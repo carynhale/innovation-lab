@@ -154,15 +154,15 @@ do {
         if ($opt{s} && ($retcode == 0 || $n == 0 || $n + 1 == $attempts)) {
             if ($retcode == 0) {
                 # op success
-                my $slack_msg = "*COMPLETE* $name :ok_hand:";
+                my $slack_msg = "*COMPLETED* $name :+1:";
                 &slack($fin_slack, "$pipeline_channel_msg $slack_msg");
                 &slack($opt{c}, $slack_msg) if $opt{c};
             } else {
                 # op failure
-                my $slack_msg = "*FAILURE* $cwd/$logfile";
+                my $slack_msg = "*FAILED* $cwd/$logfile";
                 if ($n + 1 == $attempts) {
                     # final attempt
-                    $slack_msg = ":skull_and_crossbones: $slack_msg";
+                    $slack_msg = "$slack_msg :-1:";
                     &slack($opt{c}, $slack_msg) if $opt{c};
                 }
                 &slack($err_slack, "$pipeline_channel_msg $slack_msg");
