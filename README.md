@@ -13,10 +13,8 @@ git clone https://github.com/jrflab/modules.git
 
 ## Dependencies
 - An instance of [anaconda](https://www.anaconda.com) or [miniconda](https://conda.io/en/latest/miniconda.html)
-- IMB's Platform Load Sharing Facility (LSF) or Oracle's Sun Grid Engine (SGE) for resource management
-
-### Following R Packages
-- [see full dependencies](https://github.com/ndbrown6/modules/blob/master/conda_env/jrflab_modules_env.txt)
+- IMB's Platform Load Sharing Facility (LSF) for resource management
+- [Full dependencies](https://github.com/ndbrown6/modules/blob/master/conda_env/jrflab_modules_env.txt)
 
 ## Best practices
 	
