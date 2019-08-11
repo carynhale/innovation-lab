@@ -16,7 +16,7 @@ git clone https://github.com/jrflab/modules.git
 - IMB's Platform Load Sharing Facility (LSF) or Oracle's Sun Grid Engine (SGE) for resource management
 
 ### Following R Packages
-- [xxx](https://)
+- [see full dependencies](https://github.com/ndbrown6/modules/blob/master/conda_env/jrflab_modules_env.txt)
 
 ## Best practices
 	
