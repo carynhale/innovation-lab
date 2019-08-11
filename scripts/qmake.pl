@@ -162,7 +162,7 @@ do {
                 my $slack_msg = "*FAILURE* $cwd/$logfile";
                 if ($n + 1 == $attempts) {
                     # final attempt
-                    $slack_msg = ":troll: $slack_msg";
+                    $slack_msg = ":skull_and_crossbones: $slack_msg";
                     &slack($opt{c}, $slack_msg) if $opt{c};
                 }
                 &slack($err_slack, "$pipeline_channel_msg $slack_msg");
