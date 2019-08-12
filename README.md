@@ -64,7 +64,7 @@ git clone https://github.com/ndbrown6/modules.git
 	* OncoFuse
 
 ## Detailed usage
-[wiki](https://github.com/jrflab/modules/wiki)
+[wiki](https://github.com/ndbrown6/modules/wiki)
 
 ## Known issues
 Under development
