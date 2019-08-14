@@ -306,14 +306,6 @@ TARGETS += qdnaseq_copynumber_test
 qdnaseq_copynumber_test:
 	$(call RUN_MAKE,modules/test/copy_number/qdnaseqcopynumber.mk)
 	
-TARGETS += cnv_access
-cnv_access :
-	$(call RUN_MAKE,modules/test/workflows/cnvaccess.mk)
-	
-TARGETS += fast_access
-fast_access :
-	$(call RUN_MAKE,modules/test/workflows/fastaccess.mk)
-	
 TARGETS += copynumber_summary
 copynumber_summary:
 	$(call RUN_MAKE,modules/test/workflows/copynumber_summary.mk)
