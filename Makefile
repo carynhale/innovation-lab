@@ -36,8 +36,8 @@ TARGETS += somatic_variants
 somatic_variants:
 	$(call RUN_MAKE,modules/variant_callers/somatic/somaticVariants.mk)
 	
-TARGETS += fgbio_access
-fgbio_access :
+TARGETS += fgbio
+fgbio :
 	$(call RUN_MAKE,modules/test/workflows/fgbioaccess.mk)
 
 
