@@ -39,6 +39,10 @@ somatic_variants:
 TARGETS += fgbio
 fgbio :
 	$(call RUN_MAKE,modules/test/workflows/fgbioaccess.mk)
+	
+TARGETS += marianas
+marianas :
+	$(call RUN_MAKE,modules/test/workflows/marianasaccess.mk)
 
 
 #==================================================
@@ -685,10 +689,6 @@ align_consensus :
 #==================================================
 # alpha testing
 #==================================================
-
-TARGETS += marianas_access
-marianas_access :
-	$(call RUN_MAKE,modules/test/workflows/marianasaccess.mk)
 
 
 .PHONY : $(TARGETS)
