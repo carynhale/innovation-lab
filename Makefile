@@ -24,26 +24,6 @@ endef
 
 RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+$(MAKE) -f $1,$(call RUN_QMAKE,$1,$(NUM_JOBS)))
 
-#==================================================
-# workflows
-#==================================================
-
-TARGETS += somatic_indels
-somatic_indels:
-	$(call RUN_MAKE,modules/variant_callers/somatic/somaticIndels.mk)
-	
-TARGETS += somatic_variants
-somatic_variants:
-	$(call RUN_MAKE,modules/variant_callers/somatic/somaticVariants.mk)
-	
-TARGETS += fgbio_access
-fgbio_access :
-	$(call RUN_MAKE,modules/test/workflows/fgbio_access.mk)
-	
-TARGETS += marianas
-marianas :
-	$(call RUN_MAKE,modules/test/workflows/marianasaccess.mk)
-
 
 #==================================================
 # aligners
@@ -653,7 +633,7 @@ cravat_annotate :
 
 
 #==================================================
-# beta testing
+# alpha testing
 #==================================================
 
 TARGETS += hotspot_summary
@@ -663,8 +643,24 @@ hotspot_summary:
 	
 
 #==================================================
-# alpha testing
+# beta testing
 #==================================================
 
+TARGETS += somatic_indels
+somatic_indels:
+	$(call RUN_MAKE,modules/variant_callers/somatic/somaticIndels.mk)
+	
+TARGETS += somatic_variants
+somatic_variants:
+	$(call RUN_MAKE,modules/variant_callers/somatic/somaticVariants.mk)
+	
+TARGETS += fgbio_access
+fgbio_access :
+	$(call RUN_MAKE,modules/test/workflows/fgbio_access.mk)
+	
+TARGETS += marianas
+marianas :
+	$(call RUN_MAKE,modules/test/workflows/marianasaccess.mk)
+	
 
 .PHONY : $(TARGETS)
