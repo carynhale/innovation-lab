@@ -264,7 +264,7 @@ snp6 :
 	
 TARGETS += cnv_kit
 cnv_kit :
-	$(call RUN_MAKE,modules/test/workflows/cnvkit.mk)
+	$(call RUN_MAKE,modules/test/workflows/cnv_kit.mk)
 
 TARGETS += cnvkit_coverage
 cnvkit_coverage :
