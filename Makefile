@@ -51,12 +51,12 @@ marianas :
 
 TARGETS += bwamem
 bwamem :
-	$(call RUN_MAKE,modules/aligners/bwamemAligner.mk)
+	$(call RUN_MAKE,modules/aligners/bwamem_aligner.mk)
 
 TARGETS += bwa
 bwa : NUM_ATTEMPTS = 50
 bwa :
-	$(call RUN_MAKE,modules/aligners/bwaAligner.mk)
+	$(call RUN_MAKE,modules/aligners/bwa_aligner.mk)
 
 TARGETS += bowtie
 bowtie : NUM_ATTEMPTS = 50

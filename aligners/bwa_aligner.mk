@@ -10,13 +10,11 @@ SEQ_PLATFORM = illumina
 
 VPATH ?= unprocessed_bam
 
-# use fastq; otherwise use bams
 FASTQ_CHUNKS := 10
 FASTQ_CHUNK_SEQ := $(shell seq 1 $(FASTQ_CHUNKS))
 FASTQUTILS = $(HOME)/share/usr/ngsutils/bin/fastqutils
 
 BWA_ALN_OPTS ?= 
-#BWA_ALN_OPTS ?= -q 20
 
 .SECONDARY:
 .DELETE_ON_ERROR: 

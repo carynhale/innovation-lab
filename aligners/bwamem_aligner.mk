@@ -11,7 +11,6 @@ SEQ_PLATFORM = illumina
 
 VPATH ?= unprocessed_bam
 
-# use fastq; otherwise use bams
 FASTQ_CHUNKS := 10
 FASTQ_CHUNK_SEQ := $(shell seq 1 $(FASTQ_CHUNKS))
 FASTQUTILS = $(HOME)/share/usr/ngsutils/bin/fastqutils
