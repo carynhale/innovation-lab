@@ -413,10 +413,6 @@ delly :
 # pre-processing
 #==================================================
 
-TARGETS += merge_fastq
-merge_fastq : 
-	$(call RUN_MAKE,modules/fastq_tools/mergeFastq.mk)
-
 TARGETS += fix_bam
 fix_bam :
 	$(call RUN_MAKE,modules/bam_tools/fix_bam.mk)
@@ -424,15 +420,27 @@ fix_bam :
 TARGETS += fix_rg
 fix_rg :
 	$(call RUN_MAKE,modules/bam_tools/fix_rg.mk)
+	
+TARGETS += process_bam
+process_bam : 
+	$(call RUN_MAKE,modules/bam_tools/process_bam.mk)
+
+TARGETS += merge_bam
+merge_bam :
+	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
+	
+TARGETS += extract_fastq
+extract_fastq :
+	$(call RUN_MAKE,modules/fastq_tools/extractFastq.mk)
+
+TARGETS += merge_fastq
+merge_fastq : 
+	$(call RUN_MAKE,modules/fastq_tools/mergeFastq.mk)
 
 TARGETS += merge_split_fastq
 merge_split_fastq :
 	$(call RUN_MAKE,modules/fastq_tools/mergeSplitFastq.mk)
 
-TARGETS += extract_fastq
-extract_fastq :
-	$(call RUN_MAKE,modules/fastq_tools/extractFastq.mk)
-	
 TARGETS += extract_unmapped
 extract_unmapped :
 	$(call RUN_MAKE,modules/fastq_tools/extractReads.mk)
@@ -445,14 +453,6 @@ TARGETS += bam_to_fasta
 bam_to_fasta :
 	$(call RUN_MAKE,modules/fastq_tools/bamtoFasta.mk)
 	
-TARGETS += process_bam
-process_bam : 
-	$(call RUN_MAKE,modules/bam_tools/process_bam.mk)
-
-TARGETS += merge_bam
-merge_bam :
-	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
-
 
 #==================================================
 # quality control
