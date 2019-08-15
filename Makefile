@@ -123,6 +123,27 @@ TARGETS += mutect
 mutect :
 	$(call RUN_MAKE,modules/variant_callers/somatic/mutect.mk)
 	
+TARGETS += varscanTN
+varscanTN :
+	$(call RUN_MAKE,modules/variant_callers/somatic/varscanTN.mk)
+	
+TARGETS += strelka
+strelka :
+	$(call RUN_MAKE,modules/variant_callers/somatic/strelka.mk)
+	
+TARGETS += scalpel
+scalpel :
+	$(call RUN_MAKE,modules/variant_callers/somatic/scalpel.mk)
+    
+TARGETS += lancet
+lancet :
+	$(call RUN_MAKE,modules/variant_callers/somatic/lancet.mk)
+	
+TARGETS += platypus
+platypus:
+	$(call RUN_MAKE,modules/variant_callers/somatic/platypus.mk)
+	
+	
 TARGETS += somatic_sniper
 somatic_sniper :
 	$(call RUN_MAKE,modules/variant_callers/somatic/somatic_sniper.mk)
@@ -135,33 +156,9 @@ TARGETS += tvc
 tvc:
 	$(call RUN_MAKE,modules/variant_callers/tvc.mk)
 
-TARGETS += varscanTN
-varscanTN :
-	$(call RUN_MAKE,modules/variant_callers/somatic/varscanTN.mk)
-	
 TARGETS += varscan
 varscan :
 	$(call RUN_MAKE,modules/variant_callers/varscan.mk)
-	
-TARGETS += strelka
-strelka :
-	$(call RUN_MAKE,modules/variant_callers/somatic/strelka.mk)
-
-TARGETS += scalpel
-scalpel :
-	$(call RUN_MAKE,modules/variant_callers/somatic/scalpel.mk)
-    
-TARGETS += lancet
-lancet :
-	$(call RUN_MAKE,modules/variant_callers/somatic/lancet.mk)
-
-TARGETS += pindelTN
-pindelTN :
-	$(call RUN_MAKE,modules/variant_callers/somatic/pindelTN.mk)
-	
-TARGETS += pindel
-pindel :
-	$(call RUN_MAKE,modules/variant_callers/pindel.mk)
 	
 TARGETS += gatk
 gatk : 
@@ -175,10 +172,6 @@ TARGETS += samtools_het
 samtools_het :
 	$(call RUN_MAKE,modules/variant_callers/samtoolsHet.mk)
 
-TARGETS += platypus
-platypus:
-	$(call RUN_MAKE,modules/variant_callers/somatic/platypus.mk)
-	
 TARGETS += msisensor
 msisensor :
 	$(call RUN_MAKE,modules/variant_callers/somatic/msisensor.mk)	
