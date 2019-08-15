@@ -1,9 +1,7 @@
-# use torrent variant caller on ion torrent bams
-
-LOGDIR ?= log/tvcTN.$(NOW)
-
 include modules/Makefile.inc
 include modules/variant_callers/gatk.inc
+
+LOGDIR ?= log/tvcTN.$(NOW)
 
 VPATH ?= bam
 

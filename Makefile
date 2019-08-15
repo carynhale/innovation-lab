@@ -125,15 +125,11 @@ mutect :
 	
 TARGETS += somatic_sniper
 somatic_sniper :
-	$(call RUN_MAKE,modules/variant_callers/somatic/somaticSniper.mk)
+	$(call RUN_MAKE,modules/variant_callers/somatic/somatic_sniper.mk)
 
-TARGETS += snvmix
-snvmix :
-	$(call RUN_MAKE,modules/variant_callers/snvmix.mk)
-	
-TARGETS += tvcTN
-tvcTN:
-	$(call RUN_MAKE,modules/variant_callers/somatic/tvcTN.mk)
+TARGETS += tvc_tn
+tvc_tn:
+	$(call RUN_MAKE,modules/variant_callers/somatic/tvc_tn.mk)
 
 TARGETS += tvc
 tvc:

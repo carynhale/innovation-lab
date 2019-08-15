@@ -1,8 +1,3 @@
-# Run somatic sniper on tumour-normal matched pairs
-# Detect point mutations
-##### DEFAULTS ######
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
 include modules/variant_callers/gatk.inc
 
@@ -31,7 +26,6 @@ EFF_TYPES = silent missense nonsilent_cds nonsilent
 VCF_SUFFIX = som_sniper.$(FILTER_SUFFIX).$(ANN_SUFFIX)
 TABLE_SUFFIXES = $(foreach eff,$(EFF_TYPES),$(VCF_SUFFIX).tab.$(eff).novel)
 
-#VCFS = $(foreach suff,$(VCF_SUFFIXES),$(foreach tumor,$(TUMOR_SAMPLES),vcf/$(tumor)_$(normal_lookup.$(tumor)).$(suff).vcf))
 VCFS = $(foreach pair,$(SAMPLE_PAIRS),vcf/$(pair).$(VCF_SUFFIX).vcf)
 all : somsniper_vcfs somsniper_tables
 somsniper_vcfs : $(VCFS) $(addsuffix .idx,$(VCFS))
@@ -45,9 +39,6 @@ endef
 $(foreach pair,$(SAMPLE_PAIRS), \
 	$(eval $(call somsniper-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)))))
 
-# add pedigree info
-# $(eval $(call pedigree-tumor-normal,tumor,normal))
-#$$(INIT) grep '^##' $$< > $$@; echo "##PEDIGREE=<Derived=$1,Original=$2>" >> $$@; grep '^#[^#]' $$< >> $$@; cat $$^ | grep -v '^#' | $$(VCF_SORT) $$(REF_DICT) - >> $$@ 2> $$(LOG)
 define pedigree-tumor-normal
 vcf/$1_$2.som_sniper.vcf : som_sniper/vcf/$1_$2.som_sniper.fp.fixAD.vcf
 	$$(call RUN,-s 4G -m 5G,"grep '^#' $$< > $$@; cat $$^ | grep -v '^#' | $$(VCF_SORT) $$(REF_DICT) - >> $$@")
