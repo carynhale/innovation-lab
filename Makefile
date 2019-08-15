@@ -70,6 +70,52 @@ blast :
 
 
 #==================================================
+# BAM file processing
+#==================================================
+
+TARGETS += fix_bam
+fix_bam :
+	$(call RUN_MAKE,modules/bam_tools/fix_bam.mk)
+
+TARGETS += fix_rg
+fix_rg :
+	$(call RUN_MAKE,modules/bam_tools/fix_rg.mk)
+	
+TARGETS += process_bam
+process_bam : 
+	$(call RUN_MAKE,modules/bam_tools/process_bam.mk)
+
+TARGETS += merge_bam
+merge_bam :
+	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
+	
+TARGETS += extract_unmapped
+extract_unmapped :
+	$(call RUN_MAKE,modules/bam_tools/extract_unmapped.mk)
+	
+TARGETS += bam_to_fasta
+bam_to_fasta :
+	$(call RUN_MAKE,modules/bam_tools/bam_to_fasta.mk)
+
+	
+#==================================================
+# FASTQ file processing
+#==================================================
+
+TARGETS += extract_fastq
+extract_fastq :
+	$(call RUN_MAKE,modules/fastq_tools/extract_fastq.mk)
+
+TARGETS += merge_fastq
+merge_fastq : 
+	$(call RUN_MAKE,modules/fastq_tools/merge_fastq.mk)
+
+TARGETS += merge_split_fastq
+merge_split_fastq :
+	$(call RUN_MAKE,modules/fastq_tools/merge_split_fastq.mk)
+	
+	
+#==================================================
 # variant callers
 #==================================================
 
@@ -390,51 +436,6 @@ delly :
 
 
 #==================================================
-# BAM file processing
-#==================================================
-
-TARGETS += fix_bam
-fix_bam :
-	$(call RUN_MAKE,modules/bam_tools/fix_bam.mk)
-
-TARGETS += fix_rg
-fix_rg :
-	$(call RUN_MAKE,modules/bam_tools/fix_rg.mk)
-	
-TARGETS += process_bam
-process_bam : 
-	$(call RUN_MAKE,modules/bam_tools/process_bam.mk)
-
-TARGETS += merge_bam
-merge_bam :
-	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
-	
-TARGETS += extract_unmapped
-extract_unmapped :
-	$(call RUN_MAKE,modules/bam_tools/extract_unmapped.mk)
-	
-TARGETS += bam_to_fasta
-bam_to_fasta :
-	$(call RUN_MAKE,modules/bam_tools/bam_to_fasta.mk)
-	
-#==================================================
-# FASTQ file processing
-#==================================================
-
-TARGETS += extract_fastq
-extract_fastq :
-	$(call RUN_MAKE,modules/fastq_tools/extract_fastq.mk)
-
-TARGETS += merge_fastq
-merge_fastq : 
-	$(call RUN_MAKE,modules/fastq_tools/merge_fastq.mk)
-
-TARGETS += merge_split_fastq
-merge_split_fastq :
-	$(call RUN_MAKE,modules/fastq_tools/merge_split_fastq.mk)
-
-
-#==================================================
 # quality control
 #==================================================
 
@@ -658,9 +659,9 @@ TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,modules/test/workflows/fgbio_access.mk)
 	
-TARGETS += marianas
-marianas :
-	$(call RUN_MAKE,modules/test/workflows/marianasaccess.mk)
+TARGETS += marianas_access
+marianas_access :
+	$(call RUN_MAKE,modules/test/workflows/marianas_access.mk)
 	
 
 .PHONY : $(TARGETS)
