@@ -429,34 +429,30 @@ TARGETS += merge_bam
 merge_bam :
 	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
 	
+TARGETS += extract_unmapped
+extract_unmapped :
+	$(call RUN_MAKE,modules/bam_tools/extract_unmapped.mk)
+	
+TARGETS += bam_to_fasta
+bam_to_fasta :
+	$(call RUN_MAKE,modules/bam_tools/bam_to_fasta.mk)
+	
 #==================================================
 # FASTQ file processing
 #==================================================
 
 TARGETS += extract_fastq
 extract_fastq :
-	$(call RUN_MAKE,modules/fastq_tools/extractFastq.mk)
+	$(call RUN_MAKE,modules/fastq_tools/extract_fastq.mk)
 
 TARGETS += merge_fastq
 merge_fastq : 
-	$(call RUN_MAKE,modules/fastq_tools/mergeFastq.mk)
+	$(call RUN_MAKE,modules/fastq_tools/merge_fastq.mk)
 
 TARGETS += merge_split_fastq
 merge_split_fastq :
-	$(call RUN_MAKE,modules/fastq_tools/mergeSplitFastq.mk)
+	$(call RUN_MAKE,modules/fastq_tools/merge_split_fastq.mk)
 
-TARGETS += extract_unmapped
-extract_unmapped :
-	$(call RUN_MAKE,modules/fastq_tools/extractReads.mk)
-	
-TARGETS += extract_unmapped_pairs
-extract_unmapped_pairs :
-	$(call RUN_MAKE,modules/fastq_tools/extractunmappedpairs.mk)
-
-TARGETS += bam_to_fasta
-bam_to_fasta :
-	$(call RUN_MAKE,modules/fastq_tools/bamtoFasta.mk)
-	
 
 #==================================================
 # quality control

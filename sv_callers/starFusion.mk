@@ -1,4 +1,3 @@
-# run star fusion on fastqs
 include modules/Makefile.inc
 
 LOGDIR = log/star_fusion.$(NOW)
@@ -29,4 +28,4 @@ usv/%.star_fusion.tsv : star_fusion/%.star_fusion_timestamp
 .SECONDARY: 
 .DELETE_ON_ERROR:
 
-include modules/fastq_tools/mergeSplitFastq.mk
+include modules/fastq_tools/merge_split_fastq.mk

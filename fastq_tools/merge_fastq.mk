@@ -1,4 +1,3 @@
-# add in new fastq to existing bams
 include modules/Makefile.inc
 
 LOGDIR ?= log/merge_fastq.$(NOW)

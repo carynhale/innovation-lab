@@ -1,5 +1,3 @@
-# merge split fastqs for workflows like defuse
-
 include modules/Makefile.inc
 
 LOGDIR ?= log/merge_split_fastq.$(NOW)
