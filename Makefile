@@ -26,7 +26,7 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 
 
 #==================================================
-# aligners
+# Aligners
 #==================================================
 
 TARGETS += bwamem
@@ -116,7 +116,7 @@ merge_split_fastq :
 	
 	
 #==================================================
-# tumor/normal somatic variant callers
+# Somatic variant callers
 #==================================================
 
 TARGETS += mutect
@@ -154,7 +154,7 @@ tvc_tn:
 	
 	
 #==================================================
-# specialty somatic variant callers
+# Specialty somatic variant callers
 #==================================================
 	
 TARGETS += hla_polysolver
@@ -167,7 +167,7 @@ msi_sensor :
 	
 
 #==================================================
-# single-sample variant callers
+# Single sample variant callers
 #==================================================
 
 TARGETS += tvc
@@ -224,7 +224,7 @@ sufam_summary:
 
 
 #==================================================
-# copy number
+# Copy number aberration callers
 #==================================================
 
 TARGETS += facets
@@ -349,7 +349,7 @@ myriad_score :
 
 
 #==================================================
-# structural variant callers
+# Structural variant callers
 #==================================================
 
 TARGETS += star_fusion
@@ -431,7 +431,7 @@ delly :
 
 
 #==================================================
-# quality control
+# Quality control
 #==================================================
 
 TARGETS += bam_metrics
@@ -468,7 +468,7 @@ bam_stats :
 
 
 #==================================================
-# rna sequencing
+# RNA sequencing
 #==================================================
 
 TARGETS += cufflinks
@@ -485,7 +485,7 @@ exon_counts :
 	
 
 #==================================================
-# chip sequencing
+# Chip sequencing
 #==================================================
 	
 TARGETS += macs2TN
@@ -494,7 +494,7 @@ macs2TN:
 
 
 #==================================================
-# ploidy
+# Ploidy
 #==================================================
 
 TARGETS += pyloh
@@ -503,7 +503,7 @@ pyloh :
 
 
 #==================================================
-# clonality
+# Clonality
 #==================================================
 
 TARGETS += clonehd
@@ -524,7 +524,7 @@ ss_pyclone :
 	
 
 #==================================================
-# mutational signatures
+# Mutational signatures
 #==================================================
 
 TARGETS += emu
@@ -541,7 +541,7 @@ deconstruct_sigs :
 
 
 #==================================================
-# miscellaneous
+# Miscellaneous
 #==================================================
 
 TARGETS += cluster_samples
@@ -570,7 +570,7 @@ fetch_impact :
 
 
 #==================================================
-# phylogeny
+# Phylogeny
 #==================================================
 
 TARGETS += medicc
@@ -583,7 +583,7 @@ pratchet :
 
 
 #==================================================
-# reports
+# Reports
 #==================================================
 
 TARGETS += recurrent_mutations
@@ -604,7 +604,7 @@ cravat_summary :
 
 
 #==================================================
-# annotations
+# Annotations
 #==================================================
 
 TARGETS += ann_ext_vcf
@@ -629,7 +629,7 @@ cravat_annotate :
 
 
 #==================================================
-# alpha testing
+# Alpha testing
 #==================================================
 
 TARGETS += hotspot_summary
@@ -639,7 +639,7 @@ hotspot_summary:
 	
 
 #==================================================
-# beta testing
+# Beta testing
 #==================================================
 
 TARGETS += somatic_indels
