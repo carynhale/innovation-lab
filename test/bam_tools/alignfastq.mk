@@ -60,7 +60,7 @@ marianas/$1/$1.dedup.bam : marianas/$1/$1.realn.bam
 marianas/$1/$1.recal.grp : marianas/$1/$1.dedup.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 																		   samtools index $$(<) && \
-																		   cp $$(<) $1.bai && \
+																		   cp $$(<) marianas/$1/$1.bai && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT -T BaseRecalibrator -R $(REF_FASTA) -knownSites /home/brownd7/share/reference/dbsnp_138.b37.gmaf.vcf.gz \
 									   							   		   -I $$(<) -o $$(@)")
