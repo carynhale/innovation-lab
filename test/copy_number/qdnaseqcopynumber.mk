@@ -8,17 +8,17 @@ qdnaseq_copynumber : $(foreach sample,$(SAMPLES),qdnaseq/copynumber/log2ratio/$(
 
 define qdnaseq-plot-log2ratio
 qdnaseq/copynumber/log2ratio/%.pdf : qdnaseq/bed/%.bed
-	$$(call RUN,-c -v ~/share/usr/anaconda-envs/ascat -s 10G -m 12G,"$(RSCRIPT) modules/test/copy_number/qdnaseqplot.R --sample $$(*) --type 'raw'")
+	$$(call RUN,-c -v $(ASCAT_ENV) -s 10G -m 12G,"$(RSCRIPT) modules/test/copy_number/qdnaseqplot.R --sample $$(*) --type 'raw'")
 endef
  $(foreach sample,$(SAMPLES),\
 		$(eval $(call qdnaseq-plot-log2ratio,$(sample))))
 		
 define qdnaseq-segment-log2ratio
 qdnaseq/copynumber/segmented/%.RData : qdnaseq/bed/%.bed
-	$$(call RUN,-c -v ~/share/usr/anaconda-envs/ascat -s 12G -m 16G,"$(RSCRIPT) modules/test/copy_number/qdnaseqsegment.R --sample $$(*)")
+	$$(call RUN,-c -v $(ASCAT_ENV) -s 12G -m 16G,"$(RSCRIPT) modules/test/copy_number/qdnaseqsegment.R --sample $$(*)")
 	
 qdnaseq/copynumber/pcf/%.pdf : qdnaseq/copynumber/segmented/%.RData
-	$$(call RUN,-c -v ~/share/usr/anaconda-envs/ascat -s 12G -m 16G,"$(RSCRIPT) modules/test/copy_number/qdnaseqplot.R --sample $$(*) --type 'bychromosome' --rho '$${qdnaseq_rho.$1}' --psi '$${qdnaseq_psi.$1}' --gamma '$${qdnaseq_gamma.$1}' && \
+	$$(call RUN,-c -v $(ASCAT_ENV) -s 12G -m 16G,"$(RSCRIPT) modules/test/copy_number/qdnaseqplot.R --sample $$(*) --type 'bychromosome' --rho '$${qdnaseq_rho.$1}' --psi '$${qdnaseq_psi.$1}' --gamma '$${qdnaseq_gamma.$1}' && \
 																	 $(RSCRIPT) modules/test/copy_number/qdnaseqplot.R --sample $$(*) --type 'segmented' --rho '$${qdnaseq_rho.$1}' --psi '$${qdnaseq_psi.$1}' --gamma '$${qdnaseq_gamma.$1}'")
 
 endef

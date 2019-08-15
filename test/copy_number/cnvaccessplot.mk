@@ -8,10 +8,10 @@ cnvaccess_plot : $(foreach sample,$(TUMOR_SAMPLES),cnvaccess/plot/log2/$(sample)
 
 define cnvaccess-plot
 cnvaccess/plot/log2/%.pdf : cnvaccess/cnr/%.pool-A.cnr cnvaccess/cnr/%.pool-B.cnr cnvaccess/cnr/%.no-pool.cnr
-	$$(call RUN,-c -v ~/share/usr/anaconda-envs/ascat -s 10G -m 12G,"$(RSCRIPT) modules/test/copy_number/cnvaccess.R --type 1 --sample_name $$(*)")
+	$$(call RUN,-c -v $(ASCAT_ENV) -s 10G -m 12G,"$(RSCRIPT) modules/test/copy_number/cnvaccess.R --type 1 --sample_name $$(*)")
 	
 cnvaccess/plot/bychr/%/timestamp : cnvaccess/cnr/%.pool-A.cnr cnvaccess/cnr/%.pool-B.cnr cnvaccess/cnr/%.no-pool.cnr
-	$$(call RUN,-c -v ~/share/usr/anaconda-envs/ascat -s 10G -m 12G,"mkdir -p cnvaccess/plot/ && \
+	$$(call RUN,-c -v $(ASCAT_ENV) -s 10G -m 12G,"mkdir -p cnvaccess/plot/ && \
 																	 mkdir -p cnvaccess/plot/bychr/ && \
 																	 mkdir -p cnvaccess/plot/bychr/$$(*)/ && \
 																	 $(RSCRIPT) modules/test/copy_number/cnvaccess.R --type 2 --sample_name $$(*)")
