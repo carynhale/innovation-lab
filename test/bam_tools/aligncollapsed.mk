@@ -15,7 +15,7 @@ SAMTOOLS_MEM_THREAD = 2G
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
-align_collapsed : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).collapsed.sorted.bam)
+align_collapsed : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).collapsed.fixed.bam)
 
 define fastq-to-bam
 marianas/$1/$1.collapsed.bwamem.bam : marianas/$1/collapsed_R1_.fastq marianas/$1/collapsed_R1_.fastq
@@ -28,18 +28,18 @@ marianas/$1/$1.collapsed.sorted.bam : marianas/$1/$1.collapsed.bwamem.bam
 								  									   		   	   samtools index $$(@) && \
 								  									   		   	   cp marianas/$1/$1.collapsed.sorted.bam.bai marianas/$1/$1.collapsed.sorted.bai")
 								  									   		   
-# marianas/$1/$1.collapsed.fixed.bam : marianas/$1/$1.collapsed.sorted.bam
-#	$$(call RUN,-c -n 1 -s 12G -m 18G -w 1440,"set -o pipefail && \
-#									  		   /home/${USER}/share/usr/jdk1.8.0_74/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar /home/${USER}/share/usr/picard/bin/picard.jar \
-#									  		   FixMateInformation \
-#									  		   I=$$(<) \
-#									  		   O=$$(@) \
-#									  		   SORT_ORDER=coordinate \
-#									  		   TMP_DIR=$(TMPDIR) \
-#									  		   COMPRESSION_LEVEL=0 \
-#									  		   CREATE_INDEX=true \
-#									  		   VALIDATION_STRINGENCY=LENIENT")
-#
+marianas/$1/$1.collapsed.fixed.bam : marianas/$1/$1.collapsed.sorted.bam
+	$$(call RUN,-c -n 1 -s 12G -m 18G -w 1440,"set -o pipefail && \
+									  		   /home/${USER}/share/usr/jdk1.8.0_74/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar /home/${USER}/share/usr/picard/bin/picard.jar \
+									  		   FixMateInformation \
+									  		   I=$$(<) \
+									  		   O=$$(@) \
+									  		   SORT_ORDER=coordinate \
+									  		   TMP_DIR=$(TMPDIR) \
+									  		   COMPRESSION_LEVEL=0 \
+									  		   CREATE_INDEX=true \
+									  		   VALIDATION_STRINGENCY=LENIENT")
+
 # marianas/$1/$1.intervals : marianas/$1/$1.fixed.bam
 #	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 #									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
@@ -81,6 +81,7 @@ marianas/$1/$1.collapsed.sorted.bam : marianas/$1/$1.collapsed.bwamem.bam
 #												TMP_DIR=$(TMPDIR) && \
 #												samtools index $$(@) && \
 #												cp marianas/$1/$1.bam.bai marianas/$1/$1.bai")
+
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
