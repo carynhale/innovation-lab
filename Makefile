@@ -645,11 +645,11 @@ hotspot_summary:
 
 TARGETS += somatic_indels
 somatic_indels:
-	$(call RUN_MAKE,modules/variant_callers/somatic/somatic_indels.mk)
+	$(call RUN_MAKE,modules/test/workflows/somatic_indels.mk)
 	
 TARGETS += somatic_variants
 somatic_variants:
-	$(call RUN_MAKE,modules/variant_callers/somatic/somatic_variants.mk)
+	$(call RUN_MAKE,modules/test/workflows/somatic_variants.mk)
 	
 TARGETS += fgbio_access
 fgbio_access :
