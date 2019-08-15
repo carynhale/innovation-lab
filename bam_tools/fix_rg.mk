@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/variant_callers/gatk.inc
 include modules/aligners/align.inc
 
-LOGDIR ?= log/fixRG.$(NOW)
+LOGDIR ?= log/fix_rg.$(NOW)
 
 BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 fixed_bams : $(BAMS) $(addsuffix .bai,$(BAMS))

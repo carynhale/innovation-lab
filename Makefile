@@ -419,11 +419,11 @@ merge_fastq :
 
 TARGETS += fix_bam
 fix_bam :
-	$(call RUN_MAKE,modules/bam_tools/fixBam.mk)
+	$(call RUN_MAKE,modules/bam_tools/fix_bam.mk)
 
 TARGETS += fix_rg
 fix_rg :
-	$(call RUN_MAKE,modules/bam_tools/fixRG.mk)
+	$(call RUN_MAKE,modules/bam_tools/fix_rg.mk)
 
 TARGETS += merge_split_fastq
 merge_split_fastq :
@@ -447,11 +447,11 @@ bam_to_fasta :
 	
 TARGETS += process_bam
 process_bam : 
-	$(call RUN_MAKE,modules/bam_tools/processBam.mk)
+	$(call RUN_MAKE,modules/bam_tools/process_bam.mk)
 
 TARGETS += merge_bam
 merge_bam :
-	$(call RUN_MAKE,modules/bam_tools/mergeBam.mk)
+	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
 
 
 #==================================================

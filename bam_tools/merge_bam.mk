@@ -1,6 +1,6 @@
 include modules/Makefile.inc
 
-LOGDIR = log/merge.$(NOW)
+LOGDIR = log/merge_bam.$(NOW)
 
 .SECONDARY:
 .DELETE_ON_ERROR: 
