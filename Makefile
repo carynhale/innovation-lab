@@ -544,7 +544,7 @@ ms_pyclone :
 	
 TARGETS += ss_pyclone
 ss_pyclone :
-	$(call RUN_MAKE,modules/test/workflows/pyclone.mk)
+	$(call RUN_MAKE,modules/test/workflows/ss_pyclone.mk)
 	
 
 #==================================================
