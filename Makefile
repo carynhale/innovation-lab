@@ -590,7 +590,7 @@ krona_classify :
 	
 TARGETS += fetch_impact
 fetch_impact :
-	$(call RUN_MAKE,modules/test/workflows/fetchimpact.mk)
+	$(call RUN_MAKE,modules/test/workflows/fetch_impact.mk)
 
 
 #==================================================
