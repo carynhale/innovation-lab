@@ -4,6 +4,7 @@ suppressPackageStartupMessages(library("optparse"))
 suppressPackageStartupMessages(library("copynumber"))
 suppressPackageStartupMessages(library("colorspace"))
 suppressPackageStartupMessages(library("ASCAT"))
+suppressPackageStartupMessages(library("GAP"))
 
 if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
@@ -21,7 +22,9 @@ args_list <- list(make_option("--type", default = NA, type = 'character', help =
 parser <- OptionParser(usage = "%prog", option_list = args_list)
 arguments <- parse_args(parser, positional_arguments = T)
 opt <- arguments$options
-load("modules/copy_number/CytoBand.RData")
+
+data(CytoBand)
+
 load(opt$file_in)
 
 if (opt$type=="log2") {
