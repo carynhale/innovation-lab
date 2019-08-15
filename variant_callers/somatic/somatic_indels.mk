@@ -1,9 +1,7 @@
-# Run multiple indel callers and then merge them
-# taking calls found in >= 2 callers
 include modules/Makefile.inc
 LOGDIR ?= log/somatic_indels.$(NOW)
 
-INDEL_TYPES ?= varscan_indels strelka_indels scalpel_indels lancet_indels platypus_indels pindel #mutect_indels
+INDEL_TYPES ?= varscan_indels strelka_indels scalpel_indels lancet_indels platypus_indels
 
 .PHONY : somatic_indels
 somatic_indels : $(foreach pair,$(SAMPLE_PAIRS),vcf/$(pair).somatic_indels.vcf)
@@ -43,10 +41,8 @@ endif
 vcf/%.uvcf.vcf : vcf/%.vcf uvcf/%.uvcf
 	$(call CHECK_VCF,$(call RUN,-s 4G -m 6G,"$(MERGE_UVCF_VCF) $(<<) $(<) > $@"))
 
-include modules/variant_callers/somatic/mutect2.mk
 include modules/variant_callers/somatic/strelka.mk
 include modules/variant_callers/somatic/scalpel.mk
 include modules/variant_callers/somatic/lancet.mk
 include modules/variant_callers/somatic/varscanTN.mk
 include modules/variant_callers/somatic/platypus.mk
-include modules/variant_callers/somatic/pindelTN.mk

@@ -123,10 +123,6 @@ TARGETS += mutect
 mutect :
 	$(call RUN_MAKE,modules/variant_callers/somatic/mutect.mk)
 	
-TARGETS += mutect2
-mutect2 :
-	$(call RUN_MAKE,modules/variant_callers/somatic/mutect2.mk)
-	
 TARGETS += somatic_sniper
 somatic_sniper :
 	$(call RUN_MAKE,modules/variant_callers/somatic/somaticSniper.mk)
@@ -649,11 +645,11 @@ hotspot_summary:
 
 TARGETS += somatic_indels
 somatic_indels:
-	$(call RUN_MAKE,modules/variant_callers/somatic/somaticIndels.mk)
+	$(call RUN_MAKE,modules/variant_callers/somatic/somatic_indels.mk)
 	
 TARGETS += somatic_variants
 somatic_variants:
-	$(call RUN_MAKE,modules/variant_callers/somatic/somaticVariants.mk)
+	$(call RUN_MAKE,modules/variant_callers/somatic/somatic_variants.mk)
 	
 TARGETS += fgbio_access
 fgbio_access :
