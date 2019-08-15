@@ -1,6 +1,6 @@
 include modules/Makefile.inc
 
-LOGDIR ?= log/blast_reads.$(NOW)
+LOGDIR ?= log/blast.$(NOW)
 PHONY += unmapped_read
 
 blast_reads : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).blast)

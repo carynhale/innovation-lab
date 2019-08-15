@@ -31,8 +31,6 @@ endif
 	
 BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 tophat_bams : $(BAMS) $(addsuffix .bai,$(BAMS))
-#tophat_unmapped_bams : $(foreach sample,$(SAMPLES),tophat/unmapped_bam/$(sample).unmapped.bam)
-#tophat_junctions: $(foreach sample,$(SAMPLES),tophat/junctions/$(sample)_junctions.bed)
 
 bam/%.bam : tophat/bam/%.tophat.$(BAM_SUFFIX)
 	$(INIT) ln -f $(<) $(@) 

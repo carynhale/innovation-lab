@@ -66,27 +66,27 @@ bowtie :
 TARGETS += tmap
 tmap : NUM_ATTEMPTS = 50
 tmap :
-	$(call RUN_MAKE,modules/aligners/tmapAligner.mk)
+	$(call RUN_MAKE,modules/aligners/tmap_aligner.mk)
 
 TARGETS += hisat
 hisat : 
-	$(call RUN_MAKE,modules/aligners/hisatAligner.mk)
+	$(call RUN_MAKE,modules/aligners/hisat_aligner.mk)
 
 TARGETS += tophat
 tophat : 
-	$(call RUN_MAKE,modules/aligners/tophatAligner.mk)
+	$(call RUN_MAKE,modules/aligners/tophat_aligner.mk)
 
 TARGETS += star
 star:
-	$(call RUN_MAKE,modules/aligners/starAligner.mk)
+	$(call RUN_MAKE,modules/aligners/star_aligner.mk)
 
-TARGETS += star_fusion_aligner
-star_fusion_aligner:
-	$(call RUN_MAKE,modules/aligners/starFusionAligner.mk)
+TARGETS += starfusion
+starfusion:
+	$(call RUN_MAKE,modules/aligners/starfusion_aligner.mk)
 	
-TARGETS += blast_reads
-blast_reads :
-	$(call RUN_MAKE,modules/fastq_tools/blastReads.mk)
+TARGETS += blast
+blast :
+	$(call RUN_MAKE,modules/aligners/blast_aligner.mk)
 
 
 #==================================================

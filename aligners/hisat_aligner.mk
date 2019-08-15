@@ -44,7 +44,6 @@ hisat/bam/%.hisat.bam hisat/unmapped_bam/%.hisat_unmapped.bam : fastq/%.1.fastq.
 		--un >($(SAMTOOLS2) view -bh - > hisat/unmapped_bam/$*.hisat_unmapped.bam) \
 		-1 $(<) -2 $(<<)")
 
-# usage $(eval $(call align-merged-split-fastq,merged-sample,split,fastq(s)))
 define align-merged-split-fastq
 hisat/bam/$2.hisat.bam : $3
 	$$(call RUN,-N $2_hisat -n 8 -s 1G -m 1.5G,"mkdir -p hisat/bam hisat/unmapped_bam; \

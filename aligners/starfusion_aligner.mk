@@ -19,4 +19,4 @@ star_fusion/%.star_fusion_timestamp : star/%.Chimeric.out.junction
 usv/%.star_fusion.tsv : star_fusion/%.star_fusion_timestamp
 	$(call RUN,,"$(STAR_FUSION_TO_USV) < $(<D)/$*/star-fusion.fusion_candidates.final > $@")
 
-include modules/aligners/starAligner.mk
+include modules/aligners/star_aligner.mk
