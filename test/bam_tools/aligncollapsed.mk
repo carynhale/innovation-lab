@@ -49,7 +49,7 @@ marianas/$1/timestamp : marianas/$1/$1.collapsed.fixed.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  $(JAVA) -server -Xms2G -Xmx8G -cp $(MARIANAS) org.mskcc.marianas.umi.duplex.postprocessing.SeparateBams $1.collapsed.fixed.bam && \
-									  touch timestamp && \
+									  echo 'Done!\n' > timestamp && \
 									  cd ../..")
 
 endef
