@@ -33,7 +33,6 @@ BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 bowtie_bams : $(BAMS) $(addsuffix .bai,$(BAMS))
 
-# memory for human genome: ~3.2G
 bowtie/bam/%.bowtie.bam : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
 	$(call RUN,-n 4 -s 1G -m 1.5G,"LBID=`echo \"$*\" | sed 's/_[A-Za-z0-9]\+//'`; \
 		$(BOWTIE) $(BOWTIE_OPTS) --rg-id $* --rg \"LB:\$${LBID}\" --rg \"PL:${SEQ_PLATFORM}\" --rg \"SM:\$${LBID}\" -p $(NUM_CORES) \

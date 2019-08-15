@@ -61,7 +61,7 @@ bwa :
 TARGETS += bowtie
 bowtie : NUM_ATTEMPTS = 50
 bowtie :
-	$(call RUN_MAKE,modules/aligners/bowtieAligner.mk)
+	$(call RUN_MAKE,modules/aligners/bowtie_aligner.mk)
 
 TARGETS += tmap
 tmap : NUM_ATTEMPTS = 50
