@@ -410,7 +410,7 @@ delly :
 
 
 #==================================================
-# pre-processing
+# BAM file processing
 #==================================================
 
 TARGETS += fix_bam
@@ -429,6 +429,10 @@ TARGETS += merge_bam
 merge_bam :
 	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
 	
+#==================================================
+# FASTQ file processing
+#==================================================
+
 TARGETS += extract_fastq
 extract_fastq :
 	$(call RUN_MAKE,modules/fastq_tools/extractFastq.mk)
