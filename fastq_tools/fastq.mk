@@ -1,5 +1,3 @@
-# This module is used to extract fastq files from bam files
-
 include modules/Makefile.inc
 
 VPATH ?= unprocessed_bam
@@ -16,7 +14,7 @@ ifeq ($(TRIM_READS),true)
    TRIM_OPTS ?= -l $(TRIM_LENGTH)
 endif
 
-FASTQ_TRIMMER = $(PERL) modules/fastq_tools/trimFastq.pl
+FASTQ_TRIMMER = $(PERL) modules/scripts/trim_fastq.pl
 
 .SECONDARY:
 .DELETE_ON_ERROR: 
@@ -67,4 +65,3 @@ unprocessed_fastq/$1.%.fastq.gz : $$(foreach split,$2,unprocessed_fastq/$$(split
 	$$(INIT) cat $$(^) | gzip > $$@ 2> $$(LOG)
 endef
 $(foreach sample,$(SPLIT_SAMPLES),$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
-
