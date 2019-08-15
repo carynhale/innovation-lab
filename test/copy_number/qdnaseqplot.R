@@ -4,7 +4,9 @@ suppressPackageStartupMessages(library("optparse"))
 suppressPackageStartupMessages(library("copynumber"))
 suppressPackageStartupMessages(library("colorspace"))
 suppressPackageStartupMessages(library("ASCAT"))
-load("modules/copy_number/CytoBand.RData")
+suppressPackageStartupMessages(library("GAP"))
+
+data(CytoBand)
 
 if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
