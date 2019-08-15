@@ -28,4 +28,4 @@ bam/%.ds.bam : metrics/hs_metrics.tsv bam/%.bam
 		   if [ \$$(echo \"\$$ds >= 1\" | bc) -eq 1 ]; then ln -s \$$(readlink -f $(<<)) $@; else \
 		   samtools view -hb -s \$$ds $(<<) > $@; fi")
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk

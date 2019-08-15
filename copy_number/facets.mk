@@ -89,7 +89,7 @@ facets/summary/bygene.pdf : facets/summary/bygene.txt
 	$(call RUN,-s 8G -m 10G,"$(FACETS_PLOT_GENE_CN) $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
 
 include modules/variant_callers/gatk.mk
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 
 .SECONDARY:
 .DELETE_ON_ERROR:

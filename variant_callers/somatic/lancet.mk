@@ -95,4 +95,4 @@ $(foreach pair,$(SAMPLE_PAIRS),\
 	$(eval $(call filter_lancet-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)))))
 
 include modules/vcf_tools/vcftools.mk
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk

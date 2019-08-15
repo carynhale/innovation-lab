@@ -44,6 +44,6 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 tmap/bam/%.tmap.bam : fastq/%.fastq.gz
 	$(call RUN,-c -n 4 -s 6G -m 8G,"zcat $< | $(TMAP) $(TMAP_MODE) $(TMAP_OPTS) -f $(REF_FASTA) -i fastq -s $(@) -Q 0 -o 1 -n 4 -R ID:$* -R SM:$* -R PL:$(SEQ_PLATFORM) -R PU:00000000 ")
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 include modules/fastq_tools/fastq.mk
 include modules/aligners/align.mk

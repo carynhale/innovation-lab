@@ -63,7 +63,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call merged-chimeric-junction,$(sample))))
 
 include modules/fastq_tools/fastq.mk
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 include modules/aligners/align.mk
 
 .PHONY: $(PHONY)

@@ -93,4 +93,4 @@ miso/summary_output/%/summary/$1.miso_summary : miso/%.events_analysis_timestamp
 endef
 $(foreach event_type,$(EVENT_TYPES),$(eval $(call miso-summary,$(event_type))))
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk

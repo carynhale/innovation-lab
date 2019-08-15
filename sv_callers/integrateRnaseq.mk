@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 
 LOGDIR = log/integrate_rnaseq.$(NOW)
 .PHONY: integrate_rnaseq integrate_rnaseq/oncofuse integrate_rnaseq/reads integrate_rnaseq/sum integrate_rnaseq/exons integrate_rnaseq/breakpoints integrate_rnaseq/usv

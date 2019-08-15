@@ -202,7 +202,7 @@ reports/%/index.html : reports/%.dp_ft.grp metrics/hs_metrics.txt
 
 
 # merge variants 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 include modules/vcf_tools/vcftools.mk
 
 endif

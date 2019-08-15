@@ -60,6 +60,6 @@ fastq/%.fastq.gz : fastq/%.fastq
 	$(call RUN,,"gzip -c $< > $(@) && $(RM) $< ")
 
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 include modules/fastq_tools/fastq.mk
 include modules/aligners/align.mk

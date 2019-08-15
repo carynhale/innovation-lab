@@ -41,4 +41,4 @@ sumreads/counts_by_exon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sum
 	cut -f 1-2 $< > $@; \
 	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 4 $$x | sed "s/exonCount/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk

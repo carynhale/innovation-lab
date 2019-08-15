@@ -99,4 +99,4 @@ metrics/interval_report/interval_report.timestamp : metrics/hs_metrics.tsv
 #metrics/idxstats_summary.tsv : $(foreach sample,$(SAMPLES),metrics/$(sample).idxstats)
 #	$(INIT) $(SUMMARIZE_IDXSTATS) --excel_file $(@:.tsv=.xlsx) --project_name $(PROJECT_NAME) --targets_file $(TARGETS_FILE) $^ > $@ 2> $(LOG)
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk

@@ -11,4 +11,4 @@ bam/%.bam : unprocessed_bam/%.rg.bam
 	$(INIT) ln -f $(<) $(@)
 
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk

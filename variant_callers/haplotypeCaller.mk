@@ -119,5 +119,5 @@ vcf/all.gatk_hc.%.vcf : gatk/vcf/all.variants.%.filtered.vcf.gz
 	mkdir -p $(@D); ln $< $@
 
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 include modules/vcf_tools/vcftools.mk

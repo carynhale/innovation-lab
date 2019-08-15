@@ -58,5 +58,5 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 
 include modules/fastq_tools/fastq.mk
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 include modules/aligners/align.mk

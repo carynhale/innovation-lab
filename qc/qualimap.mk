@@ -19,4 +19,4 @@ qualimap/%_bamqc.timestamp : bam/%.bam
 	$(call RUN,-n 4 -s 4.5G -m 5G,"$(QUALIMAP) bamqc $(QUALIMAP_BAMQC_OPTS) -bam $< -nr 6 -nt 8 -outdir qualimap/$*_bamqc && touch $@")
 
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk

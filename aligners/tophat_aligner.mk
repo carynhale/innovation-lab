@@ -59,5 +59,5 @@ tophat/%/accepted_hits.bam : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
 		-o tophat/$* $(BOWTIE_REF) $(<) $(<<)")
 
 include modules/fastq_tools/fastq.mk
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
 include modules/aligners/align.mk

@@ -32,4 +32,4 @@ $(foreach sample,$(MERGE_SAMPLES),\
 bam/%.bam : merged_bam/%.rg.bam
 	$(INIT) ln -f $< $@
 
-include modules/bam_tools/processBam.mk
+include modules/bam_tools/process_bam.mk
