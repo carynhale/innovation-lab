@@ -540,7 +540,7 @@ absolute_seq :
 	
 TARGETS += ms_pyclone
 ms_pyclone :
-	$(call RUN_MAKE,modules/test/workflows/mspyclone.mk)
+	$(call RUN_MAKE,modules/test/workflows/ms_pyclone.mk)
 	
 TARGETS += ss_pyclone
 ss_pyclone :
