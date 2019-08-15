@@ -116,7 +116,7 @@ merge_split_fastq :
 	
 	
 #==================================================
-# variant callers
+# tumor/normal somatic variant callers
 #==================================================
 
 TARGETS += mutect
@@ -151,6 +151,24 @@ somatic_sniper :
 TARGETS += tvc_tn
 tvc_tn:
 	$(call RUN_MAKE,modules/variant_callers/somatic/tvc_tn.mk)
+	
+	
+#==================================================
+# specialty somatic variant callers
+#==================================================
+	
+TARGETS += hla_polysolver
+hla_polysolver :
+	$(call RUN_MAKE,modules/variant_callers/somatic/hla_polysolver.mk)
+	
+TARGETS += msi_sensor
+msi_sensor :
+	$(call RUN_MAKE,modules/variant_callers/somatic/msi_sensor.mk)
+	
+
+#==================================================
+# single-sample variant callers
+#==================================================
 
 TARGETS += tvc
 tvc:
@@ -172,14 +190,6 @@ TARGETS += samtools_het
 samtools_het :
 	$(call RUN_MAKE,modules/variant_callers/samtoolsHet.mk)
 
-TARGETS += msisensor
-msisensor :
-	$(call RUN_MAKE,modules/variant_callers/somatic/msisensor.mk)	
-
-TARGETS += hla_polysolver
-hla_polysolver :
-	$(call RUN_MAKE,modules/variant_callers/somatic/polysolver.mk)
-	
 TARGETS += pyrohmm
 pyrohmm :
 	$(call RUN_MAKE,modules/variant_callers/pyroHMMVar.mk)
