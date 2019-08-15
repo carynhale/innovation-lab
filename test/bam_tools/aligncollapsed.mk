@@ -81,7 +81,6 @@ $$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 1440,"s
 #												TMP_DIR=$(TMPDIR) && \
 #												samtools index $$(@) && \
 #												cp marianas/$1/$1.bam.bai marianas/$1/$1.bai")
-
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
