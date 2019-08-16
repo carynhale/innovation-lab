@@ -18,6 +18,7 @@ arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
 if (as.numeric(opt$type)==0) {
+
 	umi_frequencies = read_tsv(file=paste0("marianas/", opt$sample_name, "/umi-frequencies.txt"), col_names=FALSE, col_types = cols(.default = col_character())) %>%
 		   			  type_convert()
 	umi_w_n = umi_frequencies %>%
@@ -100,4 +101,14 @@ if (as.numeric(opt$type)==0) {
 			   					   "6" = res_7),
 			   umi_combination = res_8)
 	save(res, file=paste0("marianas/", opt$sample_name, "/umi-info.RData"))
+	
+} else if (as.numeric(opt$type)==1) {
+	
+	load(paste0("marianas/", opt$sample_name, "/umi-info.RData"))
+
+	# Heatmap of UMI combinations
+	pdf(paste0("marianas/", opt$sample_name, "/umi-composite.pdf"))
+	heatmap(x=res$umi_combination, scale="none", col=colorRampPalette(c("white", "#deebf7", "#9ecae1", "#3182bd"))(256))
+	dev.off()
+
 }
