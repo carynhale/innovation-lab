@@ -658,9 +658,5 @@ TARGETS += marianas_access
 marianas_access :
 	$(call RUN_MAKE,modules/test/workflows/marianas_access.mk)
 	
-TARGETS += umi_qc
-umi_qc :
-	$(call RUN_MAKE,modules/test/qc/umi_qc.mk)
-	
 
 .PHONY : $(TARGETS)
