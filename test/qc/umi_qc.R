@@ -108,7 +108,7 @@ if (as.numeric(opt$type)==0) {
 
 	# Heatmap of UMI combinations
 	pdf(paste0("marianas/", opt$sample_name, "/umi-composite.pdf"))
-	heatmap(x=res$umi_combination, scale="none", col=colorRampPalette(c("white", "#deebf7", "#9ecae1", "#3182bd"))(256))
+	heatmap(x=res$umi_combination, scale="none", col=colorRampPalette(rev(c("#deebf7", "#9ecae1", "#3182bd")))(256))
 	dev.off()
 
 }
