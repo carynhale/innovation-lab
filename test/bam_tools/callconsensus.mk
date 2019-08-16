@@ -11,11 +11,11 @@ PICARD = /home/${USER}/share/usr/picard/bin/picard.jar
 POOL_A_INTERVAL ?= /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_INTERVAL ?= /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.list
 
-MIN_READS ?= 5
+MIN_READS ?= 3
 MAX_READ_ERROR ?= 0.025
 MAX_BASE_ERROR ?= 0.1
 MIN_BASE_QUAL ?= 10
-MAX_N ?= 0.1
+MAX_N ?= 0.2
 
 define call-consensus
 fgbio/%.groupedbyumi.bam : fgbio/%.regrouped.bam
@@ -47,7 +47,8 @@ fgbio/%.consensus.bam : fgbio/%.groupedbyumi.bam
 													   --input fgbio/$$(*).groupedbyumi.bam \
 													   --output fgbio/$$(*).consensus.bam \
 													   --sort-order Queryname \
-													   --min-reads 1 1 1")
+													   --min-reads 1 1 1 \
+													   --trim true")
 													   
 fgbio/%.filtered.bam : fgbio/%.consensus.bam
 	$$(call RUN,-c -n 1 -s 12G -m 24G -v $(FGBIO_ENV),"set -o pipefail && \
