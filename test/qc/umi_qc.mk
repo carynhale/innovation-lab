@@ -8,7 +8,7 @@ umi_qc : $(foreach sample,$(SAMPLES),marianas/$(sample)/umi-frequencies.pdf)
 define umi-frequencies
 marianas/$1/umi-frequencies.pdf : marianas/$1/umi-frequencies.txt
 	$$(call RUN,-c -n 1 -s 4G -m 6G ,"set -o pipefail && \
-									 $(RSCRIPT) modules/test/qc/umi_qc.R --type 0 --sample_name $$(*)")
+									 $(RSCRIPT) modules/test/qc/umi_qc.R --type 0 --sample_name $1")
 																		           
 endef
 $(foreach sample,$(SAMPLES),\
