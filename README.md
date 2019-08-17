@@ -78,7 +78,7 @@ Under development
 - [MSKCC](https://github.com/mskcc)
 - [cBioPortal](https://github.com/cBioPortal)
 - [OncoKB](https://github.com/oncokb)
-- [ACCESS](https://github.com/msk-access)
+- [MSK-ACCESS](https://github.com/msk-access)
 - [GRAIL](https://github.com/grailbio)
 
 
