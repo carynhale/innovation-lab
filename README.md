@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/cBioPortal/cbioportal.svg?branch=master)](https://travis-ci.org/jrflab/modules)
 
 ## Introduction
-This is an updated fork of the jrflab pipeline.
+This is an updated fork of the jrflab [modules](https://github.com/jrflab/modules).
 
 ## Installation
 The easiest way to download this pipeline is to clone the repository.
@@ -28,9 +28,9 @@ git clone https://github.com/ndbrown6/modules.git
 
 ### Whole genome, whole exome and targeted sequencing
 - Alignment:
-	* Broad's GATK best practices workflow for handling sequence data
-	* Marianas & Watlz for [MSK-ACCESS](https://github.com/msk-access)
-	* General purpose [fgbio](https://github.com/fulcrumgenomics/fgbio) workflow
+	* Broad's GATK best practices workflow for handling sequence data (see [here](https://software.broadinstitute.org/gatk/best-practices/))
+	* Marianas & Watlz for MSK-ACCESS (see [here](https://github.com/msk-access))
+	* General purpose workflow to collapse UMI and call consensus duplex reads using fgbio (see [here](https://github.com/fulcrumgenomics/fgbio))
 - Mutation calling:
 	* Haplotype Caller
 	* Platypus
