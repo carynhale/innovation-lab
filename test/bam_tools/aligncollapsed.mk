@@ -16,8 +16,6 @@ GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
 JAVA = /home/${USER}/share/usr/jdk1.8.0_74/bin/java
-MARIANAS = /home/${USER}/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
-WALTZ = /home/${USER}/share/usr/marianas-1.8.1/Waltz-3.0.jar
 BED_FILE=/home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.waltz.bed
 
 align_collapsed : $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp)

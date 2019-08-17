@@ -167,5 +167,18 @@ PHANGORN_ENV = $(HOME)/share/usr/anaconda-envs/phangorn
 
 FGBIO_ENV = $(HOME)/share/usr/anaconda-envs/fgbio-0.8.1
 
+MARIANAS = /home/${USER}/share/usr/marianas-1.8.0/Marianas-1.8.0.jar
+MARIANAS_UMI_LENGTH = 3
+MARIANAS_MIN_MAPQ = 1
+MARIANAS_MIN_BAQ = 30
+MARIANAS_MISMATCH = 1
+MARIANAS_WOBBLE = 2
+MARIANAS_MIN_CONSENSUS = 90
+
+WALTZ = /home/${USER}/share/usr/marianas-1.8.0/Waltz-2.0.jar
+WALTZ_COV = 20
+WALTZ_MIN_MAPQ = 20
+WALTZ_BED_FILE = /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.waltz.bed
+
 endif
 CONFIG_INC = true
