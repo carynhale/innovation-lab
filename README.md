@@ -19,7 +19,7 @@ git clone https://github.com/ndbrown6/modules.git
 ## Best practices
 	
 ### Conventions
-- BAM files are stored in bam/
+- BAM files are stored in `bam/`
 - Patient and sample names are coded in the `samples.yaml`
 - Sample names cannot contain "_"
 - FASTQ files are coded in the `sample.fastq.yaml`
@@ -32,26 +32,28 @@ git clone https://github.com/ndbrown6/modules.git
 	* Marianas & Watlz for MSK-ACCESS ([here](https://github.com/msk-access))
 	* General purpose workflow to collapse UMI and call consensus duplex reads using fgbio ([here](https://github.com/fulcrumgenomics/fgbio))
 - Mutation calling:
-	* Haplotype Caller
+	* MuTect v1
 	* Platypus
-	* MuTect
 	* Strelka
 	* Scalpel
 	* Lancet
+	* Varscan
 - Copy number:
 	* FACETS
 	* ASCAT
+	* CNVkit
 - Annotation:
 	* Annovar
 	* snpEff
 	* SIFT
 	* pph2
-	* vcf2maf
+	* vcf2maf ([here](https://github.com/mskcc/vcf2maf))
 	* VEP
-	* OncoKB
+	* OncoKB ([here](https://github.com/oncokb/oncokb-annotator))
 	* ClinVar
-- HLA Typing
+- Miscellaneous:
 	* HLA Polysolver
+	* MSIsensor
 
 ### RNA transcriptome sequencing
 - FPKM/RPKM:
@@ -72,5 +74,11 @@ git clone https://github.com/ndbrown6/modules.git
 ## Known issues
 Under development
 
-## Known bugs
-Under development
+## See also
+- [MSKCC](https://github.com/mskcc)
+- [cBioPortal](https://github.com/cBioPortal)
+- [OncoKB](https://github.com/oncokb)
+- [ACCESS](https://github.com/msk-access)
+- [GRAIL](https://github.com/grailbio)
+
+
