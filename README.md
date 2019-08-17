@@ -29,7 +29,7 @@ git clone https://github.com/ndbrown6/modules.git
 ### Whole genome, whole exome and targeted sequencing
 - Alignment:
 	* Broad's GATK best practices workflow for handling sequence data
-	* Marianas & Watlz for [MSK-ACCESS] (https://github.com/msk-access)
+	* Marianas & Watlz for [MSK-ACCESS](https://github.com/msk-access)
 	* General purpose [fgbio](https://github.com/fulcrumgenomics/fgbio) workflow
 - Mutation calling:
 	* Haplotype Caller
