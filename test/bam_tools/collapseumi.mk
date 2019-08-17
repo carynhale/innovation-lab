@@ -23,7 +23,7 @@ marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1-pileup.txt
 									  cd ../..")
 
 
-marianas/$1/second-pass-alt-alleles.txt marianas/$1/collapsed_R1_.fastq marianas/$1/collapsed_R1_.fastq : marianas/$1/first-pass.mate-position-sorted.txt
+marianas/$1/second-pass-alt-alleles.txt marianas/$1/collapsed_R1_.fastq marianas/$1/collapsed_R2_.fastq : marianas/$1/first-pass.mate-position-sorted.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  $(JAVA) -server -Xms2G -Xmx8G -cp $(MARIANAS) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqSecondPass $1.bam $1-pileup.txt $(MARIANAS_MIN_MAPQ) $(MARIANAS_MIN_BAQ) $(MARIANAS_MISMATCH) $(MARIANAS_WOBBLE) $(MARIANAS_MIN_CONSENSUS) $(REF_FASTA) first-pass.mate-position-sorted.txt && \
