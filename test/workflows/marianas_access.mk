@@ -15,7 +15,7 @@ include modules/test/fastq_tools/clipumi.mk
 include modules/test/bam_tools/alignfastq.mk
 include modules/test/bam_tools/collapseumi.mk
 include modules/test/bam_tools/aligncollapsed.mk
-include modules/test/qc/umi_qc.mk
+#include modules/test/qc/umi_qc.mk
 
 .DELETE_ON_ERROR:
 .SECONDARY:
