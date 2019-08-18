@@ -4,7 +4,7 @@ LOGDIR ?= log/marianas_access.$(NOW)
 PHONY += marianas
 
 MSK_ACCESS_WORKFLOW += clip_umi
-#MSK_ACCESS_WORKFLOW += align_fastq
+MSK_ACCESS_WORKFLOW += align_fastq
 #MSK_ACCESS_WORKFLOW += umi_collapse
 #MSK_ACCESS_WORKFLOW += align_collapsed
 #MSK_ACCESS_WORKFLOW += umi_qc
