@@ -170,9 +170,9 @@ FGBIO_ENV = $(HOME)/share/usr/anaconda-envs/fgbio-0.8.1
 MARIANAS = /home/${USER}/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
 MARIANAS_UMI_LENGTH = 3
 MARIANAS_MIN_MAPQ = 1
-MARIANAS_MIN_BAQ = 20
+MARIANAS_MIN_BAQ = 10
 MARIANAS_MISMATCH = 1
-MARIANAS_WOBBLE = 2
+MARIANAS_WOBBLE = 1
 MARIANAS_MIN_CONSENSUS = 90
 
 WALTZ = /home/${USER}/share/usr/marianas-1.8.1/Waltz-3.0.jar
