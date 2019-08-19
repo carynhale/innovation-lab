@@ -176,7 +176,7 @@ MARIANAS_WOBBLE = 1
 MARIANAS_MIN_CONSENSUS = 90
 
 WALTZ = /home/${USER}/share/usr/marianas-1.8.1/Waltz-3.0.jar
-WALTZ_MIN_MAPQ = 10
+WALTZ_MIN_MAPQ = 20
 WALTZ_BED_FILE = /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.waltz.bed
 
 endif
