@@ -15,7 +15,7 @@ SAMTOOLS_MEM_THREAD = 2G
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
-align_fastq : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).bam)
+align_fastq : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).standard.bam)
 
 define fastq-to-bam
 marianas/$1/$1.bwamem.bam : marianas/$1/$1_R1_umi-clipped.fastq.gz marianas/$1/$1_R2_umi-clipped.fastq.gz
@@ -71,7 +71,7 @@ marianas/$1/$1.recal.bam : marianas/$1/$1.dedup.bam marianas/$1/$1.recal.grp
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT -T PrintReads -R $(REF_FASTA) -I $$(<) -BQSR $$(<<) -o $$(@)")
 
-marianas/$1/$1.bam : marianas/$1/$1.recal.bam
+marianas/$1/$1.standard.bam : marianas/$1/$1.recal.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) AddOrReplaceReadGroups \
 												I=$$(<) \
 												O=$$(@) \
@@ -82,7 +82,7 @@ marianas/$1/$1.bam : marianas/$1/$1.recal.bam
 												RGSM=$1 \
 												TMP_DIR=$(TMPDIR) && \
 												samtools index $$(@) && \
-												cp marianas/$1/$1.bam.bai marianas/$1/$1.bai")
+												cp marianas/$1/$1.standard.bam.bai marianas/$1/$1.standard.bai")
 
 
 endef

@@ -170,13 +170,12 @@ FGBIO_ENV = $(HOME)/share/usr/anaconda-envs/fgbio-0.8.1
 MARIANAS = /home/${USER}/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
 MARIANAS_UMI_LENGTH = 3
 MARIANAS_MIN_MAPQ = 1
-MARIANAS_MIN_BAQ = 10
-MARIANAS_MISMATCH = 1
+MARIANAS_MIN_BAQ = 20
+MARIANAS_MISMATCH = 0
 MARIANAS_WOBBLE = 1
 MARIANAS_MIN_CONSENSUS = 90
 
 WALTZ = /home/${USER}/share/usr/marianas-1.8.1/Waltz-3.0.jar
-WALTZ_COV = 20
 WALTZ_MIN_MAPQ = 10
 WALTZ_BED_FILE = /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.waltz.bed
 
