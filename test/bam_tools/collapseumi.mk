@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
-LOGDIR ?= log/collapseumi.$(NOW)
+LOGDIR ?= log/collapse_umi.$(NOW)
 PHONY += marianas
 
 umi_collapse : $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt)
