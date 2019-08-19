@@ -15,6 +15,7 @@ marianas/$1/$1-pileup.txt : marianas/$1/$1.standard.bam
 									  $(JAVA) -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1.standard.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
 									  cd ../..")
 									  
+## to check sorting
 marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1-pileup.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
