@@ -38,7 +38,7 @@ fgbio/%.resorted.bam : fgbio/%.sorted.bam
 									  SORT_ORDER=coordinate \
 									  TMP_DIR=$(TMPDIR)")
 									  
-fgbio/$1.fixed.bam : fgbio/%.resorted.bam
+fgbio/%.fixed.bam : fgbio/%.resorted.bam
 	$$(call RUN,-c -n 1 -s 12G -m 18G -w 1440,"set -o pipefail && \
 									  		   /home/${USER}/share/usr/jdk1.8.0_74/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar /home/${USER}/share/usr/picard/bin/picard.jar \
 									  		   FixMateInformation \
@@ -50,29 +50,29 @@ fgbio/$1.fixed.bam : fgbio/%.resorted.bam
 									  		   CREATE_INDEX=true \
 									  		   VALIDATION_STRINGENCY=LENIENT")
 									  		   
-fgbio/$1.intervals : fgbio/$1.fixed.bam
+fgbio/%.intervals : fgbio/%.fixed.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT -T RealignerTargetCreator -I $$(^) -nt 8 -R $(REF_FASTA) -o $$(@) --known /home/$(USER)/share/reference/GATK_bundle/2.3/Mills_and_1000G_gold_standard.indels.b37.vcf.gz")
 
-fgbio/$1.realn.bam : fgbio/$1.resorted.bam fgbio/$1.intervals
+fgbio/%.realn.bam : fgbio/%.resorted.bam fgbio/%.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT -T IndelRealigner -I $$(<) -R $(REF_FASTA) -targetIntervals $$(<<) -o $$(@) --knownAlleles /home/brownd7/share/reference/GATK_bundle/2.3/Mills_and_1000G_gold_standard.indels.b37.vcf.gz")
 									  		   
-fgbio/$1.recal.grp : fgbio/$1.realn.bam
+fgbio/%.recal.grp : fgbio/%.realn.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 																		   samtools index $$(<) && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT -T BaseRecalibrator -R $(REF_FASTA) -knownSites /home/brownd7/share/reference/dbsnp_138.b37.gmaf.vcf.gz \
 									   							   		   -I $$(<) -o $$(@)")
 
-fgbio/$1.recal.bam : fgbio/$1.realn.bam fgbio/$1.recal.grp
+fgbio/%.recal.bam : fgbio/%.realn.bam fgbio/%.recal.grp
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT -T PrintReads -R $(REF_FASTA) -I $$(<) -BQSR $$(<<) -o $$(@)")
 
-fgbio/$1.bam : fgbio/$1.recal.bam
+fgbio/%.bam : fgbio/%.recal.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) AddOrReplaceReadGroups \
 												I=$$(<) \
 												O=$$(@) \
