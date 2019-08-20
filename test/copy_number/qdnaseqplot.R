@@ -26,8 +26,6 @@ opt$rho = ifelse(is.na(as.numeric(opt$rho)), 1, as.numeric(opt$rho))
 opt$psi = ifelse(is.na(as.numeric(opt$psi)), 2, as.numeric(opt$psi))
 opt$gamma = ifelse(is.na(as.numeric(opt$gamma)), 1, as.numeric(opt$gamma))
 
-load("modules/copy_number/CytoBand.RData")
-
 'prunesegments.cn' <- function(x, n=10)
 {
 	cnm = matrix(NA, nrow=nrow(x), ncol=nrow(x))
