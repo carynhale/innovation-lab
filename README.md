@@ -14,7 +14,7 @@ git clone https://github.com/ndbrown6/modules.git
 ## Dependencies
 - An instance of [anaconda](https://www.anaconda.com) or [miniconda](https://conda.io/en/latest/miniconda.html)
 - IMB's Platform Load Sharing Facility (LSF) for resource management
-- [Full dependencies](https://github.com/ndbrown6/modules/blob/master/conda_env/jrflab_modules_env.txt)
+- [Full dependencies](https://github.com/ndbrown6/modules/blob/master/conda/jrflab_modules.txt)
 
 ## Best practices
 	
