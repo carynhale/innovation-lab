@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 include modules/vcf_tools/vcftools.mk
 
-LOGDIR = log/absoluteSeq.$(NOW)
+LOGDIR = log/absolute.$(NOW)
 MEM := 4G
 PE := 1
 SHELL = modules/scripts/Rshell
