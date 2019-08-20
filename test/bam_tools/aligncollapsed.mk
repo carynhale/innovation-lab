@@ -72,7 +72,7 @@ marianas/$1/$1.collapsed.recal.grp : marianas/$1/$1.collapsed.realn.bam
 																		   samtools index $$(<) && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT \
-									   							   		   -fixMisencodedQuals \
+									   							   		   --allow_potentially_misencoded_quality_scores true \
 									   							   		   -T BaseRecalibrator \
 									   							   		   -R $(REF_FASTA) \
 									   							   		   -knownSites /home/brownd7/share/reference/dbsnp_138.b37.gmaf.vcf.gz \
@@ -83,7 +83,7 @@ marianas/$1/$1.collapsed.recal.bam : marianas/$1/$1.collapsed.realn.bam marianas
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT \
-									   							   		   -fixMisencodedQuals \
+									   							   		   --allow_potentially_misencoded_quality_scores true \
 									   							   		   -T PrintReads \
 									   							   		   -R $(REF_FASTA) \
 									   							   		   -I $$(<) \
