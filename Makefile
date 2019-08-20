@@ -186,14 +186,6 @@ TARGETS += samtools_het
 samtools_het :
 	$(call RUN_MAKE,modules/variant_callers/samtoolsHet.mk)
 
-TARGETS += pyrohmm
-pyrohmm :
-	$(call RUN_MAKE,modules/variant_callers/pyroHMMVar.mk)
-
-TARGETS += museqTN
-museqTN :
-	$(call RUN_MAKE,modules/variant_callers/somatic/museqTN.mk)
-	
 TARGETS += hotspot
 hotspot: 
 	$(call RUN_MAKE,modules/variant_callers/hotspot.mk)
@@ -206,10 +198,6 @@ TARGETS += genotype_pdx
 genotype_pdx:
 	$(call RUN_MAKE,modules/variant_callers/genotypepdx.mk)
 	
-TARGETS += jsm
-jsm :
-	$(call RUN_MAKE,modules/variant_callers/somatic/jsm.mk)
-
 TARGETS += sufam
 sufam:
 	$(call RUN_MAKE,modules/variant_callers/sufamsampleset.mk)

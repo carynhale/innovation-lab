@@ -1,5 +1,3 @@
-# run unified genotyper on hotspots
-
 include modules/Makefile.inc
 include modules/variant_callers/gatk.inc
 

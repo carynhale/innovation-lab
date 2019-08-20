@@ -1,5 +1,3 @@
-# Run samtools to detect heterozygous positions
-##### DEFAULTS ######
 include modules/Makefile.inc
 include modules/variant_callers/gatk.inc
 
