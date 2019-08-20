@@ -180,7 +180,7 @@ gatk :
 	
 TARGETS += haplotype_caller
 haplotype_caller : 
-	$(call RUN_MAKE,modules/variant_callers/haplotypeCaller.mk)
+	$(call RUN_MAKE,modules/variant_callers/haplotype_caller.mk)
 	
 TARGETS += samtools_het
 samtools_het :

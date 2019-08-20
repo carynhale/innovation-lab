@@ -3,10 +3,8 @@ include modules/variant_callers/gatk.inc
 
 LOGDIR = log/haplotype_caller.$(NOW)
 
-# covariates for recalibration step
 COVARIATES = -cov ReadGroupCovariate -cov QualityScoreCovariate -cov DinucCovariate -cov CycleCovariate
 
-# defaults
 VARIANT_CALL_THRESHOLD = 30
 VARIANT_RECAL_TRUTH_SENSITIVITY_LEVEL = 99.0
 VARIANT_RECAL_ANNOTATIONS = QD MQRankSum FS MQ ReadPosRankSum
