@@ -12,10 +12,10 @@ CN_SUMMARY_WORKFLOW += genome_summary
 
 cn_summary_workflow : $(CN_SUMMARY_WORKFLOW)
 
-include modules/copy_number/genomealtered.mk
-include modules/copy_number/lstscore.mk
-include modules/copy_number/ntaiscore.mk
-include modules/copy_number/myriadhrdscore.mk
+include modules/test/copy_number/genomealtered.mk
+include modules/test/copy_number/lstscore.mk
+include modules/test/copy_number/ntaiscore.mk
+include modules/test/copy_number/myriadhrdscore.mk
 include modules/summary/genomesummary.mk
 
 .DELETE_ON_ERROR:

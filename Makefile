@@ -251,22 +251,6 @@ TARGETS += copynumber_summary
 copynumber_summary:
 	$(call RUN_MAKE,modules/test/workflows/copynumber_summary.mk)
 	
-TARGETS += genome_altered
-genome_altered :
-	$(call RUN_MAKE,modules/copy_number/genomealtered.mk)
-	
-TARGETS += lst_score
-lst_score :
-	$(call RUN_MAKE,modules/copy_number/lstscore.mk)
-	
-TARGETS += ntai_score
-ntai_score :
-	$(call RUN_MAKE,modules/copy_number/ntaiscore.mk)
-	
-TARGETS += myriad_score
-myriad_score :
-	$(call RUN_MAKE,modules/copy_number/myriadhrdscore.mk)
-
 
 #==================================================
 # Structural variant callers
