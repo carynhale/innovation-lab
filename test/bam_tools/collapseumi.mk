@@ -4,7 +4,9 @@ include modules/genome_inc/b37.inc
 LOGDIR ?= log/collapse_umi.$(NOW)
 PHONY += marianas
 
-umi_collapse : $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt)
+umi_collapse : $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
+			   $(foreach sample,$(SAMPLES),marianas/$(sample)/collapsed_R1_.fastq) \
+			   $(foreach sample,$(SAMPLES),marianas/$(sample)/collapsed_R2_.fastq)
 
 JAVA = /home/${USER}/share/usr/jdk1.8.0_74/bin/java
 
