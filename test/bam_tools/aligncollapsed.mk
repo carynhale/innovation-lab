@@ -47,6 +47,7 @@ marianas/$1/$1.collapsed.intervals : marianas/$1/$1.collapsed.fixed.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT \
+									   							   		   -allowPotentiallyMisencodedQuals \
 									   							   		   -T RealignerTargetCreator \
 									   							   		   -I $$(^) \
 									   							   		   -nt 8 \
@@ -58,6 +59,7 @@ marianas/$1/$1.collapsed.realn.bam : marianas/$1/$1.collapsed.sorted.bam mariana
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT \
+									   							   		   -allowPotentiallyMisencodedQuals \
 									   							   		   -T IndelRealigner \
 									   							   		   -I $$(<) \
 									   							   		   -R $(REF_FASTA) \
@@ -70,6 +72,7 @@ marianas/$1/$1.collapsed.recal.grp : marianas/$1/$1.collapsed.realn.bam
 																		   samtools index $$(<) && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT \
+									   							   		   -allowPotentiallyMisencodedQuals \
 									   							   		   -T BaseRecalibrator \
 									   							   		   -R $(REF_FASTA) \
 									   							   		   -knownSites /home/brownd7/share/reference/dbsnp_138.b37.gmaf.vcf.gz \
@@ -80,6 +83,7 @@ marianas/$1/$1.collapsed.recal.bam : marianas/$1/$1.collapsed.realn.bam marianas
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   		   /home/$(USER)/share/usr/jdk1.8.0_121/bin/java -Djava.io.tmpdir=$(TMPDIR) -Xms1G -Xmx12G -jar /home/$(USER)/share/usr/lib/java/GenomeAnalysisTK-3.7.jar \
 									   							   		   -S LENIENT \
+									   							   		   -allowPotentiallyMisencodedQuals \
 									   							   		   -T PrintReads \
 									   							   		   -R $(REF_FASTA) \
 									   							   		   -I $$(<) \
