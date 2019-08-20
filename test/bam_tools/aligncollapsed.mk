@@ -74,6 +74,7 @@ marianas/$1/$1.collapsed.recal.grp : marianas/$1/$1.collapsed.realn.bam
 									   							   		   -S LENIENT \
 									   							   		   -allowPotentiallyMisencodedQuals \
 									   							   		   -T BaseRecalibrator \
+									   							   		   --baq RECALCULATE \
 									   							   		   -R $(REF_FASTA) \
 									   							   		   -knownSites /home/brownd7/share/reference/dbsnp_138.b37.gmaf.vcf.gz \
 									   							   		   -I $$(<) \
