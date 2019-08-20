@@ -1,11 +1,6 @@
-# Run VarScan on tumour-normal matched pairs
-# Detect point mutations
-##### DEFAULTS ######
-
-LOGDIR ?= log/varscanTN.$(NOW)
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
+
+LOGDIR ?= log/varscan.$(NOW)
 
 IGNORE_FP_FILTER ?= true
 

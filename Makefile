@@ -123,9 +123,9 @@ TARGETS += mutect
 mutect :
 	$(call RUN_MAKE,modules/variant_callers/somatic/mutect.mk)
 	
-TARGETS += varscanTN
-varscanTN :
-	$(call RUN_MAKE,modules/variant_callers/somatic/varscanTN.mk)
+TARGETS += varscan
+varscan :
+	$(call RUN_MAKE,modules/variant_callers/somatic/varscan.mk)
 	
 TARGETS += strelka
 strelka :
@@ -174,10 +174,6 @@ TARGETS += tvc
 tvc:
 	$(call RUN_MAKE,modules/variant_callers/tvc.mk)
 
-TARGETS += varscan
-varscan :
-	$(call RUN_MAKE,modules/variant_callers/varscan.mk)
-	
 TARGETS += gatk
 gatk : 
 	$(call RUN_MAKE,modules/variant_callers/gatk.mk)

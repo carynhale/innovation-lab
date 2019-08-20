@@ -44,5 +44,5 @@ vcf/%.uvcf.vcf : vcf/%.vcf uvcf/%.uvcf
 include modules/variant_callers/somatic/strelka.mk
 include modules/variant_callers/somatic/scalpel.mk
 include modules/variant_callers/somatic/lancet.mk
-include modules/variant_callers/somatic/varscanTN.mk
+include modules/variant_callers/somatic/varscan.mk
 include modules/variant_callers/somatic/platypus.mk
