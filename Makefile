@@ -512,7 +512,7 @@ clonehd :
 
 TARGETS += absolute_seq
 absolute_seq :
-	$(call RUN_MAKE,modules/clonality/absolute.mk)
+	$(call RUN_MAKE,modules/clonality/absolute_seq.mk)
 	
 TARGETS += ms_pyclone
 ms_pyclone :
