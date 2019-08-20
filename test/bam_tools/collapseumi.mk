@@ -4,9 +4,7 @@ include modules/genome_inc/b37.inc
 LOGDIR ?= log/collapse_umi.$(NOW)
 PHONY += marianas
 
-umi_collapse : $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
-			   $(foreach sample,$(SAMPLES),marianas/$(sample)/collapsed_R1_.fastq) \
-			   $(foreach sample,$(SAMPLES),marianas/$(sample)/collapsed_R2_.fastq)
+umi_collapse : $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt)
 
 JAVA = /home/${USER}/share/usr/jdk1.8.0_74/bin/java
 
@@ -33,7 +31,7 @@ marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1.standard-pileup
 									  cd ../..")
 
 
-marianas/$1/second-pass-alt-alleles.txt marianas/$1/collapsed_R1_.fastq marianas/$1/collapsed_R2_.fastq : marianas/$1/first-pass.mate-position-sorted.txt
+marianas/$1/second-pass-alt-alleles.txt : marianas/$1/first-pass.mate-position-sorted.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  $(JAVA) -server -Xms2G -Xmx8G -cp $(MARIANAS) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqSecondPass \
