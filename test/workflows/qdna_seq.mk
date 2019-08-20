@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
-LOGDIR ?= log/qdnaseq.$(NOW)
+LOGDIR ?= log/qdna_seq.$(NOW)
 PHONY += qdnaseq qdnaseq/copynumber qdnaseq/copynumber/log2ratio qdnaseq/copynumber/segmented qdnaseq/copynumber/pcf
 
 QDNA_SEQ_WORKFLOW += qdnaseq_extract

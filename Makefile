@@ -219,45 +219,17 @@ TARGETS += ascat
 ascat :
 	$(call RUN_MAKE,modules/copy_number/ascat.mk)
 
-TARGETS += norm_copynum
-norm_copynum :
-	$(call RUN_MAKE,modules/copy_number/normalisedCopyNum.mk)
-
 TARGETS += titan
 titan :
 	$(call RUN_MAKE,modules/copy_number/titan.mk)
 
-TARGETS += strelka_varscan_indels
-strelka_varscan_indels:
-	$(call RUN_MAKE,modules/variant_callers/somatic/strelkaVarscanIndels.mk)
-
 TARGETS += varscan_cnv
 varscan_cnv :
-	$(call RUN_MAKE,modules/copy_number/varscanCNV.mk)
+	$(call RUN_MAKE,modules/copy_number/varscan.mk)
 
 TARGETS += hmmcopy
 hmmcopy :
-	$(call RUN_MAKE,modules/copy_number/hmmCopy.mk)
-
-TARGETS += freec
-freec : 
-	$(call RUN_MAKE,modules/copy_number/controlFreeC.mk)
-
-TARGETS += freecTN
-freecTN : 
-	$(call RUN_MAKE,modules/copy_number/controlFreeCTN.mk)
-
-TARGETS += freec_lohTN
-freec_lohTN : 
-	$(call RUN_MAKE,modules/copy_number/controlFreeCLOHTN.mk)
-
-TARGETS += exomecnv
-exomecnv : 
-	$(call RUN_MAKE,modules/copy_number/exomeCNV.mk)
-
-TARGETS += exomecnvloh
-exomecnvloh : 
-	$(call RUN_MAKE,modules/copy_number/exomeCNVLOH.mk)
+	$(call RUN_MAKE,modules/copy_number/hmmcopy.mk)
 
 TARGETS += gistic
 gistic :
@@ -265,51 +237,15 @@ gistic :
 	
 TARGETS += snp6
 snp6 :
-	$(call RUN_MAKE,modules/snp6/snp6.mk)
+	$(call RUN_MAKE,modules/copy_number/snp6.mk)
 	
-TARGETS += cnv_kit
-cnv_kit :
+TARGETS += cnvkit
+cnvkit :
 	$(call RUN_MAKE,modules/test/workflows/cnv_kit.mk)
 
-TARGETS += cnvkit_coverage
-cnvkit_coverage :
-	$(call RUN_MAKE,modules/copy_number/cnvkitcoverage.mk)
-	
-TARGETS += cnvkit_reference
-cnvkit_reference :
-	$(call RUN_MAKE,modules/copy_number/cnvkitreference.mk)
-	
-TARGETS += cnvkit_fix
-cnvkit_fix :
-	$(call RUN_MAKE,modules/copy_number/cnvkitfix.mk)
-
-TARGETS += cnvkit_plot
-cnvkit_plot :
-	$(call RUN_MAKE,modules/copy_number/cnvkitplot.mk)
-	
-TARGETS += cnvkit_heatmap
-cnvkit_heatmap :
-	$(call RUN_MAKE,modules/copy_number/cnvkitheatmap.mk)
-	
-TARGETS += cnvkit_pca
-cnvkit_pca :
-	$(call RUN_MAKE,modules/copy_number/cnvkitprcomp.mk)
-	
-TARGETS += cnvkit_qc
-cnvkit_qc :
-	$(call RUN_MAKE,modules/copy_number/cnvkitqc.mk)
-	
-TARGETS += qdna_seq
-qdna_seq :
-	$(call RUN_MAKE,modules/test/workflows/qdnaseq.mk)
-	
-TARGETS += qdnaseq_extract_test
-qdnaseq_extract_test:
-	$(call RUN_MAKE,modules/test/copy_number/qdnaseqextract.mk)
-	
-TARGETS += qdnaseq_copynumber_test
-qdnaseq_copynumber_test:
-	$(call RUN_MAKE,modules/test/copy_number/qdnaseqcopynumber.mk)
+TARGETS += qdnaseq
+qdnaseq :
+	$(call RUN_MAKE,modules/test/workflows/qdna_seq.mk)
 	
 TARGETS += copynumber_summary
 copynumber_summary:
@@ -620,6 +556,34 @@ TARGETS += hotspot_summary
 hotspot_summary:
 	$(MAKE) -f modules/variant_callers/genotypehotspots.mk -j $(NUM_JOBS)
 	$(call RUN_MAKE,modules/summary/hotspotsummary.mk)
+	
+TARGETS += cnvkit_coverage
+cnvkit_coverage :
+	$(call RUN_MAKE,modules/copy_number/cnvkitcoverage.mk)
+	
+TARGETS += cnvkit_reference
+cnvkit_reference :
+	$(call RUN_MAKE,modules/copy_number/cnvkitreference.mk)
+	
+TARGETS += cnvkit_fix
+cnvkit_fix :
+	$(call RUN_MAKE,modules/copy_number/cnvkitfix.mk)
+
+TARGETS += cnvkit_plot
+cnvkit_plot :
+	$(call RUN_MAKE,modules/copy_number/cnvkitplot.mk)
+	
+TARGETS += cnvkit_heatmap
+cnvkit_heatmap :
+	$(call RUN_MAKE,modules/copy_number/cnvkitheatmap.mk)
+	
+TARGETS += cnvkit_pca
+cnvkit_pca :
+	$(call RUN_MAKE,modules/copy_number/cnvkitprcomp.mk)
+	
+TARGETS += cnvkit_qc
+cnvkit_qc :
+	$(call RUN_MAKE,modules/copy_number/cnvkitqc.mk)
 	
 
 #==================================================

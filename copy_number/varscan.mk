@@ -1,11 +1,5 @@
-# Run VarScan to detect copynumber
-# Detect copy number
-##### DEFAULTS ######
-
-LOGDIR = log/varscan.$(NOW)
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
+LOGDIR = log/varscan.$(NOW)
 
 SEGMENTCNV = modules/copy_number/segmentVarscanCNV.R
 CGHCALL = modules/copy_number/cghCall.R
