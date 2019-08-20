@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 suppressPackageStartupMessages(library("optparse"))
-
+suppressPackageStartupMessages(library("hg19"))
 
 if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
@@ -25,11 +25,11 @@ chromStrToNum <- function(str) {
 }
 
 GetChrominfo <- function() {
-  f <- "modules/copy_number/hg19_chrominfo.txt"
-  chrom <- read.table(file=f)
+  data(hg19_chrominfo)
+  chrom <- hg19_chrominfo
   chrom <- subset(chrom, grepl("^chr[0-9XY]{1,2}$", chrom[,1]))
-  f <- "modules/copy_number/hg19_gaps.txt"
-  gaps <- read.table(file=f)
+  data(hg19_gaps)
+  gaps <- hg19_gaps
   centro <- subset(gaps, gaps[,8] == "centromere")
   chrominfo <- merge(chrom[,1:2], centro[,2:4], by.x = 1, by.y = 1) 
   chrominfo$centromere <- rowMeans(chrominfo[,3:4]) 
