@@ -9,7 +9,14 @@ clip_umi : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz)
 		   $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
 		   $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R2_umi-clipped.fastq.gz)
 
-JAVA = /home/${USER}/share/usr/jdk1.8.0_74/bin/java
+JAVA = $(HOME)/share/usr/jdk1.8.0_74/bin/java
+MARIANAS_UMI_LENGTH ?= 3
+MARIANAS_MIN_MAPQ ?= 1
+MARIANAS_MIN_BAQ ?= 20
+MARIANAS_MISMATCH ?= 0
+MARIANAS_WOBBLE ?= 1
+MARIANAS_MIN_CONSENSUS ?= 90
+WALTZ_MIN_MAPQ ?= 20
 
 define copy-fastq
 marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz : $3

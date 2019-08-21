@@ -116,7 +116,7 @@ TVC ?= $(HOME)/share/usr/bin/tvc
 
 # resources
 DB_NSFP ?= $(HOME)/share/reference/snpEff-4.1/dbNSFP3.0b1a.hg19.txt.gz
-WALTZ_BED_FILE = $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.waltz.bed
+WALTZ_BED_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.waltz.bed
 NSFP_FIELDS ?= Uniprot_acc_Polyphen2 Uniprot_id_Polyphen2 Polyphen2_HVAR_score Polyphen2_HVAR_pred 1000Gp3_AF ESP6500_AA_AF ESP6500_EA_AF MutationAssessor_pred MutationAssessor_score MutationTaster_pred MutationTaster_score PROVEAN_pred ExAC_Adj_AF clinvar_rs clinvar_clnsig Interpro_domain
 
 CLUSTER_ENGINE ?= SGE
@@ -144,14 +144,6 @@ EMBL_MYSQLDB_USER = embl
 EMBL_MYSQLDB_PW = embl
 EMBL_MYSQLDB_DB = homo_sapiens_core_75_37
 endif
-
-MARIANAS_UMI_LENGTH = 3
-MARIANAS_MIN_MAPQ = 1
-MARIANAS_MIN_BAQ = 20
-MARIANAS_MISMATCH = 0
-MARIANAS_WOBBLE = 1
-MARIANAS_MIN_CONSENSUS = 90
-WALTZ_MIN_MAPQ = 20
 
 endif
 CONFIG_INC = true

@@ -8,15 +8,18 @@ BWA_ALN_OPTS ?= -M
 BWAMEM_REF_FASTA ?= $(REF_FASTA)
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
-
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
-
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
-
-JAVA = /home/${USER}/share/usr/jdk1.8.0_74/bin/java
-BED_FILE=/home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.waltz.bed
+JAVA = $(HOME)/share/usr/jdk1.8.0_74/bin/java
+MARIANAS_UMI_LENGTH ?= 3
+MARIANAS_MIN_MAPQ ?= 1
+MARIANAS_MIN_BAQ ?= 20
+MARIANAS_MISMATCH ?= 0
+MARIANAS_WOBBLE ?= 1
+MARIANAS_MIN_CONSENSUS ?= 90
+WALTZ_MIN_MAPQ ?= 20
 
 align_collapsed : $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp)
 

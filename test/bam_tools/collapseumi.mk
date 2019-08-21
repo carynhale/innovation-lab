@@ -6,7 +6,14 @@ PHONY += marianas
 
 umi_collapse : $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt)
 
-JAVA = /home/${USER}/share/usr/jdk1.8.0_74/bin/java
+JAVA = $(HOME)/share/usr/jdk1.8.0_74/bin/java
+MARIANAS_UMI_LENGTH ?= 3
+MARIANAS_MIN_MAPQ ?= 1
+MARIANAS_MIN_BAQ ?= 20
+MARIANAS_MISMATCH ?= 0
+MARIANAS_WOBBLE ?= 1
+MARIANAS_MIN_CONSENSUS ?= 90
+WALTZ_MIN_MAPQ ?= 20
 
 define genotype-and-collapse
 marianas/$1/$1.standard-pileup.txt : marianas/$1/$1.standard.bam
