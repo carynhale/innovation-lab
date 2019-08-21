@@ -5,7 +5,7 @@ LOGDIR ?= log/copy_bam.$(NOW)
 PHONY += bam
 
 copy_bam : $(foreach sample,$(SAMPLES),bam/$(sample)-standard.bam) \
-		   $(foreach sample,$(SAMPLES),bam/$(sample)-unfiltered.bam)
+		   $(foreach sample,$(SAMPLES),bam/$(sample)-unfiltered.bam) \
 		   $(foreach sample,$(SAMPLES),bam/$(sample)-simplex.bam) \
 		   $(foreach sample,$(SAMPLES),bam/$(sample)-duplex.bam)
 
