@@ -1,0 +1,19 @@
+# packages in environment at /home/brownd7/share/usr/anaconda-envs/star-fusion-1.0.0:
+#
+# Name                    Version                   Build  Channel
+blast                     2.2.31                        1    bioconda
+boost                     1.57.0                        4  
+bowtie                    1.0.0                         1    bioconda
+bzip2                     1.0.6                         1    conda-forge
+gmap                      2017.05.08           pl5.22.0_0    bioconda
+icu                       58.1                          1    conda-forge
+libdb                     6.1.26                        0    bioconda
+libgcc                    5.2.0                         0  
+perl                      5.22.0.1                      0    conda-forge
+perl-db-file              1.835                         5    bioconda
+perl-set-intervaltree     0.10                 pl5.22.0_4    bioconda
+perl-threaded             5.22.0              pl5.22.0_12    bioconda
+perl-uri                  1.71                          0    bioconda
+star                      2.5.3a                        0    bioconda
+star-fusion               1.0.0                pl5.22.0_0    bioconda
+zlib                      1.2.11                        0    conda-forge
