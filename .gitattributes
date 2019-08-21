@@ -1,7 +1,7 @@
 # Basic .gitattributes for R
-*.Rd    text
-*.Rmd	text
-*.R  	text
+*.Rd    text diff=r
+*.Rmd	  text diff=r
+*.R  	  text diff=r
 
 # Basic .gitattributes for Perl
 *.pl    text diff=perl
