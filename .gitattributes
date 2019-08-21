@@ -24,7 +24,6 @@
 *.pyc    binary
 *.pyd    binary
 *.pyo    binary
-*.ipynb  text
 
 # Basic .gitattributes for Serialisation
 *.yaml   text
@@ -32,3 +31,5 @@
 
 # Basic .gitattributes for Shell scripts
 *.sh     text eol=lf
+
+*.ipynb  export-ignore
