@@ -9,11 +9,11 @@ umi_qc : $(foreach sample,$(SAMPLES),marianas/$(sample)/umi-info.RData) \
 define umi-frequencies
 marianas/$1/umi-info.RData : marianas/$1/timestamp
 	$$(call RUN,-c -n 1 -s 4G -m 6G ,"set -o pipefail && \
-									 $(RSCRIPT) modules/test/qc/umi_qc.R --type 0 --sample_name $1")
+									 $(RSCRIPT) modules/test/qc/umiqc.R --type 0 --sample_name $1")
 
 marianas/$1/umi-composite.pdf : marianas/$1/umi-info.RData	
 	$$(call RUN,-c -n 1 -s 4G -m 6G ,"set -o pipefail && \
-									 $(RSCRIPT) modules/test/qc/umi_qc.R --type 1 --sample_name $1")
+									 $(RSCRIPT) modules/test/qc/umiqc.R --type 1 --sample_name $1")
 																           
 endef
 $(foreach sample,$(SAMPLES),\

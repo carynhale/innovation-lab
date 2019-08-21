@@ -86,7 +86,7 @@ marianas/$1/timestamp : marianas/$1/$1.collapsed.bam
 									  $(JAVA) -server -Xms2G -Xmx8G -cp $(MARIANAS) org.mskcc.marianas.umi.duplex.postprocessing.SeparateBams $1.collapsed.bam && \
 									  echo 'Done!\n' > timestamp && \
 									  cd ../..")
-
+									  
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
