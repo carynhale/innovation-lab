@@ -29,10 +29,10 @@ git clone https://github.com/ndbrown6/modules.git
 ### Whole genome, whole exome and targeted sequencing
 - Alignment:
 	* Broad's GATK best practices workflow for handling sequence data ([here](https://software.broadinstitute.org/gatk/best-practices/))
-	* Marianas & Watlz for MSK-ACCESS ([here](https://github.com/juberpatel))
-	* General purpose workflow to collapse UMI and call consensus duplex reads using fgbio ([here](https://github.com/fulcrumgenomics/fgbio))
+	* [Marianas](https://github.com/juberpatel/Marianas) & [Waltz](https://github.com/juberpatel/Waltz) for MSK-ACCESS
+	* General purpose workflow to collapse UMI and call consensus duplex reads using ([fgbio](https://github.com/fulcrumgenomics/fgbio))
 - Mutation calling:
-	* MuTect v1
+	* MuTect
 	* Platypus
 	* Strelka
 	* Scalpel
@@ -47,9 +47,9 @@ git clone https://github.com/ndbrown6/modules.git
 	* snpEff
 	* SIFT
 	* pph2
-	* vcf2maf ([here](https://github.com/mskcc/vcf2maf))
+	* [vcf2maf](https://github.com/mskcc/vcf2maf)
 	* VEP
-	* OncoKB ([here](https://github.com/oncokb/oncokb-annotator))
+	* [OncoKB](https://github.com/oncokb/oncokb-annotator)
 	* ClinVar
 - Miscellaneous:
 	* HLA Polysolver
@@ -76,9 +76,9 @@ Under development
 
 ## See also
 - [MSKCC](https://github.com/mskcc)
-- [cBioPortal](https://github.com/cBioPortal)
-- [OncoKB](https://github.com/oncokb)
 - [MSK-ACCESS](https://github.com/msk-access)
+- [OncoKB](https://github.com/oncokb)
+- [cBioPortal](https://github.com/cBioPortal)
 - [GRAIL](https://github.com/grailbio)
 
 ## Contributors
@@ -88,4 +88,3 @@ Under development
 - Contributors who provided codes
 	- Nadeem Riaz
 	- Fong Chun Chan
-
