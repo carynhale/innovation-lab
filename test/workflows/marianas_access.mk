@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/marianas_access.$(NOW)
-PHONY += marianas
+PHONY += marianas bam
 
 MSK_ACCESS_WORKFLOW += clip_umi
 MSK_ACCESS_WORKFLOW += align_fastq
