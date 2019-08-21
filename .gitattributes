@@ -24,7 +24,7 @@
 *.pyc    binary
 *.pyd    binary
 *.pyo    binary
-*.ipynb  text
+# *.ipynb  text
 
 # Serialisation
 *.yaml     text
