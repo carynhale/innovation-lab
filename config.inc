@@ -177,7 +177,7 @@ MARIANAS_MIN_CONSENSUS = 90
 
 WALTZ = /home/${USER}/share/usr/marianas-1.8.1/Waltz-3.0.jar
 WALTZ_MIN_MAPQ = 20
-WALTZ_BED_FILE = /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.waltz.bed
+WALTZ_BED_FILE = /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.waltz.bed
 
 endif
 CONFIG_INC = true
