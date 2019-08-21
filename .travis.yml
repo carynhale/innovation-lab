@@ -36,3 +36,4 @@ script:
   - bash -x test/vcf_tools/test_pathogenicity.sh
   - bash -x test/scripts/test_create_sample_yaml.sh
   - bash -x test/scripts/test_configure.sh
+
