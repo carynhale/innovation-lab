@@ -25,13 +25,13 @@ bam/$1-unfiltered.bam : marianas/$1/$1.collapsed.bam
 												
 bam/$1-simplex.bam : marianas/$1/timestamp
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
-								 cp marianas/$1/$1.collapsed-simplex $$(@) && \
+								 cp marianas/$1/$1.collapsed-simplex.bam $$(@) && \
 								 cp marianas/$1/$1.collapsed-simplex.bai bam/$1-simplex.bam.bai && \
 								 cp marianas/$1/$1.collapsed-simplex.bai bam/$1-simplex.bai")
 												
 bam/$1-duplex.bam : marianas/$1/timestamp
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
-								 cp marianas/$1/$1.collapsed-duplex $$(@) && \
+								 cp marianas/$1/$1.collapsed-duplex.bam $$(@) && \
 								 cp marianas/$1/$1.collapsed-duplex.bai bam/$1-duplex.bam.bai && \
 								 cp marianas/$1/$1.collapsed-duplex.bai bam/$1-duplex.bai")
 
