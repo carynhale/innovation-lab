@@ -44,7 +44,7 @@ metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
 									   TMP_DIR=$(TMPDIR)")
 
 metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectHsMetrics \
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
 									   R=$(REF_FASTA) \
 									   I=$$(<) \
 									   O=$$(@) \
