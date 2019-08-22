@@ -97,7 +97,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				      type_convert()
 	}
 	n = lapply(insert_metrics, function(x) {max(x$`insert_size`)})
-	insert_distribution = matrix(NA, nrow=n, ncol=length(tmp))
+	insert_distribution = matrix(NA, nrow=n, ncol=length(insert_metrics))
 	for (i in 1:length(insert_metrics)) {
 		insert_distribution[insert_metrics[[i]]$`insert_size`,i] = insert_metrics[[i]]$`All_Reads.fr_count`
 	}
