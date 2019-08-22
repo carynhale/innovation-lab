@@ -87,4 +87,21 @@ if (as.numeric(opt$metric_type)==1) {
 	insert_metrics = do.call(rbind, insert_metrics)
 	write_tsv(x=insert_metrics, path="metrics/standard/insert_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+}  else if (as.numeric(opt$metric_type)==4) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	insert_metrics = list()
+	for (i in 1:length(sample_names)) {
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, skip = 3, col_types = cols(.default = col_character())) %>%
+		   				      slice(2:n()) %>%
+		   				      type_convert()
+	}
+	n = lapply(insert_metrics, function(x) {max(x$`insert_size`)})
+	insert_distribution = matrix(NA, nrow=n, ncol=length(tmp))
+	for (i in 1:length(insert_metrics)) {
+		insert_distribution[insert_metrics[[i]]$`insert_size`,i] = insert_metrics[[i]]$`All_Reads.fr_count`
+	}
+	write_tsv(x=insert_distribution, path="metrics/standard/insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }
+

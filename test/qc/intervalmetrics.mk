@@ -15,7 +15,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
 				   metrics/standard/idx_metrics.tsv \
 				   metrics/standard/aln_metrics.tsv \
-				   metrics/standard/insert_metrics.tsv
+				   metrics/standard/insert_metrics.tsv \
+				   metrics/standard/insert_distribution.tsv \
 
 define picard-metrics
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
@@ -76,6 +77,9 @@ metrics/standard/aln_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).aln_st
 	
 metrics/standard/insert_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 3 --sample_names '$(SAMPLES)'")
+	
+metrics/standard/insert_distribution.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 16G -m 24G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 4 --sample_names '$(SAMPLES)'")
 
 
 .DELETE_ON_ERROR:
