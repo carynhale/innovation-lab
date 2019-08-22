@@ -10,7 +10,7 @@ POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-prob
 interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt)
 
 define picard-metrics
-metrics/standard/$1.idx_stats.txt : bam/%-standard.bam
+metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) BamIndexStats \
 												I=$$(<) \
 												O=$$(@) \
