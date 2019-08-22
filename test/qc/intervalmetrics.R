@@ -36,7 +36,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				   mutate(SAMPLE = sample_names[i])
 	}
 	idx_metrics = do.call(rbind, idx_metrics)
-	write_tsv(x=aln_metrics, path="metrics/standard/idx_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=idx_metrics, path="metrics/standard/idx_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
 	
 } else if (as.numeric(opt$metric_type)==2) {
 
