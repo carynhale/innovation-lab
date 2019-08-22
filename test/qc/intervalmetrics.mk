@@ -72,6 +72,9 @@ metrics/standard/idx_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_st
 		
 metrics/standard/aln_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).aln_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 2 --sample_names '$(SAMPLES)'")
+	
+metrics/standard/insert_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 3 --sample_names '$(SAMPLES)'")
 
 
 .DELETE_ON_ERROR:
