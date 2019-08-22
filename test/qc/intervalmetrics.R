@@ -101,9 +101,10 @@ if (as.numeric(opt$metric_type)==1) {
 	for (i in 1:length(insert_metrics)) {
 		ix = as.numeric(as.character(insert_metrics[[i]]$`insert_size`))
 		iy = as.numeric(as.character(insert_metrics[[i]]$`All_Reads.fr_count`))
-		print(ix)
 		insert_distribution[ix,i] = iy
 	}
+	colnames(insert_distribution) = sample_names
+	insert_distribution = as.data.frame(insert_distribution)
 	write_tsv(x=insert_distribution, path="metrics/standard/insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 }
