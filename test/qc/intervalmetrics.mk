@@ -6,7 +6,6 @@ PHONY += metrics metrics/standard metrics/unfiltered metrics/simplex metrics/dup
 
 POOL_A_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.list
-WALTZ_MIN_MAPQ ?= 20
 
 interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
@@ -50,7 +49,6 @@ metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
 									   O=$$(@) \
 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
-									   MINIMUM_MAPPING_QUALITY=$(WALTZ_MIN_MAPQ) \
 									   TMP_DIR=$(TMPDIR)")
 												
 #metrics/standard/$1.pool-B.hs_metrics.txt : bam/%-standard.bam
