@@ -7,7 +7,7 @@ PHONY += metrics metrics/standard metrics/unfiltered metrics/simplex metrics/dup
 POOL_A_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B..sorted.list
 
-interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idxstats.txt)
+interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt)
 
 define picard-metrics
 metrics/standard/$1.idx_stats.txt : bam/%-standard.bam
