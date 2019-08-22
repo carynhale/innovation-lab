@@ -67,7 +67,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
 		
 metrics/standard/aln_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).aln_stats.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric-type 2 --sample-names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 2 --sample_names '$(SAMPLES)'")
 
 
 .DELETE_ON_ERROR:
