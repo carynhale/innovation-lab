@@ -11,7 +11,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt)
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt)
 
 define picard-metrics
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
@@ -51,15 +52,15 @@ metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
 									   TMP_DIR=$(TMPDIR)")
 												
-#metrics/standard/$1.pool-B.hs_metrics.txt : bam/%-standard.bam
-#	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) CollectHsMetrics \
-#												R=$(REF_FASTA) \
-#												I=$$(<) \
-#												O=$$(@) \
-#												BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
-#												TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
-#												TMP_DIR=$(TMPDIR)")
-#
+metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
