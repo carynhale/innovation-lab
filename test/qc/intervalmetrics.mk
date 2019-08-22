@@ -14,7 +14,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
 				   metrics/standard/idx_metrics.tsv \
-				   metrics/standard/aln_metrics.tsv
+				   metrics/standard/aln_metrics.tsv \
+				   metrics/standard/insert_metrics.tsv
 
 define picard-metrics
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
