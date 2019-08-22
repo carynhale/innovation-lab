@@ -5,9 +5,10 @@ LOGDIR ?= log/interval_metrics.$(NOW)
 PHONY += metrics metrics/standard metrics/unfiltered metrics/simplex metrics/duplex
 
 POOL_A_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
-POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B..sorted.list
+POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.list
 
-interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt)
+interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
 
 define picard-metrics
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
@@ -15,14 +16,14 @@ metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 									   I=$$(<) \
 									   TMP_DIR=$(TMPDIR) \
 									   > $$(@)")
+									   
+metrics/standard/$1.aln_metrics.txt : bam/%-standard.bam
+	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+												R=$(REF_FASTA) \
+												I=$$(<) \
+												O=$$(@) \
+												TMP_DIR=$(TMPDIR)")
 
-#metrics/standard/$1.aln_metrics.txt : bam/%-standard.bam
-#	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
-#												R=$(REF_FASTA) \
-#												I=$$(<) \
-#												O=$$(@) \
-#												TMP_DIR=$(TMPDIR)")
-#
 #metrics/standard/$1.insert_metrics.txt : bam/%-standard.bam
 #	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
 #												I=$$(<) \
