@@ -32,7 +32,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				   summarize(N_ALIGNED = sum(X3),
 		   				   			 N_UNALIGNED = sum(X4)
 		   				   ) %>%
-		   				   mutate(N_TOTAL = ALIGNED + UNALIGNED) %>%
+		   				   mutate(N_TOTAL = N_ALIGNED + N_UNALIGNED) %>%
 		   				   mutate(SAMPLE = sample_names[i])
 	}
 	idx_metrics = do.call(rbind, idx_metrics)
