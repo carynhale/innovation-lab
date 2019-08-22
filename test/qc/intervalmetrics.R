@@ -17,6 +17,8 @@ parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
+print(opt)
+
 if (as.numeric(opt$metric_type)==2) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	aln_metrics = list()
