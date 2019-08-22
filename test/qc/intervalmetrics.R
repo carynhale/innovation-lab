@@ -99,7 +99,9 @@ if (as.numeric(opt$metric_type)==1) {
 	n = max(unlist(lapply(insert_metrics, function(x) {max(x$`insert_size`)})))
 	insert_distribution = matrix(NA, nrow=n, ncol=length(insert_metrics))
 	for (i in 1:length(insert_metrics)) {
-		insert_distribution[insert_metrics[[i]]$`insert_size`,i] = insert_metrics[[i]]$`All_Reads.fr_count`
+		ix = as.numeric(insert_metrics[[i]]$`insert_size`)
+		iy = as.numeric(insert_metrics[[i]]$`All_Reads.fr_count`)
+		insert_distribution[ix,i] = iy
 	}
 	write_tsv(x=insert_distribution, path="metrics/standard/insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
