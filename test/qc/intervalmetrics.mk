@@ -11,10 +11,10 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 
 define picard-metrics
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
-	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) BamIndexStats \
-												I=$$(<) \
-												O=$$(@) \
-												TMP_DIR=$(TMPDIR)")
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+									   I=$$(<) \
+									   TMP_DIR=$(TMPDIR) \
+									   > $$(@)")
 
 #metrics/standard/$1.aln_metrics.txt : bam/%-standard.bam
 #	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
