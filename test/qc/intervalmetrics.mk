@@ -13,6 +13,7 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
+				   metrics/standard/idx_metrics.tsv \
 				   metrics/standard/aln_metrics.tsv
 
 define picard-metrics
@@ -65,6 +66,9 @@ metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
+
+metrics/standard/idx_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 1 --sample_names '$(SAMPLES)'")
 		
 metrics/standard/aln_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).aln_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 2 --sample_names '$(SAMPLES)'")
