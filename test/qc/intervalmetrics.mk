@@ -52,8 +52,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/summary/metrics_idx.tsv \
 				   metrics/summary/metrics_aln.tsv \
 				   metrics/summary/metrics_insert.tsv \
-				   metrics/summary/metrics_insert_distribution.tsv
-#				   metrics/summary/metrics_hs.tsv
+				   metrics/summary/metrics_insert_distribution.tsv \
+				   metrics/summary/metrics_hs.tsv
 
 define picard-metrics-standard
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
@@ -313,8 +313,8 @@ metrics/summary/metrics_insert.tsv : metrics/standard/metrics_insert.tsv metrics
 metrics/summary/metrics_insert_distribution.tsv : metrics/standard/metrics_insert_distribution.tsv metrics/unfiltered/metrics_insert_distribution.tsv metrics/duplex/metrics_insert_distribution.tsv metrics/simplex/metrics_insert_distribution.tsv
 	$(call RUN, -c -n 1 -s 16G -m 24G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 25")
 	
-#metrics/summary/metrics_hs.tsv : metrics/standard/metrics_hs.tsv metrics/unfiltered/metrics_hs.tsv metrics/duplex/metrics_hs.tsv metrics/simplex/metrics_hs.tsv
-#	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 25 --sample_names '$(SAMPLES)'")
+metrics/summary/metrics_hs.tsv : metrics/standard/metrics_hs.tsv metrics/unfiltered/metrics_hs.tsv metrics/duplex/metrics_hs.tsv metrics/simplex/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 26")
 
 	
 .DELETE_ON_ERROR:

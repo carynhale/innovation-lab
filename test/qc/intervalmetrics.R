@@ -629,4 +629,21 @@ if (as.numeric(opt$metric_type)==1) {
 	metrics_insert_distribution = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_insert_distribution, path="metrics/summary/metrics_insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+} else if (as.numeric(opt$metric_type)==26) {
+
+	standard = read_tsv(file="metrics/standard/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	   type_convert() %>%
+		   	   mutate(TYPE = "STANDARD")
+	unfiltered = read_tsv(file="metrics/unfiltered/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	     type_convert() %>%
+		   	     mutate(TYPE = "UNFILTERED")
+	simplex = read_tsv(file="metrics/simplex/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	  type_convert() %>%
+		   	  mutate(TYPE = "SIMPLEX")
+	duplex = read_tsv(file="metrics/duplex/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	 type_convert() %>%
+		   	 mutate(TYPE = "DUPLEX")
+	metrics_hs = bind_rows(standard, unfiltered, simplex, duplex)
+	write_tsv(x=metrics_hs, path="metrics/summary/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }
