@@ -18,9 +18,14 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/standard/metrics_insert.tsv \
 				   metrics/standard/metrics_insert_distribution.tsv \
 				   metrics/standard/metrics_oxog.tsv \
-				   metrics/standard/metrics_hs.tsv
+				   metrics/standard/metrics_hs.tsv \
+				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt)
 
-define picard-metrics
+define picard-metrics-standard
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
 									   I=$$(<) \
@@ -69,7 +74,52 @@ metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
 
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call picard-metrics,$(sample))))
+		$(eval $(call picard-metrics-standard,$(sample))))
+		
+define picard-metrics-unfiltered
+metrics/unfiltered/$1.idx_stats.txt : bam/$1-unfiltered.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+									   I=$$(<) \
+									   TMP_DIR=$(TMPDIR) \
+									   > $$(@)")
+									   
+metrics/unfiltered/$1.aln_metrics.txt : bam/$1-unfiltered.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   TMP_DIR=$(TMPDIR)")
+
+metrics/unfiltered/$1.insert_metrics.txt : bam/$1-unfiltered.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
+									   I=$$(<) \
+									   O=$$(@) \
+									   H=metrics/unfiltered/$1.insert_metrics.pdf \
+									   M=0.5 \
+									   TMP_DIR=$(TMPDIR)")
+												
+metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1-unfiltered.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+												
+metrics/unfiltered/$1.probe-B.hs_metrics.txt : bam/$1-unfiltered.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call picard-metrics-unfiltered,$(sample))))		
+
 
 metrics/standard/metrics_idx.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 1 --sample_names '$(SAMPLES)'")
