@@ -38,7 +38,17 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/duplex/metrics_aln.tsv \
 				   metrics/duplex/metrics_insert.tsv \
 				   metrics/duplex/metrics_insert_distribution.tsv \
-				   metrics/duplex/metrics_hs.tsv
+				   metrics/duplex/metrics_hs.tsv \
+				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
+				   metrics/simplex/metrics_idx.tsv \
+				   metrics/simplex/metrics_aln.tsv \
+				   metrics/simplex/metrics_insert.tsv \
+				   metrics/simplex/metrics_insert_distribution.tsv \
+				   metrics/simplex/metrics_hs.tsv
 
 define picard-metrics-standard
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
@@ -153,7 +163,7 @@ metrics/duplex/$1.insert_metrics.txt : bam/$1-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
 									   I=$$(<) \
 									   O=$$(@) \
-									   H=metrics/unfiltered/$1.insert_metrics.pdf \
+									   H=metrics/duplex/$1.insert_metrics.pdf \
 									   M=0.5 \
 									   TMP_DIR=$(TMPDIR)")
 												
@@ -178,6 +188,50 @@ metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1-duplex.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics-duplex,$(sample))))
+		
+define picard-metrics-simplex
+metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+									   I=$$(<) \
+									   TMP_DIR=$(TMPDIR) \
+									   > $$(@)")
+									   
+metrics/simplex/$1.aln_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   TMP_DIR=$(TMPDIR)")
+
+metrics/simplex/$1.insert_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
+									   I=$$(<) \
+									   O=$$(@) \
+									   H=metrics/simplex/$1.insert_metrics.pdf \
+									   M=0.5 \
+									   TMP_DIR=$(TMPDIR)")
+												
+metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+												
+metrics/simplex/$1.probe-B.hs_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call picard-metrics-simplex,$(sample))))
 		
 metrics/standard/metrics_idx.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 1 --sample_names '$(SAMPLES)'")
@@ -227,7 +281,22 @@ metrics/duplex/metrics_insert_distribution.tsv : $(wildcard metrics/duplex/$(SAM
 metrics/duplex/metrics_hs.tsv : $(wildcard metrics/duplex/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/duplex/$(SAMPLES).probe-B.hs_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 16 --sample_names '$(SAMPLES)'")
 	
+metrics/simplex/metrics_idx.tsv : $(wildcard metrics/simplex/$(SAMPLES).idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 17 --sample_names '$(SAMPLES)'")
+		
+metrics/simplex/metrics_aln.tsv : $(wildcard metrics/simplex/$(SAMPLES).aln_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 18 --sample_names '$(SAMPLES)'")
+	
+metrics/simplex/metrics_insert.tsv : $(wildcard metrics/simplex/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 19 --sample_names '$(SAMPLES)'")
+	
+metrics/simplex/metrics_insert_distribution.tsv : $(wildcard metrics/simplex/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 16G -m 24G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 20 --sample_names '$(SAMPLES)'")
+	
+metrics/simplex/metrics_hs.tsv : $(wildcard metrics/simplex/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/simplex/$(SAMPLES).probe-B.hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 21 --sample_names '$(SAMPLES)'")
 
+	
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: $(PHONY)
