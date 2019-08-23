@@ -24,14 +24,12 @@ if (as.numeric(opt$type)==1) {
 	umi_list = list()
 	for (i in 1:length(sample_names)) {
 		umi_frequencies[[i]] = read_tsv(file=paste0("marianas/", sample_names[i], "/umi-frequencies.txt"), col_names=FALSE, col_types = cols(.default = col_character())) %>%
-		   					   type_convert() %>%
-		   					   filter(!grepl("N", X1, fixed=TRUE)) %>%
-		   					   arrange(X1)
+		   					   type_convert()
 		umi_list[[i]] = umi_frequencies %>%
 						.[["X1"]]
 	}
 	umi_list = unique(unlist(umi_list))
-	umis = matrix(0, nrow=length(umi_list), ncol=length(sample_names), dimnames=list(umi_list, sample_names))
+	umis = data.frame(matrix(0, nrow=length(umi_list), ncol=length(sample_names), dimnames=list(umi_list, sample_names)))
 	for (i in 1:length(sample_names)) {
 		ix = umi_frequencies[[i]] %>%
 			 .[["X1"]]
@@ -39,7 +37,7 @@ if (as.numeric(opt$type)==1) {
 			 .[["X2"]]
 		umis[ix,i] = iy
 	}
-	write_tsv(x=data.frame(umis), path="metrics/summary/umi-frequencies.tsv", na="NA", append=FALSE, col_names=TRUE)
+	write_tsv(x=umis, path="metrics/summary/umi-frequencies.tsv", na="NA", append=FALSE, col_names=TRUE)
 
 }
 	
