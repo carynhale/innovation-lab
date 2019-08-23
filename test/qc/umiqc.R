@@ -37,9 +37,8 @@ if (as.numeric(opt$type)==1) {
 			 .[["X2"]]
 		umis[ix,i] = iy
 	}
-	umis = cbind(UMI=umi_list, umis)
 	colnames(umis) = gsub(pattern=".", replacement="-", x=colnames(umis), fixed=TRUE)
-	write_tsv(x=umis, path="metrics/summary/umi-frequencies.tsv", na="NA", append=FALSE, col_names=TRUE)
+	write.table(umis, file="metrics/summary/umi-frequencies.tsv", sep="\t", col.names=TRUE, row.names=TRUE, append=FALSE, quote=FALSE)
 
 }
 	
