@@ -40,5 +40,27 @@ if (as.numeric(opt$type)==1) {
 	colnames(umis) = gsub(pattern=".", replacement="-", x=colnames(umis), fixed=TRUE)
 	write.table(umis, file="metrics/summary/umi_frequencies.tsv", sep="\t", col.names=TRUE, row.names=TRUE, append=FALSE, quote=FALSE)
 
+} else if (as.numeric(opt$type)==2) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	umi_frequencies = list()
+	umi_list = list()
+	for (i in 1:length(sample_names)) {
+		umi_frequencies[[i]] = read_tsv(file=paste0("marianas/", sample_names[i], "/composite-umi-frequencies.txt"), col_names=FALSE, col_types = cols(.default = col_character())) %>%
+		   					   type_convert()
+		umi_list[[i]] = umi_frequencies %>%
+						.[["X1"]]
+	}
+	umi_list = unique(unlist(umi_list))
+	umis = data.frame(matrix(0, nrow=length(umi_list), ncol=length(sample_names), dimnames=list(umi_list, sample_names)))
+	for (i in 1:length(sample_names)) {
+		ix = umi_frequencies[[i]] %>%
+			 .[["X1"]]
+		iy = umi_frequencies[[i]] %>%
+			 .[["X2"]]
+		umis[ix,i] = iy
+	}
+	colnames(umis) = gsub(pattern=".", replacement="-", x=colnames(umis), fixed=TRUE)
+	write.table(umis, file="metrics/summary/umi_composite.tsv", sep="\t", col.names=TRUE, row.names=TRUE, append=FALSE, quote=FALSE)
+
 }
-	
