@@ -112,7 +112,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	oxog_metrics = list()
 	for (i in 1:length(sample_names)) {
-		oxog_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		oxog_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".oxog_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert()
 	}
