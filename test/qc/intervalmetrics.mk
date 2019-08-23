@@ -24,11 +24,11 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
-				   metrics/standard/metrics_idx.tsv \
-				   metrics/standard/metrics_aln.tsv \
-				   metrics/standard/metrics_insert.tsv \
-				   metrics/standard/metrics_insert_distribution.tsv \
-				   metrics/standard/metrics_hs.tsv
+				   metrics/unfiltered/metrics_idx.tsv \
+				   metrics/unfiltered/metrics_aln.tsv \
+				   metrics/unfiltered/metrics_insert.tsv \
+				   metrics/unfiltered/metrics_insert_distribution.tsv \
+				   metrics/unfiltered/metrics_hs.tsv
 
 
 define picard-metrics-standard
