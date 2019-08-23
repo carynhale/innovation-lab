@@ -17,7 +17,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/standard/aln_metrics.tsv \
 				   metrics/standard/insert_metrics.tsv \
 				   metrics/standard/insert_distribution.tsv \
-				   metrics/standard/oxog_metrics.tsv
+				   metrics/standard/oxog_metrics.tsv \
+				   metrics/standard/hs_metrics.tsv
 
 define picard-metrics
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
@@ -83,8 +84,11 @@ metrics/standard/insert_distribution.tsv : $(wildcard metrics/standard/$(SAMPLES
 	$(call RUN, -c -n 1 -s 16G -m 24G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 4 --sample_names '$(SAMPLES)'")
 	
 metrics/standard/oxog_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).oxog_metrics.txt)
-	$(call RUN, -c -n 1 -s 16G -m 24G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 5 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 5 --sample_names '$(SAMPLES)'")
 
+metrics/standard/hs_metrics.tsv : $(wildcard metrics/standard/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/standard/$(SAMPLES).probe-B.hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 6 --sample_names '$(SAMPLES)'")
+	
 
 .DELETE_ON_ERROR:
 .SECONDARY:

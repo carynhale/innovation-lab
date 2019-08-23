@@ -87,7 +87,7 @@ if (as.numeric(opt$metric_type)==1) {
 	insert_metrics = do.call(rbind, insert_metrics)
 	write_tsv(x=insert_metrics, path="metrics/standard/insert_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
-}  else if (as.numeric(opt$metric_type)==4) {
+} else if (as.numeric(opt$metric_type)==4) {
 
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
@@ -119,5 +119,26 @@ if (as.numeric(opt$metric_type)==1) {
 	oxog_metrics = do.call(rbind, oxog_metrics)
 	write_tsv(x=oxog_metrics, path="metrics/standard/oxog_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+} else if (as.numeric(opt$metric_type)==6) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	hs_metrics_a = hs_metrics_b = list()
+	for (i in 1:length(sample_names)) {
+		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				    slice(2:n()) %>%
+		   				    type_convert() %>%
+		   				    mutate(SAMPLE = sample_names[i])
+		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				    slice(2:n()) %>%
+		   				    type_convert() %>%
+		   				    mutate(SAMPLE = sample_names[i])
+		   				   
+	}
+	hs_metrics_a = do.call(rbind, hs_metrics_a)
+	hs_metrics_b = do.call(rbind, hs_metrics_b)
+	hs_metrics = rbind(hs_metrics_a, hs_metrics_b) %>%
+				 arrange(SAMPLE)
+	write_tsv(x=hs_metrics, path="metrics/standard/hs_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	
 }
 
