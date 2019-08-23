@@ -11,7 +11,7 @@ define family-size-metric
 marianas/$1/family-sizes.txt : marianas/$1/second-pass-alt-alleles.txt
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   cd marianas/$1 && \
-									   source modules/test/qc/umiqc.sh $(UMI_QC_BED_FILE_A) $(UMI_QC_BED_FILE_B) $1")
+									   source ../../modules/test/qc/umiqc.sh $(UMI_QC_BED_FILE_A) $(UMI_QC_BED_FILE_B) $1")
 
 endef
 $(foreach sample,$(SAMPLES),\
