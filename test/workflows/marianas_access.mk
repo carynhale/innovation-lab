@@ -10,7 +10,7 @@ MSK_ACCESS_WORKFLOW += umi_collapse
 MSK_ACCESS_WORKFLOW += align_collapsed
 MSK_ACCESS_WORKFLOW += copy_bam
 MSK_ACCESS_WORKFLOW += interval_metrics
-#MSK_ACCESS_WORKFLOW += umi_qc
+MSK_ACCESS_WORKFLOW += umi_qc
 
 msk_access_workflow : $(MSK_ACCESS_WORKFLOW)
 
@@ -20,7 +20,7 @@ include modules/test/bam_tools/collapseumi.mk
 include modules/test/bam_tools/aligncollapsed.mk
 include modules/test/bam_tools/copybam.mk
 include modules/test/qc/intervalmetrics.mk
-#include modules/test/qc/umiqc.mk
+include modules/test/qc/umiqc.mk
 
 .DELETE_ON_ERROR:
 .SECONDARY:
