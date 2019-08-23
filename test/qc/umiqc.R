@@ -63,4 +63,34 @@ if (as.numeric(opt$type)==1) {
 	colnames(umis) = gsub(pattern=".", replacement="-", x=colnames(umis), fixed=TRUE)
 	write.table(umis, file="metrics/summary/umi_composite.tsv", sep="\t", col.names=TRUE, row.names=TRUE, append=FALSE, quote=FALSE)
 
+} else if (as.numeric(opt$type)==3) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+
+	umi_families = list()
+	for (i in 1:length(sample_names)) {
+		umi_families[[i]] = read_tsv(file=paste0("marianas/", sample_names[i], "/family-sizes.txt"), col_names=TRUE, col_types = cols(.default = col_character())) %>%
+		   					type_convert()
+	}
+	umi_families = do.call(rbind, umi_families)
+	write_tsv(x=umi_families, path="metrics/summary/umi_families.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	
+	family_types_a = list()
+	for (i in 1:length(sample_names)) {
+		family_types_a[[i]] = read_tsv(file=paste0("marianas/", sample_names[i], "/family-types-A.txt"), col_names=TRUE, col_types = cols(.default = col_character())) %>%
+		   					  type_convert()
+	}
+	family_types_a = do.call(rbind, family_types_a) %>%
+					 mutate(BAIT_SET = "MSK-ACCESS_v1.0_probe-A")
+	family_types_b = list()
+	for (i in 1:length(sample_names)) {
+		family_types_b[[i]] = read_tsv(file=paste0("marianas/", sample_names[i], "/family-types-B.txt"), col_names=TRUE, col_types = cols(.default = col_character())) %>%
+		   					  type_convert()
+	}
+	family_types_b = do.call(rbind, family_types_b) %>%
+					 mutate(BAIT_SET = "MSK-ACCESS_v1.0_probe-B")
+					 
+	family_types = bind_rows(family_types_a, family_types_b)
+	write_tsv(x=family_types, path="metrics/summary/umi_family_types.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }

@@ -5,7 +5,8 @@ PHONY += marinanas metrics metrics/summary
 
 umi_qc : $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
 		 metrics/summary/umi_frequencies.tsv \
-		 metrics/summary/umi_composite.tsv
+		 metrics/summary/umi_composite.tsv \
+		 metrics/summary/umi_families.tsv
 
 define family-size-metric
 marianas/$1/family-sizes.txt : marianas/$1/second-pass-alt-alleles.txt
@@ -23,6 +24,8 @@ metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequen
 metrics/summary/umi_composite.tsv : $(wildcard marianas/$(SAMPLES)/composite-umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/umiqc.R --type 2 --sample_names '$(SAMPLES)'")
 
+metrics/summary/umi_families.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/umiqc.R --type 3 --sample_names '$(SAMPLES)'")
 
 .DELETE_ON_ERROR:
 .SECONDARY:
