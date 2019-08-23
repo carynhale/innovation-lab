@@ -561,6 +561,21 @@ if (as.numeric(opt$metric_type)==1) {
 				 		PCT_TARGET_BASES_100X = 100*PCT_TARGET_BASES_100X)
 	write_tsv(x=hs_metrics, path="metrics/simplex/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+} else if (as.numeric(opt$metric_type)==22) {
+
+	standard = read_tsv(file="metrics/standard/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	   type_convert() %>%
+		   	   mutate(TYPE = "STANDARD")
+	unfiltered = read_tsv(file="metrics/unfiltered/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	     type_convert() %>%
+		   	     mutate(TYPE = "UNFILTERED")
+	simplex = read_tsv(file="metrics/simplex/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	  type_convert() %>%
+		   	  mutate(TYPE = "SIMPLEX")
+	duplex = read_tsv(file="metrics/duplex/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	 type_convert() %>%
+		   	 mutate(TYPE = "DUPLEX")
+	metrics_idx = bind_rows(standard, unfiltered, simplex, duplex)
+	write_tsv(x=metrics_idx, path="metrics/summary/metrics_idx.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }
-
-

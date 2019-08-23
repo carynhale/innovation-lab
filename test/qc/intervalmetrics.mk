@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/interval_metrics.$(NOW)
-PHONY += metrics metrics/standard metrics/unfiltered metrics/simplex metrics/duplex
+PHONY += metrics metrics/standard metrics/unfiltered metrics/duplex metrics/simplex metrics/summary
 
 POOL_A_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.list
@@ -48,7 +48,12 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/simplex/metrics_aln.tsv \
 				   metrics/simplex/metrics_insert.tsv \
 				   metrics/simplex/metrics_insert_distribution.tsv \
-				   metrics/simplex/metrics_hs.tsv
+				   metrics/simplex/metrics_hs.tsv \
+				   metrics/summary/metrics_idx.tsv
+#				   metrics/summary/metrics_aln.tsv \
+#				   metrics/summary/metrics_insert.tsv \
+#				   metrics/summary/metrics_insert_distribution.tsv \
+#				   metrics/summary/metrics_hs.tsv
 
 define picard-metrics-standard
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
@@ -295,6 +300,21 @@ metrics/simplex/metrics_insert_distribution.tsv : $(wildcard metrics/simplex/$(S
 	
 metrics/simplex/metrics_hs.tsv : $(wildcard metrics/simplex/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/simplex/$(SAMPLES).probe-B.hs_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 21 --sample_names '$(SAMPLES)'")
+	
+metrics/summary/metrics_idx.tsv : metrics/standard/metrics_idx.tsv metrics/unfiltered/metrics_idx.tsv metrics/duplex/metrics_idx.tsv metrics/simplex/metrics_idx.tsv
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 22")
+		
+#metrics/summary/metrics_aln.tsv : 
+#	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 18 --sample_names '$(SAMPLES)'")
+#	
+#metrics/summary/metrics_insert.tsv : 
+#	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 19 --sample_names '$(SAMPLES)'")
+#	
+#metrics/summary/metrics_insert_distribution.tsv : 
+#	$(call RUN, -c -n 1 -s 16G -m 24G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 20 --sample_names '$(SAMPLES)'")
+#	
+#metrics/summary/metrics_hs.tsv : 
+#	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 21 --sample_names '$(SAMPLES)'")
 
 	
 .DELETE_ON_ERROR:
