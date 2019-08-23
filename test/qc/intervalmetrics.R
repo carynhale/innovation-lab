@@ -578,4 +578,21 @@ if (as.numeric(opt$metric_type)==1) {
 	metrics_idx = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_idx, path="metrics/summary/metrics_idx.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+} else if (as.numeric(opt$metric_type)==23) {
+
+	standard = read_tsv(file="metrics/standard/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	   type_convert() %>%
+		   	   mutate(TYPE = "STANDARD")
+	unfiltered = read_tsv(file="metrics/unfiltered/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	     type_convert() %>%
+		   	     mutate(TYPE = "UNFILTERED")
+	simplex = read_tsv(file="metrics/simplex/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	  type_convert() %>%
+		   	  mutate(TYPE = "SIMPLEX")
+	duplex = read_tsv(file="metrics/duplex/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   	 type_convert() %>%
+		   	 mutate(TYPE = "DUPLEX")
+	metrics_aln = bind_rows(standard, unfiltered, simplex, duplex)
+	write_tsv(x=metrics_aln, path="metrics/summary/metrics_aln.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }
