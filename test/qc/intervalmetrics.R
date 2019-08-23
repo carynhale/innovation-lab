@@ -139,6 +139,7 @@ if (as.numeric(opt$metric_type)==1) {
 	hs_metrics = rbind(hs_metrics_a, hs_metrics_b) %>%
 				 arrange(SAMPLE) %>%
 				 dplyr::select(GENOME_SIZE,
+				 			   BAIT_SET,
 				 			   TARGET_TERRITORY,
 				 			   ON_TARGET_BASES,
 				 			   MEAN_TARGET_COVERAGE,
