@@ -1,10 +1,21 @@
 include modules/Makefile.inc
 
 LOGDIR ?= log/umi_qc.$(NOW)
-PHONY += metrics metrics/summary
+PHONY += marinanas metrics metrics/summary
 
-umi_qc : metrics/summary/umi_frequencies.tsv \
+umi_qc : $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
+		 metrics/summary/umi_frequencies.tsv \
 		 metrics/summary/umi_composite.tsv
+
+define family-size-metric
+marianas/$1/family-sizes.txt : marianas/$1/second-pass-alt-alleles.txt
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   cd marianas/$1 && \
+									   source modules/test/qc/umiqc.sh $(UMI_QC_BED_FILE_A) $(UMI_QC_BED_FILE_B) $1")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call family-size-metric,$(sample))))
 		 
 metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/umiqc.R --type 1 --sample_names '$(SAMPLES)'")

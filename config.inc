@@ -118,6 +118,8 @@ TVC ?= $(HOME)/share/usr/bin/tvc
 DB_NSFP ?= $(HOME)/share/reference/snpEff-4.1/dbNSFP3.0b1a.hg19.txt.gz
 WALTZ_BED_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.waltz.bed
 NSFP_FIELDS ?= Uniprot_acc_Polyphen2 Uniprot_id_Polyphen2 Polyphen2_HVAR_score Polyphen2_HVAR_pred 1000Gp3_AF ESP6500_AA_AF ESP6500_EA_AF MutationAssessor_pred MutationAssessor_score MutationTaster_pred MutationTaster_score PROVEAN_pred ExAC_Adj_AF clinvar_rs clinvar_clnsig Interpro_domain
+UMI_QC_BED_FILE_A ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.bed
+UMI_QC_BED_FILE_B ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.bed
 
 CLUSTER_ENGINE ?= SGE
 ifeq ($(CLUSTER_ENGINE),PBS)
