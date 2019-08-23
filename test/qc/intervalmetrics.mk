@@ -177,7 +177,7 @@ metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1-duplex.bam
 
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call picard-metrics-unfiltered,$(sample))))
+		$(eval $(call picard-metrics-duplex,$(sample))))
 		
 metrics/standard/metrics_idx.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 1 --sample_names '$(SAMPLES)'")
