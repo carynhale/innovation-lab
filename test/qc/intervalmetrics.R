@@ -36,7 +36,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				   mutate(SAMPLE = sample_names[i])
 	}
 	idx_metrics = do.call(rbind, idx_metrics)
-	write_tsv(x=idx_metrics, path="metrics/standard/idx_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=idx_metrics, path="metrics/standard/metrics_idx.tsv", na = "NA", append = FALSE, col_names = TRUE)
 	
 } else if (as.numeric(opt$metric_type)==2) {
 
@@ -71,7 +71,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				   
 	}
 	aln_metrics = do.call(rbind, aln_metrics)
-	write_tsv(x=aln_metrics, path="metrics/standard/aln_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=aln_metrics, path="metrics/standard/metrics_aln.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$metric_type)==3) {
 
@@ -85,7 +85,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				   
 	}
 	insert_metrics = do.call(rbind, insert_metrics)
-	write_tsv(x=insert_metrics, path="metrics/standard/insert_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=insert_metrics, path="metrics/standard/metrics_insert.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$metric_type)==4) {
 
@@ -105,7 +105,7 @@ if (as.numeric(opt$metric_type)==1) {
 	}
 	colnames(insert_distribution) = sample_names
 	insert_distribution = as.data.frame(insert_distribution)
-	write_tsv(x=insert_distribution, path="metrics/standard/insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=insert_distribution, path="metrics/standard/metrics_insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$metric_type)==5) {
 
@@ -117,7 +117,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				    type_convert()
 	}
 	oxog_metrics = do.call(rbind, oxog_metrics)
-	write_tsv(x=oxog_metrics, path="metrics/standard/oxog_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=oxog_metrics, path="metrics/standard/metrics_oxog.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$metric_type)==6) {
 
@@ -160,7 +160,7 @@ if (as.numeric(opt$metric_type)==1) {
 				 		PCT_TARGET_BASES_40X = 100*PCT_TARGET_BASES_40X,
 				 		PCT_TARGET_BASES_50X = 100*PCT_TARGET_BASES_50X,
 				 		PCT_TARGET_BASES_100X = 100*PCT_TARGET_BASES_100X)
-	write_tsv(x=hs_metrics, path="metrics/standard/hs_metrics.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=hs_metrics, path="metrics/standard/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 }
 
