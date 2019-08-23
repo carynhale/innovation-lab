@@ -565,16 +565,16 @@ if (as.numeric(opt$metric_type)==1) {
 
 	standard = read_tsv(file="metrics/standard/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	   type_convert() %>%
-		   	   mutate(TYPE = "STANDARD")
+		   	   mutate(LIBRARY = "STANDARD")
 	unfiltered = read_tsv(file="metrics/unfiltered/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	     type_convert() %>%
-		   	     mutate(TYPE = "UNFILTERED")
+		   	     mutate(LIBRARY = "UNFILTERED")
 	simplex = read_tsv(file="metrics/simplex/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	  type_convert() %>%
-		   	  mutate(TYPE = "SIMPLEX")
+		   	  mutate(LIBRARY = "SIMPLEX")
 	duplex = read_tsv(file="metrics/duplex/metrics_idx.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	 type_convert() %>%
-		   	 mutate(TYPE = "DUPLEX")
+		   	 mutate(LIBRARY = "DUPLEX")
 	metrics_idx = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_idx, path="metrics/summary/metrics_idx.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
@@ -582,16 +582,16 @@ if (as.numeric(opt$metric_type)==1) {
 
 	standard = read_tsv(file="metrics/standard/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	   type_convert() %>%
-		   	   mutate(TYPE = "STANDARD")
+		   	   mutate(LIBRARY = "STANDARD")
 	unfiltered = read_tsv(file="metrics/unfiltered/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	     type_convert() %>%
-		   	     mutate(TYPE = "UNFILTERED")
+		   	     mutate(LIBRARY = "UNFILTERED")
 	simplex = read_tsv(file="metrics/simplex/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	  type_convert() %>%
-		   	  mutate(TYPE = "SIMPLEX")
+		   	  mutate(LIBRARY = "SIMPLEX")
 	duplex = read_tsv(file="metrics/duplex/metrics_aln.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	 type_convert() %>%
-		   	 mutate(TYPE = "DUPLEX")
+		   	 mutate(LIBRARY = "DUPLEX")
 	metrics_aln = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_aln, path="metrics/summary/metrics_aln.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
@@ -599,16 +599,16 @@ if (as.numeric(opt$metric_type)==1) {
 
 	standard = read_tsv(file="metrics/standard/metrics_insert.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	   type_convert() %>%
-		   	   mutate(TYPE = "STANDARD")
+		   	   mutate(LIBRARY = "STANDARD")
 	unfiltered = read_tsv(file="metrics/unfiltered/metrics_insert.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	     type_convert() %>%
-		   	     mutate(TYPE = "UNFILTERED")
+		   	     mutate(LIBRARY = "UNFILTERED")
 	simplex = read_tsv(file="metrics/simplex/metrics_insert.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	  type_convert() %>%
-		   	  mutate(TYPE = "SIMPLEX")
+		   	  mutate(LIBRARY = "SIMPLEX")
 	duplex = read_tsv(file="metrics/duplex/metrics_insert.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	 type_convert() %>%
-		   	 mutate(TYPE = "DUPLEX")
+		   	 mutate(LIBRARY = "DUPLEX")
 	metrics_insert = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_insert, path="metrics/summary/metrics_insert.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
@@ -616,16 +616,16 @@ if (as.numeric(opt$metric_type)==1) {
 
 	standard = read_tsv(file="metrics/standard/metrics_insert_distribution.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	   type_convert() %>%
-		   	   mutate(TYPE = "STANDARD")
+		   	   mutate(LIBRARY = "STANDARD")
 	unfiltered = read_tsv(file="metrics/unfiltered/metrics_insert_distribution.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	     type_convert() %>%
-		   	     mutate(TYPE = "UNFILTERED")
+		   	     mutate(LIBRARY = "UNFILTERED")
 	simplex = read_tsv(file="metrics/simplex/metrics_insert_distribution.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	  type_convert() %>%
-		   	  mutate(TYPE = "SIMPLEX")
+		   	  mutate(LIBRARY = "SIMPLEX")
 	duplex = read_tsv(file="metrics/duplex/metrics_insert_distribution.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	 type_convert() %>%
-		   	 mutate(TYPE = "DUPLEX")
+		   	 mutate(LIBRARY = "DUPLEX")
 	metrics_insert_distribution = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_insert_distribution, path="metrics/summary/metrics_insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
@@ -633,16 +633,16 @@ if (as.numeric(opt$metric_type)==1) {
 
 	standard = read_tsv(file="metrics/standard/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	   type_convert() %>%
-		   	   mutate(TYPE = "STANDARD")
+		   	   mutate(LIBRARY = "STANDARD")
 	unfiltered = read_tsv(file="metrics/unfiltered/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	     type_convert() %>%
-		   	     mutate(TYPE = "UNFILTERED")
+		   	     mutate(LIBRARY = "UNFILTERED")
 	simplex = read_tsv(file="metrics/simplex/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	  type_convert() %>%
-		   	  mutate(TYPE = "SIMPLEX")
+		   	  mutate(LIBRARY = "SIMPLEX")
 	duplex = read_tsv(file="metrics/duplex/metrics_hs.tsv", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   	 type_convert() %>%
-		   	 mutate(TYPE = "DUPLEX")
+		   	 mutate(LIBRARY = "DUPLEX")
 	metrics_hs = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_hs, path="metrics/summary/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
