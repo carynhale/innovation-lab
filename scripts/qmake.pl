@@ -86,13 +86,13 @@ do {
         	my $pipeline_channel_msg = "\@${slackname} $project_name :";
         	if ($opt{s} && ($retcode == 0 || $n == 0 || $n + 1 == $attempts)) {
             	if ($retcode == 0) {
-                	my $slack_msg = "*COMPLETE* $name :the_horns:";
+                	my $slack_msg = "*COMPLETE* $name :ok_hand:";
                 	&slack($fin_slack, "$pipeline_channel_msg $slack_msg");
                 	&slack($opt{c}, $slack_msg) if $opt{c};
                 } else {
                 	my $slack_msg = "*FAILURE* $cwd/$logfile";
                 	if ($n + 1 == $attempts) {
-                		$slack_msg = "$slack_msg :troll:";
+                		$slack_msg = ":-1: $slack_msg";
                 		&slack($opt{c}, $slack_msg) if $opt{c};
                 	}
                 	&slack($err_slack, "$pipeline_channel_msg $slack_msg");
