@@ -118,7 +118,7 @@ if (as.numeric(opt$type)==1) {
 		   dplyr::rename(`Sample ID` = SAMPLE)
 	
 	pdf(file="metrics/report/umi_family_sizes_all.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID)) +
+	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
 			 geom_point(size=.5) +
 			 geom_line() +
 			 theme_classic(base_size=15) +
@@ -135,7 +135,7 @@ if (as.numeric(opt$type)==1) {
 		   dplyr::rename(`Sample ID` = SAMPLE)
 	
 	pdf(file="metrics/report/umi_family_sizes_duplex.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID)) +
+	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
 			 geom_point(size=.5) +
 			 geom_line() +
 			 theme_classic(base_size=15) +
@@ -152,7 +152,7 @@ if (as.numeric(opt$type)==1) {
 		   dplyr::rename(`Sample ID` = SAMPLE)
 	
 	pdf(file="metrics/report/umi_family_sizes_simplex.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID)) +
+	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
 			 geom_point(size=.5) +
 			 geom_line() +
 			 theme_classic(base_size=15) +
