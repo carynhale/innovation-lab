@@ -13,7 +13,11 @@ my %slack_map = (
     brownd7 => "brownd7",
     lees19 => "lees19",
     ferrandl => "ferrandl",
-    dacruzpa => "dacruzpa"
+    dacruzpa => "dacruzpa",
+    selenicp => "selenicp",
+    gularter => "_TO_CHANGE_",
+    
+    
 );
 
 sub HELP_MESSAGE {
