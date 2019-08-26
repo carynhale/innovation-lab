@@ -25,7 +25,7 @@ if (as.numeric(opt$type)==1) {
 		   type_convert() %>%
 		   replace(is.na(.), 0)
 	index = order(apply(data, 1, sum))
-	data = data[,index,drop=FALSE]
+	data = data[index,,drop=FALSE]
 	pdf(file="metrics/report/umi_frequencies.pdf", width=10, height=14)
 	heatmap(t(as.matrix(data)), Rowv=NA, scale="row", col=colorRampPalette(c("#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1"))( 256 ))
 	dev.off()
