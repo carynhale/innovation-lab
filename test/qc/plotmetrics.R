@@ -19,7 +19,8 @@ opt = arguments$options
 
 if (as.numeric(opt$type)==1) {
 
-	data = read.csv(file="metrics/summary/umi_frequencies.tsv", sep="\t", header=TRUE, row.names=1, stringsAsFactors=FALSE) %>%
+	data = read.csv(file="metrics/summary/umi_frequencies.tsv", sep="\t", header=TRUE, row.names=1, stringsAsFactors=FALSE)
+	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert() %>%
 		   replace(is.na(.), 0)
