@@ -26,8 +26,10 @@ if (as.numeric(opt$type)==1) {
 		   replace(is.na(.), 0)
 	index = order(apply(data, 1, sum))
 	data = data[index,,drop=FALSE]
-	pdf(file="metrics/report/umi_frequencies.pdf", width=10, height=14)
-	heatmap(t(as.matrix(data)), Rowv=NA, scale="row", col=colorRampPalette(c("#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1"))( 256 ))
+	index = order(apply(data, 2, sum))
+	data = data[,index,drop=FALSE]
+	pdf(file="metrics/report/umi_frequencies.pdf", width=14, height=14)
+	heatmap(t(as.matrix(data)), Rowv=NA, Colv=NA, scale="row", col=colorRampPalette(c("#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1"))( 256 ))
 	dev.off()
 	
 } else if (as.numeric(opt$type)==2) {
@@ -39,8 +41,10 @@ if (as.numeric(opt$type)==1) {
 		   replace(is.na(.), 0)
 	index = order(apply(data, 1, sum))
 	data = data[index,,drop=FALSE]
-	pdf(file="metrics/report/umi_composite.pdf", width=20, height=14)
-	heatmap(t(as.matrix(data)), Rowv=NA, scale="row", col=colorRampPalette(c("#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1"))( 256 ))
+	index = order(apply(data, 2, sum))
+	data = data[,index,drop=FALSE]
+	pdf(file="metrics/report/umi_composite.pdf", width=14, height=14)
+	heatmap(t(as.matrix(data)), Rowv=NA, Colv=NA, scale="row", col=colorRampPalette(c("#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1"))( 256 ))
 	dev.off()
 	
 }
