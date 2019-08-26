@@ -110,4 +110,55 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
+} else if (as.numeric(opt$type)==5) {
+
+	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert() %>%
+		   filter(FamilyType=="All") +
+		   dplyr::rename(`Sample ID` = SAMPLE)
+	
+	pdf(file="metrics/report/umi_family_sizes_all.pdf", width=14)
+	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID)) +
+			 geom_point(size=.5) +
+			 geom_line() +
+			 theme_classic(base_size=15) +
+			 labs(x="Family size", y="Frequency") +
+			 xlim(0, 50)
+	print(plot.0)
+	dev.off()
+	
+} else if (as.numeric(opt$type)==6) {
+
+	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert() %>%
+		   filter(FamilyType=="Duplex") +
+		   dplyr::rename(`Sample ID` = SAMPLE)
+	
+	pdf(file="metrics/report/umi_family_sizes_duplex.pdf", width=14)
+	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID)) +
+			 geom_point(size=.5) +
+			 geom_line() +
+			 theme_classic(base_size=15) +
+			 labs(x="Family size", y="Frequency") +
+			 xlim(0, 50)
+	print(plot.0)
+	dev.off()
+	
+} else if (as.numeric(opt$type)==7) {
+
+	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert() %>%
+		   filter(FamilyType=="Simplex") %>%
+		   dplyr::rename(`Sample ID` = SAMPLE)
+	
+	pdf(file="metrics/report/umi_family_sizes_simplex.pdf", width=14)
+	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID)) +
+			 geom_point(size=.5) +
+			 geom_line() +
+			 theme_classic(base_size=15) +
+			 labs(x="Family size", y="Frequency") +
+			 xlim(0, 50)
+	print(plot.0)
+	dev.off()
+	
 }
