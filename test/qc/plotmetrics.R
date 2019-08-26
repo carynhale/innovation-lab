@@ -114,7 +114,7 @@ if (as.numeric(opt$type)==1) {
 
 	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
-		   filter(FamilyType=="All") +
+		   filter(FamilyType=="All") %>%
 		   dplyr::rename(`Sample ID` = SAMPLE)
 	
 	pdf(file="metrics/report/umi_family_sizes_all.pdf", width=14)
@@ -131,7 +131,7 @@ if (as.numeric(opt$type)==1) {
 
 	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
-		   filter(FamilyType=="Duplex") +
+		   filter(FamilyType=="Duplex") %>%
 		   dplyr::rename(`Sample ID` = SAMPLE)
 	
 	pdf(file="metrics/report/umi_family_sizes_duplex.pdf", width=14)
