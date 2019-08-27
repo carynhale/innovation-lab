@@ -5,7 +5,7 @@ LOGDIR = log/cluster_samples.$(NOW)
 PHONE += marianas metrics/summary metrics/report
 
 cluster_samples : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)-snps.vcf) \
-				  $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)-snps-filtered.vcf)
+				  metrics/summary/snps.vcf
 
 DBSNP_SUBSET ?= $(HOME)/share/reference/dbsnp_tseq_intersect.bed
 CLUSTER_VCF ?= $(RSCRIPT) modules/test/qc/clustersample.R
@@ -18,14 +18,13 @@ marianas/$1/$1-snps.vcf : marianas/$1/$1.standard.bam
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES")
 									
-marianas/$1/$1-snps-filtered.vcf : marianas/$1/$1-snps.vcf
-	$$(call RUN,-n 1 -s 6G -m 12G,"grep '^#' $$(<) > $$(@) && \
-								   grep -e '0/1' -e '1/1' $$(<) >> $$(@)")
-
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call genotype-snps,$(sample))))
-
+		
+metrics/summary/snps.vcf : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)-snps.vcf)
+	$(call RUN,-s 16G -m 20G,"$(call GATK_MEM,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
+							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA)")
 
 include modules/vcf_tools/vcftools.mk
 
