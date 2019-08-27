@@ -11,11 +11,12 @@ CLUSTER_VCF ?= $(RSCRIPT) modules/test/qc/clustersample.R
 
 define genotype-snps
 marianas/$1/$1-snps.vcf : bam/$1-duplex.bam
-	$$(call RUN,-n 4 -s 2.5G -m 3G,"$(call GATK_MEM,8G) -T UnifiedGenotyper -nt 4 -R $(REF_FASTA) --dbsnp $(DBSNP) $(foreach bam,$(filter %.bam,$^),-I $(bam) ) -L $(DBSNP_SUBSET) -o $@ --output_mode EMIT_ALL_SITES")
+	$$(call RUN,-n 4 -s 2.5G -m 3G,"$(call GATK_MEM,8G) -T UnifiedGenotyper -nt 4 -R $(REF_FASTA) --dbsnp $(DBSNP) $(foreach bam,$(filter %-duplex.bam,$^),-I $(bam) ) -L $(DBSNP_SUBSET) -o $@ --output_mode EMIT_ALL_SITES")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call genotype-snps,$(sample))))
+
 
 include modules/vcf_tools/vcftools.mk
 
