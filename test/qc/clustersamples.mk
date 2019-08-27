@@ -11,7 +11,7 @@ cluster_samples : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)-snps.
 #				  metrics/report/snp_clustering.pdf
 
 DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
-CLUSTER_VCF = $(RSCRIPT) modules/test/qc/clustersample.R
+CLUSTER_VCF = $(RSCRIPT) modules/test/qc/clustersamples.R
 
 define genotype-snps
 marianas/$1/$1-snps.vcf : marianas/$1/$1.standard.bam
