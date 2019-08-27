@@ -19,7 +19,10 @@ plot_metrics : metrics/report/umi_frequencies.pdf \
 			   metrics/report/insert_size_summary.pdf
 
 metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
-	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 1")
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 1 && \
+														  gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/umi_frequencies-2.pdf metrics/report/umi_frequencies.pdf && \
+														  rm metrics/report/umi_frequencies.pdf && \
+														  mv metrics/report/umi_frequencies-2.pdf metrics/report/umi_frequencies.pdf")
 	
 metrics/report/umi_family_types_probe-A.pdf : metrics/summary/umi_family_types.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 2")

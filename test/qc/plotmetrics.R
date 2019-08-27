@@ -18,6 +18,8 @@ opt = arguments$options
 
 if (as.numeric(opt$type)==1) {
 
+	suppressPackageStartupMessages(library("superheat"))
+
 	data = read.csv(file="metrics/summary/umi_frequencies.tsv", sep="\t", header=TRUE, row.names=1, stringsAsFactors=FALSE)
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
@@ -28,7 +30,9 @@ if (as.numeric(opt$type)==1) {
 	index = order(apply(data, 2, sum))
 	data = data[,index,drop=FALSE]
 	pdf(file="metrics/report/umi_frequencies.pdf", width=14, height=14)
-	heatmap(t(as.matrix(data)), Rowv=NA, Colv=NA, scale="none", col=colorRampPalette(c("#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1"))( 256 ))
+	superheat(X = t(data), smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
+			  force.grid.hline = TRUE, force.grid.vline = TRUE, bottom.label.text.angle = 90, bottom.label.text.size = 3.5,
+			  grid.hline.col = "grey90", grid.vline.col = "grey90")
 	dev.off()
 	
 } else if (as.numeric(opt$type)==2) {

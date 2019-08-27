@@ -32,6 +32,7 @@ CNTILP_ENV ?= $(HOME)/share/usr/anaconda-envs/cnt-ilp
 PHYLO_ENV ?= $(HOME)/share/usr/anaconda-envs/phylotools
 MEDICC_ENV ?= $(HOME)/share/usr/anaconda-envs/medicc
 ASCAT_ENV ?= $(HOME)/share/usr/anaconda-envs/ascat
+SUPERHEAT_ENV ?= $(HOME)/share/usr/anaconda-envs/superheat-1.0.0
 
 # general paths
 JARDIR ?= $(HOME)/share/usr/lib/java
