@@ -32,7 +32,8 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/umi_frequencies.pdf", width=14, height=14)
 	superheat(X = t(data), smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  force.grid.hline = TRUE, force.grid.vline = TRUE, bottom.label.text.angle = 90, bottom.label.text.size = 3.5,
-			  grid.hline.col = "grey90", grid.vline.col = "grey90")
+			  bottom.label.size = .05, left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
+			  grid.vline.col = "grey90", print.plot = TRUE)
 	dev.off()
 	
 } else if (as.numeric(opt$type)==2) {
