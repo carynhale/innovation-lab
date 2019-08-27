@@ -12,6 +12,7 @@ MSK_ACCESS_WORKFLOW += copy_bam
 MSK_ACCESS_WORKFLOW += interval_metrics
 MSK_ACCESS_WORKFLOW += umi_qc
 MSK_ACCESS_WORKFLOW += plot_metrics
+MSK_ACCESS_WORKFLOW += cluster_samples
 
 msk_access_workflow : $(MSK_ACCESS_WORKFLOW)
 
@@ -23,6 +24,7 @@ include modules/test/bam_tools/copybam.mk
 include modules/test/qc/intervalmetrics.mk
 include modules/test/qc/umiqc.mk
 include modules/test/qc/plotmetrics.mk
+include modules/test/qc/clustersamples.mk
 
 .DELETE_ON_ERROR:
 .SECONDARY:
