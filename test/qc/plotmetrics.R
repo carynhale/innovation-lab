@@ -180,6 +180,23 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
+	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert() %>%
+		   filter(LIBRARY=="STANDARD") %>%
+		   filter(!is.na(MEAN_TARGET_COVERAGE_NO_DEDUP)) %>%
+		   arrange(desc(MEAN_TARGET_COVERAGE_NO_DEDUP)) %>%
+		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
+		   
+	pdf(file="metrics/report/mean_standard_target_coverage-nodedup.pdf", width=14)
+	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE_NO_DEDUP)) +
+			 geom_bar(stat="identity") +
+			 theme_classic(base_size=15) +
+			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
+			 labs(x="Sample ID", y="Depth")
+	print(plot.0)
+	dev.off()
+	
+	
 } else if (as.numeric(opt$type)==9) {
 
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
