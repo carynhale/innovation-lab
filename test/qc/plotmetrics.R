@@ -336,5 +336,37 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 
+} else if (as.numeric(opt$type)==15) {
+
+	data = read_tsv(file="metrics/summary/metrics_insert_distribution.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert()
+		   
+	pdf(file="metrics/report/insert_size_distribution.pdf", width=14)
+	libnames = c("Standard" = "STANDARD", "Collapsed" = "UNFILTERED", "Duplex" = "DUPLEX", "Simplex" = "SIMPLEX")
+	for (i in 1:length(libnames)) {
+		tmp.0 = data %>%
+				filter(LIBRARY==libnames[i]) %>%
+				dplyr::select(-LIBRARY)
+		tmp.1 = list()
+		for (j in 1:ncol(tmp.0)) {
+			x = 1:nrow(tmp.0)
+			y = tmp.0[,j,drop=TRUE]
+			x = x[!is.na(y)]
+			y = y[!is.na(y)]
+			z = smooth.spline(x=x, y=y, spar=0.3)
+			tmp.1[[j]] = data.frame(x=z$x, y=z$y) %>%
+				    	 mutate(`Sample ID` = colnames(tmp.0)[j])
+		}
+		tmp.1 = do.call(rbind, tmp.1)
+		plot.0 = ggplot(tmp.1, aes(x=x, y=y, color=`Sample ID`)) +
+				 geom_point(size=.5) +
+				 geom_line() +
+				 theme_classic(base_size=15) +
+				 labs(x="\nInsert size (bp)", y="Frequency\n", title=names(libnames)[i]) +
+				 theme(plot.title = element_text(hjust = 0.5, size=16)) +
+				 xlim(0, 400)
+		print(plot.0)
+	}
+	dev.off()
 }
 
