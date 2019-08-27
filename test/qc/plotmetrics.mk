@@ -15,7 +15,8 @@ plot_metrics : metrics/report/umi_frequencies.pdf \
 			   metrics/report/mean_duplex_target_coverage.pdf \
 			   metrics/report/mean_simplex_target_coverage.pdf \
 			   metrics/report/mean_standard_target_coverage-nodedup.pdf \
-			   metrics/report/aligment_summary.pdf
+			   metrics/report/aligment_summary.pdf \
+			   metrics/report/insert_size_summary.pdf
 
 metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 1")
@@ -55,6 +56,9 @@ metrics/report/mean_simplex_target_coverage-nodedup.pdf : metrics/summary/metric
 	
 metrics/report/aligment_summary.pdf : metrics/summary/metrics_idx.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 13")
+	
+metrics/report/insert_size_summary.pdf : metrics/summary/metrics_insert.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 14")
 
 	
 .DELETE_ON_ERROR:

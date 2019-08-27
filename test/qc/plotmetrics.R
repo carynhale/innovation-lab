@@ -283,5 +283,22 @@ if (as.numeric(opt$type)==1) {
 	}
 	dev.off()
 
+} else if (as.numeric(opt$type)==14) {
+
+	data = read_tsv(file="metrics/summary/metrics_insert.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert() %>%
+		   arrange(desc(MEDIAN_INSERT_SIZE)) %>%
+		   dplyr::rename(`Sample ID` = SAMPLE)
+		   
+	pdf(file="metrics/report/insert_size_summary.pdf", width=14)
+	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEDIAN_INSERT_SIZE, fill=LIBRARY)) +
+			 geom_bar(stat="identity", position="dodge") +
+		 	 theme_classic(base_size=15) +
+		 	 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
+		 	 labs(x="Sample ID", y="Average size (bp)\n", fill="Library") +
+		 	 ylim(0,200)
+	print(plot.0)
+	dev.off()
+
 }
 
