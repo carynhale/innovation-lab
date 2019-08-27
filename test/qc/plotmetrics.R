@@ -166,14 +166,14 @@ if (as.numeric(opt$type)==1) {
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
 		   filter(LIBRARY=="STANDARD") %>%
-		   arrange(MEAN_TARGET_COVERAGE) %>%
+		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
 		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
 		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
 		   
 	
 	pdf(file="metrics/report/mean_standard_target_coverage.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity") +
+			 geom_bar(stat="identity", position="dodge") +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth", fill="Bait set")
@@ -185,14 +185,14 @@ if (as.numeric(opt$type)==1) {
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
 		   filter(LIBRARY=="UNFILTERED") %>%
-		   arrange(MEAN_TARGET_COVERAGE) %>%
+		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
 		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
 		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
 		   
 	
 	pdf(file="metrics/report/mean_unfiltered_target_coverage.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity") +
+			 geom_bar(stat="identity", position="dodge") +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth", fill="Bait set")
@@ -204,14 +204,14 @@ if (as.numeric(opt$type)==1) {
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
 		   filter(LIBRARY=="DUPLEX") %>%
-		   arrange(MEAN_TARGET_COVERAGE) %>%
+		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
 		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
 		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
 		   
 	
 	pdf(file="metrics/report/mean_duplex_target_coverage.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity") +
+			 geom_bar(stat="identity", position="dodge") +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth", fill="Bait set")
@@ -223,14 +223,14 @@ if (as.numeric(opt$type)==1) {
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
 		   filter(LIBRARY=="SIMPLEX") %>%
-		   arrange(MEAN_TARGET_COVERAGE) %>%
+		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
 		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
 		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
 		   
 	
 	pdf(file="metrics/report/mean_simplex_target_coverage.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity") +
+			 geom_bar(stat="identity", position="dodge") +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth", fill="Bait set")
