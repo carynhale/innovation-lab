@@ -255,4 +255,34 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
+} else if (as.numeric(opt$type)==13) {
+
+	data = read_tsv(file="metrics/summary/metrics_idx.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert()
+		   
+	x = data %>%
+		dplyr::select(N = N_ALIGNED, SAMPLE, LIBRARY) %>%
+		mutate(TYPE = "Aligned")
+	y = data %>%
+		dplyr::select(N = N_UNALIGNED, SAMPLE, LIBRARY) %>%
+		mutate(TYPE = "Unaligned")
+	data = bind_rows(x, y) %>%
+		   arrange(N) %>%
+		   dplyr::rename(`Sample ID` = SAMPLE, Type = TYPE) %>%
+		   mutate(`Sample ID` = factor(`Sample ID`, levels=unique(`Sample ID`), ordered=TRUE))
+		   
+	
+	LIBRARIES = c("STANDARD", "UNFILTERED", "DUPLEX", "SIMPLEX")
+	for (i in LIBRARIES) {
+		pdf(file=paste0("metrics/report/aligment_summary_", tolower(i), ".pdf"), width=14)
+		plot.0 = ggplot(data %>% filter(LIBRARY==i), aes(x=`Sample ID`, y=N, fill=Type)) +
+				 geom_bar(stat="identity") +
+		 		 theme_classic(base_size=15) +
+		 		 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
+		 		 labs(x="Sample ID", y="Number of reads\n")
+		print(plot.0)
+		dev.off()
+	}
+	
 }
+
