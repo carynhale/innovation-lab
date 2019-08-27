@@ -6,10 +6,12 @@ PHONE += marianas metrics/summary metrics/report
 
 cluster_samples : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)-snps.vcf) \
 				  metrics/summary/snps.vcf \
-				  metrics/summary/snps-filtered.vcf
+				  metrics/summary/snps-filtered.vcf \
+				  metrics/summary/snps-filtered.tsv
+#				  metrics/report/snp_clustering.pdf
 
-DBSNP_SUBSET ?= $(HOME)/share/reference/dbsnp_tseq_intersect.bed
-CLUSTER_VCF ?= $(RSCRIPT) modules/test/qc/clustersample.R
+DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
+CLUSTER_VCF = $(RSCRIPT) modules/test/qc/clustersample.R
 
 define genotype-snps
 marianas/$1/$1-snps.vcf : marianas/$1/$1.standard.bam
@@ -29,6 +31,9 @@ metrics/summary/snps.vcf : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(samp
 							  
 metrics/summary/snps-filtered.vcf : metrics/summary/snps.vcf
 	$(INIT) grep '^#' $< > $@ && grep -e '0/1' -e '1/1' $< >> $@
+	
+metrics/report/snps-filtered.tsv : metrics/summary/snps-filtered.vcf
+	$(INIT) $(CLUSTER_VCF)
 
 include modules/vcf_tools/vcftools.mk
 
