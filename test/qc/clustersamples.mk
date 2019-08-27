@@ -10,7 +10,7 @@ DBSNP_SUBSET ?= $(HOME)/share/reference/dbsnp_tseq_intersect.bed
 CLUSTER_VCF ?= $(RSCRIPT) modules/test/qc/clustersample.R
 
 define genotype-snps
-marianas/$1/$1-snps.vcf : bam/$1-duplex.bam
+marianas/$1/$1-snps.vcf : marianas/$1/$1.standard.bam
 	$$(call RUN,-n 4 -s 2.5G -m 3G,"$(call GATK_MEM,8G) -T UnifiedGenotyper -nt 4 -R $(REF_FASTA) --dbsnp $(DBSNP) $(foreach bam,$(filter %-duplex.bam,$^),-I $(bam) ) -L $(DBSNP_SUBSET) -o $@ --output_mode EMIT_ALL_SITES")
 
 endef
