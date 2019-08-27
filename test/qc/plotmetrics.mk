@@ -10,11 +10,11 @@ plot_metrics : metrics/report/umi_frequencies.pdf \
 			   metrics/report/umi_family_sizes_all.pdf \
 			   metrics/report/umi_family_sizes_duplex.pdf \
 			   metrics/report/umi_family_sizes_simplex.pdf \
-			   metrics/report/mean_standard_target_coverage.pdf \
+			   metrics/report/mean_standard_target_coverage-dedup.pdf \
+			   metrics/report/mean_standard_target_coverage-nodedup.pdf \
 			   metrics/report/mean_unfiltered_target_coverage.pdf \
 			   metrics/report/mean_duplex_target_coverage.pdf \
 			   metrics/report/mean_simplex_target_coverage.pdf \
-			   metrics/report/mean_standard_target_coverage-nodedup.pdf \
 			   metrics/report/aligment_summary.pdf \
 			   metrics/report/insert_size_summary.pdf
 
@@ -42,19 +42,19 @@ metrics/report/umi_family_sizes_duplex.pdf : metrics/summary/umi_families.tsv
 metrics/report/umi_family_sizes_simplex.pdf : metrics/summary/umi_families.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 7")
 	
-metrics/report/mean_standard_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+metrics/report/mean_standard_target_coverage-dedup.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 8")
 
-metrics/report/mean_unfiltered_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+metrics/report/mean_standard_target_coverage-nodedup.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 9")
 
-metrics/report/mean_duplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+metrics/report/mean_unfiltered_target_coverage.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 10")
 
-metrics/report/mean_simplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+metrics/report/mean_duplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 11")
-	
-metrics/report/mean_standard_target_coverage-nodedup.pdf : metrics/summary/metrics_hs.tsv
+
+metrics/report/mean_simplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 12")
 	
 metrics/report/aligment_summary.pdf : metrics/summary/metrics_idx.tsv
