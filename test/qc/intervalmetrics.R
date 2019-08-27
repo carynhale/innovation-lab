@@ -281,6 +281,9 @@ if (as.numeric(opt$metric_type)==1) {
 	}
 	hs_metrics_a = do.call(rbind, hs_metrics_a)
 	hs_metrics_b = do.call(rbind, hs_metrics_b)
+	hs_metrics_a = cbind(hs_metrics_a, "MEAN_TARGET_COVERAGE_NO_DEDUP"=rep(NA, length(sample_names)))
+	hs_metrics_b = cbind(hs_metrics_b, "MEAN_TARGET_COVERAGE_NO_DEDUP"=rep(NA, length(sample_names)))
+	
 	hs_metrics = rbind(hs_metrics_a, hs_metrics_b) %>%
 				 arrange(SAMPLE) %>%
 				 dplyr::select(GENOME_SIZE,
@@ -288,6 +291,7 @@ if (as.numeric(opt$metric_type)==1) {
 				 			   TARGET_TERRITORY,
 				 			   ON_TARGET_BASES,
 				 			   MEAN_TARGET_COVERAGE,
+				 			   MEAN_TARGET_COVERAGE_NO_DEDUP,
 				 			   PCT_TARGET_BASES_2X,
 				 			   PCT_TARGET_BASES_10X,
 				 			   PCT_TARGET_BASES_20X,
@@ -414,6 +418,9 @@ if (as.numeric(opt$metric_type)==1) {
 	}
 	hs_metrics_a = do.call(rbind, hs_metrics_a)
 	hs_metrics_b = do.call(rbind, hs_metrics_b)
+	hs_metrics_a = cbind(hs_metrics_a, "MEAN_TARGET_COVERAGE_NO_DEDUP"=rep(NA, length(sample_names)))
+	hs_metrics_b = cbind(hs_metrics_b, "MEAN_TARGET_COVERAGE_NO_DEDUP"=rep(NA, length(sample_names)))
+	
 	hs_metrics = rbind(hs_metrics_a, hs_metrics_b) %>%
 				 arrange(SAMPLE) %>%
 				 dplyr::select(GENOME_SIZE,
@@ -421,6 +428,7 @@ if (as.numeric(opt$metric_type)==1) {
 				 			   TARGET_TERRITORY,
 				 			   ON_TARGET_BASES,
 				 			   MEAN_TARGET_COVERAGE,
+				 			   MEAN_TARGET_COVERAGE_NO_DEDUP,
 				 			   PCT_TARGET_BASES_2X,
 				 			   PCT_TARGET_BASES_10X,
 				 			   PCT_TARGET_BASES_20X,
@@ -547,6 +555,9 @@ if (as.numeric(opt$metric_type)==1) {
 	}
 	hs_metrics_a = do.call(rbind, hs_metrics_a)
 	hs_metrics_b = do.call(rbind, hs_metrics_b)
+	hs_metrics_a = cbind(hs_metrics_a, "MEAN_TARGET_COVERAGE_NO_DEDUP"=rep(NA, length(sample_names)))
+	hs_metrics_b = cbind(hs_metrics_b, "MEAN_TARGET_COVERAGE_NO_DEDUP"=rep(NA, length(sample_names)))
+	
 	hs_metrics = rbind(hs_metrics_a, hs_metrics_b) %>%
 				 arrange(SAMPLE) %>%
 				 dplyr::select(GENOME_SIZE,
@@ -554,6 +565,7 @@ if (as.numeric(opt$metric_type)==1) {
 				 			   TARGET_TERRITORY,
 				 			   ON_TARGET_BASES,
 				 			   MEAN_TARGET_COVERAGE,
+				 			   MEAN_TARGET_COVERAGE_NO_DEDUP,
 				 			   PCT_TARGET_BASES_2X,
 				 			   PCT_TARGET_BASES_10X,
 				 			   PCT_TARGET_BASES_20X,
