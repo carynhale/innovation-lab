@@ -5,6 +5,7 @@ suppressPackageStartupMessages(library("readr"))
 suppressPackageStartupMessages(library("dplyr"))
 suppressPackageStartupMessages(library("magrittr"))
 suppressPackageStartupMessages(library("ggplot2"))
+suppressPackageStartupMessages(library("scales"))
 
 if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
@@ -129,9 +130,13 @@ if (as.numeric(opt$type)==1) {
 	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
 			 geom_point(size=.5) +
 			 geom_line() +
+			 scale_x_continuous(trans = 'log2',
+			 					breaks = c(1, 10, 20, 30, 40, 50),
+    							labels = c(1, 10, 20, 30, 40, 50),
+    							limits = c(1, 50)) +
 			 theme_classic(base_size=15) +
-			 labs(x="Family size", y="Frequency") +
-			 xlim(0, 50)
+			 labs(x="\nFamily size", y="Frequency\n", title="All") +
+			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
 	
@@ -146,9 +151,13 @@ if (as.numeric(opt$type)==1) {
 	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
 			 geom_point(size=.5) +
 			 geom_line() +
+			 scale_x_continuous(trans = 'log2',
+			 					breaks = c(1, 10, 20, 30, 40, 50),
+    							labels = c(1, 10, 20, 30, 40, 50),
+    							limits = c(1, 50)) +
 			 theme_classic(base_size=15) +
-			 labs(x="Family size", y="Frequency") +
-			 xlim(0, 50)
+			 labs(x="\nFamily size", y="Frequency\n", title="Duplex") +
+			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
 	
@@ -163,9 +172,13 @@ if (as.numeric(opt$type)==1) {
 	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
 			 geom_point(size=.5) +
 			 geom_line() +
+			 scale_x_continuous(trans = 'log2',
+			 					breaks = c(1, 10, 20, 30, 40, 50),
+    							labels = c(1, 10, 20, 30, 40, 50),
+    							limits = c(1, 50)) +
 			 theme_classic(base_size=15) +
-			 labs(x="Family size", y="Frequency") +
-			 xlim(0, 50)
+			 labs(x="\nFamily size", y="Frequency\n", title="Simplex") +
+			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
 	
