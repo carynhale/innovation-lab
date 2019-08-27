@@ -368,5 +368,24 @@ if (as.numeric(opt$type)==1) {
 		print(plot.0)
 	}
 	dev.off()
+	
+} else if (as.numeric(opt$type)==16) {
+
+	suppressPackageStartupMessages(library("superheat"))
+
+	data = read.csv(file="metrics/summary/snps-filtered.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
+	data = data	 %>%
+		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
+		   type_convert()
+	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
+	dm = max(dm) - dm
+	pdf(file="metrics/report/snp_clustering.pdf", width=14, height=14)
+	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
+			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
+			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
+			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
+			  grid.vline.col = "grey90", print.plot = TRUE)
+	dev.off()
+	
 }
 

@@ -7,8 +7,8 @@ PHONE += marianas metrics/summary metrics/report
 cluster_samples : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)-snps.vcf) \
 				  metrics/summary/snps.vcf \
 				  metrics/summary/snps-filtered.vcf \
-				  metrics/summary/snps-filtered.tsv
-#				  metrics/report/snp_clustering.pdf
+				  metrics/summary/snps-filtered.tsv \
+				  metrics/report/snp_clustering.pdf
 
 DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
 CLUSTER_VCF = $(RSCRIPT) modules/test/qc/clustersamples.R
@@ -34,9 +34,15 @@ metrics/summary/snps-filtered.vcf : metrics/summary/snps.vcf
 	
 metrics/summary/snps-filtered.tsv : metrics/summary/snps-filtered.vcf
 	$(INIT) $(CLUSTER_VCF)
+	
+metrics/report/snp_clustering.pdf : metrics/summary/snps-filtered.tsv
+	$(call RUN, -c -n 1 -s 12G -m 16G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 16 && \
+									   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snp_clustering-2.pdf metrics/report/snp_clustering.pdf && \
+									   rm metrics/report/snp_clustering.pdf && \
+									   mv metrics/report/snp_clustering-2.pdf metrics/report/snp_clustering.pdf")
 
 include modules/vcf_tools/vcftools.mk
 
 .DELETE_ON_ERROR:
 .SECONDARY: 
-.PHONY : all
+.PHONY: $(PHONY)
