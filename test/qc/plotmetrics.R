@@ -271,18 +271,17 @@ if (as.numeric(opt$type)==1) {
 		   dplyr::rename(`Sample ID` = SAMPLE, Type = TYPE) %>%
 		   mutate(`Sample ID` = factor(`Sample ID`, levels=unique(`Sample ID`), ordered=TRUE))
 		   
-	
+	pdf(file="metrics/report/aligment_summary.pdf", width=14)
 	LIBRARIES = c("STANDARD", "UNFILTERED", "DUPLEX", "SIMPLEX")
 	for (i in LIBRARIES) {
-		pdf(file=paste0("metrics/report/aligment_summary_", tolower(i), ".pdf"), width=14)
 		plot.0 = ggplot(data %>% filter(LIBRARY==i), aes(x=`Sample ID`, y=N, fill=Type)) +
 				 geom_bar(stat="identity") +
 		 		 theme_classic(base_size=15) +
 		 		 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 		 		 labs(x="Sample ID", y="Number of reads\n")
 		print(plot.0)
-		dev.off()
 	}
-	
+	dev.off()
+
 }
 
