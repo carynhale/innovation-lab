@@ -50,7 +50,7 @@ if (as.numeric(opt$type)==1) {
 			 geom_bar(stat="identity") +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(fill = "Family type")
+			 labs(fill = "Family type", x=" ", title="Probe-A bait set", y="Count\n")
 	print(plot.0)
 	dev.off()
 
@@ -68,7 +68,7 @@ if (as.numeric(opt$type)==1) {
 			 geom_bar(stat="identity") +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(fill = "Family type")
+			 labs(fill = "Family type", x=" ", title="Probe-B bait set", y="Count\n")
 	print(plot.0)
 	dev.off()
 
