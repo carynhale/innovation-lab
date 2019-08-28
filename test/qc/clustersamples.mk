@@ -27,6 +27,7 @@ cluster_samples : $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-snps.vc
 
 DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
 CLUSTER_VCF = $(RSCRIPT) modules/test/qc/clustersamples.R
+POOL_AB_INTERVAL ?= /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.sorted.list
 
 define genotype-snps-standard
 metrics/standard/$1-snps.vcf : bam/$1-standard.bam
@@ -36,7 +37,8 @@ metrics/standard/$1-snps.vcf : bam/$1-standard.bam
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--min_base_quality_score 30 \
-									--standard_min_confidence_threshold_for_calling 20")
+									--standard_min_confidence_threshold_for_calling 20 \
+									-L $(POOL_AB_INTERVAL)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -67,7 +69,8 @@ metrics/unfiltered/$1-snps.vcf : bam/$1-unfiltered.bam
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10 \
-									--standard_min_confidence_threshold_for_calling 20")
+									--standard_min_confidence_threshold_for_calling 20 \
+									-L $(POOL_AB_INTERVAL)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -98,7 +101,8 @@ metrics/simplex/$1-snps.vcf : bam/$1-simplex.bam
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10 \
-									--standard_min_confidence_threshold_for_calling 20")
+									--standard_min_confidence_threshold_for_calling 20 \
+									-L $(POOL_AB_INTERVAL)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -129,7 +133,8 @@ metrics/duplex/$1-snps.vcf : bam/$1-duplex.bam
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10 \
-									--standard_min_confidence_threshold_for_calling 20")
+									--standard_min_confidence_threshold_for_calling 20 \
+									-L $(POOL_AB_INTERVAL)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
