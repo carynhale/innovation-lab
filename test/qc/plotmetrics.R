@@ -217,7 +217,7 @@ if (as.numeric(opt$type)==1) {
 			 scale_fill_manual(values=c("Probe-A"="#619CFF", "Probe-B"="#00BA38")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth\n", title="MEAN COVERAGE WITH DUPLICATES") +
+			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN COVERAGE WITH DUPLICATES") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
