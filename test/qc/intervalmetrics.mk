@@ -56,15 +56,15 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/summary/metrics_insert.tsv \
 				   metrics/summary/metrics_insert_distribution.tsv \
 				   metrics/summary/metrics_hs.tsv \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).ontarget.cnn) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).offtarget.cnn)
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).ontarget.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).offtarget.txt)
 				   
 define coverage-metric
-metrics/standard/$1.ontarget.cnn : bam/$1-standard.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o metrics/standard/$$(*).ontarget.cnn")
+metrics/standard/$1.ontarget.txt : bam/$1-standard.bam
+	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o $$(@)")
 
-metrics/standard/$1.offtarget.cnn : bam/$1-standard.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o metrics/standard/$$(*).offtarget.cnn")
+metrics/standard/$1.offtarget.txt : bam/$1-standard.bam
+	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call coverage-metric,$(sample))))
