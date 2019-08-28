@@ -34,7 +34,9 @@ metrics/standard/$1-snps.vcf : bam/$1-standard.bam
 									-I $$(<) \
 									-L $(DBSNP_SUBSET) \
 									-o $$(@) \
-									--output_mode EMIT_ALL_SITES")
+									--output_mode EMIT_ALL_SITES \
+									--min_base_quality_score 30 \
+									--standard_min_confidence_threshold_for_calling 20")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -64,7 +66,8 @@ metrics/unfiltered/$1-snps.vcf : bam/$1-unfiltered.bam
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
-									--min_base_quality_score 10")
+									--min_base_quality_score 10 \
+									--standard_min_confidence_threshold_for_calling 20")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -94,7 +97,8 @@ metrics/simplex/$1-snps.vcf : bam/$1-simplex.bam
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
-									--min_base_quality_score 10")
+									--min_base_quality_score 10 \
+									--standard_min_confidence_threshold_for_calling 20")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -124,7 +128,8 @@ metrics/duplex/$1-snps.vcf : bam/$1-duplex.bam
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
-									--min_base_quality_score 10")
+									--min_base_quality_score 10 \
+									--standard_min_confidence_threshold_for_calling 20")
 									
 endef
 $(foreach sample,$(SAMPLES),\
