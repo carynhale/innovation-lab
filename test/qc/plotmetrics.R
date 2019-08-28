@@ -34,7 +34,7 @@ if (as.numeric(opt$type)==1) {
 	superheat(X = t(data), smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  force.grid.hline = TRUE, force.grid.vline = TRUE, bottom.label.text.angle = 90, bottom.label.text.size = 3.5,
 			  bottom.label.size = .05, left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", title="UMI FREQUENCY", print.plot = TRUE)
+			  grid.vline.col = "grey90", title="     ", print.plot = TRUE)
 	dev.off()
 	
 } else if (as.numeric(opt$type)==2) {
