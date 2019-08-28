@@ -377,9 +377,15 @@ if (as.numeric(opt$type)==1) {
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
-	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
+	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
+	data[is.na(data)] = 1
+	data[data==3] = 1
+	for (i in 1:2) {
+		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
+	}
+	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
 	pdf(file="metrics/report/snps_clustering-standard.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
+	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
 			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
 			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
@@ -394,9 +400,15 @@ if (as.numeric(opt$type)==1) {
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
-	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
+	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
+	data[is.na(data)] = 1
+	data[data==3] = 1
+	for (i in 1:2) {
+		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
+	}
+	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
 	pdf(file="metrics/report/snps_clustering-unfiltered.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
+	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
 			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
 			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
@@ -411,9 +423,15 @@ if (as.numeric(opt$type)==1) {
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
-	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
+	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
+	data[is.na(data)] = 1
+	data[data==3] = 1
+	for (i in 1:2) {
+		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
+	}
+	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
 	pdf(file="metrics/report/snps_clustering-simplex.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
+	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
 			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
 			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
@@ -428,9 +446,15 @@ if (as.numeric(opt$type)==1) {
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
-	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
+	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
+	data[is.na(data)] = 1
+	data[data==3] = 1
+	for (i in 1:2) {
+		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
+	}
+	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
 	pdf(file="metrics/report/snps_clustering-duplex.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
+	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
 			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
 			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
