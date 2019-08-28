@@ -6,6 +6,8 @@ PHONY += metrics metrics/standard metrics/unfiltered metrics/duplex metrics/simp
 
 POOL_A_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.list
+ONTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.ontarget.bed
+OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.offtarget.bed
 
 interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
@@ -53,7 +55,19 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/summary/metrics_aln.tsv \
 				   metrics/summary/metrics_insert.tsv \
 				   metrics/summary/metrics_insert_distribution.tsv \
-				   metrics/summary/metrics_hs.tsv
+				   metrics/summary/metrics_hs.tsv \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).ontarget.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).offtarget.txt)
+				   
+define coverage-metric
+metrics/standard/$1.ontarget.txt : bam/$1-standard.bam
+	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o metrics/standard/$$(*).ontarget.txt")
+
+metrics/standard/$1.offtarget.txt : bam/$1-standard.bam
+	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o metrics/standard/$$(*).offtarget.txt")
+endef
+ $(foreach sample,$(SAMPLES),\
+		$(eval $(call coverage-metric,$(sample))))
 
 define picard-metrics-standard
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
