@@ -378,7 +378,6 @@ if (as.numeric(opt$type)==1) {
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
 	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
-	dm = max(dm) - dm
 	pdf(file="metrics/report/snps_clustering-standard.pdf", width=14, height=14)
 	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
@@ -396,7 +395,6 @@ if (as.numeric(opt$type)==1) {
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
 	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
-	dm = max(dm) - dm
 	pdf(file="metrics/report/snps_clustering-unfiltered.pdf", width=14, height=14)
 	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
@@ -414,7 +412,6 @@ if (as.numeric(opt$type)==1) {
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
 	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
-	dm = max(dm) - dm
 	pdf(file="metrics/report/snps_clustering-simplex.pdf", width=14, height=14)
 	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
@@ -432,7 +429,6 @@ if (as.numeric(opt$type)==1) {
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
 	dm = as.matrix(dist(t(data), method="euclidean", diag=TRUE, upper=TRUE))
-	dm = max(dm) - dm
 	pdf(file="metrics/report/snps_clustering-duplex.pdf", width=14, height=14)
 	superheat(X = dm, smooth.heat = FALSE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
