@@ -127,7 +127,7 @@ metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
 									   TMP_DIR=$(TMPDIR)")
 												
-metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1realn.bam
+metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
 									   R=$(REF_FASTA) \
 									   I=$$(<) \
