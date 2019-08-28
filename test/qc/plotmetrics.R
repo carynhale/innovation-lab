@@ -390,7 +390,7 @@ if (as.numeric(opt$type)==1) {
 			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
 			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
 			  grid.vline.col = "grey90", print.plot = TRUE,
-			  heat.lim = c(10, 100), extreme.values.na = FALSE)
+			  heat.lim = c(50, max(dm)), extreme.values.na = FALSE)
 	dev.off()
 	
 } else if (as.numeric(opt$type)==17) {
