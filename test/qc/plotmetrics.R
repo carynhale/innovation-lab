@@ -207,9 +207,8 @@ if (as.numeric(opt$type)==1) {
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
 		   filter(LIBRARY=="STANDARD") %>%
-		   filter(!is.na(MEAN_TARGET_COVERAGE_NO_DEDUP)) %>%
 		   arrange(desc(MEAN_TARGET_COVERAGE_NO_DEDUP)) %>%
-		    mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
+		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
 		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
 		   
 	pdf(file="metrics/report/mean_standard_target_coverage-nodedup.pdf", width=14)
