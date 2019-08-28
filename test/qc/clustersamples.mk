@@ -47,6 +47,7 @@ metrics/unfiltered/$1-snps.vcf : bam/$1-unfiltered.bam
 									-L $(DBSNP_SUBSET) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
+									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10")
 									
 endef
@@ -60,6 +61,7 @@ metrics/simplex/$1-snps.vcf : bam/$1-simplex.bam
 									-L $(DBSNP_SUBSET) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
+									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10")
 									
 endef
@@ -73,6 +75,7 @@ metrics/duplex/$1-snps.vcf : bam/$1-duplex.bam
 									-L $(DBSNP_SUBSET) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
+									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10")
 									
 endef
