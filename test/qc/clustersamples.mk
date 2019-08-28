@@ -19,9 +19,11 @@ cluster_samples : $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-snps.vc
 				  $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-snps.vcf) \
 				  metrics/summary/snps_combined-duplex.vcf \
 				  metrics/summary/snps_filtered-duplex.vcf \
-				  metrics/summary/snps_filtered-duplex.tsv
-				  
-#				  metrics/report/snps_clustering-standard.pdf
+				  metrics/summary/snps_filtered-duplex.tsv \
+				  metrics/report/snps_clustering-standard.pdf \
+				  metrics/report/snps_clustering-unfiltered.pdf \
+				  metrics/report/snps_clustering-simplex.pdf \
+				  metrics/report/snps_clustering-duplex.pdf
 
 DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
 CLUSTER_VCF = $(RSCRIPT) modules/test/qc/clustersamples.R
