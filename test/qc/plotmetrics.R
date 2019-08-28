@@ -384,6 +384,7 @@ if (as.numeric(opt$type)==1) {
 		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
 	}
 	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
+	dm[dm>100] = 1000
 	pdf(file="metrics/report/snps_clustering-standard.pdf", width=14, height=14)
 	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
