@@ -15,6 +15,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
 				   metrics/standard/metrics_idx.tsv \
 				   metrics/standard/metrics_aln.tsv \
 				   metrics/standard/metrics_insert.tsv \
