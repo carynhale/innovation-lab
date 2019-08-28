@@ -7,7 +7,20 @@ PHONE += metrics metrics/summary metrics/report
 cluster_samples : $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-snps.vcf) \
 				  metrics/summary/snps_combined-standard.vcf \
 				  metrics/summary/snps_filtered-standard.vcf \
-				  metrics/summary/snps_filtered-standard.tsv
+				  metrics/summary/snps_filtered-standard.tsv \
+				  $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample)-snps.vcf) \
+				  metrics/summary/snps_combined-unfiltered.vcf \
+				  metrics/summary/snps_filtered-unfiltered.vcf \
+				  metrics/summary/snps_filtered-unfiltered.tsv \
+				  $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-snps.vcf) \
+				  metrics/summary/snps_combined-simplex.vcf \
+				  metrics/summary/snps_filtered-simplex.vcf \
+				  metrics/summary/snps_filtered-simplex.tsv \
+				  $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-snps.vcf) \
+				  metrics/summary/snps_combined-duplex.vcf \
+				  metrics/summary/snps_filtered-duplex.vcf \
+				  metrics/summary/snps_filtered-duplex.tsv
+				  
 #				  metrics/report/snps_clustering-standard.pdf
 
 DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
