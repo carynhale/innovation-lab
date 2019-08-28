@@ -137,15 +137,26 @@ if (as.numeric(opt$metric_type)==1) {
 	hs_metrics_a = do.call(rbind, hs_metrics_a)
 	hs_metrics_b = do.call(rbind, hs_metrics_b)
 	
-	hs_metrics_dup = list()
+	hs_metrics_a_nodedup = hs_metrics_b_nodedup = list()
 	for (i in 1:length(sample_names)) {
-		hs_metrics_dup[[i]] = read_tsv(file=paste0("marianas/", sample_names[i], "/", sample_names[i], ".standard-pileup.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   				      type_convert() %>%
-		   				      summarize(X = mean(X4)) %>%
-		   				      .[["X"]]
+		hs_metrics_a_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics-nodedup.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				    		slice(2:n()) %>%
+		   				    		type_convert() %>%
+		   				    		mutate(SAMPLE = sample_names[i])
+		hs_metrics_b_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics-nodedup.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				    		slice(2:n()) %>%
+		   				    		type_convert() %>%
+		   				    		mutate(SAMPLE = sample_names[i])
+		   				   
 	}
-	hs_metrics_a = cbind(hs_metrics_a, "MEAN_TARGET_COVERAGE_NO_DEDUP"=unlist(hs_metrics_dup))
-	hs_metrics_b = cbind(hs_metrics_b, "MEAN_TARGET_COVERAGE_NO_DEDUP"=rep(NA, length(hs_metrics_dup)))
+	hs_metrics_a_nodedup = do.call(rbind, hs_metrics_a_nodedup)
+	hs_metrics_b_nodedup = do.call(rbind, hs_metrics_b_nodedup)
+	colnames(hs_metrics_a_nodedup) = paste0(colnames(hs_metrics_a_nodedup), "_NO_DEDUP")
+	colnames(hs_metrics_b_nodedup) = paste0(colnames(hs_metrics_b_nodedup), "_NO_DEDUP")
+	
+	
+	hs_metrics_a = cbind(hs_metrics_a, hs_metrics_a_nodedup)
+	hs_metrics_b = cbind(hs_metrics_b, hs_metrics_b_nodedup)
 	
 	hs_metrics = rbind(hs_metrics_a, hs_metrics_b) %>%
 				 arrange(SAMPLE) %>%
@@ -154,7 +165,6 @@ if (as.numeric(opt$metric_type)==1) {
 				 			   TARGET_TERRITORY,
 				 			   ON_TARGET_BASES,
 				 			   MEAN_TARGET_COVERAGE,
-				 			   MEAN_TARGET_COVERAGE_NO_DEDUP,
 				 			   PCT_TARGET_BASES_2X,
 				 			   PCT_TARGET_BASES_10X,
 				 			   PCT_TARGET_BASES_20X,
@@ -164,6 +174,17 @@ if (as.numeric(opt$metric_type)==1) {
 				 			   PCT_TARGET_BASES_100X,
 				 			   AT_DROPOUT,
 				 			   GC_DROPOUT,
+				 			   ON_TARGET_BASES_NO_DEDUP,
+				 			   MEAN_TARGET_COVERAGE_NO_DEDUP,
+				 			   PCT_TARGET_BASES_2X_NO_DEDUP,
+				 			   PCT_TARGET_BASES_10X_NO_DEDUP,
+				 			   PCT_TARGET_BASES_20X_NO_DEDUP,
+				 			   PCT_TARGET_BASES_30X_NO_DEDUP,
+				 			   PCT_TARGET_BASES_40X_NO_DEDUP,
+				 			   PCT_TARGET_BASES_50X_NO_DEDUP,
+				 			   PCT_TARGET_BASES_100X_NO_DEDUP,
+				 			   AT_DROPOUT_NO_DEDUP,
+				 			   GC_DROPOUT_NO_DEDUP,
 				 			   SAMPLE) %>%
 				 mutate(PCT_TARGET_BASES_2X = 100*PCT_TARGET_BASES_2X,
 				 		PCT_TARGET_BASES_10X = 100*PCT_TARGET_BASES_10X,
@@ -171,7 +192,14 @@ if (as.numeric(opt$metric_type)==1) {
 				 		PCT_TARGET_BASES_30X = 100*PCT_TARGET_BASES_30X,
 				 		PCT_TARGET_BASES_40X = 100*PCT_TARGET_BASES_40X,
 				 		PCT_TARGET_BASES_50X = 100*PCT_TARGET_BASES_50X,
-				 		PCT_TARGET_BASES_100X = 100*PCT_TARGET_BASES_100X)
+				 		PCT_TARGET_BASES_100X = 100*PCT_TARGET_BASES_100X,
+				 		PCT_TARGET_BASES_2X_NO_DEDUP = 100*PCT_TARGET_BASES_2X_NO_DEDUP,
+				 		PCT_TARGET_BASES_10X_NO_DEDUP = 100*PCT_TARGET_BASES_10X_NO_DEDUP,
+				 		PCT_TARGET_BASES_20X_NO_DEDUP = 100*PCT_TARGET_BASES_20X_NO_DEDUP,
+				 		PCT_TARGET_BASES_30X_NO_DEDUP = 100*PCT_TARGET_BASES_30X_NO_DEDUP,
+				 		PCT_TARGET_BASES_40X_NO_DEDUP = 100*PCT_TARGET_BASES_40X_NO_DEDUP,
+				 		PCT_TARGET_BASES_50X_NO_DEDUP = 100*PCT_TARGET_BASES_50X_NO_DEDUP,
+				 		PCT_TARGET_BASES_100X_NO_DEDUP = 100*PCT_TARGET_BASES_100X_NO_DEDUP)
 	write_tsv(x=hs_metrics, path="metrics/standard/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$metric_type)==7) {
