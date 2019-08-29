@@ -29,7 +29,7 @@ git clone https://github.com/ndbrown6/modules.git
 ### Whole genome, whole exome and targeted sequencing
 - Alignment:
 	* [Broad's GATK best practices workflow](https://software.broadinstitute.org/gatk/best-practices/) for handling sequence data
-	* [Marianas](https://github.com/juberpatel/Marianas) & [Waltz](https://github.com/juberpatel/Waltz) for [MSK-ACCESS](https://github.com/msk-access)
+	* [Marianas](https://github.com/juberpatel/Marianas) & [Waltz](https://github.com/juberpatel/Waltz) for [MSK-ACCESS](https://github.com/ndbrown6/modules/wiki/4.-MSK%E2%80%90ACCESS)
 	* General purpose workflow to collapse UMI and call consensus duplex reads using [fgbio](https://github.com/fulcrumgenomics/fgbio)
 - Mutation calling:
 	* [MuTect](https://www.nature.com/articles/nbt.2514)
@@ -38,7 +38,7 @@ git clone https://github.com/ndbrown6/modules.git
 	* [Scalpel](https://doi.org/10.1038/nprot.2016.150)
 	* [Lancet](https://www.nature.com/articles/s42003-018-0023-9)
 	* [Varscan](https://academic.oup.com/bioinformatics/article/25/17/2283/210190)
-- Copy number:
+- Copy number aberrations:
 	* [FACETS](https://academic.oup.com/nar/article/44/16/e131/2460163)
 	* [ASCAT](https://www.pnas.org/content/107/39/16910)
 	* [CNVkit](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004873)
