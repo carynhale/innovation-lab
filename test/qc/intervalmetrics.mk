@@ -62,7 +62,36 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
-				   metrics/summary/metrics_ts.tsv
+				   metrics/summary/metrics_ts.tsv \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt)
+
+
+define pielup-metric
+metrics/standard/$1-pileup.txt : bam/$1-standard.bam
+	$$(call RUN,-c -s 6G -m 12G,"cp bam/$1-standard.bam metrics/standard/$1.bam && \
+								 cp bam/$1-standard.bam.bai metrics/standard/$1.bam.bai && \
+								 cp bam/$1-standard.bai metrics/standard/$1.bai && \
+								 cd metrics/standard && \
+								 $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 rm -rf $1.bam && \
+								 rm -rf $1.bam.bai && \
+								 rm -rf $1.bai")
+									 
+metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
+	$$(call RUN,-c -s 6G -m 12G,"cp bam/$1-duplex.bam metrics/duplex/$1.bam && \
+								 cp bam/$1-duplex.bam.bai metrics/duplex/$1.bam.bai && \
+								 cp bam/$1-duplex.bai metrics/duplex/$1.bai && \
+								 cd metrics/duplex && \
+								 $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 rm -rf $1.bam && \
+								 rm -rf $1.bam.bai && \
+								 rm -rf $1.bai")
+
+								 
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call pileup-metric,$(sample))))
 				   
 define coverage-metric
 metrics/standard/$1.A.ontarget.txt : marianas/$1/$1.realn.bam
