@@ -692,32 +692,58 @@ if (as.numeric(opt$metric_type)==1) {
 } else if (as.numeric(opt$metric_type)==27) {
 	
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
-	metrics_x = list()
+	metrics_a = list()
 	for (i in 1:length(sample_names)) {
-		metrics_x[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".ontarget.txt"), col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		metrics_a[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".A.ontarget.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   				 type_convert() %>%
-		   				 mutate(n = depth) %>%
-		   				 summarize(Nx = sum(n, na.rm=TRUE)) %>%
+		   				 select(X3, X4) %>%
+		   				 filter(!is.na(X3)) %>%
+		   				 filter(!is.na(X4)) %>%
+		   				 mutate(X3 = as.numeric(gsub("Aligned= ", "", X3, fixed=TRUE))) %>%
+		   				 mutate(X4 = as.numeric(gsub("Unaligned= ", "", X4, fixed=TRUE))) %>%
+		   				 summarize(N_ALIGNED = sum(X3),
+		   				 		   N_UNALIGNED = sum(X4)
+		   				 ) %>%
+		   				 mutate(N_TOTAL = N_ALIGNED + N_UNALIGNED) %>%
 		   				 mutate(SAMPLE = sample_names[i])
 	}
-	metrics_x = do.call(rbind, metrics_x)
-	
-	metrics_y = list()
+	metrics_a = do.call(rbind, metrics_a) %>%
+				mutate(BAIT_SET = "Probe-A")
+	metrics_b = list()
 	for (i in 1:length(sample_names)) {
-		metrics_y[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".offtarget.txt"), col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		metrics_b[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".B.ontarget.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   				 type_convert() %>%
-		   				 mutate(n = depth) %>%
-		   				 summarize(Ny = sum(n, na.rm=TRUE)) %>%
+		   				 select(X3, X4) %>%
+		   				 filter(!is.na(X3)) %>%
+		   				 filter(!is.na(X4)) %>%
+		   				 mutate(X3 = as.numeric(gsub("Aligned= ", "", X3, fixed=TRUE))) %>%
+		   				 mutate(X4 = as.numeric(gsub("Unaligned= ", "", X4, fixed=TRUE))) %>%
+		   				 summarize(N_ALIGNED = sum(X3),
+		   				 		   N_UNALIGNED = sum(X4)
+		   				 ) %>%
+		   				 mutate(N_TOTAL = N_ALIGNED + N_UNALIGNED) %>%
 		   				 mutate(SAMPLE = sample_names[i])
 	}
-	metrics_y = do.call(rbind, metrics_y)
-	
-	metrics_xy = full_join(metrics_x, metrics_y, by="SAMPLE") %>%
-				 select(SAMPLE, Nx, Ny) %>%
-				 mutate(Nt = Nx+Ny) %>%
-				 mutate(Nxp = 100*Nx/Nt) %>%
-				 mutate(Nyp = 100*Ny/Nt)
-	
-	write_tsv(x=metrics_xy, path="metrics/summary/metrics_ts.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	metrics_b = do.call(rbind, metrics_b) %>%
+				mutate(BAIT_SET = "Probe-B")
+	metrics_ab = list()
+	for (i in 1:length(sample_names)) {
+		metrics_ab[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".AB.offtarget.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   				 type_convert() %>%
+		   				 select(X3, X4) %>%
+		   				 filter(!is.na(X3)) %>%
+		   				 filter(!is.na(X4)) %>%
+		   				 mutate(X3 = as.numeric(gsub("Aligned= ", "", X3, fixed=TRUE))) %>%
+		   				 mutate(X4 = as.numeric(gsub("Unaligned= ", "", X4, fixed=TRUE))) %>%
+		   				 summarize(N_ALIGNED = sum(X3),
+		   				 		   N_UNALIGNED = sum(X4)
+		   				 ) %>%
+		   				 mutate(N_TOTAL = N_ALIGNED + N_UNALIGNED) %>%
+		   				 mutate(SAMPLE = sample_names[i])
+	}
+	metrics_ab = do.call(rbind, metrics_ab) %>%
+				mutate(BAIT_SET = "Probe-AB")
+	metrics_idx = bind_rows(metrics_a, metrics_b, metrics_ab)
+	write_tsv(x=metrics_idx, path="metrics/summary/metrics_ts.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 }
