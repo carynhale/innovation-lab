@@ -67,7 +67,7 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt)
 
 
-define pielup-metric
+define pileup-metric
 metrics/standard/$1-pileup.txt : bam/$1-standard.bam
 	$$(call RUN,-c -s 6G -m 12G,"cp bam/$1-standard.bam metrics/standard/$1.bam && \
 								 cp bam/$1-standard.bam.bai metrics/standard/$1.bam.bai && \
