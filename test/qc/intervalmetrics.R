@@ -742,7 +742,7 @@ if (as.numeric(opt$metric_type)==1) {
 		   				 mutate(SAMPLE = sample_names[i])
 	}
 	metrics_ab = do.call(rbind, metrics_ab) %>%
-				mutate(BAIT_SET = "Probe-AB")
+				 mutate(BAIT_SET = "Probe-AB")
 	metrics_idx = bind_rows(metrics_a, metrics_b, metrics_ab)
 	write_tsv(x=metrics_idx, path="metrics/summary/metrics_ts.tsv", na = "NA", append = FALSE, col_names = TRUE)
 

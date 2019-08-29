@@ -494,25 +494,35 @@ if (as.numeric(opt$type)==1) {
 
  	pdf(file="metrics/report/read_alignment_summary.pdf", width=14)
 	tmp.1 = data %>%
-			arrange(desc(Nxp)) %>%
+			arrange(desc(N_TOTAL)) %>%
+			filter(BAIT_SET=="Probe-A") %>%
 			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
-			select(`Sample ID`, N = Nxp) %>%
-			mutate(Type = "On-target")
+			select(`Sample ID`, N = N_ALIGNED) %>%
+			mutate(Type = "Probe-A")
 			
 	tmp.2 = data %>%
-			arrange(desc(Nxp)) %>%
+			arrange(desc(N_TOTAL)) %>%
+			filter(BAIT_SET=="Probe-B") %>%
 			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
-			select(`Sample ID`, N = Nyp) %>%
+			select(`Sample ID`, N = N_ALIGNED) %>%
+			mutate(Type = "Probe-B")
+			
+	tmp.3 = data %>%
+			arrange(desc(N_TOTAL)) %>%
+			filter(BAIT_SET=="Probe-AB") %>%
+			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
+			select(`Sample ID`, N = N_ALIGNED) %>%
 			mutate(Type = "Off-target")
 			
-	tmp.0 = bind_rows(tmp.1, tmp.2)
+	tmp.0 = bind_rows(tmp.1, tmp.2, tmp.3)
+			
 			
 	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=N, fill=Type)) +
 			 geom_bar(stat="identity") +
-			 scale_fill_manual(values=c("On-target"="#d7191c", "Off-target"="#2c7bb6")) +
+			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6", "Off-target"="#fdae61")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(fill = "Type", x=" ", title="READS ON TARGET", y=" Fraction of total reads (%)\n") +
+			 labs(fill = "Type", x=" ", title="DISTRIBUTION OF READS", y="Number of read pairs\n") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
