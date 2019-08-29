@@ -64,7 +64,9 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
 				   metrics/summary/metrics_ts.tsv \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt)
+				   
 
 
 define pileup-metric
@@ -76,8 +78,20 @@ metrics/standard/$1-pileup.txt : bam/$1-standard.bam
 								 $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
 								 rm -rf $1.bam && \
 								 rm -rf $1.bam.bai && \
-								 rm -rf $1.bai")
+								 rm -rf $1.bai && \
+								 cd ..")
 									 
+metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
+	$$(call RUN,-c -s 6G -m 12G,"cp bam/$1-simplex.bam metrics/simplex/$1.bam && \
+								 cp bam/$1-simplex.bam.bai metrics/simplex/$1.bam.bai && \
+								 cp bam/$1-simplex.bai metrics/simplex/$1.bai && \
+								 cd metrics/simplex && \
+								 $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 rm -rf $1.bam && \
+								 rm -rf $1.bam.bai && \
+								 rm -rf $1.bai && \
+								 cd ..")
+								 
 metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
 	$$(call RUN,-c -s 6G -m 12G,"cp bam/$1-duplex.bam metrics/duplex/$1.bam && \
 								 cp bam/$1-duplex.bam.bai metrics/duplex/$1.bam.bai && \
@@ -86,8 +100,8 @@ metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
 								 $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
 								 rm -rf $1.bam && \
 								 rm -rf $1.bam.bai && \
-								 rm -rf $1.bai")
-
+								 rm -rf $1.bai && \
+								 cd ..")
 								 
 endef
 $(foreach sample,$(SAMPLES),\
