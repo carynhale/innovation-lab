@@ -486,7 +486,7 @@ if (as.numeric(opt$type)==1) {
 			  print.plot = TRUE)
 	dev.off()
 	
-} else else if (as.numeric(opt$type)==20) {
+} else if (as.numeric(opt$type)==20) {
 
 	data = read_tsv(file="metrics/summary/metrics_ts.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
