@@ -66,34 +66,34 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   
 define coverage-metric
 metrics/standard/$1.A.ontarget.txt : marianas/$1/$1.realn.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"samtools view -L $$(ONTARGET_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
-									 samtools index metrics/standard/$1-ontarget-A.bam && \
-									 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
-									 I=metrics/standard/$1-ontarget-A.bam \
-									 TMP_DIR=$(TMPDIR) \
-									 > $$(@) && \
-									 rm -rf metrics/standard/$1-ontarget-A.bam && \
-									 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
+	$$(call RUN,-c -s 6G -m 12G,"samtools view -L $$(ONTARGET_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
+								 samtools index metrics/standard/$1-ontarget-A.bam && \
+								 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+								 I=metrics/standard/$1-ontarget-A.bam \
+								 TMP_DIR=$(TMPDIR) \
+								 > $$(@) && \
+								 rm -rf metrics/standard/$1-ontarget-A.bam && \
+								 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
 									 
 metrics/standard/$1.B.ontarget.txt : marianas/$1/$1.realn.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"samtools view -L $$(ONTARGET_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
-									 samtools index metrics/standard/$1-ontarget-B.bam && \
-									 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
-									 I=metrics/standard/$1-ontarget-B.bam \
-									 TMP_DIR=$(TMPDIR) \
-									 > $$(@) && \
-									 rm -rf metrics/standard/$1-ontarget-B.bam && \
-									 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
+	$$(call RUN,-c -s 6G -m 12G,"samtools view -L $$(ONTARGET_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
+								 samtools index metrics/standard/$1-ontarget-B.bam && \
+								 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+								 I=metrics/standard/$1-ontarget-B.bam \
+								 TMP_DIR=$(TMPDIR) \
+								 > $$(@) && \
+								 rm -rf metrics/standard/$1-ontarget-B.bam && \
+								 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
 	
 metrics/standard/$1.AB.offtarget.txt : marianas/$1/$1.realn.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"samtools view -L $$(OFFTARGET_FILE) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
-									 samtools index metrics/standard/$1-offtarget-AB.bam && \
-									 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
-									 I=metrics/standard/$1-offtarget-AB.bam \
-									 TMP_DIR=$(TMPDIR) \
-									 > $$(@) && \
-									 rm -rf metrics/standard/$1-offtarget-AB.bam && \
-									 rm -rf metrics/standard/$1-offtarget-AB.bam.bai")
+	$$(call RUN,-c -s 6G -m 12G,"samtools view -L $$(OFFTARGET_FILE) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
+								 samtools index metrics/standard/$1-offtarget-AB.bam && \
+								 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+								 I=metrics/standard/$1-offtarget-AB.bam \
+								 TMP_DIR=$(TMPDIR) \
+								 > $$(@) && \
+								 rm -rf metrics/standard/$1-offtarget-AB.bam && \
+								 rm -rf metrics/standard/$1-offtarget-AB.bam.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
