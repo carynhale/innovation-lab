@@ -47,8 +47,12 @@ if (as.numeric(opt$type)==1) {
 			filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-A") %>%
 			arrange(Count) %>%
 			mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
-	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=Count, fill = Type)) +
+	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=Count, fill=Type)) +
 			 geom_bar(stat="identity") +
+			 scale_fill_manual(values=c("Duplex"      = "#d7191c",
+			 							"Simplex"     = "#fdae61",
+			 							"Singletons"  = "#abd9e9",
+			 							"Sub-Simplex" = "#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(fill = "Family type", x=" ", title="PROBE-A BAIT SET", y="Count\n") +
@@ -66,8 +70,12 @@ if (as.numeric(opt$type)==1) {
 			filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-B") %>%
 			arrange(Count) %>%
 			mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
-	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=Count, fill = Type)) +
+	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=Count, fill=Type)) +
 			 geom_bar(stat="identity") +
+			 scale_fill_manual(values=c("Duplex"      = "#d7191c",
+			 							"Simplex"     = "#fdae61",
+			 							"Singletons"  = "#abd9e9",
+			 							"Sub-Simplex" = "#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(fill = "Family type", x=" ", title="PROBE-B BAIT SET", y="Count\n") +
@@ -194,7 +202,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/mean_standard_target_coverage-dedup.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
 			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#619CFF", "Probe-B"="#00BA38")) +
+			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN DEDUPLICATED COVERAGE") +
@@ -214,7 +222,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/mean_standard_target_coverage-nodedup.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE_NO_DEDUP, fill=BAIT_SET)) +
 			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#619CFF", "Probe-B"="#00BA38")) +
+			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN COVERAGE WITH DUPLICATES") +
@@ -234,7 +242,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/mean_unfiltered_target_coverage.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
 			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#619CFF", "Probe-B"="#00BA38")) +
+			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth", fill="Bait set", title="MEAN COLLAPSED COVERAGE") +
@@ -255,7 +263,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/mean_duplex_target_coverage.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
 			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#619CFF", "Probe-B"="#00BA38")) +
+			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth", fill="Bait set", title="MEAN DUPLEX COVERAGE") +
@@ -276,7 +284,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/mean_simplex_target_coverage.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
 			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#619CFF", "Probe-B"="#00BA38")) +
+			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 			 labs(x="Sample ID", y="Depth", fill="Bait set", title="MEAN SIMPLEX COVERAGE") +
@@ -305,7 +313,7 @@ if (as.numeric(opt$type)==1) {
 	for (i in 1:length(libnames)) {
 		plot.0 = ggplot(data %>% filter(LIBRARY==libnames[i]), aes(x=`Sample ID`, y=N, fill=Type)) +
 				 geom_bar(stat="identity") +
-				 scale_fill_manual(values=c("Aligned"="#619CFF", "Unaligned"="#00BA38")) +
+				 scale_fill_manual(values=c("Aligned"="#d7191c", "Unaligned"="#2c7bb6")) +
 		 		 theme_classic(base_size=15) +
 		 		 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 		 		 labs(x="Sample ID", y="Number of read pairs\n", title=names(libnames)[i]) +
@@ -329,6 +337,10 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/insert_size_summary.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEDIAN_INSERT_SIZE, fill=LIBRARY)) +
 			 geom_bar(stat="identity", position="dodge") +
+			 scale_fill_manual(values=c("Collapsed" = "#2c7bb6",
+			 							"Duplex"    = "#d7191c",
+			 							"Simplex"   = "#fdae61",
+			 							"Standard"  = "#abd9e9")) +
 		 	 theme_classic(base_size=15) +
 		 	 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 		 	 labs(x="Sample ID", y="Size (bp)\n", fill="Library", title="MEAN INSERT SIZE") +
