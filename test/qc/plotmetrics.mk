@@ -17,7 +17,8 @@ plot_metrics : metrics/report/umi_frequencies.pdf \
 			   metrics/report/mean_simplex_target_coverage.pdf \
 			   metrics/report/aligment_summary.pdf \
 			   metrics/report/insert_size_summary.pdf \
-			   metrics/report/insert_size_distribution.pdf
+			   metrics/report/insert_size_distribution.pdf \
+			   metrics/report/read_alignment_summary.pdf
 
 metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 1 && \
@@ -66,6 +67,9 @@ metrics/report/insert_size_summary.pdf : metrics/summary/metrics_insert.tsv
 	
 metrics/report/insert_size_distribution.pdf : metrics/summary/metrics_insert_distribution.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 15")
+	
+metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_ts.tsv
+	$(call RUN, -c -n 1 -s 12G -m 16G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 20")
 
 	
 .DELETE_ON_ERROR:

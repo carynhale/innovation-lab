@@ -59,7 +59,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/summary/metrics_insert_distribution.tsv \
 				   metrics/summary/metrics_hs.tsv \
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).ontarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).offtarget.txt)
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).offtarget.txt) \
+				   metrics/summary/metrics_ts.tsv
 				   
 define coverage-metric
 metrics/standard/$1.ontarget.txt : bam/$1-standard.bam
@@ -350,6 +351,8 @@ metrics/summary/metrics_insert_distribution.tsv : metrics/standard/metrics_inser
 metrics/summary/metrics_hs.tsv : metrics/standard/metrics_hs.tsv metrics/unfiltered/metrics_hs.tsv metrics/duplex/metrics_hs.tsv metrics/simplex/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 26")
 
+metrics/summary/metrics_ts.tsv : $(wildcard metrics/standard/$(SAMPLES).ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).offtarget.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 27 --sample_names '$(SAMPLES)'")
 	
 .DELETE_ON_ERROR:
 .SECONDARY:

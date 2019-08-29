@@ -689,4 +689,35 @@ if (as.numeric(opt$metric_type)==1) {
 	metrics_hs = bind_rows(standard, unfiltered, simplex, duplex)
 	write_tsv(x=metrics_hs, path="metrics/summary/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+} else if (as.numeric(opt$metric_type)==27) {
+	
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	metrics_x = list()
+	for (i in 1:length(sample_names)) {
+		metrics_x[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".ontarget.txt"), col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				 type_convert() %>%
+		   				 mutate(n = depth) %>%
+		   				 summarize(Nx = sum(n, na.rm=TRUE)) %>%
+		   				 mutate(SAMPLE = sample_names[i])
+	}
+	metrics_x = do.call(rbind, metrics_x)
+	
+	metrics_y = list()
+	for (i in 1:length(sample_names)) {
+		metrics_y[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".offtarget.txt"), col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				 type_convert() %>%
+		   				 mutate(n = depth) %>%
+		   				 summarize(Ny = sum(n, na.rm=TRUE)) %>%
+		   				 mutate(SAMPLE = sample_names[i])
+	}
+	metrics_y = do.call(rbind, metrics_y)
+	
+	metrics_xy = full_join(metrics_x, metrics_y, by="SAMPLE") %>%
+				 select(SAMPLE, Nx, Ny) %>%
+				 mutate(Nt = Nx+Ny) %>%
+				 mutate(Nxp = 100*Nx/Nt) %>%
+				 mutate(Nyp = 100*Ny/Nt)
+	
+	write_tsv(x=metrics_xy, path="metrics/summary/metrics_ts.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }

@@ -486,4 +486,35 @@ if (as.numeric(opt$type)==1) {
 			  print.plot = TRUE)
 	dev.off()
 	
+} else else if (as.numeric(opt$type)==20) {
+
+	data = read_tsv(file="metrics/summary/metrics_ts.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert() %>%
+		   dplyr::rename(`Sample ID` = SAMPLE)
+
+ 	pdf(file="metrics/report/read_alignment_summary.pdf", width=14)
+	tmp.1 = data %>%
+			arrange(desc(Nxp)) %>%
+			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
+			select(`Sample ID`, N = Nxp) %>%
+			mutate(Type = "On-target")
+			
+	tmp.2 = data %>%
+			arrange(desc(Nxp)) %>%
+			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
+			select(`Sample ID`, N = Nyp) %>%
+			mutate(Type = "Off-target")
+			
+	tmp.0 = bind_rows(tmp.1, tmp.2)
+			
+	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=N, fill=Type)) +
+			 geom_bar(stat="identity") +
+			 scale_fill_manual(values=c("On-target"="#d7191c", "Off-target"="#2c7bb6")) +
+			 theme_classic(base_size=15) +
+			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
+			 labs(fill = "Type", x=" ", title="READS ON TARGET", y=" Fraction of total reads (%)\n") +
+			 theme(plot.title = element_text(hjust = 0.5, size=16))
+	print(plot.0)
+	dev.off()
+
 }
