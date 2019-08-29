@@ -39,9 +39,9 @@ git clone https://github.com/ndbrown6/modules.git
 	* [Lancet](https://www.nature.com/articles/s42003-018-0023-9)
 	* [Varscan](https://academic.oup.com/bioinformatics/article/25/17/2283/210190)
 - Copy number:
-	* FACETS
-	* ASCAT
-	* CNVkit
+	* [FACETS](https://academic.oup.com/nar/article/44/16/e131/2460163)
+	* [ASCAT](https://www.pnas.org/content/107/39/16910)
+	* [CNVkit](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1004873)
 - Annotation:
 	* Annovar
 	* snpEff
@@ -52,8 +52,8 @@ git clone https://github.com/ndbrown6/modules.git
 	* [OncoKB](https://github.com/oncokb/oncokb-annotator)
 	* ClinVar
 - Miscellaneous:
-	* HLA Polysolver
-	* MSIsensor
+	* [HLA Polysolver](https://www.nature.com/articles/nbt.3344)
+	* [MSIsensor](https://academic.oup.com/bioinformatics/article/30/7/1015/236553)
 
 ### RNA transcriptome sequencing
 - FPKM/RPKM:
