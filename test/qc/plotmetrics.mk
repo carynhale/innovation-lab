@@ -17,8 +17,8 @@ plot_metrics : metrics/report/umi_frequencies.pdf \
 			   metrics/report/mean_simplex_target_coverage.pdf \
 			   metrics/report/aligment_summary.pdf \
 			   metrics/report/insert_size_summary.pdf \
-			   metrics/report/insert_size_distribution.pdf \
-			   metrics/report/read_alignment_summary.pdf
+			   metrics/report/insert_size_distribution.pdf
+#			   metrics/report/read_alignment_summary.pdf
 
 metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 1 && \

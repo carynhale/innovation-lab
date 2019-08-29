@@ -6,7 +6,8 @@ PHONY += metrics metrics/standard metrics/unfiltered metrics/duplex metrics/simp
 
 POOL_A_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.list
-ONTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.ontarget.bed
+ONTARGET_FILE_A ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.ontarget.bed
+ONTARGET_FILE_B ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.ontarget.bed
 OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.offtarget.bed
 
 interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
@@ -58,16 +59,42 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   metrics/summary/metrics_insert.tsv \
 				   metrics/summary/metrics_insert_distribution.tsv \
 				   metrics/summary/metrics_hs.tsv \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).ontarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).offtarget.txt) \
-				   metrics/summary/metrics_ts.tsv
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt)
+#				   metrics/summary/metrics_ts.tsv
 				   
 define coverage-metric
-metrics/standard/$1.ontarget.txt : bam/$1-standard.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o $$(@)")
+metrics/standard/$1.A.ontarget.txt : marianas/$1/$1.realn.bam
+	$$(call RUN,-c -n 4 -s 6G -m 8G,"samtools view -L $$(ONTARGET_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
+									 samtools index metrics/standard/$1-ontarget-A.bam && \
+									 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+									 I=metrics/standard/$1-ontarget-A.bam \
+									 TMP_DIR=$(TMPDIR) \
+									 > $$(@) && \
+									 rm -rf metrics/standard/$1-ontarget-A.bam && \
+									 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
+									 
+metrics/standard/$1.B.ontarget.txt : marianas/$1/$1.realn.bam
+	$$(call RUN,-c -n 4 -s 6G -m 8G,"samtools view -L $$(ONTARGET_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
+									 samtools index metrics/standard/$1-ontarget-B.bam && \
+									 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+									 I=metrics/standard/$1-ontarget-B.bam \
+									 TMP_DIR=$(TMPDIR) \
+									 > $$(@) && \
+									 rm -rf metrics/standard/$1-ontarget-B.bam && \
+									 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
+	
+metrics/standard/$1.AB.offtarget.txt : marianas/$1/$1.realn.bam
+	$$(call RUN,-c -n 4 -s 6G -m 8G,"samtools view -L $$(OFFTARGET_FILE) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
+									 samtools index metrics/standard/$1-offtarget-AB.bam && \
+									 java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+									 I=metrics/standard/$1-offtarget-AB.bam \
+									 TMP_DIR=$(TMPDIR) \
+									 > $$(@) && \
+									 rm -rf metrics/standard/$1-offtarget-AB.bam && \
+									 rm -rf metrics/standard/$1-offtarget-AB.bam.bai")
 
-metrics/standard/$1.offtarget.txt : bam/$1-standard.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call coverage-metric,$(sample))))
@@ -351,8 +378,8 @@ metrics/summary/metrics_insert_distribution.tsv : metrics/standard/metrics_inser
 metrics/summary/metrics_hs.tsv : metrics/standard/metrics_hs.tsv metrics/unfiltered/metrics_hs.tsv metrics/duplex/metrics_hs.tsv metrics/simplex/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 26")
 
-metrics/summary/metrics_ts.tsv : $(wildcard metrics/standard/$(SAMPLES).ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).offtarget.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 27 --sample_names '$(SAMPLES)'")
+#metrics/summary/metrics_ts.tsv : $(wildcard metrics/standard/$(SAMPLES).ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).offtarget.txt)
+#	$(call RUN, -c -n 1 -s 8G -m 16G,"$(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 27 --sample_names '$(SAMPLES)'")
 	
 .DELETE_ON_ERROR:
 .SECONDARY:
