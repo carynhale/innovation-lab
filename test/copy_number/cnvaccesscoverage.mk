@@ -16,7 +16,7 @@ cnvaccess/cnn/%.pool-A.targetcoverage.cnn : bam/%-standard.bam
 	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE_A) -o cnvaccess/cnn/$$(*).pool-A.targetcoverage.cnn")
 
 cnvaccess/cnn/%.pool-A.antitargetcoverage.cnn : bam/%-standard.bam
-	$$(call RUN,-n 1 -s 1G -m 2G,"touch cnvaccess/cnn/tumor/$$(*).pool-A.antitargetcoverage.cnn")
+	$$(call RUN,-n 1 -s 1G -m 2G,"touch cnvaccess/cnn/$$(*).pool-A.antitargetcoverage.cnn")
 	
 cnvaccess/cnn/%.pool-B.targetcoverage.cnn : bam/%-standard.bam
 	$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE_B) -o cnvaccess/cnn/$$(*).pool-B.targetcoverage.cnn")
