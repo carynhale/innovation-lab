@@ -67,6 +67,10 @@ starfusion:
 TARGETS += blast
 blast :
 	$(call RUN_MAKE,modules/aligners/blast_aligner.mk)
+	
+TARGETS += msk_access
+msk_access :
+	$(call RUN_MAKE,modules/test/workflows/msk_access.mk)
 
 
 #==================================================
@@ -577,9 +581,9 @@ TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,modules/test/workflows/fgbio_access.mk)
 	
-TARGETS += msk_access
-msk_access :
-	$(call RUN_MAKE,modules/test/workflows/msk_access.mk)
+TARGETS += cnv_access
+cnv_access :
+	$(call RUN_MAKE,modules/test/workflows/cnv_access.mk)
 	
 
 .PHONY : $(TARGETS)
