@@ -11,7 +11,8 @@ if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
 }
 
-args_list = list(make_option("--type", default = NA, type = 'character', help = "analysis type"))
+args_list = list(make_option("--type", default = NA, type = 'character', help = "analysis type"),
+				 make_option("--sample_names", default = NA, type = 'character', help = "sample names"))
 				  
 parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
@@ -525,6 +526,211 @@ if (as.numeric(opt$type)==1) {
 			 labs(fill = "Type", x=" ", title="DISTRIBUTION OF READS", y="Number of read pairs\n") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
+	dev.off()
+
+} else if (as.numeric(opt$type)==21) {
+
+	suppressPackageStartupMessages(library("superheat"))
+	suppressPackageStartupMessages(library("viridis"))
+	
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	nuc_metrics = list()
+	for (i in 1:length(sample_names)) {
+		pileup_metrics = read_tsv(file=paste0("metrics/standard/", sample_names[i], "-pileup.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+						 type_convert() %>%
+						 dplyr::select(Chromosome = X1,
+									   Position = X2,
+									   Reference_Allele = X3,
+									   Total_Depth = X4,
+									   A = X5,
+									   C = X6,
+									   G = X7,
+									   T = X8) %>%
+						 mutate(AF_A = 100*A/Total_Depth,
+								AF_C = 100*C/Total_Depth,
+								AF_G = 100*G/Total_Depth,
+								AF_T = 100*T/Total_Depth)
+		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
+								  Position = rep(pileup_metrics$Position, 4),
+								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
+								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
+													   rep("C", nrow(pileup_metrics)),
+													   rep("G", nrow(pileup_metrics)),
+													   rep("T", nrow(pileup_metrics))),
+								  Allele_Frequency = c(pileup_metrics$AF_A,
+													   pileup_metrics$AF_C,
+													   pileup_metrics$AF_G,
+													   pileup_metrics$AF_T)) %>%
+								  filter(Reference_Allele!=Alternate_Allele) %>%
+								  filter(Allele_Frequency<10) %>%
+								  filter(Chromosome=="21") %>%
+								  arrange(Position)
+	}
+	standard_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	for (i in 1:length(sample_names)) {
+		cat(i, "\n")
+		standard_bam = left_join(standard_bam, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+	}
+	colnames(standard_bam)[5:ncol(standard_bam)] = sample_names
+
+	nuc_metrics = list()
+	for (i in 1:length(sample_names)) {
+		pileup_metrics = read_tsv(file=paste0("metrics/standard/", sample_names[i], "-pileup-without-duplicates.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+						 type_convert() %>%
+						 dplyr::select(Chromosome = X1,
+									   Position = X2,
+									   Reference_Allele = X3,
+									   Total_Depth = X4,
+									   A = X5,
+									   C = X6,
+									   G = X7,
+									   T = X8) %>%
+						 mutate(AF_A = 100*A/Total_Depth,
+								AF_C = 100*C/Total_Depth,
+								AF_G = 100*G/Total_Depth,
+								AF_T = 100*T/Total_Depth)
+		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
+								  Position = rep(pileup_metrics$Position, 4),
+								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
+								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
+													   rep("C", nrow(pileup_metrics)),
+													   rep("G", nrow(pileup_metrics)),
+													   rep("T", nrow(pileup_metrics))),
+								  Allele_Frequency = c(pileup_metrics$AF_A,
+													   pileup_metrics$AF_C,
+													   pileup_metrics$AF_G,
+													   pileup_metrics$AF_T)) %>%
+								  filter(Reference_Allele!=Alternate_Allele) %>%
+								  filter(Allele_Frequency<10) %>%
+								  filter(Chromosome=="21") %>%
+								  arrange(Position)
+	}
+	standard_bam_dedup = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	for (i in 1:length(sample_names)) {
+		cat(i, "\n")
+		standard_bam_dedup = left_join(standard_bam_dedup, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+	}
+	colnames(standard_bam_dedup)[5:ncol(standard_bam_dedup)] = sample_names
+
+	nuc_metrics = list()
+	for (i in 1:length(sample_names)) {
+		pileup_metrics = read_tsv(file=paste0("metrics/simplex/", sample_names[i], "-pileup.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+						 type_convert() %>%
+						 dplyr::select(Chromosome = X1,
+									   Position = X2,
+									   Reference_Allele = X3,
+									   Total_Depth = X4,
+									   A = X5,
+									   C = X6,
+									   G = X7,
+									   T = X8) %>%
+						 mutate(AF_A = 100*A/Total_Depth,
+								AF_C = 100*C/Total_Depth,
+								AF_G = 100*G/Total_Depth,
+								AF_T = 100*T/Total_Depth)
+		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
+								  Position = rep(pileup_metrics$Position, 4),
+								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
+								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
+													   rep("C", nrow(pileup_metrics)),
+													   rep("G", nrow(pileup_metrics)),
+													   rep("T", nrow(pileup_metrics))),
+								  Allele_Frequency = c(pileup_metrics$AF_A,
+													   pileup_metrics$AF_C,
+													   pileup_metrics$AF_G,
+													   pileup_metrics$AF_T)) %>%
+								  filter(Reference_Allele!=Alternate_Allele) %>%
+								  filter(Allele_Frequency<10) %>%
+								  filter(Chromosome=="21") %>%
+								  arrange(Position)
+	}
+	simplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	for (i in 1:length(sample_names)) {
+		cat(i, "\n")
+		simplex_bam = left_join(simplex_bam, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+	}
+	colnames(simplex_bam)[5:ncol(simplex_bam)] = sample_names
+
+	nuc_metrics = list()
+	for (i in 1:length(sample_names)) {
+		pileup_metrics = read_tsv(file=paste0("metrics/duplex/", sample_names[i], "-pileup.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+						 type_convert() %>%
+						 dplyr::select(Chromosome = X1,
+									   Position = X2,
+									   Reference_Allele = X3,
+									   Total_Depth = X4,
+									   A = X5,
+									   C = X6,
+									   G = X7,
+									   T = X8) %>%
+						 mutate(AF_A = 100*A/Total_Depth,
+								AF_C = 100*C/Total_Depth,
+								AF_G = 100*G/Total_Depth,
+								AF_T = 100*T/Total_Depth)
+		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
+								  Position = rep(pileup_metrics$Position, 4),
+								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
+								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
+													   rep("C", nrow(pileup_metrics)),
+													   rep("G", nrow(pileup_metrics)),
+													   rep("T", nrow(pileup_metrics))),
+								  Allele_Frequency = c(pileup_metrics$AF_A,
+													   pileup_metrics$AF_C,
+													   pileup_metrics$AF_G,
+													   pileup_metrics$AF_T)) %>%
+								  filter(Reference_Allele!=Alternate_Allele) %>%
+								  filter(Allele_Frequency<10) %>%
+								  filter(Chromosome=="21") %>%
+								  arrange(Position)
+	}
+	duplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	for (i in 1:length(sample_names)) {
+		cat(i, "\n")
+		duplex_bam = left_join(duplex_bam, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+	}
+	colnames(duplex_bam)[5:ncol(duplex_bam)] = sample_names
+
+	nuc_pileup = left_join(standard_bam,
+						   standard_bam_dedup,
+						   by = c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele")) %>%
+				 left_join(simplex_bam,
+						   by = c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele")) %>%
+				 left_join(duplex_bam,
+						   by = c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+	index = order(apply(nuc_pileup[,5:ncol(nuc_pileup),drop=FALSE], 1, mean, na.rm=TRUE), decreasing=FALSE)
+	nuc_pileup = nuc_pileup[index,,drop=FALSE] %>%
+				 arrange(Alternate_Allele) %>%
+				 arrange(Reference_Allele)
+			 
+			 
+	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
+	row_groups = paste0(nuc_pileup$Reference_Allele, " > ", nuc_pileup$Alternate_Allele, "         ")
+
+	nuc_pileup = nuc_pileup %>%
+				 dplyr::select(-Chromosome, -Position, -Reference_Allele, -Alternate_Allele)
+
+	index = apply(nuc_pileup, 1, function(x) {sum(is.na(x))})==0
+	pdf(file="metrics/report/non_reference_calls.pdf", height=14, width=14)
+	superheat(X = as.matrix(nuc_pileup[index,,drop=FALSE]),
+			  smooth.heat = FALSE,
+			  scale = FALSE,
+			  legend = FALSE,
+			  grid.hline = FALSE,
+			  grid.vline = FALSE,
+			  membership.cols=col_groups,
+			  membership.rows=row_groups[index],
+			  row.dendrogram = FALSE,
+			  col.dendrogram = FALSE,
+			  force.grid.hline = FALSE,
+			  force.grid.vline = FALSE,
+			  bottom.label.text.angle = 0,
+			  bottom.label.text.size = 3.5,
+			  bottom.label.size = .15,
+			  left.label.size = .15,
+			  left.label.text.size = 3.5,
+			  print.plot = TRUE,
+			  heat.pal = viridis(n=10),
+			  heat.pal.values = c(seq(0,.1,l=9), 10))
 	dev.off()
 
 }

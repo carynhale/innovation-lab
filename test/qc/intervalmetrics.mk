@@ -66,7 +66,6 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt)
-				   
 
 
 define pileup-metric

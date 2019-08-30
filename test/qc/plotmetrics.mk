@@ -18,7 +18,8 @@ plot_metrics : metrics/report/umi_frequencies.pdf \
 			   metrics/report/aligment_summary.pdf \
 			   metrics/report/insert_size_summary.pdf \
 			   metrics/report/insert_size_distribution.pdf \
-			   metrics/report/read_alignment_summary.pdf
+			   metrics/report/read_alignment_summary.pdf \
+			   metrics/report/non_reference_calls.pdf
 
 metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 1 && \
@@ -70,8 +71,11 @@ metrics/report/insert_size_distribution.pdf : metrics/summary/metrics_insert_dis
 	
 metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_ts.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 20")
-
 	
+metrics/report/non_reference_calls.pdf : $(wildcard metrics/standard/$(SAMPLES)-pileup.txt) $(wildcard metrics/simplex/$(SAMPLES)-pileup.txt) $(wildcard metrics/duplex/$(SAMPLES)-pileup.txt)
+	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 21 --sample_names '$(SAMPLES)'")
+
+
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: $(PHONY)
