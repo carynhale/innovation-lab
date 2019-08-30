@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
-LOGDIR ?= log/marianas_access.$(NOW)
+LOGDIR ?= log/msk_access.$(NOW)
 PHONY += marianas bam metrics
 
 MSK_ACCESS_WORKFLOW += clip_umi

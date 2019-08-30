@@ -577,9 +577,9 @@ TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,modules/test/workflows/fgbio_access.mk)
 	
-TARGETS += marianas_access
-marianas_access :
-	$(call RUN_MAKE,modules/test/workflows/marianas_access.mk)
+TARGETS += msk_access
+msk_access :
+	$(call RUN_MAKE,modules/test/workflows/msk_access.mk)
 	
 
 .PHONY : $(TARGETS)
