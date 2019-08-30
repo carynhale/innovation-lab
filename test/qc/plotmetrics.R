@@ -246,7 +246,7 @@ if (as.numeric(opt$type)==1) {
 			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth", fill="Bait set", title="MEAN COLLAPSED COVERAGE") +
+			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN COLLAPSED COVERAGE") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
@@ -267,7 +267,7 @@ if (as.numeric(opt$type)==1) {
 			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth", fill="Bait set", title="MEAN DUPLEX COVERAGE") +
+			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN DUPLEX COVERAGE") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
@@ -288,7 +288,7 @@ if (as.numeric(opt$type)==1) {
 			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth", fill="Bait set", title="MEAN SIMPLEX COVERAGE") +
+			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN SIMPLEX COVERAGE") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()
