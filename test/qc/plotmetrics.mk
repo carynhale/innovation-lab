@@ -73,7 +73,10 @@ metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_ts.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G,"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 20")
 	
 metrics/report/non_reference_calls.pdf : $(wildcard metrics/standard/$(SAMPLES)-pileup.txt) $(wildcard metrics/simplex/$(SAMPLES)-pileup.txt) $(wildcard metrics/duplex/$(SAMPLES)-pileup.txt)
-	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 21 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"$(RSCRIPT) modules/test/qc/plotmetrics.R --type 21 --sample_names '$(SAMPLES)' && \
+														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf && \
+														   rm metrics/report/non_reference_calls.pdf && \
+														   mv metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf")
 
 
 .DELETE_ON_ERROR:
