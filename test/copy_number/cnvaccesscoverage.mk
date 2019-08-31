@@ -8,7 +8,7 @@ PHONY += cnvaccess cnvaccess/cnn
 cnvaccess_coverage : $(foreach sample,$(SAMPLES),cnvaccess/cov/$(sample).probe-A.txt)
 
 R_COVERAGE ?= modules/test/copy_number/cnvaccesscoverage.R
-EXOME_DEPTH_ENV ?= $(HOME)/usr/anaconda-envs/exomedepth-1.1.12
+EXOME_DEPTH_ENV ?= $(HOME)/share/usr/anaconda-envs/exomedepth-1.1.12
 
 define cnvaccess-coverage
 cnvaccess/cov/$1.probe-A.txt : bam/$1-standard.bam
