@@ -30,9 +30,18 @@ if (as.character(opt$probe)=="A") {
 	counts = getBamCounts(bed.frame = bed,
                           bam.files = paste0("bam/", as.character(opt$sample_name), "-standard.bam"),
                           include.chr = FALSE)
-    counts = as.data.frame(counts) %>%
+    counts = as.data.frame(counts)
+    colnames(counts)[6] = "counts"
+    counts = counts %>%
     		 dplyr::select(
-    		 )
+    		 	chr = space,
+    		 	start = start,
+    		 	end = end,
+    		 	counts = counts)
+    bed = read_tsv(file="~/share/reference/cnvkit_reference/MSK-ACCESS-v1_0-probe-A.bigWig", col_types = cols(.default = col_character())) %>%
+		  type_convert() %>%
+		  dplyr::select(gc, mappability)
+	counts = bind_cols(counts, bed)
     write_tsv(counts, path=paste0("cnvaccess/cov/", as.charcater(opt$sample_name), ".probe-A.txt"))
 
 }                          
