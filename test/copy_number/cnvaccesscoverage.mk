@@ -20,7 +20,7 @@ cnvaccess/cov/$1.probe-B.txt : bam/$1-standard.bam
 	$$(call RUN,-c -n 1 -s 6G -m 12G -v $(EXOME_DEPTH_ENV),"$(RSCRIPT) $(R_COVERAGE) --sample_name $1 --probe 'B'")
 	
 cnvaccess/cov/$1.probe-AB.txt : bam/$1-standard.bam
-	$$(call RUN,-c -n 1 -s 6G -m 12G -v $(EXOME_DEPTH_ENV),"$(RSCRIPT) $(R_COVERAGE) --sample_name $1 --probe 'NA'")
+	$$(call RUN,-c -n 1 -s 12G -m 24G -v $(EXOME_DEPTH_ENV),"$(RSCRIPT) $(R_COVERAGE) --sample_name $1 --probe 'NA'")
 	
 endef
  $(foreach sample,$(SAMPLES),\
