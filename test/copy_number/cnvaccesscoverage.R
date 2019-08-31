@@ -42,6 +42,6 @@ if (as.character(opt$probe)=="A") {
 		  type_convert() %>%
 		  dplyr::select(gc, mappability)
 	counts = bind_cols(counts, bed)
-    write_tsv(counts, path=paste0("cnvaccess/cov/", as.charcater(opt$sample_name), ".probe-A.txt"))
+    write_tsv(counts, path=paste0("cnvaccess/cov/", as.character(opt$sample_name), ".probe-A.txt"), na = "NA", append = FALSE, col_names = TRUE)
 
 }                          

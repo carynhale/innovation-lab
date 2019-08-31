@@ -12,7 +12,7 @@ EXOME_DEPTH_ENV ?= $(HOME)/share/usr/anaconda-envs/exomedepth-1.1.12
 
 define cnvaccess-coverage
 cnvaccess/cov/$1.probe-A.txt : bam/$1-standard.bam
-	$$(call RUN,-c -n 1 -s 12G -m 26G -v $(EXOME_DEPTH_ENV),"$(RSCRIPT) $(R_COVERAGE) --sample_name $1 --probe 'A'")
+	$$(call RUN,-c -n 1 -s 6G -m 12G -v $(EXOME_DEPTH_ENV),"$(RSCRIPT) $(R_COVERAGE) --sample_name $1 --probe 'A'")
 	
 endef
  $(foreach sample,$(SAMPLES),\
