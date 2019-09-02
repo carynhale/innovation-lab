@@ -18,7 +18,8 @@ plot_metrics : metrics/report/umi_frequencies.pdf \
 			   metrics/report/insert_size_summary.pdf \
 			   metrics/report/insert_size_distribution.pdf \
 			   metrics/report/read_alignment_summary.pdf \
-			   metrics/report/non_reference_calls.pdf
+			   metrics/report/non_reference_calls.pdf \
+			   metrics/report/combined_report.pdf
 
 metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -89,6 +90,27 @@ metrics/report/non_reference_calls.pdf : $(wildcard metrics/standard/$(SAMPLES)-
 														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf && \
 														   rm metrics/report/non_reference_calls.pdf && \
 														   mv metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf")
+
+metrics/report/combined_report.pdf : metrics/report/umi_frequencies.pdf metrics/report/umi_family_types_probe-A.pdf metrics/report/umi_family_types_probe-B.pdf metrics/report/umi_family_sizes_all.pdf metrics/report/umi_family_sizes_duplex.pdf metrics/report/umi_family_sizes_simplex.pdf metrics/report/mean_standard_target_coverage-dedup.pdf metrics/report/mean_standard_target_coverage-nodedup.pdf metrics/report/mean_unfiltered_target_coverage.pdf metrics/report/mean_duplex_target_coverage.pdf metrics/report/mean_simplex_target_coverage.pdf metrics/report/aligment_summary.pdf metrics/report/insert_size_summary.pdf metrics/report/insert_size_distribution.pdf metrics/report/read_alignment_summary.pdf metrics/report/non_reference_calls.pdf 
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dAutoRotatePages=/None \
+									   -sOutputFile=metrics/report/combined_report.pdf \
+									   metrics/report/umi_frequencies.pdf \
+									   metrics/report/umi_family_types_probe-A.pdf \
+									   metrics/report/umi_family_types_probe-B.pdf \
+									   metrics/report/umi_family_sizes_all.pdf \
+									   metrics/report/umi_family_sizes_duplex.pdf \
+									   metrics/report/umi_family_sizes_simplex.pdf \
+									   metrics/report/mean_standard_target_coverage-dedup.pdf \
+									   metrics/report/mean_standard_target_coverage-nodedup.pdf \
+									   metrics/report/mean_unfiltered_target_coverage.pdf \
+									   metrics/report/mean_duplex_target_coverage.pdf \
+									   metrics/report/mean_simplex_target_coverage.pdf \
+									   metrics/report/aligment_summary.pdf \
+									   metrics/report/insert_size_summary.pdf \
+									   metrics/report/insert_size_distribution.pdf \
+									   metrics/report/read_alignment_summary.pdf \
+									   metrics/report/non_reference_calls.pdf")
 
 
 .DELETE_ON_ERROR:
