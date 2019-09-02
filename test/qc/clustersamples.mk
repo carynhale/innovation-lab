@@ -58,7 +58,7 @@ metrics/summary/snps_filtered-standard.tsv : metrics/summary/snps_filtered-stand
 	
 metrics/report/snps_clustering-standard.pdf : metrics/summary/snps_filtered-standard.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 16 && \
+														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 15 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-standard-2.pdf metrics/report/snps_clustering-standard.pdf && \
 									   					   rm metrics/report/snps_clustering-standard.pdf && \
 									   					   mv metrics/report/snps_clustering-standard-2.pdf metrics/report/snps_clustering-standard.pdf")
@@ -93,7 +93,7 @@ metrics/summary/snps_filtered-unfiltered.tsv : metrics/summary/snps_filtered-unf
 	
 metrics/report/snps_clustering-unfiltered.pdf : metrics/summary/snps_filtered-unfiltered.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 17 && \
+														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 16 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-unfiltered-2.pdf metrics/report/snps_clustering-unfiltered.pdf && \
 									   					   rm metrics/report/snps_clustering-unfiltered.pdf && \
 									   					   mv metrics/report/snps_clustering-unfiltered-2.pdf metrics/report/snps_clustering-unfiltered.pdf")
@@ -128,7 +128,7 @@ metrics/summary/snps_filtered-simplex.tsv : metrics/summary/snps_filtered-simple
 	
 metrics/report/snps_clustering-simplex.pdf : metrics/summary/snps_filtered-simplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 18 && \
+														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 17 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-simplex-2.pdf metrics/report/snps_clustering-simplex.pdf && \
 									   					   rm metrics/report/snps_clustering-simplex.pdf && \
 									   					   mv metrics/report/snps_clustering-simplex-2.pdf metrics/report/snps_clustering-simplex.pdf")
@@ -163,7 +163,7 @@ metrics/summary/snps_filtered-duplex.tsv : metrics/summary/snps_filtered-duplex.
 	
 metrics/report/snps_clustering-duplex.pdf : metrics/summary/snps_filtered-duplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 19 && \
+														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 18 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-duplex-2.pdf metrics/report/snps_clustering-duplex.pdf && \
 									   					   rm metrics/report/snps_clustering-duplex.pdf && \
 									   					   mv metrics/report/snps_clustering-duplex-2.pdf metrics/report/snps_clustering-duplex.pdf")
