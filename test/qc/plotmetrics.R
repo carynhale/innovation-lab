@@ -117,9 +117,9 @@ if (as.numeric(opt$type)==1) {
 			 geom_point(size=.5) +
 			 geom_line() +
 			 scale_x_continuous(trans = 'log2',
-			 					breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							labels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							limits = c(1, 50)) +
+			 					breaks = c(2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
+    							labels = c(2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
+    							limits = c(2, 50)) +
 			 theme_classic(base_size=15) +
 			 labs(x="\nFamily size", y="Frequency\n", title="DUPLEX FAMILY SIZES") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
@@ -138,9 +138,9 @@ if (as.numeric(opt$type)==1) {
 			 geom_point(size=.5) +
 			 geom_line() +
 			 scale_x_continuous(trans = 'log2',
-			 					breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							labels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							limits = c(1, 50)) +
+			 					breaks = c(3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
+    							labels = c(3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
+    							limits = c(3, 50)) +
 			 theme_classic(base_size=15) +
 			 labs(x="\nFamily size", y="Frequency\n", title="SIMPLEX FAMILY SIZES") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
