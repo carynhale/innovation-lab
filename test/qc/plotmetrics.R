@@ -84,7 +84,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 
-} else if (as.numeric(opt$type)==5) {
+} else if (as.numeric(opt$type)==4) {
 
 	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -105,7 +105,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==6) {
+} else if (as.numeric(opt$type)==5) {
 
 	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -126,7 +126,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==7) {
+} else if (as.numeric(opt$type)==6) {
 
 	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -147,7 +147,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==8) {
+} else if (as.numeric(opt$type)==7) {
 
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -167,7 +167,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==9) {
+} else if (as.numeric(opt$type)==8) {
 
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -187,7 +187,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==10) {
+} else if (as.numeric(opt$type)==9) {
 
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -207,7 +207,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==11) {
+} else if (as.numeric(opt$type)==10) {
 
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -228,7 +228,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==12) {
+} else if (as.numeric(opt$type)==11) {
 
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -249,7 +249,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==13) {
+} else if (as.numeric(opt$type)==12) {
 
 	data = read_tsv(file="metrics/summary/metrics_idx.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert()
@@ -279,7 +279,7 @@ if (as.numeric(opt$type)==1) {
 	}
 	dev.off()
 
-} else if (as.numeric(opt$type)==14) {
+} else if (as.numeric(opt$type)==13) {
 
 	data = read_tsv(file="metrics/summary/metrics_insert.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -306,7 +306,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 
-} else if (as.numeric(opt$type)==15) {
+} else if (as.numeric(opt$type)==14) {
 
 	data = read_tsv(file="metrics/summary/metrics_insert_distribution.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert()
@@ -339,7 +339,7 @@ if (as.numeric(opt$type)==1) {
 	}
 	dev.off()
 	
-} else if (as.numeric(opt$type)==16) {
+} else if (as.numeric(opt$type)==15) {
 
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
@@ -365,7 +365,7 @@ if (as.numeric(opt$type)==1) {
 			  print.plot = TRUE)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==17) {
+} else if (as.numeric(opt$type)==16) {
 
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
@@ -391,7 +391,7 @@ if (as.numeric(opt$type)==1) {
 			  print.plot = TRUE)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==18) {
+} else if (as.numeric(opt$type)==17) {
 
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
@@ -417,7 +417,7 @@ if (as.numeric(opt$type)==1) {
 			  print.plot = TRUE)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==19) {
+} else if (as.numeric(opt$type)==18) {
 
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
@@ -443,7 +443,7 @@ if (as.numeric(opt$type)==1) {
 			  print.plot = TRUE)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==20) {
+} else if (as.numeric(opt$type)==19) {
 
 	data = read_tsv(file="metrics/summary/metrics_ts.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
@@ -484,7 +484,7 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 
-} else if (as.numeric(opt$type)==21) {
+} else if (as.numeric(opt$type)==20) {
 
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
