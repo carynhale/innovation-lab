@@ -84,50 +84,6 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 
-} else if (as.numeric(opt$type)==4) {
-
-	data = read_tsv(file="metrics/summary/umi_family_types.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert()
-	x = data %>%
-		filter(Type=="Singletons") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-A")
-	y = data %>%
-		filter(Type=="Singletons") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-B")
-	z.0 = left_join(x, y, by="SAMPLE")
-	x = data %>%
-		filter(Type=="Sub-Simplex") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-A")
-	y = data %>%
-		filter(Type=="Sub-Simplex") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-B")
-	z.1 = left_join(x, y, by="SAMPLE")
-	x = data %>%
-		filter(Type=="Simplex") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-A")
-	y = data %>%
-		filter(Type=="Simplex") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-B")
-	z.2 = left_join(x, y, by="SAMPLE")
-	x = data %>%
-		filter(Type=="Duplex") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-A")
-	y = data %>%
-		filter(Type=="Duplex") %>%
-		filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-B")
-	z.3 = left_join(x, y, by="SAMPLE")
-	tmp.0 = bind_rows(z.0, z.1, z.2, z.3)
-	pdf(file="metrics/report/umi_family_types_probe-AB.pdf")
-	plot.0 = ggplot(tmp.0, aes(x=Count.x, y=Count.y)) +
-			 geom_point(alpha=.75, size=1.95, shape=21, color="black", fill="red") +
-			 geom_smooth(method="lm", color="goldenrod3", size=1, fullrange=TRUE) +
-			 theme_bw(base_size=15) +
-			 theme(axis.text=element_text(size=12)) +
-			 labs(x="\nProbe-A", y="Probe-B\n") +
-			 facet_wrap(~Type.x, scales="free")
-	print(plot.0)
-	dev.off()
-	
 } else if (as.numeric(opt$type)==5) {
 
 	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
