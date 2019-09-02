@@ -38,10 +38,6 @@ if (as.character(opt$probe)=="A") {
     		 	start = start,
     		 	end = end,
     		 	counts = counts)
-    bed = read_tsv(file="~/share/reference/cnvkit_reference/MSK-ACCESS-v1_0-probe-A.bigWig", col_types = cols(.default = col_character())) %>%
-		  type_convert() %>%
-		  dplyr::select(gc, mappability)
-	counts = bind_cols(counts, bed)
     write_tsv(counts, path=paste0("cnvaccess/cov/", as.character(opt$sample_name), ".probe-A.txt"), na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.character(opt$probe)=="B") {
@@ -64,10 +60,6 @@ if (as.character(opt$probe)=="A") {
     		 	start = start,
     		 	end = end,
     		 	counts = counts)
-    bed = read_tsv(file="~/share/reference/cnvkit_reference/MSK-ACCESS-v1_0-probe-B.bigWig", col_types = cols(.default = col_character())) %>%
-		  type_convert() %>%
-		  dplyr::select(gc, mappability)
-	counts = bind_cols(counts, bed)
     write_tsv(counts, path=paste0("cnvaccess/cov/", as.character(opt$sample_name), ".probe-B.txt"), na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.character(opt$probe)=="NA") {
@@ -90,11 +82,6 @@ if (as.character(opt$probe)=="A") {
     		 	start = start,
     		 	end = end,
     		 	counts = counts)
-    bed = read_tsv(file="~/share/reference/cnvkit_reference/MSK-ACCESS-v1_0-noprobe.bigWig", col_types = cols(.default = col_character())) %>%
-		  type_convert() %>%
-		  dplyr::select(gc, mappability)
-	counts = bind_cols(counts, bed)
     write_tsv(counts, path=paste0("cnvaccess/cov/", as.character(opt$sample_name), ".probe-AB.txt"), na = "NA", append = FALSE, col_names = TRUE)
 
 }
-
