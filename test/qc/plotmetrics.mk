@@ -110,6 +110,7 @@ metrics/report/combined_report.pdf : metrics/report/umi_frequencies.pdf metrics/
 									   metrics/report/insert_size_summary.pdf \
 									   metrics/report/insert_size_distribution.pdf \
 									   metrics/report/read_alignment_summary.pdf \
+									   metrics/report/snps_clustering-standard.pdf \
 									   metrics/report/non_reference_calls.pdf")
 
 
