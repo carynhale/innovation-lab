@@ -17,6 +17,35 @@ parser <- OptionParser(usage = "%prog", option_list = args_list)
 arguments <- parse_args(parser, positional_arguments = T)
 opt <- arguments$options
 
+'absolute_' <- function(rho, psi, gamma=1, x)
+{
+	rho = ifelse(is.na(rho), 1, rho)
+	psi = ifelse(is.na(psi), 2, psi)
+	return(invisible(((((2^(x/gamma))*(rho*psi+(1-rho)*2)) - ((1-rho)*2))/rho)))
+}
+
+'prune_' <- function(x, n=10)
+{
+	cnm = matrix(NA, nrow=nrow(x), ncol=nrow(x))
+	for (j in 1:nrow(x)) {
+		cnm[,j] = abs(2^x[j,"log2"] - 2^x[,"log2"])
+	}
+	cnt = hclust(as.dist(cnm), "average")
+	cnc = cutree(tree=cnt, k=n)
+	for (j in unique(cnc)) {
+		indx = which(cnc==j)
+		if (length(indx)>2) {
+			mcl = mean(x[indx,"log2"])
+			scl = sd(x[indx,"log2"])
+			ind = which(x[indx,"log2"]<(mcl+1.96*scl) & x[indx,"log2"]>(mcl-1.96*scl))
+			x[indx[ind],"log2"] = mean(x[indx[ind],"log2"])
+		} else {
+			x[indx,"log2"] = mean(x[indx,"log2"])
+		}
+	}
+	return(x)
+}
+
 if (as.numeric(opt$type)==1) {
 
 	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, ".txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
@@ -60,6 +89,8 @@ if (as.numeric(opt$type)==1) {
 	colnames(log2_) = c("chr", "pos", "log2")
     colnames(segmented_) = c("chr", "arm", "start", "end", "n", "log2")
 	save(log2_, segmented_, file=paste0("cnvaccess/report/segmented/", opt$sample_name, ".RData"))
+	
+	segmented_ = prune_(x=segmented_, n=5)
 
 	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, ".pdf"), width=14, height=5)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
@@ -92,6 +123,12 @@ if (as.numeric(opt$type)==1) {
 	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1.5, lwd=1.5, tcl=.5)
 	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1.25)
 	dev.off()
+
+} else if (as.numeric(opt$type)==3) {
+
+	load(file=paste0("cnvaccess/report/segmented/", opt$sample_name, ".RData"))
+	
+
 
 }
 
