@@ -13,7 +13,7 @@ EXOME_DEPTH_ENV ?= $(HOME)/share/usr/anaconda-envs/exomedepth-1.1.12
 
 define cnvaccess-plot
 cnvaccess/report/log2/$1.pdf : cnvaccess/log2/$1.txt
-	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 1 --sample_name $1")
+	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 1 --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
