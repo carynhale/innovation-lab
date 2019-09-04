@@ -82,8 +82,8 @@ if (as.numeric(opt$type)==1) {
 
 	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, ".txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
 	log2_ = subset(log2_, log2_$chr<=22 & !is.na(log2_$log2))
-	log2_ = winsorize(data = log2_[,c("chr", "start", "log2"),drop=FALSE], method = "mad", tau = 2.05, k = 15, verbose = FALSE)
-	segmented_ = pcf(data=log2_, kmin = 5, gamma = 50,
+	log2_ = winsorize(data = log2_[,c("chr", "start", "log2"),drop=FALSE], method = "mad", tau = 2.15, k = 10, verbose = FALSE)
+	segmented_ = pcf(data=log2_, kmin = 2, gamma = 5,
 					 normalize = FALSE, fast = FALSE, assembly = "hg19", digits = 4,
            			 return.est = FALSE, save.res = FALSE, file.names = NULL, verbose = FALSE)[,2:7,drop=FALSE]
 	colnames(log2_) = c("chr", "pos", "log2")
@@ -127,7 +127,30 @@ if (as.numeric(opt$type)==1) {
 } else if (as.numeric(opt$type)==3) {
 
 	load(file=paste0("cnvaccess/report/segmented/", opt$sample_name, ".RData"))
+	segmented_ = prune_(x=segmented_, n=5)
 	
+	rho = seq(from=.05, to=1, length=250)
+	psi = seq(from=1.5, to=5, length=250)
+	SSE = matrix(NA, nrow=250, ncol=250)
+	for (i in 1:length(rho)) {
+		for (j in 1:length(psi)) {
+			x = absolute_(rho[i], psi[j], gamma=.55, x=segmented_$log2)
+			SSE[j,i] = (segmented_$end - segmented_$start) %*% (round(x)-x)^2
+		}
+	}
+	
+	pdf(file=paste0("cnvaccess/report/ASACT/", opt$sample_name, ".pdf"), width=7, height=7)
+	par(mar=c(6.1, 6.5, 4.1, 1.1))
+	mtext(side=1, text="Ploidy", line=4, cex=1.5)
+    mtext(side=2, text="Purity", line=4, cex=1.5)
+	image(log2(SSE), col = (colorRampPalette(RColorBrewer::brewer.pal(10, "RdBu"))(25)), useRaster = TRUE, axes = FALSE)
+	axis(side=1, at=seq(from=0, to=1, length=5), labels=signif(seq(from=1.5, to=5, length=5), 2))
+	axis(side=2, at=seq(from=0, to=1, length=5), labels=signif(seq(from=.05, to=1, length=5), 2), las=1)
+	box(lwd=1.5)
+	dev.off()
+	
+}	
+			
 
 
 }
