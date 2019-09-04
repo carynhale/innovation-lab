@@ -141,17 +141,13 @@ if (as.numeric(opt$type)==1) {
 	
 	pdf(file=paste0("cnvaccess/report/ASCAT/", opt$sample_name, ".pdf"), width=7, height=7)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
-	mtext(side=1, text="Ploidy", line=4, cex=1.5)
-    mtext(side=2, text="Purity", line=4, cex=1.5)
 	image(log2(SSE), col = (colorRampPalette(RColorBrewer::brewer.pal(10, "RdBu"))(25)), useRaster = TRUE, axes = FALSE)
 	axis(side=1, at=seq(from=0, to=1, length=5), labels=signif(seq(from=1.5, to=5, length=5), 2))
 	axis(side=2, at=seq(from=0, to=1, length=5), labels=signif(seq(from=.05, to=1, length=5), 2), las=1)
+	mtext(side=1, text="Ploidy", line=4, cex=1.5)
+    mtext(side=2, text="Purity", line=4, cex=1.5)
 	box(lwd=1.5)
 	dev.off()
 	
-}	
-			
-
-
 }
 
