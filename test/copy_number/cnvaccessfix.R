@@ -93,4 +93,4 @@ AB_ = rbind(A_, B_) %>%
 	  mutate(chr = as.numeric(chr)) %>%
 	  arrange(chr, start)
 	  
-write_table(AB_, path=paste0("cnvaccess/log2/", opt$sample_name, ".txt"), na = "NA", append = FALSE, col_names = TRUE)
+write_tsv(AB_, path=paste0("cnvaccess/log2/", opt$sample_name, ".txt"), na = "NA", append = FALSE, col_names = TRUE)
