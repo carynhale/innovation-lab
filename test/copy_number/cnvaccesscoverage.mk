@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/cnvaccess_coverage.$(NOW)
-PHONY += cnvaccess cnvaccess/cnn
+PHONY += cnvaccess cnvaccess/cov
 
 
 cnvaccess_coverage : $(foreach sample,$(SAMPLES),cnvaccess/cov/$(sample).probe-A.txt) \
@@ -10,6 +10,7 @@ cnvaccess_coverage : $(foreach sample,$(SAMPLES),cnvaccess/cov/$(sample).probe-A
 					 $(foreach sample,$(SAMPLES),cnvaccess/cov/$(sample).probe-AB.txt)
 
 R_COVERAGE ?= modules/test/copy_number/cnvaccesscoverage.R
+R_FIX ?= modules/test/copy_number/cnvaccessfix.R
 EXOME_DEPTH_ENV ?= $(HOME)/share/usr/anaconda-envs/exomedepth-1.1.12
 
 define cnvaccess-coverage
