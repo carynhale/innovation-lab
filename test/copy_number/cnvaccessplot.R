@@ -139,7 +139,7 @@ if (as.numeric(opt$type)==1) {
 		}
 	}
 	
-	pdf(file=paste0("cnvaccess/report/ASACT/", opt$sample_name, ".pdf"), width=7, height=7)
+	pdf(file=paste0("cnvaccess/report/ASCAT/", opt$sample_name, ".pdf"), width=7, height=7)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	mtext(side=1, text="Ploidy", line=4, cex=1.5)
     mtext(side=2, text="Purity", line=4, cex=1.5)
