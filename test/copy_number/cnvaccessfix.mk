@@ -12,7 +12,7 @@ EXOME_DEPTH_ENV ?= $(HOME)/share/usr/anaconda-envs/exomedepth-1.1.12
 
 define cnvaccess-fix
 cnvaccess/log2/$1.txt : cnvaccess/cov/$1.probe-A.txt cnvaccess/cov/$1.probe-B.txt
-	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(EXOME_DEPTH_ENV),"$(RSCRIPT) $(R_FIX) --sample_name $1")
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"$(RSCRIPT) $(R_FIX) --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
