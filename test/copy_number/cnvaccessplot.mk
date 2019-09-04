@@ -6,7 +6,7 @@ PHONY += cnvaccess cnvaccess/report cnvaccess/report/log2 cnvaccess/report/ASCAT
 
 cnvaccess_plot : $(foreach sample,$(SAMPLES),cnvaccess/report/log2/$(sample).pdf) \
 				 $(foreach sample,$(SAMPLES),cnvaccess/report/segmented/$(sample).RData) \
-				 $(foreach sample,$(SAMPLES),cnvaccess/report/ASCAT/$(sample).RData)
+				 $(foreach sample,$(SAMPLES),cnvaccess/report/ASCAT/$(sample).pdf)
 				 
 
 R_COVERAGE ?= modules/test/copy_number/cnvaccesscoverage.R
