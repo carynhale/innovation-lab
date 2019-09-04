@@ -77,6 +77,7 @@ if (as.numeric(opt$type)==1) {
 	for (j in 2:nrow(segmented_)) {
  		lines(x=c(segmented_[j-1,"n"], segmented_[j,"n"]), y=rep(segmented_[j,"log2"],2), lty=1, lwd=3.0, col="red")
  	}
+ 	lines(x=c(1, segmented_[1,"n"]), y=rep(segmented_[1,"log2"],2), lty=1, lwd=3.0, col="red")
 	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="red")
 	axis(2, at=seq(-3, 3, by=1), labels=seq(-3,3, by=1), cex.axis=1.5, las=1, lwd=1.5)
 	mtext(side=1, text="Chromosome", line=4, cex=1.5)
