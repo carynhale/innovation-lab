@@ -1,0 +1,15 @@
+# packages in environment at /home/brownd7/share/usr/anaconda-envs/vcf2maf:
+#
+# Name                    Version                   Build  Channel
+libgcc                    5.2.0                         0  
+openssl                   1.0.2h                        1  
+perl-archive-extract      0.76                          3    bioconda
+perl-archive-zip          1.55                          3    bioconda
+perl-cgi                  4.22                          3    bioconda
+perl-dbi                  1.634                         2    bioconda
+perl-devel-stacktrace     2.00                          0    bioconda
+perl-encode-locale        1.05                          3    bioconda
+perl-lwp-protocol-https   6.06                          2    bioconda
+perl-lwp-simple           6.15                          3    bioconda
+perl-threaded             5.22.0                       10    bioconda
+perl-time-hires           1.9728                        2    bioconda

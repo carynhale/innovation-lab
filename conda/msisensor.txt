@@ -1,0 +1,9 @@
+# packages in environment at /home/brownd7/share/usr/anaconda-envs/msisensor:
+#
+libgcc-ng                 7.2.0                hdf63c60_3    conda-forge
+libstdcxx-ng              7.2.0                hdf63c60_3    conda-forge
+llvm-meta                 7.0.0                         0    conda-forge
+msisensor                 0.5                  hd0b41b6_0    bioconda
+ncurses                   6.1                  hfc679d8_1    conda-forge
+openmp                    7.0.0                h2d50403_0    conda-forge
+zlib                      1.2.11               h470a237_3    conda-forge

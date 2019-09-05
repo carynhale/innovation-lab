@@ -1,0 +1,322 @@
+# packages in environment at /home/brownd7/share/usr/anaconda-envs/jrflab-modules-0.1.6:
+#
+# Name                    Version                   Build  Channel
+_r-mutex                  1.0.0               anacondar_1  
+asn1crypto                0.24.0                   py27_0  
+awscli                    1.16.112                 py27_0    conda-forge
+binutils_impl_linux-64    2.28.1               had2808c_3  
+binutils_linux-64         7.2.0               had2808c_27  
+bioconductor-annotate     1.60.0                   r351_0    bioconda
+bioconductor-annotationdbi 1.44.0                   r351_0    bioconda
+bioconductor-biobase      2.42.0           r351h14c3975_1    bioconda
+bioconductor-biocgenerics 0.28.0                   r351_1    bioconda
+bioconductor-biocinstaller 1.30.0                   r351_0    bioconda
+bioconductor-biocparallel 1.16.2           r351h1c2f66e_1    bioconda
+bioconductor-biomart      2.38.0                   r351_0    bioconda
+bioconductor-biostrings   2.50.2           r351h14c3975_0    bioconda
+bioconductor-bsgenome     1.50.0                   r351_0    bioconda
+bioconductor-bsgenome.hsapiens.ucsc.hg19 1.4.0                    r351_5    bioconda
+bioconductor-cghbase      1.32.0                        0    bioconda
+bioconductor-cghcall      2.34.0                        0    bioconda
+bioconductor-complexheatmap 1.20.0                   r351_0    bioconda
+bioconductor-copynumber   1.22.0                   r351_0    bioconda
+bioconductor-delayedarray 0.8.0            r351h14c3975_0    bioconda
+bioconductor-dnacopy      1.54.0           r351ha44fe06_0    bioconda
+bioconductor-genomeinfodb 1.18.1                   r351_0    bioconda
+bioconductor-genomeinfodbdata 1.2.0                    r351_0    bioconda
+bioconductor-genomicalignments 1.18.1           r351h14c3975_0    bioconda
+bioconductor-genomicfeatures 1.34.1                   r351_0    bioconda
+bioconductor-genomicranges 1.34.0           r351h14c3975_0    bioconda
+bioconductor-go.db        3.7.0                    r351_0    bioconda
+bioconductor-graph        1.60.0           r351h14c3975_0    bioconda
+bioconductor-homo.sapiens 1.3.1                    r351_4    bioconda
+bioconductor-impute       1.54.0           r351ha44fe06_0    bioconda
+bioconductor-iranges      2.16.0           r351h14c3975_0    bioconda
+bioconductor-limma        3.36.5           r351h470a237_0    bioconda
+bioconductor-maftools     1.8.0                    r351_0    bioconda
+bioconductor-marray       1.58.0                   r351_0    bioconda
+bioconductor-org.hs.eg.db 3.7.0                    r351_0    bioconda
+bioconductor-organismdbi  1.24.0                   r351_0    bioconda
+bioconductor-rbgl         1.58.1           r351hf484d3e_0    bioconda
+bioconductor-rgraphviz    2.26.0           r351hf484d3e_0    bioconda
+bioconductor-rsamtools    1.34.0           r351hf484d3e_0    bioconda
+bioconductor-rtracklayer  1.42.1           r351h9d9f1b6_1    bioconda
+bioconductor-s4vectors    0.20.1           r351h14c3975_0    bioconda
+bioconductor-summarizedexperiment 1.12.0                   r351_0    bioconda
+bioconductor-txdb.hsapiens.ucsc.hg19.knowngene 3.2.2                    r351_4    bioconda
+bioconductor-variantannotation 1.28.3           r351h14c3975_0    bioconda
+bioconductor-xvector      0.22.0           r351h14c3975_0    bioconda
+bioconductor-zlibbioc     1.28.0           r351h14c3975_0    bioconda
+blas                      1.0                         mkl    anaconda
+boost                     1.67.0                   py27_4    anaconda
+botocore                  1.12.102                   py_0    conda-forge
+bwidget                   1.9.11                        1  
+bzip2                     1.0.6                h470a237_2    conda-forge
+ca-certificates           2019.3.9             hecc5488_0    conda-forge
+cairo                     1.14.12              h8948797_3  
+certifi                   2019.3.9                 py27_0    conda-forge
+cffi                      1.11.5           py27he75722e_1  
+chardet                   3.0.4                    py27_1  
+coincbc                   2.9.8                         1    conda-forge
+colorama                  0.3.9                      py_1    conda-forge
+conda                     4.6.8                    py27_0    conda-forge
+conda-env                 2.6.0                         1  
+cryptography              2.5              py27h1ba5d50_0  
+curl                      7.62.0               hbc83047_0    anaconda
+docutils                  0.14                  py27_1001    conda-forge
+enum34                    1.1.6                    py27_1  
+fontconfig                2.13.0               h9420a91_0  
+freetype                  2.9.1                h6debe1e_4    conda-forge
+fribidi                   1.0.5                h7b6447c_0  
+futures                   3.2.0                    py27_0  
+gcc_impl_linux-64         7.2.0                habb00fd_3  
+gcc_linux-64              7.2.0               h550dcbe_27  
+gdata                     2.0.18                   py27_0    anaconda
+gettext                   0.19.8.1             h5e8e0c9_1    conda-forge
+gfortran_impl_linux-64    7.2.0                hdf63c60_3  
+gfortran_linux-64         7.2.0               h550dcbe_27  
+glib                      2.56.2               hd408876_0  
+glpk                      4.65              ha14ba45_1001    conda-forge
+gmp                       6.1.2                hfc679d8_0    conda-forge
+graphite2                 1.3.12               hfc679d8_1    conda-forge
+gsl                       2.4                  h14c3975_4  
+gurobipy                  8.1.0                    pypi_0    pypi
+gxx_impl_linux-64         7.2.0                hdf63c60_3  
+gxx_linux-64              7.2.0               h550dcbe_27  
+harfbuzz                  1.9.0                h04dbb29_1    conda-forge
+hmmcopy                   0.1.1                hd28b015_2    bioconda
+icu                       58.2                 hfc679d8_0    conda-forge
+idna                      2.7                      py27_0  
+intel-openmp              2019.1                      144    anaconda
+ipaddress                 1.0.22                   py27_0  
+jbig                      2.1               h470a237_1001    conda-forge
+jmespath                  0.9.3                      py_1    conda-forge
+jpeg                      9c                   h470a237_1    conda-forge
+krb5                      1.16.1               h173b8e3_7  
+lemon                     1.3.1                h338f22d_1    conda-forge
+libboost                  1.67.0               h46d08c1_4    anaconda
+libcurl                   7.62.0               h20c2e04_0  
+libedit                   3.1.20170329         h6b74fdf_2  
+libffi                    3.2.1                hd88cf55_4  
+libgcc                    7.2.0                h69d50b8_2    conda-forge
+libgcc-ng                 8.2.0                hdf63c60_1  
+libgfortran               3.0.0                         1    conda-forge
+libgfortran-ng            7.2.0                hdf63c60_3    conda-forge
+libiconv                  1.14                          4    conda-forge
+libpng                    1.6.35               ha92aebf_2    conda-forge
+libssh2                   1.8.0             h90d6eec_1004    conda-forge
+libstdcxx-ng              8.2.0                hdf63c60_1  
+libtiff                   4.0.10               he6b73bb_0    conda-forge
+libuuid                   1.0.3                         1    conda-forge
+libxcb                    1.13                 h470a237_2    conda-forge
+libxml2                   2.9.8                h26e45fe_1  
+make                      4.2.1             h470a237_1002    conda-forge
+mkl                       2019.1                      144    anaconda
+mkl_fft                   1.0.6            py27h7dd41cf_0    anaconda
+mkl_random                1.0.1            py27h4414c95_1    anaconda
+ncurses                   6.1                  hf484d3e_0  
+numpy                     1.15.4           py27h1d66e8a_0    anaconda
+numpy-base                1.15.4           py27h81de0dd_0    anaconda
+openblas                  0.3.5             h9ac9557_1000    conda-forge
+openssl                   1.1.1b               h14c3975_1    conda-forge
+pandoc                    2.5                           0    conda-forge
+pango                     1.42.4               h049681c_0  
+parallel                  20181022                      0    conda-forge
+pcre                      8.42                 h439df22_0  
+perl                      5.26.2               h470a237_0    conda-forge
+pip                       10.0.1                   py27_0  
+pixman                    0.34.0               h470a237_3    conda-forge
+pthread-stubs             0.4                  h470a237_1    conda-forge
+py-boost                  1.67.0           py27h04863e7_4    anaconda
+pyasn1                    0.4.4                      py_1    conda-forge
+pycosat                   0.6.3            py27h14c3975_0  
+pycparser                 2.18                     py27_1  
+pyopenssl                 18.0.0                   py27_0  
+pysocks                   1.6.8                    py27_0  
+python                    2.7.15               h9bab390_6  
+python-dateutil           2.8.0                      py_0    conda-forge
+pyyaml                    3.13            py27h14c3975_1001    conda-forge
+r                         3.5.1                 r351_1000    conda-forge
+r-assertthat              0.2.0            r351h6115d3f_0    r
+r-backports               1.1.2            r351h96ca727_0    r
+r-base                    3.5.1                h1e0a451_2    r
+r-base64enc               0.1_3            r351h96ca727_4    r
+r-beeswarm                0.2.3           r351h6115d3f_1001    conda-forge
+r-bh                      1.66.0_1              r351_2001    conda-forge
+r-bibtex                  0.4.2           r351h96ca727_1002    conda-forge
+r-bindr                   0.1.1            r351h6115d3f_0    r
+r-bindrcpp                0.2.2            r351h29659fb_0    r
+r-biocmanager             1.30.4          r351h6115d3f_1000    conda-forge
+r-bit                     1.1_12           r351h470a237_2    conda-forge
+r-bit64                   0.9_7            r351hc070d10_0    conda-forge
+r-bitops                  1.0_6            r351hc070d10_2    conda-forge
+r-blob                    1.1.1                 r351_1001    conda-forge
+r-boot                    1.3_20           r351hf348343_0    r
+r-broom                   0.5.0            r351h6115d3f_0    r
+r-callr                   2.0.4            r351h6115d3f_0    r
+r-catools                 1.17.1.1         r351h29659fb_0    r
+r-cellranger              1.1.0            r351h6115d3f_0    r
+r-circlize                0.4.5                 r351_1000    conda-forge
+r-class                   7.3_15          r351h96ca727_1000    conda-forge
+r-cli                     1.0.0            r351h6115d3f_1    r
+r-clipr                   0.4.1           r351h6115d3f_1001    conda-forge
+r-cluster                 2.0.7_1         r351ha65eedd_1000    conda-forge
+r-codetools               0.2_15           r351h6115d3f_0    r
+r-colorspace              1.3_2            r351h96ca727_0    r
+r-cometexacttest          0.1.5           r351h14c3975_1002    conda-forge
+r-corrplot                0.84                  r351_1001    conda-forge
+r-cowplot                 0.9.3           r351h6115d3f_1001    conda-forge
+r-crayon                  1.3.4            r351h6115d3f_0    r
+r-curl                    3.2              r351hc070d10_2    conda-forge
+r-data.table              1.11.4           r351h96ca727_0    r
+r-dbi                     1.0.0           r351h6115d3f_1001    conda-forge
+r-dbplyr                  1.2.2            r351hf348343_0    r
+r-dichromat               2.0_0            r351h6115d3f_4    r
+r-digest                  0.6.15           r351h96ca727_0    r
+r-domc                    1.3.5            r351h6115d3f_4    r
+r-doparallel              1.0.14           r351h6115d3f_0    conda-forge
+r-dplyr                   0.7.6            r351h29659fb_0    r
+r-evaluate                0.11             r351h6115d3f_0    r
+r-fansi                   0.2.3            r351h96ca727_0    r
+r-forcats                 0.3.0            r351h6115d3f_0    r
+r-foreach                 1.4.4            r351h6115d3f_0    r
+r-foreign                 0.8_71          r351h96ca727_1002    conda-forge
+r-formatr                 1.5             r351h6115d3f_1001    conda-forge
+r-futile.logger           1.4.3           r351h6115d3f_1001    conda-forge
+r-futile.options          1.0.1           r351h6115d3f_1000    conda-forge
+r-fuzzyjoin               0.1.4                 r351_1001    conda-forge
+r-gdata                   2.18.0           r351h6115d3f_0    r
+r-geosphere               1.5_7            r351hc070d10_1    conda-forge
+r-getoptlong              0.1.7                 r351_1001    conda-forge
+r-ggplot2                 3.0.0            r351h6115d3f_0    r
+r-ggrepel                 0.8.0           r351h29659fb_1002    conda-forge
+r-ggridges                0.5.1           r351h6115d3f_1000    conda-forge
+r-globaloptions           0.1.0                 r351_2001    conda-forge
+r-glue                    1.3.0            r351h96ca727_0    r
+r-gplots                  3.0.1            r351h6115d3f_0    r
+r-gridbase                0.4_7           r351h6115d3f_1001    conda-forge
+r-gridextra               2.3              r351h6115d3f_0    r
+r-gtable                  0.2.0            r351h6115d3f_0    r
+r-gtools                  3.8.1            r351h96ca727_0    r
+r-haven                   1.1.2            r351h29659fb_0    r
+r-highr                   0.7              r351h6115d3f_0    r
+r-hms                     0.4.2           r351h6115d3f_1000    conda-forge
+r-htmltools               0.3.6            r351h29659fb_0    r
+r-httr                    1.4.0           r351h6115d3f_1000    conda-forge
+r-hwriter                 1.3.2           r351h6115d3f_1001    conda-forge
+r-iterators               1.0.10           r351h6115d3f_0    r
+r-jsonlite                1.6              r351hc070d10_0    conda-forge
+r-kernsmooth              2.23_15          r351hac1494b_4    r
+r-knitr                   1.20             r351h6115d3f_0    r
+r-labeling                0.3              r351h6115d3f_4    r
+r-lambda.r                1.2.3           r351h6115d3f_1000    conda-forge
+r-lattice                 0.20_35          r351h96ca727_0    r
+r-lazyeval                0.2.1            r351h96ca727_0    r
+r-lubridate               1.7.4            r351h29659fb_0    r
+r-magrittr                1.5              r351h6115d3f_4    r
+r-markdown                0.8              r351h96ca727_0    r
+r-mass                    7.3_50           r351h96ca727_0    r
+r-matrix                  1.2_14           r351h96ca727_0    r
+r-matrixstats             0.54.0           r351hc070d10_0    conda-forge
+r-mclust                  5.4.1            r351h364d78e_2    conda-forge
+r-memoise                 1.1.0           r351h6115d3f_1001    conda-forge
+r-mgcv                    1.8_24           r351h96ca727_0    r
+r-mime                    0.6              r351hc070d10_0    conda-forge
+r-modelr                  0.1.2            r351h6115d3f_0    r
+r-munsell                 0.5.0            r351h6115d3f_0    r
+r-nlme                    3.1_137          r351ha65eedd_0    r
+r-nmf                     0.21.0          r351h29659fb_1002    conda-forge
+r-nnet                    7.3_12          r351h96ca727_1002    conda-forge
+r-openssl                 1.0.2            r351h96ca727_1  
+r-pander                  0.6.2            r351h9d2a408_2    conda-forge
+r-pillar                  1.3.0            r351h6115d3f_0    r
+r-pkgconfig               2.0.2           r351h6115d3f_1001    conda-forge
+r-pkgmaker                0.27            r351h6115d3f_1000    conda-forge
+r-plogr                   0.2.0           r351h6115d3f_1001    conda-forge
+r-plotrix                 3.7_3           r351h6115d3f_1000    conda-forge
+r-plyr                    1.8.4            r351h29659fb_0    r
+r-praise                  1.0.0            r351h6115d3f_4    r
+r-prettyunits             1.0.2           r351h6115d3f_1001    conda-forge
+r-proc                    1.12.1           r351h29659fb_0    r
+r-processx                3.1.0            r351h29659fb_0    r
+r-progress                1.2.0           r351h6115d3f_1002    conda-forge
+r-pscl                    1.5.2            r351h470a237_2    conda-forge
+r-purrr                   0.2.5            r351h96ca727_0    r
+r-r6                      2.2.2            r351h6115d3f_0    r
+r-rcolorbrewer            1.1_2            r351h6115d3f_0    r
+r-rcpp                    0.12.18          r351h29659fb_0    r
+r-rcurl                   1.95_4.11        r351hc070d10_3    conda-forge
+r-readr                   1.3.1            r351h9d2a408_0    conda-forge
+r-readxl                  1.1.0            r351h29659fb_0    r
+r-recommended             3.5.1                 r351_1001    conda-forge
+r-registry                0.5             r351h6115d3f_1001    conda-forge
+r-rematch                 1.0.1            r351h6115d3f_0    r
+r-reprex                  0.2.0            r351h6115d3f_0    r
+r-reshape2                1.4.3            r351h29659fb_0    r
+r-rjson                   0.2.20          r351h29659fb_1000    conda-forge
+r-rlang                   0.2.1            r351h96ca727_0    r
+r-rmarkdown               1.10             r351h6115d3f_0    r
+r-rngtools                1.3.1           r351h6115d3f_1001    conda-forge
+r-rpart                   4.1_13          r351h96ca727_1002    conda-forge
+r-rprojroot               1.3_2            r351h6115d3f_0    r
+r-rsqlite                 2.1.1            r351h9d2a408_0    conda-forge
+r-rstudioapi              0.7              r351h6115d3f_0    r
+r-rvest                   0.3.2            r351h6115d3f_0    r
+r-scales                  0.5.0            r351h29659fb_0    r
+r-selectr                 0.4_1            r351h6115d3f_0    r
+r-shape                   1.4.4                 r351_1001    conda-forge
+r-slam                    0.1_43          r351h96ca727_1000    conda-forge
+r-sm                      2.2_5.6          r351h364d78e_0    conda-forge
+r-snow                    0.4_3           r351h6115d3f_1000    conda-forge
+r-snowfall                1.84_6.1        r351h6115d3f_1001    conda-forge
+r-sp                      1.3_1            r351hc070d10_0    conda-forge
+r-spatial                 7.3_11          r351h96ca727_1002    conda-forge
+r-stringdist              0.9.5.1          r351hc070d10_0    conda-forge
+r-stringi                 1.2.4            r351h29659fb_0    r
+r-stringr                 1.3.1            r351h6115d3f_0    r
+r-survival                2.43_3          r351h96ca727_1000    conda-forge
+r-testthat                2.0.0            r351h29659fb_0    r
+r-tibble                  1.4.2            r351h96ca727_0    r
+r-tidyr                   0.8.1            r351h29659fb_0    r
+r-tidyselect              0.2.4            r351h29659fb_0    r
+r-tidyverse               1.2.1            r351h6115d3f_0    r
+r-tinytex                 0.6              r351h6115d3f_0    r
+r-utf8                    1.1.4            r351h96ca727_0    r
+r-vioplot                 0.2                   r351_1000    conda-forge
+r-viridislite             0.3.0            r351h6115d3f_0    r
+r-whisker                 0.3_2            r351hf348343_4    r
+r-withr                   2.1.2            r351h6115d3f_0    r
+r-wordcloud               2.5             r351hf484d3e_1002    conda-forge
+r-xfun                    0.3              r351h6115d3f_0    r
+r-xml                     3.98_1.16        r351hc070d10_0    conda-forge
+r-xml2                    1.2.0            r351h29659fb_0    r
+r-xtable                  1.8_3                 r351_2000    conda-forge
+r-yaml                    2.2.0            r351h96ca727_0    r
+readline                  7.0                  h7b6447c_5  
+requests                  2.19.1                   py27_0  
+rsa                       3.4.2                      py_1    conda-forge
+ruamel_yaml               0.15.46          py27h14c3975_0  
+s3transfer                0.2.0                    py27_0    conda-forge
+setuptools                40.2.0                   py27_0  
+six                       1.11.0                   py27_1  
+sqlite                    3.25.3               h7b6447c_0    anaconda
+tk                        8.6.8                hbc83047_0  
+tktable                   2.10                 h14c3975_0  
+urllib3                   1.23                     py27_0  
+wget                      1.19.5               h20c2e04_0  
+wheel                     0.31.1                   py27_0  
+xorg-kbproto              1.0.7                h470a237_2    conda-forge
+xorg-libice               1.0.9                h470a237_4    conda-forge
+xorg-libsm                1.2.2                h470a237_5    conda-forge
+xorg-libx11               1.6.6                h470a237_0    conda-forge
+xorg-libxau               1.0.8                h470a237_6    conda-forge
+xorg-libxdmcp             1.1.2                h470a237_7    conda-forge
+xorg-libxext              1.3.3                h470a237_4    conda-forge
+xorg-libxrender           0.9.10               h470a237_2    conda-forge
+xorg-libxt                1.1.5                h470a237_2    conda-forge
+xorg-renderproto          0.11.1               h470a237_2    conda-forge
+xorg-xextproto            7.3.0                h470a237_2    conda-forge
+xorg-xproto               7.0.31               h470a237_7    conda-forge
+xz                        5.2.4                h470a237_1    conda-forge
+yaml                      0.1.7                had09818_2  
+zlib                      1.2.11               ha838bed_2  

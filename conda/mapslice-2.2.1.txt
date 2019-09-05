@@ -1,0 +1,28 @@
+# packages in environment at /home/brownd7/share/usr/anaconda-envs/mapslice-2.2.1:
+#
+# Name                    Version                   Build  Channel
+argcomplete               1.8.2                    py36_0    conda-forge
+argh                      0.26.2                   py36_1    conda-forge
+ca-certificates           2017.4.17                     0    conda-forge
+certifi                   2017.4.17                py36_0    conda-forge
+gffutils                  0.9                      py36_0    bioconda
+mapsplice                 2.2.1           py36_ncurses5.9_1    raylim
+mkl                       2017.0.3                      0  
+ncurses                   5.9                          10    conda-forge
+numpy                     1.13.1                   py36_0  
+openssl                   1.0.2k                        0    conda-forge
+pandas                    0.20.3                   py36_1    conda-forge
+pip                       9.0.1                    py36_0    conda-forge
+pyfaidx                   0.5.0                    py36_0    bioconda
+python                    3.6.2                         0    conda-forge
+python-dateutil           2.6.1                    py36_0    conda-forge
+pytz                      2017.2                   py36_0    conda-forge
+readline                  6.2                           0    conda-forge
+setuptools                33.1.1                   py36_0    conda-forge
+simplejson                3.11.1                   py36_0    conda-forge
+six                       1.11.0                   py36_1    conda-forge
+sqlite                    3.13.0                        1    conda-forge
+tk                        8.5.19                        1    conda-forge
+wheel                     0.29.0                   py36_0    conda-forge
+xz                        5.2.2                         0    conda-forge
+zlib                      1.2.11                        0    conda-forge

@@ -1,0 +1,40 @@
+# packages in environment at /home/brownd7/share/usr/anaconda-envs/hla-polysolver:
+#
+# Name                    Version                   Build  Channel
+bzip2                     1.0.6                         3  
+ca-certificates           2018.8.24            ha4d7672_0    conda-forge
+certifi                   2018.8.24                py27_1    conda-forge
+hla-polysolver            1.0.0           pl526he21958b_21    vacation
+java-jdk                  7.0.91                        1    bioconda
+libgcc                    7.2.0                h69d50b8_2    conda-forge
+libgcc-ng                 7.2.0                hdf63c60_3    conda-forge
+libstdcxx-ng              7.2.0                hdf63c60_3    conda-forge
+make                      4.2.1             h470a237_1002    conda-forge
+mutect                    1.1.6                h77566b4_1    vacation
+ncurses                   6.1                  hfc679d8_1    conda-forge
+novoalign                 3.09.00              h7311fa2_1    bioconda
+openssl                   1.0.2p               h470a237_0    conda-forge
+perl                      5.22.0.1                      0    conda-forge
+perl-app-cpanminus        1.7043               pl5.22.0_0    bioconda
+perl-array-utils          0.5                           0    bioconda
+perl-bio-db-sam           1.41                          2    bioconda
+perl-bioperl              1.6.924                       4    bioconda
+perl-data-dumper          2.161                pl5.22.0_0    bioconda
+perl-exporter-tiny        0.042                         1    bioconda
+perl-list-moreutils       0.428                pl5.22.0_0    bioconda
+perl-list-util            1.38                 pl5.22.0_0    bioconda
+perl-parallel-forkmanager 1.17                          0    bioconda
+perl-posix                1.38_03              pl5.22.0_0    bioconda
+perl-test-more            1.001002             pl5.22.0_0    bioconda
+perl-threaded             5.22.0                       13    bioconda
+perl-vcftools-vcf         0.953                         3    bioconda
+perl-yaml                 1.24                    pl522_1    bioconda
+pip                       18.0                     py27_1    conda-forge
+python                    2.7.15               h9fef7bc_0    conda-forge
+readline                  7.0                  haf1bffa_1    conda-forge
+samtools                  0.1.18                        0    bioconda
+setuptools                40.2.0                   py27_0    conda-forge
+sqlite                    3.24.0               h2f33b56_0    conda-forge
+tk                        8.6.8                         0    conda-forge
+wheel                     0.31.1                   py27_1    conda-forge
+zlib                      1.2.11               h470a237_3    conda-forge

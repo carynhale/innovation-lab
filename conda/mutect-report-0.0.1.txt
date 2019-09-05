@@ -1,0 +1,77 @@
+# packages in environment at /home/brownd7/share/usr/anaconda-envs/mutect-report-0.0.1:
+#
+# Name                    Version                   Build  Channel
+bzip2                     1.0.6                         3  
+ca-certificates           2016.8.31                     0    conda-forge
+cairo                     1.12.18                       6  
+certifi                   2016.8.31                py27_0    conda-forge
+curl                      7.49.1                        1    conda-forge
+fontconfig                2.11.1                        6  
+freetype                  2.5.5                         1  
+gettext                   0.19.7                        1    conda-forge
+glib                      2.48.0                        4    conda-forge
+gsl                       2.1                           2    conda-forge
+harfbuzz                  0.9.35                        6    r
+icu                       54.1                          0  
+jpeg                      9b                            0    conda-forge
+libffi                    3.2.1                         2    conda-forge
+libgcc                    4.8.5                         1    r
+libiconv                  1.14                          3    conda-forge
+libpng                    1.6.24                        0    conda-forge
+libtiff                   4.0.6                         6    conda-forge
+libxml2                   2.9.3                         0    bioconda
+ncurses                   5.9                           9    conda-forge
+openssl                   1.0.2h                        2    conda-forge
+pango                     1.36.8                        3    r
+pcre                      8.38                          1    conda-forge
+pip                       8.1.2                    py27_0    conda-forge
+pixman                    0.32.6                        0    conda-forge
+python                    2.7.12                        1    conda-forge
+r                         3.3.1                  r3.3.1_0    r
+r-base                    3.3.1                         3    r
+r-boot                    1.3_18                 r3.3.1_0    r
+r-class                   7.3_14                 r3.3.1_0    r
+r-cluster                 2.0.4                  r3.3.1_0    r
+r-codetools               0.2_14                 r3.3.1_0    r
+r-curl                    0.9.7                  r3.3.1_0    r
+r-devtools                1.11.1                 r3.3.1_0    r
+r-digest                  0.6.9                  r3.3.1_0    bioconda
+r-evaluate                0.9                    r3.3.1_0    r
+r-foreign                 0.8_66                 r3.3.1_0    r
+r-formatr                 1.4                    r3.3.1_0    r
+r-getopt                  1.20.0                 r3.3.1_0    bioconda
+r-git2r                   0.15.0                 r3.3.1_0    r
+r-highr                   0.6                    r3.3.1_0    r
+r-httr                    1.2.0                  r3.3.1_0    r
+r-jpeg                    0.1_8                  r3.3.1_2    r
+r-jsonlite                0.9.19                 r3.3.1_0    bioconda
+r-kernsmooth              2.23_15                r3.3.1_0    r
+r-knitr                   1.12.3                        0    bioconda
+r-lattice                 0.20_33                r3.3.1_0    r
+r-markdown                0.7.7                  r3.3.1_2    r
+r-mass                    7.3_45                 r3.3.1_0    r
+r-matrix                  1.2_6                  r3.3.1_0    r
+r-memoise                 1.0.0                  r3.3.1_0    r
+r-mgcv                    1.8_12                 r3.3.1_0    r
+r-mime                    0.4                    r3.3.1_0    r
+r-nlme                    3.1_128                r3.3.1_0    r
+r-nnet                    7.3_12                 r3.3.1_0    r
+r-openssl                 0.9.4                  r3.3.1_0    r
+r-optparse                1.3.0                  r3.3.1_1    bioconda
+r-r6                      2.1.2                  r3.3.1_0    r
+r-recommended             3.3.1                  r3.3.1_0    r
+r-rpart                   4.1_10                 r3.3.1_0    r
+r-rstudioapi              0.5                    r3.3.1_0    r
+r-spatial                 7.3_11                 r3.3.1_0    r
+r-stringr                 0.6.2                        0a    r
+r-survival                2.39_4                 r3.3.1_0    r
+r-whisker                 0.3_2                  r3.3.1_2    r
+r-withr                   1.0.2                  r3.3.1_0    r
+r-yaml                    2.1.13                        0    r
+readline                  6.2                           0    conda-forge
+setuptools                26.1.1                   py27_0    conda-forge
+sqlite                    3.13.0                        1    conda-forge
+tk                        8.5.19                        0    conda-forge
+wheel                     0.29.0                   py27_0    conda-forge
+xz                        5.2.2                         0    conda-forge
+zlib                      1.2.8                         3    conda-forge
