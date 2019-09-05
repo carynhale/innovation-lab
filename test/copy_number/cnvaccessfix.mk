@@ -24,7 +24,7 @@ endef
 		
 define cnvaccess-cnvkit-fix
 cnvaccess/cnr/$1.cnr : cnvaccess/cnn/$1.targetcoverage.cnn cnvaccess/cnn/$1.antitargetcoverage.cnn
-	$$(call RUN,-c -s 6G -m 8G,"cnvkit.py fix $$(<) $$(<<) $(REFERENCE_FILE) -o $$(^)")
+	$$(call RUN,-c -s 6G -m 8G,"cnvkit.py fix $$(<) $$(<<) $(REFERENCE_FILE) -o cnvaccess/cnr/$1.cnr")
 	
 endef
  $(foreach sample,$(SAMPLES),\
