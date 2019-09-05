@@ -48,10 +48,10 @@ opt <- arguments$options
 
 if (as.numeric(opt$type)==1) {
 
-	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, ".txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
+	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, "-ontarget.txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
 	log2_ = subset(log2_, log2_$chr<=22 & !is.na(log2_$log2))
 	log2_ = winsorize(data = log2_[,c("chr", "start", "log2"),drop=FALSE], method = "mad", tau = 2.05, k = 15, verbose = FALSE)
-	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, ".pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-ontarget.pdf"), width=14, height=5)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = "grey35",
@@ -80,7 +80,7 @@ if (as.numeric(opt$type)==1) {
 
 } else if (as.numeric(opt$type)==2) {
 
-	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, ".txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
+	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, "-ontarget.txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
 	log2_ = subset(log2_, log2_$chr<=22 & !is.na(log2_$log2))
 	log2_ = winsorize(data = log2_[,c("chr", "start", "log2"),drop=FALSE], method = "mad", tau = 2.15, k = 10, verbose = FALSE)
 	segmented_ = pcf(data=log2_, kmin = 2, gamma = 5,
@@ -88,11 +88,11 @@ if (as.numeric(opt$type)==1) {
            			 return.est = FALSE, save.res = FALSE, file.names = NULL, verbose = FALSE)[,2:7,drop=FALSE]
 	colnames(log2_) = c("chr", "pos", "log2")
     colnames(segmented_) = c("chr", "arm", "start", "end", "n", "log2")
-	save(log2_, segmented_, file=paste0("cnvaccess/report/segmented/", opt$sample_name, ".RData"))
+	save(log2_, segmented_, file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-ontarget.RData"))
 	
 	segmented_ = prune_(x=segmented_, n=5)
 
-	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, ".pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-ontarget.pdf"), width=14, height=5)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = "grey80",
@@ -126,7 +126,7 @@ if (as.numeric(opt$type)==1) {
 
 } else if (as.numeric(opt$type)==3) {
 
-	load(file=paste0("cnvaccess/report/segmented/", opt$sample_name, ".RData"))
+	load(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-ontarget.RData"))
 	segmented_ = prune_(x=segmented_, n=5)
 	
 	rho = seq(from=.05, to=1, length=250)
@@ -139,7 +139,7 @@ if (as.numeric(opt$type)==1) {
 		}
 	}
 	
-	pdf(file=paste0("cnvaccess/report/ASCAT/", opt$sample_name, ".pdf"), width=7, height=7)
+	pdf(file=paste0("cnvaccess/report/ASCAT/", opt$sample_name, "-ontarget.pdf"), width=7, height=7)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	image(log2(SSE), col = (colorRampPalette(RColorBrewer::brewer.pal(10, "RdBu"))(25)), useRaster = TRUE, axes = FALSE)
 	axis(side=1, at=seq(from=0, to=1, length=5), labels=signif(seq(from=1.5, to=5, length=5), 2))
@@ -151,10 +151,10 @@ if (as.numeric(opt$type)==1) {
 	
 } else if (as.numeric(opt$type)==4) {
 
-	log2_ = read.csv(file=paste0("cnvaccess/cnr/", opt$sample_name, ".txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
+	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, "-offtarget.txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
 	log2_ = subset(log2_, log2_$chromosome %in% c(1:22) & !is.na(log2_$log2))
 	log2_ = winsorize(data = log2_[,c("chromosome", "start", "log2"),drop=FALSE], method = "mad", tau = 1.5, k = 25, verbose = FALSE)
-	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-2.pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-offtarget.pdf"), width=14, height=5)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = "grey35",
