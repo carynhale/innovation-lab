@@ -10,7 +10,7 @@ PHONY += metrics metrics/pileup metrics/cov metrics/summary
 #ONTARGET_FILE_B ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.bed
 #OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.offtarget.bed
 
-interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample).txt)
+interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample).txt) \
 			   	   $(foreach sample,$(SAMPLES),metrics/cov/$(sample).ontarget.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/cov/$(sample).offtarget.txt)
 
