@@ -28,9 +28,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample).txt)
 #				   metrics/summary/metrics_ts.tsv
 				   
 
-
 define pileup-metric
-metrics/pielup/$1.txt : bam/$1.bam
+metrics/pileup/$1.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cp bam/$1.bam metrics/pielup/$1.bam && \
 								 cp bam/$1.bam.bai metrics/pileup/$1.bam.bai && \
