@@ -186,7 +186,7 @@ if (as.numeric(opt$type)==1) {
 	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, "-offtarget.txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)[,c("chromosome", "start", "end", "log2"),drop=FALSE]
 	log2_ = subset(log2_, log2_$chromosome %in% c(1:22) & !is.na(log2_$log2))
 	log2_ = winsorize(data = log2_[,c("chromosome", "start", "log2"),drop=FALSE], method = "mad", tau = 1.5, k = 25, verbose = FALSE)
-	segmented_ = pcf(data=log2_, kmin = 100, gamma = 60,
+	segmented_ = pcf(data=log2_, kmin = 50, gamma = 50,
 					 normalize = FALSE, fast = FALSE, assembly = "hg19", digits = 4,
            			 return.est = FALSE, save.res = FALSE, file.names = NULL, verbose = FALSE)[,2:7,drop=FALSE]
 	colnames(log2_) = c("chr", "pos", "log2")
@@ -227,4 +227,29 @@ if (as.numeric(opt$type)==1) {
 	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1.25)
 	dev.off()
 
+} else if (as.numeric(opt$type)==6) {
+
+	load(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-offtarget.RData"))
+	segmented_ = prune_(x=segmented_, n=5)
+	
+	rho = seq(from=.05, to=1, length=250)
+	psi = seq(from=1.5, to=5, length=250)
+	SSE = matrix(NA, nrow=250, ncol=250)
+	for (i in 1:length(rho)) {
+		for (j in 1:length(psi)) {
+			x = absolute_(rho[i], psi[j], gamma=.55, x=segmented_$log2)
+			SSE[j,i] = (segmented_$end - segmented_$start) %*% (round(x)-x)^2
+		}
+	}
+	
+	pdf(file=paste0("cnvaccess/report/ASCAT/", opt$sample_name, "-offtarget.pdf"), width=7, height=7)
+	par(mar=c(6.1, 6.5, 4.1, 1.1))
+	image(log2(SSE), col = (colorRampPalette(RColorBrewer::brewer.pal(10, "RdBu"))(25)), useRaster = TRUE, axes = FALSE)
+	axis(side=1, at=seq(from=0, to=1, length=5), labels=signif(seq(from=1.5, to=5, length=5), 2))
+	axis(side=2, at=seq(from=0, to=1, length=5), labels=signif(seq(from=.05, to=1, length=5), 2), las=1)
+	mtext(side=1, text="Ploidy", line=4, cex=1.5)
+    mtext(side=2, text="Purity", line=4, cex=1.5)
+	box(lwd=1.5)
+	dev.off()
+	
 }
