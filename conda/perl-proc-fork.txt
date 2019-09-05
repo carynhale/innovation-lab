@@ -1,6 +1,0 @@
-# packages in environment at /home/brownd7/share/usr/anaconda-envs/perl-proc-fork:
-#
-# Name                    Version                   Build  Channel
-perl-exporter-tidy        0.08                          3    inodb
-perl-proc-fork            0.804                         1    inodb
-perl-threaded             5.22.0                       10    bioconda
