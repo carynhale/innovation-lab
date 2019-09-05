@@ -30,10 +30,10 @@ endef
 		
 define cnvaccess-cnvkit-cov
 cnvaccess/cnn/$1.antitargetcoverage.cnn : bam/$1-standard.bam
-		$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o $$(^)")
+		$$(call RUN,-c -n 4 -s 6G -m 8G,"cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o $$(*)")
 	
 cnvaccess/cnn/$1.targetcoverage.cnn : bam/$1-standard.bam
-		$$(call RUN,-n 1 -s 1G -m 2G,"touch $$(^)")
+		$$(call RUN,-n 1 -s 1G -m 2G,"touch $$(<)")
 	
 endef
  $(foreach sample,$(SAMPLES),\
