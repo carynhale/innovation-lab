@@ -16,24 +16,24 @@ bam_fix_rg: false
 bam_phred64: false
 bam_reprocess: false
 
-# Mutation callers and filtering
+## MUTATION CALLERS & FILTERING
 snv_type: mutect
 mutect_split_chr: true
 mutect_use_contest: false
 indel_types: varscan_indels strelka_indels scalpel_indels lancet_indels platypus_indels
 vcf_post_ann_filter_expression: ExAC_AF > 0.01
 
-# Annotations
+## ANNOTATIONS
 ann_facets: true
 ann_mut_taste: false
 ann_provean: false
 ann_pathogen: false
 
-# Target panels BED files
+# BED FILES
 # exome: true
 # targets_file: ~/share/reference/target_panels/
 
-# FACETS
+## FACETS
 gatk_hard_filter_snps: true
 gatk_pool_snp_recal: false
 facets_pre_cval: 50
@@ -42,11 +42,11 @@ facets_cval2: 50
 facets_min_nhet: 25
 facets_union_gatk_dbsnp: false
 
-# CNVKIT
+## CNVKIT
 ontarget_file: ~/share/reference/target_panels/MSK-IMPACT-468_CNVkit_ontarget.bed
 offtarget_file: ~/share/reference/target_panels/MSK-IMPACT-468_CNVkit_offtarget.bed
 
-# MSK-ACCESS
+## MSK-ACCESS
 marianas_umi_length: 3
 marianas_min_mapq: 1
 marianas_min_baq: 20
@@ -58,3 +58,4 @@ waltz_bed_file: ~/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.waltz.be
 
 qsub_priority: 0
 ...
+
