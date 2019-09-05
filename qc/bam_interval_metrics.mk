@@ -2,23 +2,18 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/bam_interval_metrics.$(NOW)
-PHONY += metrics metrics/pileup metrics/cov metrics/summary
+PHONY += metrics metrics/pileup metrics/cov metrics/picard metrics/summary
 
-#POOL_A_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.list
-#POOL_B_TARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.list
-#ONTARGET_FILE_A ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.bed
-#ONTARGET_FILE_B ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.bed
-#OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.offtarget.bed
+TARGETS_LIST ?= $(HOME)/share/reference/target_panels/MSK-IMPACT-468.list
 
-interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample).txt) \
-			   	   $(foreach sample,$(SAMPLES),metrics/cov/$(sample).ontarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/cov/$(sample).offtarget.txt)
-
-#				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
-#				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
-#				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
-#				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
-#				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
+interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.txt) \
+			   	   $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-ontarget.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-offtarget.txt)
+				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-idx_stats.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-aln_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-insert_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-oxog_metrics.txt) \
+				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-hs_metrics.txt)
 #				   metrics/standard/metrics_idx.tsv \
 #				   metrics/standard/metrics_aln.tsv \
 #				   metrics/standard/metrics_insert.tsv \
@@ -27,9 +22,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample).txt) \
 #				   metrics/standard/metrics_hs.tsv \
 #				   metrics/summary/metrics_ts.tsv
 				   
-
 define pileup-metric
-metrics/pileup/$1.txt : bam/$1.bam
+metrics/pileup/$1-pileup.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cp bam/$1.bam metrics/pileup/$1.bam && \
 								 cp bam/$1.bam.bai metrics/pileup/$1.bam.bai && \
@@ -46,7 +40,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call pileup-metric,$(sample))))
 				   
 define coverage-metric
-metrics/cov/$1.ontarget.txt : bam/$1.bam
+metrics/cov/$1-ontarget.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 samtools view -L $$(ONTARGET_FILE) $$(<) -b > metrics/cov/$1-ontarget.bam && \
 								 samtools index metrics/cov/$1-ontarget.bam && \
@@ -57,7 +51,7 @@ metrics/cov/$1.ontarget.txt : bam/$1.bam
 								 rm -rf metrics/cov/$1-ontarget.bam && \
 								 rm -rf metrics/cov/$1-ontarget.bam.bai")
 									 
-metrics/cov/$1.offtarget.txt : bam/$1.bam
+metrics/cov/$1-offtarget.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 samtools view -L $$(OFFTARGET_FILE) $$(<) -b > metrics/cov/$1-offtarget.bam && \
 								 samtools index metrics/cov/$1-offtarget.bam && \
@@ -72,15 +66,15 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call coverage-metric,$(sample))))
 
-define picard-metrics-standard
-metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
+define picard-metric
+metrics/picard/$1-idx_stats.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
 									   I=$$(<) \
 									   TMP_DIR=$(TMPDIR) \
 									   > $$(@)")
 									   
-metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
+metrics/picard/$1-aln_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
 									   R=$(REF_FASTA) \
@@ -88,16 +82,16 @@ metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
 									   O=$$(@) \
 									   TMP_DIR=$(TMPDIR)")
 
-metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
+metrics/picard/$1-insert_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
 									   I=$$(<) \
 									   O=$$(@) \
-									   H=metrics/standard/$1.insert_metrics.pdf \
+									   H=metrics/picard/$1.insert_metrics.pdf \
 									   M=0.5 \
 									   TMP_DIR=$(TMPDIR)")
 												
-metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
+metrics/picard/$1-oxog_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectOxoGMetrics \
 									   R=$(REF_FASTA) \
@@ -105,49 +99,19 @@ metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
 									   O=$$(@) \
 									   TMP_DIR=$(TMPDIR)")
 
-metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
+metrics/picard/$1-hs_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
 									   R=$(REF_FASTA) \
 									   I=$$(<) \
 									   O=$$(@) \
-									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
-									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   BAIT_INTERVALS=$(TARGETS_LIST) \
+									   TARGET_INTERVALS=$(TARGETS_LIST) \
 									   TMP_DIR=$(TMPDIR)")
 												
-metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
-									   R=$(REF_FASTA) \
-									   I=$$(<) \
-									   O=$$(@) \
-									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
-									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
-									   TMP_DIR=$(TMPDIR)")
-									   
-metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
-									   R=$(REF_FASTA) \
-									   I=$$(<) \
-									   O=$$(@) \
-									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
-									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
-									   TMP_DIR=$(TMPDIR)")
-												
-metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
-									   R=$(REF_FASTA) \
-									   I=$$(<) \
-									   O=$$(@) \
-									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
-									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
-									   TMP_DIR=$(TMPDIR)")
-
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call picard-metrics-standard,$(sample))))
+		$(eval $(call picard-metric,$(sample))))
 		
 		
 .DELETE_ON_ERROR:
