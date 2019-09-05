@@ -5,7 +5,7 @@ LOGDIR ?= log/cnvaccess_fix.$(NOW)
 PHONY += cnvaccess cnvaccess/log2 cnvaccess/cnr
 
 cnvaccess_fix : $(foreach sample,$(SAMPLES),cnvaccess/log2/$(sample).txt) \
-				$(foreach sample,$(SAMPLES),cnvaccess/cnr/$(sample).cnr)
+				$(foreach sample,$(SAMPLES),cnvaccess/cnr/$(sample).txt)
 
 R_COVERAGE ?= modules/test/copy_number/cnvaccesscoverage.R
 R_FIX ?= modules/test/copy_number/cnvaccessfix.R
@@ -23,8 +23,8 @@ endef
 		$(eval $(call cnvaccess-fix,$(sample))))
 		
 define cnvaccess-cnvkit-fix
-cnvaccess/cnr/$1.cnr : cnvaccess/cnn/$1.targetcoverage.cnn cnvaccess/cnn/$1.antitargetcoverage.cnn
-	$$(call RUN,-c -s 6G -m 8G,"cnvkit.py fix $$(<) $$(<<) $(REFERENCE_FILE) -o cnvaccess/cnr/$1.cnr")
+cnvaccess/cnr/$1.txt : cnvaccess/cnn/$1.targetcoverage.cnn cnvaccess/cnn/$1.antitargetcoverage.cnn
+	$$(call RUN,-c -s 6G -m 8G,"cnvkit.py fix $$(<) $$(<<) $(REFERENCE_FILE) -o cnvaccess/cnr/$1.txt")
 	
 endef
  $(foreach sample,$(SAMPLES),\
