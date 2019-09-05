@@ -344,7 +344,7 @@ delly :
 
 TARGETS += bam_metrics
 bam_metrics :
-	$(call RUN_MAKE,modules/qc/bamMetrics.mk)
+	$(call RUN_MAKE,modules/qc/bam_metrics.mk)
 
 TARGETS += bam_interval_metrics
 bam_interval_metrics :
@@ -352,7 +352,7 @@ bam_interval_metrics :
 
 TARGETS += rnaseq_metrics
 rnaseq_metrics :
-	$(call RUN_MAKE,modules/qc/rnaseqMetrics.mk)
+	$(call RUN_MAKE,modules/qc/rnaseq_metrics.mk)
 
 TARGETS += fastqc
 fastqc :
@@ -360,7 +360,7 @@ fastqc :
 
 TARGETS += interval_qc
 interval_qc :
-	$(call RUN_MAKE,modules/qc/intervalBamQC.mk)
+	$(call RUN_MAKE,modules/qc/interval_bam_qc.mk)
 
 TARGETS += rseqc
 rseqc :
@@ -368,11 +368,11 @@ rseqc :
 
 TARGETS += qualimap
 qualimap :
-	$(call RUN_MAKE,modules/qc/qualimap.mk)
+	$(call RUN_MAKE,modules/qc/qualimap_qc.mk)
 
 TARGETS += bam_stats
 bam_stats :
-	$(call RUN_MAKE,modules/qc/bamStats.mk)
+	$(call RUN_MAKE,modules/qc/bam_stats.mk)
 
 
 #==================================================

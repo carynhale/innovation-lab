@@ -13,14 +13,15 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-aln_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-insert_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-oxog_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-hs_metrics.txt)
-#				   metrics/standard/metrics_idx.tsv \
-#				   metrics/standard/metrics_aln.tsv \
-#				   metrics/standard/metrics_insert.tsv \
-#				   metrics/standard/metrics_insert_distribution.tsv \
-#				   metrics/standard/metrics_oxog.tsv \
-#				   metrics/standard/metrics_hs.tsv \
-#				   metrics/summary/metrics_ts.tsv
+				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-hs_metrics.txt) \
+#				   metrics/summary/metrics_pileup.tsv 
+				   metrics/summary/metrics_idx.tsv
+#				   metrics/summary/metrics_aln.tsv \
+#				   metrics/summary/metrics_insert.tsv \
+#				   metrics/summary/metrics_insert_distribution.tsv \
+#				   metrics/summary/metrics_oxog.tsv \
+#				   metrics/summary/metrics_hs.tsv \
+#				   metrics/summary/metrics_coverage.tsv
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
@@ -112,6 +113,11 @@ metrics/picard/$1-hs_metrics.txt : bam/$1.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metric,$(sample))))
+		
+		
+metrics/summary/metrics_idx.tsv : $(wildcard metrics/$(SAMPLES)-idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 1 --samples '$(SAMPLES)'")
 		
 		
 .DELETE_ON_ERROR:
