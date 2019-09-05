@@ -8,7 +8,7 @@ TARGETS_LIST ?= $(HOME)/share/reference/target_panels/MSK-IMPACT-468.list
 
 interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.txt) \
 			   	   $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-ontarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-offtarget.txt)
+				   $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-offtarget.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-idx_stats.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-aln_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-insert_metrics.txt) \
