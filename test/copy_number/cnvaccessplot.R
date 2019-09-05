@@ -154,7 +154,7 @@ if (as.numeric(opt$type)==1) {
 	log2_ = read.csv(file=paste0("cnvaccess/cnr/", opt$sample_name, ".txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
 	log2_ = subset(log2_, log2_$chromosome %in% c(1:22) & !is.na(log2_$log2))
 	log2_ = winsorize(data = log2_[,c("chromosome", "start", "log2"),drop=FALSE], method = "mad", tau = 1.5, k = 25, verbose = FALSE)
-	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "(2).pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-2.pdf"), width=14, height=5)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = "grey35",
