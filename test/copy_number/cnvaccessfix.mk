@@ -16,7 +16,8 @@ REFERENCE_FILE ?= $(HOME)/share/reference/cnvkit_reference/MSK-ACCESS-v1_0-nopro
 
 define cnvaccess-fix
 cnvaccess/log2/$1-ontarget.txt : cnvaccess/cov/$1.probe-A.txt cnvaccess/cov/$1.probe-B.txt
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"$(RSCRIPT) $(R_FIX) --sample_name $1")
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(R_FIX) --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
@@ -24,7 +25,8 @@ endef
 		
 define cnvaccess-cnvkit-fix
 cnvaccess/log2/$1-offtarget.txt : cnvaccess/cnn/$1.targetcoverage.cnn cnvaccess/cnn/$1.antitargetcoverage.cnn
-	$$(call RUN,-c -s 6G -m 8G,"cnvkit.py fix $$(<) $$(<<) $(REFERENCE_FILE) -o cnvaccess/log2/$1-offtarget.txt")
+	$$(call RUN,-c -s 6G -m 8G,"set -o pipefail && \
+								cnvkit.py fix $$(<) $$(<<) $(REFERENCE_FILE) -o cnvaccess/log2/$1-offtarget.txt")
 	
 endef
  $(foreach sample,$(SAMPLES),\

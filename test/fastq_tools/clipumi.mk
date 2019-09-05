@@ -20,7 +20,8 @@ WALTZ_MIN_MAPQ ?= 20
 
 define copy-fastq
 marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz : $3
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"mkdir -p marianas/$1 && \
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+									 mkdir -p marianas/$1 && \
 								     $(RSCRIPT) modules/test/fastq_tools/copyfastq.R --sample_name $1 --fastq_files '$$^'")
 
 endef
@@ -30,7 +31,8 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 
 define clip-umi
 marianas/$1/$1_R1_umi-clipped.fastq.gz marianas/$1/$1_R2_umi-clipped.fastq.gz : marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"cd marianas/$1/ && \
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  cd marianas/$1/ && \
 									  $(JAVA) -Djava.io.tmpdir=$(TMPDIR) -server -Xms2G -Xmx8G -cp $(MARIANAS) \
 									  org.mskcc.marianas.umi.duplex.fastqprocessing.ProcessLoopUMIFastq \
 									  $1_R1.fastq.gz $1_R2.fastq.gz \

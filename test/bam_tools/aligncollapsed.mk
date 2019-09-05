@@ -71,7 +71,8 @@ marianas/$1/$1.collapsed.realn.bam : marianas/$1/$1.collapsed.sorted.bam mariana
 									   							   		   --knownAlleles /home/brownd7/share/reference/GATK_bundle/2.3/Mills_and_1000G_gold_standard.indels.b37.vcf.gz")
 									  		   
 marianas/$1/$1.collapsed.bam : marianas/$1/$1.collapsed.realn.bam
-	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) AddOrReplaceReadGroups \
+	$$(call RUN, -c -n 1 -s 12G -m 18G -w 1440,"set -o pipefail && \
+												java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx16G -jar $$(PICARD_JAR) AddOrReplaceReadGroups \
 												I=$$(<) \
 												O=$$(@) \
 												RGID=$1 \

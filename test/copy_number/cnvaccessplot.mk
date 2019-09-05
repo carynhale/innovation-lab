@@ -18,7 +18,8 @@ EXOME_DEPTH_ENV ?= $(HOME)/share/usr/anaconda-envs/exomedepth-1.1.12
 
 define cnvaccess-plot
 cnvaccess/report/log2/$1-ontarget.pdf : cnvaccess/log2/$1-ontarget.txt
-	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 1 --sample_name $1")
+	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"set -o pipefail && \
+													 $(RSCRIPT) $(R_PLOT) --type 1 --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
@@ -26,7 +27,8 @@ endef
 		
 define cnvaccess-segment
 cnvaccess/report/segmented/$1-ontarget.RData : cnvaccess/log2/$1-ontarget.txt
-	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 2 --sample_name $1")
+	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"set -o pipefail && \
+													 $(RSCRIPT) $(R_PLOT) --type 2 --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
@@ -34,7 +36,8 @@ endef
 		
 define cnvaccess-ascat
 cnvaccess/report/ASCAT/$1-ontarget.pdf : cnvaccess/report/segmented/$1-ontarget.RData
-	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 3 --sample_name $1")
+	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"set -o pipefail && \
+													 $(RSCRIPT) $(R_PLOT) --type 3 --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
@@ -42,7 +45,8 @@ endef
 
 define cnvaccess-plot-cnvkit
 cnvaccess/report/log2/$1-offtarget.pdf : cnvaccess/log2/$1-offtarget.txt
-	$$(call RUN,-c -n 1 -s 6G -m 8G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 4 --sample_name $1")
+	$$(call RUN,-c -n 1 -s 6G -m 8G -v $(ASCAT_ENV),"set -o pipefail && \
+													 $(RSCRIPT) $(R_PLOT) --type 4 --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
@@ -50,7 +54,8 @@ endef
 		
 define cnvaccess-segment-cnvkit
 cnvaccess/report/segmented/$1-offtarget.RData : cnvaccess/log2/$1-offtarget.txt
-	$$(call RUN,-c -n 1 -s 6G -m 8G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 5 --sample_name $1")
+	$$(call RUN,-c -n 1 -s 6G -m 8G -v $(ASCAT_ENV),"set -o pipefail && \
+													 $(RSCRIPT) $(R_PLOT) --type 5 --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
@@ -58,7 +63,8 @@ endef
 
 define cnvaccess-ascat-cnvkit
 cnvaccess/report/ASCAT/$1-offtarget.pdf : cnvaccess/report/segmented/$1-offtarget.RData
-	$$(call RUN,-c -n 1 -s 6G -m 8G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 6 --sample_name $1")
+	$$(call RUN,-c -n 1 -s 6G -m 8G -v $(ASCAT_ENV),"set -o pipefail && \
+													 $(RSCRIPT) $(R_PLOT) --type 6 --sample_name $1")
 	
 endef
  $(foreach sample,$(SAMPLES),\
