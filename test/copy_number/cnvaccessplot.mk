@@ -6,7 +6,8 @@ PHONY += cnvaccess cnvaccess/report cnvaccess/report/log2 cnvaccess/report/ASCAT
 
 cnvaccess_plot : $(foreach sample,$(SAMPLES),cnvaccess/report/log2/$(sample).pdf) \
 				 $(foreach sample,$(SAMPLES),cnvaccess/report/segmented/$(sample).RData) \
-				 $(foreach sample,$(SAMPLES),cnvaccess/report/ASCAT/$(sample).pdf)
+				 $(foreach sample,$(SAMPLES),cnvaccess/report/ASCAT/$(sample).pdf) \
+				 $(foreach sample,$(SAMPLES),cnvaccess/report/log2/$(sample)(2).pdf)
 				 
 
 R_COVERAGE ?= modules/test/copy_number/cnvaccesscoverage.R
@@ -38,6 +39,14 @@ endef
  $(foreach sample,$(SAMPLES),\
 		$(eval $(call cnvaccess-ascat,$(sample))))
 
+
+define cnvaccess-plot-cnvkit
+cnvaccess/report/log2/$1(2).pdf : cnvaccess/cnr/$1.txt
+	$$(call RUN,-c -n 1 -s 4G -m 6G -v $(ASCAT_ENV),"$(RSCRIPT) $(R_PLOT) --type 4 --sample_name $1")
+	
+endef
+ $(foreach sample,$(SAMPLES),\
+		$(eval $(call cnvaccess-plot-cnvkit,$(sample))))
 
 
 .PHONY: $(PHONY)
