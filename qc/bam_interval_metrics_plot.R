@@ -179,6 +179,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file="metrics/report/non_reference_calls.pdf", height=7, width=14)
 	plot.0 = ggplot(nuc_pileup, aes(x=x_lab, y=mean_af, ymin=q1_af, ymax=q3_af, color=Reference_Allele)) +
 			 geom_pointrange(stat="identity", size=1) +
+			 scale_color_manual(values = c("A"="#d7191c", "T"="#fdae61", "G"="#abd9e9", "C"="#2c7bb6")) +
 			 theme_classic(base_size = 18) +
 			 xlab("\n\nSubstitution type\n") +
 			 ylab("\nMean allele frequency (%)\n\n") +
