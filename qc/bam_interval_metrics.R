@@ -154,4 +154,40 @@ if (as.numeric(opt$metric)==1) {
 				 		PCT_TARGET_BASES_100X = 100*PCT_TARGET_BASES_100X)
 	write_tsv(x=hs_metrics, path="metrics/summary/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+} else if (as.numeric(opt$metric)==7) {
+	
+	sample_names = unlist(strsplit(x=as.character(opt$samples), split=" ", fixed=TRUE))
+	metrics_x = list()
+	for (i in 1:length(sample_names)) {
+		metrics_x[[i]] = read_tsv(file=paste0("metrics/cov/", sample_names[i], "-ontarget.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   			     type_convert() %>%
+		   			     dplyr::select(X3, X4) %>%
+		   			     filter(!(is.na(X3) | is.na(X4))) %>%
+		   			     mutate(X3 = as.numeric(gsub("Aligned= ", "", X3, fixed=TRUE))) %>%
+		   			     mutate(X4 = as.numeric(gsub("Unaligned= ", "", X4, fixed=TRUE))) %>%
+		   			     summarize(N_ALIGNED = sum(X3),
+		   				 		   N_UNALIGNED = sum(X4)) %>%
+		   			     mutate(N_TOTAL = N_ALIGNED + N_UNALIGNED) %>%
+		   			     mutate(SAMPLE = sample_names[i])
+	}
+	metrics_x = do.call(rbind, metrics_x) %>%
+				mutate(BAIT_SET = "On-target")
+	metrics_y = list()
+	for (i in 1:length(sample_names)) {
+		metrics_y[[i]] = read_tsv(file=paste0("metrics/cov/", sample_names[i], "-offtarget.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   				 type_convert() %>%
+		   				 dplyr::select(X3, X4) %>%
+		   			   	 filter(!(is.na(X3) | is.na(X4))) %>%
+		   			     mutate(X3 = as.numeric(gsub("Aligned= ", "", X3, fixed=TRUE))) %>%
+		   			     mutate(X4 = as.numeric(gsub("Unaligned= ", "", X4, fixed=TRUE))) %>%
+		   			     summarize(N_ALIGNED = sum(X3),
+		   						   N_UNALIGNED = sum(X4)) %>%
+		   			     mutate(N_TOTAL = N_ALIGNED + N_UNALIGNED) %>%
+		   			     mutate(SAMPLE = sample_names[i])
+	}
+	metrics_y = do.call(rbind, metrics_y) %>%
+				mutate(BAIT_SET = "Off-target")
+	metrics_idx = bind_rows(metrics_x, metrics_y)
+	write_tsv(x=metrics_idx, path="metrics/summary/metrics_coverage.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }

@@ -19,9 +19,9 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/summary/metrics_insert.tsv \
 				   metrics/summary/metrics_insert_distribution.tsv \
 				   metrics/summary/metrics_oxog.tsv \
-				   metrics/summary/metrics_hs.tsv
-#				   metrics/summary/metrics_coverage.tsv \
-#				   metrics/summary/metrics_pileup.tsv 
+				   metrics/summary/metrics_hs.tsv \
+				   metrics/summary/metrics_coverage.tsv
+ 
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
@@ -116,15 +116,15 @@ $(foreach sample,$(SAMPLES),\
 		
 		
 metrics/summary/metrics_idx.tsv : $(wildcard metrics/picard/$(SAMPLES)-idx_stats.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 1 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_aln.tsv : $(wildcard metrics/picard/$(SAMPLES)-aln_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 2 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_insert.tsv : $(wildcard metrics/picard/$(SAMPLES)-insert_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 3 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_insert_distribution.tsv : $(wildcard metrics/picard$(SAMPLES)-insert_metrics.txt)
@@ -132,12 +132,16 @@ metrics/summary/metrics_insert_distribution.tsv : $(wildcard metrics/picard$(SAM
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 4 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_oxog.tsv : $(wildcard metrics/picard/$(SAMPLES)-oxog_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 5 --samples '$(SAMPLES)'")									  
 		
 metrics/summary/metrics_hs.tsv : $(wildcard metrics/picard/$(SAMPLES)-hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 6 --samples '$(SAMPLES)'")
+									  
+metrics/summary/metrics_coverage.tsv : $(wildcard metrics/cov/$(SAMPLES)-ontarget.txt) $(wildcard metrics/cov/$(SAMPLES)-offtarget.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 6 --samples '$(SAMPLES)'")									  
+									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 7 --samples '$(SAMPLES)'")							  
 
 		
 .DELETE_ON_ERROR:
