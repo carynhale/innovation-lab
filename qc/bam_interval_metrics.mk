@@ -24,7 +24,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/report/target_coverage.pdf \
 				   metrics/report/alignment_summary.pdf \
 				   metrics/report/insert_size_summary.pdf \
-				   metrics/report/insert_size_distribution.pdf
+				   metrics/report/insert_size_distribution.pdf \
+				   metrics/report/non_reference_calls.pdf
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
@@ -160,7 +161,15 @@ metrics/report/insert_size_summary.pdf : metrics/summary/metrics_insert.tsv
 									  
 metrics/report/insert_size_distribution.pdf : metrics/summary/metrics_insert_distribution.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 4")									  
+									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 4")
+									  
+metrics/report/non_reference_calls.pdf : $(wildcard metrics/pileup/$(SAMPLES)-pileup.txt)
+	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 5 --sample_names '$(SAMPLES)' && \
+														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf && \
+														   rm metrics/report/non_reference_calls.pdf && \
+														   mv metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf")
+									  
 									  		
 .DELETE_ON_ERROR:
 .SECONDARY:
