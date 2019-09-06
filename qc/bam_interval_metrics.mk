@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/bam_interval_metrics.$(NOW)
-PHONY += metrics metrics/pileup metrics/cov metrics/picard metrics/summary metrics/report cluster_samples
+PHONY += metrics metrics/pileup metrics/cov metrics/picard metrics/summary metrics/report
 
 TARGETS_LIST ?= $(HOME)/share/reference/target_panels/MSK-IMPACT-468.list
 
@@ -30,6 +30,7 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/report/read_alignment_summary.pdf \
 				   metrics/report/combined_report.pdf
 				   
+
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
@@ -181,7 +182,7 @@ metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_coverage.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 7")
 									  
-metrics/report/combined_report.pdf : metrics/report/target_coverage.pdf metrics/report/alignment_summary.pdf metrics/report/insert_size_summary.pdf metrics/report/insert_size_distribution.pdf metrics/report/non_reference_calls.pdf metrics/report/oxog_error_rate.pdf metrics/report/read_alignment_summary.pdf
+metrics/report/combined_report.pdf : metrics/report/target_coverage.pdf metrics/report/alignment_summary.pdf metrics/report/insert_size_summary.pdf metrics/report/insert_size_distribution.pdf metrics/report/non_reference_calls.pdf metrics/report/oxog_error_rate.pdf metrics/report/read_alignment_summary.pdf metrics/report/snps_clustering.pdf
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dAutoRotatePages=/None \
 									  -sOutputFile=metrics/report/combined_report.pdf \
