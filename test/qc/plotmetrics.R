@@ -19,7 +19,7 @@ arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
 AF = 1
-CHR = c("21", "22")
+CHR = "21"
 
 if (as.numeric(opt$type)==1) {
 
@@ -522,7 +522,7 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
 								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome %in% CHR) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	standard_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
@@ -561,7 +561,7 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
 								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome %in% CHR) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	standard_bam_dedup = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
@@ -600,7 +600,7 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
 								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome %in% CHR) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	simplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
@@ -639,7 +639,7 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
 								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome %in% CHR) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	duplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
