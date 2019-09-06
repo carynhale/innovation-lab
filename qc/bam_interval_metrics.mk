@@ -30,6 +30,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/report/read_alignment_summary.pdf \
 				   metrics/report/combined_report.pdf
 				   
+cluster_metric : cluster_samples
+				   
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
@@ -192,7 +194,10 @@ metrics/report/combined_report.pdf : metrics/report/target_coverage.pdf metrics/
 									  metrics/report/insert_size_distribution.pdf \
 									  metrics/report/non_reference_calls.pdf \
 									  metrics/report/oxog_error_rate.pdf \
-									  metrics/report/read_alignment_summary.pdf")
+									  metrics/report/read_alignment_summary.pdf \
+									  metrics/report/snps_clustering.pdf")
+									  
+include modules/qc/cluster_samples.mk
 
 .DELETE_ON_ERROR:
 .SECONDARY:
