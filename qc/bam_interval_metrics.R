@@ -106,4 +106,16 @@ if (as.numeric(opt$metric)==1) {
 	insert_distribution = as.data.frame(insert_distribution)
 	write_tsv(x=insert_distribution, path="metrics/summary/metrics_insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
+} else if (as.numeric(opt$metric)==5) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$samples), split=" ", fixed=TRUE))
+	oxog_metrics = list()
+	for (i in 1:length(sample_names)) {
+		oxog_metrics[[i]] = read_tsv(file=paste0("metrics/picard/", sample_names[i], ".oxog_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				    slice(2:n()) %>%
+		   				    type_convert()
+	}
+	oxog_metrics = do.call(rbind, oxog_metrics)
+	write_tsv(x=oxog_metrics, path="metrics/summary/metrics_oxog.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }
