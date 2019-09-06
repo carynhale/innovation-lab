@@ -665,7 +665,7 @@ if (as.numeric(opt$type)==1) {
 	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
 	row_groups = paste0(nuc_pileup$Reference_Allele, " > ", nuc_pileup$Alternate_Allele, "         ")
 	
-	write_tsv(nuc_pileup, path="metrics/report/snp_pileup.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(nuc_pileup, path="metrics/summary/snp_pileup_non_ref.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 	nuc_pileup = nuc_pileup %>%
 				 dplyr::select(-Chromosome, -Position, -Reference_Allele, -Alternate_Allele)
