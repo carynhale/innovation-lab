@@ -25,7 +25,9 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/report/alignment_summary.pdf \
 				   metrics/report/insert_size_summary.pdf \
 				   metrics/report/insert_size_distribution.pdf \
-				   metrics/report/non_reference_calls.pdf
+				   metrics/report/non_reference_calls.pdf \
+				   metrics/report/oxog_error_rate.pdf
+				   
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
@@ -170,6 +172,13 @@ metrics/report/non_reference_calls.pdf : $(wildcard metrics/pileup/$(SAMPLES)-pi
 														   rm metrics/report/non_reference_calls.pdf && \
 														   mv metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf")
 									  
+metrics/report/oxog_error_rate.pdf : metrics/summary/metrics_oxog.tsv
+	$(call RUN, -c -n 1 -s 8G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+														   $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 6 && \
+														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/oxog_error_rate-2.pdf metrics/report/oxog_error_rate.pdf && \
+														   rm metrics/report/oxog_error_rate.pdf && \
+														   mv metrics/report/oxog_error_rate-2.pdf metrics/report/oxog_error_rate.pdf")
+
 									  		
 .DELETE_ON_ERROR:
 .SECONDARY:

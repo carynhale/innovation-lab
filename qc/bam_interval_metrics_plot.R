@@ -236,4 +236,24 @@ if (as.numeric(opt$type)==1) {
 			  heat.pal.values = c(seq(0,.4,l=9), 1))
 	dev.off()
 
+} else if (as.numeric(opt$type)==6) {
+
+	suppressPackageStartupMessages(library("superheat"))
+	suppressPackageStartupMessages(library("viridis"))
+
+	data = read_tsv(file="metrics/summary/metrics_oxog.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert() %>%
+		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
+		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
+		   		   
+	pdf(file="metrics/report/target_coverage.pdf", width=14)
+	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE)) +
+			 geom_bar(stat="identity", fill="#d7191c") +
+			 theme_classic(base_size=15) +
+			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
+			 labs(x="Sample ID", y="Depth\n", title="MEAN DEDUPLICATED COVERAGE") +
+			 theme(plot.title = element_text(hjust = 0.5, size=16))
+	print(plot.0)
+	dev.off()
+	
 }
