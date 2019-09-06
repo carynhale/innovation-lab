@@ -18,7 +18,7 @@ parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
-AF = 5
+AF = 1
 CHR = "21"
 
 if (as.numeric(opt$type)==1) {
@@ -112,9 +112,6 @@ if (as.numeric(opt$type)==1) {
 	dev.off()
 	
 } else if (as.numeric(opt$type)==5) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
 	
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	
@@ -157,84 +154,36 @@ if (as.numeric(opt$type)==1) {
 	}
 	colnames(standard_bam)[5:ncol(standard_bam)] = sample_names
 
-	nuc_metrics = list()
-	for (i in 1:length(sample_names)) {
-		pileup_metrics = read_tsv(file=paste0("metrics/pileup/", sample_names[i], "-pileup-without-duplicates.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-						 type_convert() %>%
-						 dplyr::select(Chromosome = X1,
-									   Position = X2,
-									   Reference_Allele = X3,
-									   Total_Depth = X4,
-									   A = X5,
-									   C = X6,
-									   G = X7,
-									   T = X8) %>%
-						 mutate(AF_A = 100*A/Total_Depth,
-								AF_C = 100*C/Total_Depth,
-								AF_G = 100*G/Total_Depth,
-								AF_T = 100*T/Total_Depth)
-		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
-								  Position = rep(pileup_metrics$Position, 4),
-								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
-								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
-													   rep("C", nrow(pileup_metrics)),
-													   rep("G", nrow(pileup_metrics)),
-													   rep("T", nrow(pileup_metrics))),
-								  Allele_Frequency = c(pileup_metrics$AF_A,
-													   pileup_metrics$AF_C,
-													   pileup_metrics$AF_G,
-													   pileup_metrics$AF_T)) %>%
-								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome==CHR) %>%
-								  arrange(Position)
-	}
-	standard_bam_dedup = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
-	for (i in 1:length(sample_names)) {
-		cat(i, "\n")
-		standard_bam_dedup = left_join(standard_bam_dedup, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
-	}
-	colnames(standard_bam_dedup)[5:ncol(standard_bam_dedup)] = sample_names
-
-	nuc_pileup = left_join(standard_bam,
-						   standard_bam_dedup,
-						   by = c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
-	index = order(apply(nuc_pileup[,5:ncol(nuc_pileup),drop=FALSE], 1, mean, na.rm=TRUE), decreasing=FALSE)
-	nuc_pileup = nuc_pileup[index,,drop=FALSE] %>%
-				 arrange(Alternate_Allele) %>%
-				 arrange(Reference_Allele)
-			 
-	col_groups = rep(c("PILEUP\nWITH DUPLICATES", "DEDUPLICATED\nPILEUP"), each=length(sample_names))
-	row_groups = paste0(nuc_pileup$Reference_Allele, " > ", nuc_pileup$Alternate_Allele, "         ")
+	nuc_pileup = standard_bam[,1:5]
+	colnames(nuc_pileup)[5] = "Allele_Frequency"
+	for (i in 2:length(sample_names)) {
+		nuc_metrics = standard_bam[,c(1:4, i+4),drop=FALSE]
+		colnames(nuc_metrics)[5] = "Allele_Frequency"
+		nuc_pileup = bind_rows(nuc_pileup, nuc_metrics)
+	}		 
 	
 	write_tsv(nuc_pileup, path="metrics/summary/snp_pileup_non_ref.tsv", na = "NA", append = FALSE, col_names = TRUE)
-
+	
 	nuc_pileup = nuc_pileup %>%
-				 dplyr::select(-Chromosome, -Position, -Reference_Allele, -Alternate_Allele)
+		  		 group_by(Reference_Allele, Alternate_Allele) %>%
+		  		 summarize(max_af = max(Allele_Frequency, na.rm=TRUE),
+		  		 		   min_af = min(Allele_Frequency, na.rm=TRUE),
+		  		 		   mean_af = mean(Allele_Frequency, na.rm=TRUE),
+		  		 		   q1_af = mean(Allele_Frequency, na.rm=TRUE) - .1*sd(Allele_Frequency, na.rm=TRUE),
+		  		 		   q3_af = mean(Allele_Frequency, na.rm=TRUE) + .1*sd(Allele_Frequency, na.rm=TRUE)) %>%
+		  		 mutate(x_lab = paste0(Reference_Allele, " > ", Alternate_Allele)) %>%
+		  		 mutate(title = "\nError rate by substitution type\n") %>%
+		  		 arrange(x_lab)
+		  		 
 
-	index = apply(nuc_pileup, 1, function(x) {sum(is.na(x))})==0
-	pdf(file="metrics/report/non_reference_calls.pdf", height=14, width=14)
-	superheat(X = as.matrix(nuc_pileup[index,,drop=FALSE]),
-			  smooth.heat = FALSE,
-			  scale = FALSE,
-			  legend = TRUE,
-			  grid.hline = FALSE,
-			  grid.vline = FALSE,
-			  membership.cols=col_groups,
-			  membership.rows=row_groups[index],
-			  row.dendrogram = FALSE,
-			  col.dendrogram = FALSE,
-			  force.grid.hline = FALSE,
-			  force.grid.vline = FALSE,
-			  bottom.label.text.angle = 0,
-			  bottom.label.text.size = 3.5,
-			  bottom.label.size = .15,
-			  left.label.size = .15,
-			  left.label.text.size = 3.5,
-			  print.plot = TRUE,
-			  heat.pal = viridis(n=10),
-			  heat.pal.values = c(seq(0,.01,l=7),
-			  					  seq(.02,5,l=3)))
+	pdf(file="metrics/report/non_reference_calls.pdf", height=7, width=14)
+	plot.0 = ggplot(nuc_pileup, aes(x=x_lab, y=mean_af, ymin=q1_af, ymax=q3_af, color=Reference_Allele)) +
+			 geom_pointrange(stat="identity", size=1) +
+			 theme_classic(base_size = 18) +
+			 xlab("\n\nSubstitution type\n") +
+			 ylab("\nMean allele frequency (%)\n\n") +
+			 theme(legend.position = "none")
+	print(plot.0)
 	dev.off()
 
 } else if (as.numeric(opt$type)==6) {
