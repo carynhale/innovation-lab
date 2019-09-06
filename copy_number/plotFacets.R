@@ -87,7 +87,7 @@ for (chr in unique(df$chrom)) {
      	if (!dir.exists(y)) {
      		dir.create(y)
      	}
-        pdf(paste0(y, "Chr_", chr, ".pdf"), height = 5, width = 5)
+        pdf(paste0(y, "/Chr_", chr, ".pdf"), height = 5, width = 5)
         par(mar=c(5, 5, 4, 2)+.1)
         plot(chdf$cnlr, type="p", pch=20, col="grey80", xlab="", ylab="", main = "", ylim=c(-4,5), axes=FALSE, frame=TRUE)
         points(chdf$cnlr.median.clust, pch=20, col="red")
