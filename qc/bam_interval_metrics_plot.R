@@ -20,149 +20,17 @@ opt = arguments$options
 
 if (as.numeric(opt$type)==1) {
 
-	suppressPackageStartupMessages(library("superheat"))
-
-	data = read.csv(file="metrics/summary/umi_frequencies.tsv", sep="\t", header=TRUE, row.names=1, stringsAsFactors=FALSE)
-	data = data	 %>%
-		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
-		   type_convert() %>%
-		   replace(is.na(.), 0)
-	index = order(apply(data, 1, sum))
-	data = data[index,,drop=FALSE]
-	index = order(apply(data, 2, sum))
-	data = data[,index,drop=FALSE]
-	pdf(file="metrics/report/umi_frequencies.pdf", width=14, height=14)
-	superheat(X = t(data), smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
-			  force.grid.hline = TRUE, force.grid.vline = TRUE, bottom.label.text.angle = 90, bottom.label.text.size = 3.5,
-			  bottom.label.size = .05, left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", title="     ", print.plot = TRUE)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==2) {
-
-	data = read_tsv(file="metrics/summary/umi_family_types.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert()
-
-	pdf(file="metrics/report/umi_family_types_probe-A.pdf", width=14)
-	tmp.0 = data %>%
-			filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-A") %>%
-			arrange(Count) %>%
-			mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
-	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=Count, fill=Type)) +
-			 geom_bar(stat="identity") +
-			 scale_fill_manual(values=c("Duplex"      = "#d7191c",
-			 							"Simplex"     = "#fdae61",
-			 							"Singletons"  = "#abd9e9",
-			 							"Sub-Simplex" = "#2c7bb6")) +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(fill = "Family type", x=" ", title="PROBE-A BAIT SET", y="Count\n") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-
-} else if (as.numeric(opt$type)==3) {
-
-	data = read_tsv(file="metrics/summary/umi_family_types.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert()
-
-	pdf(file="metrics/report/umi_family_types_probe-B.pdf", width=14)
-	tmp.0 = data %>%
-			filter(BAIT_SET=="MSK-ACCESS_v1.0_probe-B") %>%
-			arrange(Count) %>%
-			mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
-	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=Count, fill=Type)) +
-			 geom_bar(stat="identity") +
-			 scale_fill_manual(values=c("Duplex"      = "#d7191c",
-			 							"Simplex"     = "#fdae61",
-			 							"Singletons"  = "#abd9e9",
-			 							"Sub-Simplex" = "#2c7bb6")) +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(fill = "Family type", x=" ", title="PROBE-B BAIT SET", y="Count\n") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-
-} else if (as.numeric(opt$type)==4) {
-
-	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   filter(FamilyType=="All") %>%
-		   dplyr::rename(`Sample ID` = SAMPLE)
-	
-	pdf(file="metrics/report/umi_family_sizes_all.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
-			 geom_point(size=.5) +
-			 geom_line() +
-			 scale_x_continuous(trans = 'log2',
-			 					breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							labels = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							limits = c(1, 50)) +
-			 theme_classic(base_size=15) +
-			 labs(x="\nFamily size", y="Frequency\n", title="ALL FAMILIY SIZES") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==5) {
-
-	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   filter(FamilyType=="Duplex") %>%
-		   dplyr::rename(`Sample ID` = SAMPLE)
-	
-	pdf(file="metrics/report/umi_family_sizes_duplex.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
-			 geom_point(size=.5) +
-			 geom_line() +
-			 scale_x_continuous(trans = 'log2',
-			 					breaks = c(2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							labels = c(2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							limits = c(2, 50)) +
-			 theme_classic(base_size=15) +
-			 labs(x="\nFamily size", y="Frequency\n", title="DUPLEX FAMILY SIZES") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==6) {
-
-	data = read_tsv(file="metrics/summary/umi_families.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   filter(FamilyType=="Simplex") %>%
-		   dplyr::rename(`Sample ID` = SAMPLE)
-	
-	pdf(file="metrics/report/umi_family_sizes_simplex.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=FamilySize, y=Frequency, color=`Sample ID`)) +
-			 geom_point(size=.5) +
-			 geom_line() +
-			 scale_x_continuous(trans = 'log2',
-			 					breaks = c(3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							labels = c(3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50),
-    							limits = c(3, 50)) +
-			 theme_classic(base_size=15) +
-			 labs(x="\nFamily size", y="Frequency\n", title="SIMPLEX FAMILY SIZES") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==7) {
-
 	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
-		   filter(LIBRARY=="STANDARD") %>%
 		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
-		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
-		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
-		   
-	pdf(file="metrics/report/mean_standard_target_coverage-dedup.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
+		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
+		   		   
+	pdf(file="metrics/report/mean_standard_target_coverage.pdf", width=14)
+	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE)) +
+			 geom_bar(stat="identity", fill="#d7191c") +
 			 theme_classic(base_size=15) +
 			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN DEDUPLICATED COVERAGE") +
+			 labs(x="Sample ID", y="Depth\n", title="MEAN DEDUPLICATED COVERAGE") +
 			 theme(plot.title = element_text(hjust = 0.5, size=16))
 	print(plot.0)
 	dev.off()

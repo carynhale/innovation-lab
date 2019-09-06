@@ -20,7 +20,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/summary/metrics_insert_distribution.tsv \
 				   metrics/summary/metrics_oxog.tsv \
 				   metrics/summary/metrics_hs.tsv \
-				   metrics/summary/metrics_coverage.tsv
+				   metrics/summary/metrics_coverage.tsv \
+				   metrics/report/mean_standard_target_coverage.pdf
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
@@ -140,7 +141,11 @@ metrics/summary/metrics_hs.tsv : $(wildcard metrics/picard/$(SAMPLES)-hs_metrics
 									  
 metrics/summary/metrics_coverage.tsv : $(wildcard metrics/cov/$(SAMPLES)-ontarget.txt) $(wildcard metrics/cov/$(SAMPLES)-offtarget.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 7 --samples '$(SAMPLES)'")							  
+									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 7 --samples '$(SAMPLES)'")
+									  
+metrics/report/mean_standard_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 1")
 
 		
 .DELETE_ON_ERROR:
