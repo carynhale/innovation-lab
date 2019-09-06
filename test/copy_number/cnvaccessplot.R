@@ -110,7 +110,7 @@ if (as.numeric(opt$type)==1) {
  	}
  	lines(x=c(1, segmented_[1,"n"]), y=rep(segmented_[1,"log2"],2), lty=1, lwd=3.0, col="red")
 	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
-	axis(2, at=seq(-3, 3, by=1), labels=seq(-3,3, by=1), cex.axis=1.5, las=1, lwd=1.5)
+	axis(2, at=NULL, labels=NULL, cex.axis=1.5, las=1, lwd=1.5)
 	mtext(side=1, text="Chromosome", line=4, cex=1.5)
 	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
 	title(main=opt$sample_name, cex.main=.75, font.main=1)
@@ -158,8 +158,8 @@ if (as.numeric(opt$type)==1) {
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = c("grey80", "lightblue")[as.numeric(log2_$chr)%%2 + 1],
-		 pch = 16,
-		 cex = .5,
+		 pch = ".",
+		 cex = 1,
 		 ylim = c(-4.5,4.5),
 		 las = 1,
 		 xlab = "",
@@ -199,8 +199,8 @@ if (as.numeric(opt$type)==1) {
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = c("grey80", "lightblue")[as.numeric(log2_$chr)%%2 + 1],
-		 pch = 16,
-		 cex = .5,
+		 pch = ".",
+		 cex = 1,
 		 ylim = c(-4.5,4.5),
 		 las = 1,
 		 xlab = "",
@@ -213,7 +213,7 @@ if (as.numeric(opt$type)==1) {
  	}
  	lines(x=c(1, segmented_[1,"n"]), y=rep(segmented_[1,"log2"],2), lty=1, lwd=3.0, col="red")
 	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
-	axis(2, at=seq(-3, 3, by=1), labels=seq(-3,3, by=1), cex.axis=1.5, las=1, lwd=1.5)
+	axis(2, at=NULL, labels=NULL, cex.axis=1.5, las=1, lwd=1.5)
 	mtext(side=1, text="Chromosome", line=4, cex=1.5)
 	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
 	title(main=opt$sample_name, cex.main=.75, font.main=1)
