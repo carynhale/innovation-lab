@@ -24,7 +24,7 @@
    	for (i in 1:23) {
    		index = c(index, seq(from = CytoBand[i, "start"], to=CytoBand[i, "end"], length=sum(cna$chrom==i)))
    	}
-	plot(index, cna$log2, type="p", pch=".", cex=1.95, col="grey80", axes=FALSE, frame=FALSE, xlab="", ylab="", main="", ylim=c(-4.5,4.5))
+	plot(index, cna$log2, type="p", pch=".", cex=1.95, col=c("grey80", "lightblue")[cna$chrom%%2 + 1], axes=FALSE, frame=FALSE, xlab="", ylab="", main="", ylim=c(-4.5,4.5))
  	for (j in 1:nrow(seg)) {
  		if (j == 1) {
  			lines(x=c(1, index[seg[j,"n"]]), y=rep(seg[j,"log2"],2), lty=1, lwd=2.75, col="red")
@@ -36,7 +36,7 @@
 	axis(side=1, at=apply(CytoBand[,c("start", "end"),drop=FALSE], 1, mean), labels=c(1:22, "X"), tcl=-.5, lwd=0, lwd.ticks=1, tcl=-.25)
   	axis(2, at = c(-4, -2, 0, 2, 4), labels = c(-4, -2, 0, 2, 4), cex.axis = 1, las = 1)
 	mtext(side = 2, text = expression(Log[2]~"Ratio"), line = 3.15, cex = 1.25)
-	points(c(0-.05*length(cna$log2),length(cna$log2)+.01*length(cna$log2)), c(0,0), type="l", col="black")
+	points(c(0-.05*max(index),max(index)+.01*max(index)), c(0,0), type="l", col="black")
 	title(main = paste0(title, " | alpha = ", signif(purity, 3), " | psi = ", signif(ploidy, 3)), cex.main=.75, font.main=1)
 }
 
