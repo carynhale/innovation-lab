@@ -86,8 +86,7 @@ if (as.numeric(opt$type)==1) {
 		   type_convert()
 		   
 	pdf(file="metrics/report/insert_size_distribution.pdf", width=14)
-	tmp.0 = data %>%
-			dplyr::select(-LIBRARY)
+	tmp.0 = data
 	tmp.1 = list()
 	for (j in 1:ncol(tmp.0)) {
 		x = 1:nrow(tmp.0)
