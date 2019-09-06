@@ -83,7 +83,7 @@ if (as.numeric(opt$metric)==1) {
 		   				   
 	}
 	insert_metrics = do.call(rbind, insert_metrics)
-	write_tsv(x=insert_metrics, path="metrics/standard/metrics_insert.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=insert_metrics, path="metrics/summary/metrics_insert.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 
 }
