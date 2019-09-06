@@ -123,7 +123,7 @@ metrics/summary/metrics_aln.tsv : $(wildcard metrics/$(SAMPLES)-aln_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 2 --samples '$(SAMPLES)'")
 									  
-metrics/summary/metrics_isert.tsv : $(wildcard metrics/$(SAMPLES)-insert_metrics.txt.txt)
+metrics/summary/metrics_insert.tsv : $(wildcard metrics/$(SAMPLES)-insert_metrics.txt.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 3 --samples '$(SAMPLES)'")
 									  
