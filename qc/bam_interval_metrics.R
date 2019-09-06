@@ -29,12 +29,49 @@ if (as.numeric(opt$metric)==1) {
 		   				   mutate(X3 = as.numeric(gsub("Aligned= ", "", X3, fixed=TRUE))) %>%
 		   				   mutate(X4 = as.numeric(gsub("Unaligned= ", "", X4, fixed=TRUE))) %>%
 		   				   summarize(N_ALIGNED = sum(X3),
-		   				   			 N_UNALIGNED = sum(X4)
-		   				   ) %>%
+		   				   			 N_UNALIGNED = sum(X4)) %>%
 		   				   mutate(N_TOTAL = N_ALIGNED + N_UNALIGNED) %>%
 		   				   mutate(SAMPLE = sample_names[i])
 	}
 	idx_metrics = do.call(rbind, idx_metrics)
 	write_tsv(x=idx_metrics, path="metrics/summary/metrics_idx.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	
+} else if (as.numeric(opt$metric)==2) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$samples), split=" ", fixed=TRUE))
+	aln_metrics = list()
+	for (i in 1:length(sample_names)) {
+		aln_metrics[[i]] = read_tsv(file=paste0("metrics/picard/", sample_names[i], "-aln_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   				   type_convert() %>%
+		   				   slice(2:n()) %>%
+		   				   mutate(TOTAL_READS = as.numeric(TOTAL_READS)) %>%
+		   				   mutate(PF_READS = as.numeric(PF_READS)) %>%
+		   				   mutate(PCT_PF_READS = 100*as.numeric(PCT_PF_READS)) %>%
+		   				   mutate(PF_NOISE_READS = as.numeric(PF_NOISE_READS)) %>%
+		   				   mutate(PF_READS_ALIGNED = as.numeric(PF_READS_ALIGNED)) %>%
+		   				   mutate(PCT_PF_READS_ALIGNED = 100*as.numeric(PCT_PF_READS_ALIGNED)) %>%
+		   				   mutate(PF_ALIGNED_BASES = as.numeric(PF_ALIGNED_BASES)) %>%
+		   				   mutate(PF_HQ_ALIGNED_READS = as.numeric(PF_HQ_ALIGNED_READS)) %>%
+		   				   mutate(PF_HQ_ALIGNED_BASES = as.numeric(PF_HQ_ALIGNED_BASES)) %>%
+		   				   mutate(PF_HQ_ALIGNED_Q20_BASES = as.numeric(PF_HQ_ALIGNED_Q20_BASES)) %>%
+		   				   mutate(PF_HQ_MEDIAN_MISMATCHES = as.numeric(PF_HQ_MEDIAN_MISMATCHES)) %>%
+		   				   mutate(PF_MISMATCH_RATE = 100*as.numeric(PF_MISMATCH_RATE)) %>%
+		   				   mutate(PF_HQ_ERROR_RATE = 100*as.numeric(PF_HQ_ERROR_RATE)) %>%
+		   				   mutate(PF_INDEL_RATE = 100*as.numeric(PF_INDEL_RATE)) %>%
+		   				   mutate(MEAN_READ_LENGTH = as.numeric(MEAN_READ_LENGTH)) %>%
+		   				   mutate(READS_ALIGNED_IN_PAIRS = as.numeric(READS_ALIGNED_IN_PAIRS)) %>%
+		   				   mutate(PCT_READS_ALIGNED_IN_PAIRS = 100*as.numeric(PCT_READS_ALIGNED_IN_PAIRS)) %>%
+		   				   mutate(BAD_CYCLES = as.numeric(BAD_CYCLES)) %>%
+		   				   mutate(STRAND_BALANCE = as.numeric(STRAND_BALANCE)) %>%
+		   				   mutate(PCT_CHIMERAS = 100*as.numeric(PCT_CHIMERAS)) %>%
+		   				   mutate(PCT_ADAPTER = as.numeric(PCT_ADAPTER)) %>%
+		   				   mutate(SAMPLE = sample_names[i])
+		   				   
+	}
+	aln_metrics = do.call(rbind, aln_metrics)
+	write_tsv(x=idx_metrics, path="metrics/summary/metrics_aln.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
+} else if (as.numeric(opt$metric)==3) {
+
 	
 }

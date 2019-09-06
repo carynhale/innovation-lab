@@ -16,7 +16,7 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-hs_metrics.txt) \
 #				   metrics/summary/metrics_pileup.tsv 
 				   metrics/summary/metrics_idx.tsv
-#				   metrics/summary/metrics_aln.tsv \
+				   metrics/summary/metrics_aln.tsv \
 #				   metrics/summary/metrics_insert.tsv \
 #				   metrics/summary/metrics_insert_distribution.tsv \
 #				   metrics/summary/metrics_oxog.tsv \
@@ -118,6 +118,10 @@ $(foreach sample,$(SAMPLES),\
 metrics/summary/metrics_idx.tsv : $(wildcard metrics/$(SAMPLES)-idx_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 1 --samples '$(SAMPLES)'")
+									  
+metrics/summary/metrics_aln.tsv : $(wildcard metrics/$(SAMPLES)-aln_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 2 --samples '$(SAMPLES)'")
 		
 		
 .DELETE_ON_ERROR:
