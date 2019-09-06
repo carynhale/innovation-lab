@@ -62,28 +62,19 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 
-} else if (as.numeric(opt$type)==13) {
+} else if (as.numeric(opt$type)==3) {
 
 	data = read_tsv(file="metrics/summary/metrics_insert.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
 		   arrange(desc(MEDIAN_INSERT_SIZE)) %>%
-		   dplyr::rename(`Sample ID` = SAMPLE) %>%
-		   mutate(LIBRARY = case_when(
-		   		LIBRARY == "STANDARD" ~ "Standard",
-		   		LIBRARY == "UNFILTERED" ~ "Collapsed",
-		   		LIBRARY == "DUPLEX" ~ "Duplex",
-		   		LIBRARY == "SIMPLEX" ~ "Simplex"))
+		   dplyr::rename(`Sample ID` = SAMPLE)
 		   
 	pdf(file="metrics/report/insert_size_summary.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEDIAN_INSERT_SIZE, fill=LIBRARY)) +
-			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Collapsed" = "#2c7bb6",
-			 							"Duplex"    = "#d7191c",
-			 							"Simplex"   = "#fdae61",
-			 							"Standard"  = "#abd9e9")) +
+	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEDIAN_INSERT_SIZE)) +
+			 geom_bar(stat="identity", fill="#d7191c") +
 		 	 theme_classic(base_size=15) +
 		 	 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-		 	 labs(x="Sample ID", y="Size (bp)\n", fill="Library", title="MEAN INSERT SIZE") +
+		 	 labs(x="Sample ID", y="Size (bp)\n", title="MEAN INSERT SIZE") +
 		 	 theme(plot.title = element_text(hjust = 0.5, size=16)) +
 		 	 ylim(0,200)
 	print(plot.0)

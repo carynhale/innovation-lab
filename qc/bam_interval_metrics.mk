@@ -22,7 +22,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/summary/metrics_hs.tsv \
 				   metrics/summary/metrics_coverage.tsv \
 				   metrics/report/target_coverage.pdf \
-				   metrics/report/alignment_summary.pdf
+				   metrics/report/alignment_summary.pdf \
+				   metrics/report/insert_size_summary.pdf \
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
@@ -152,7 +153,10 @@ metrics/report/alignment_summary.pdf : metrics/summary/metrics_aln.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 2")
 
-		
+metrics/report/insert_size_summary.pdf : metrics/summary/metrics_insert.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 3")
+									  		
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: $(PHONY)
