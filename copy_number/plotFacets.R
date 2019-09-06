@@ -65,7 +65,7 @@ normalName <- facetsFile %>%
 			  sub('^.*_', '', .) %>%
 			  sub('\\..*', '', .)
 
-pdf(file = str_c(opt$outPrefix, ".pdf"), width=10, height=4.25)
+pdf(file = str_c(opt$outPrefix, ".pdf"), width=12, height=5)
 plot_log2_(x=out2, y=fit, purity=fit$purity, ploidy=fit$ploidy, title = gsub("facets/plots/log2/", "", opt$outPrefix, fixed=TRUE))
 dev.off()
 
