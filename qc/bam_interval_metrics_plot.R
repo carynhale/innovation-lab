@@ -233,7 +233,7 @@ if (as.numeric(opt$type)==1) {
 			  left.label.text.size = 3.5,
 			  print.plot = TRUE,
 			  heat.pal = viridis(n=10),
-			  heat.pal.values = c(seq(0,.4,l=9), 1))
+			  heat.pal.values = c(seq(0,1,l=9), 5))
 	dev.off()
 
 } else if (as.numeric(opt$type)==6) {

@@ -26,7 +26,8 @@ metrics/snps/$1.vcf : bam/$1.bam
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--min_base_quality_score 30 \
-									--standard_min_confidence_threshold_for_calling 20")
+									--standard_min_confidence_threshold_for_calling 20 \
+									-rf BadCigar")
 									
 endef
 $(foreach sample,$(SAMPLES),\
