@@ -19,7 +19,7 @@ arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
 AF = 1
-CHR = "21"
+CHR = "20"
 
 if (as.numeric(opt$type)==1) {
 
