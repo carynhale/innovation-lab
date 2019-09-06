@@ -18,7 +18,7 @@ parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
-AF = 1
+AF = .1
 CHR = "21"
 
 if (as.numeric(opt$type)==1) {
@@ -242,18 +242,41 @@ if (as.numeric(opt$type)==1) {
 	suppressPackageStartupMessages(library("viridis"))
 
 	data = read_tsv(file="metrics/summary/metrics_oxog.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
-		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE))
-		   		   
-	pdf(file="metrics/report/target_coverage.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE)) +
-			 geom_bar(stat="identity", fill="#d7191c") +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth\n", title="MEAN DEDUPLICATED COVERAGE") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
+		   type_convert()
+	sample_id = unique(data$SAMPLE_ALIAS)
+	nuc_context = unique(data$CONTEXT)
+	oxog = matrix(0, nrow=length(nuc_context), ncol=length(sample_id), dimnames=list(nuc_context, sample_id))
+	for (i in 1:length(sample_id)) {
+		indx = data %>%
+			   filter(SAMPLE_ALIAS == sample_id[i]) %>%
+			   .[["CONTEXT"]]
+		indy = sample_id[i]
+		oxog[indx,indy] = as.numeric(data %>%
+						  			 filter(SAMPLE_ALIAS == sample_id[i]) %>%
+						  			 .[["OXIDATION_ERROR_RATE"]])
+	}
+	index = order(apply(oxog, 2, mean))
+	oxog = oxog[,index,drop=FALSE]
+	index = order(apply(oxog, 1, mean))
+	oxog = oxog[index,,drop=FALSE]
+	
+	pdf(file="metrics/report/oxog_error_rate.pdf", height=14, width=14)
+	superheat(X = t(oxog),
+			  smooth.heat = TRUE,
+			  scale = FALSE,
+			  legend = TRUE,
+			  grid.hline = FALSE,
+			  grid.vline = FALSE,
+			  row.dendrogram = FALSE,
+			  col.dendrogram = FALSE,
+			  force.grid.hline = FALSE,
+			  force.grid.vline = FALSE,
+			  bottom.label.text.angle = 0,
+			  bottom.label.text.size = 3.5,
+			  bottom.label.size = .15,
+			  left.label.size = .15,
+			  left.label.text.size = 3.5,
+			  print.plot = TRUE)
+	dev.off()	   		   
 	
 }
