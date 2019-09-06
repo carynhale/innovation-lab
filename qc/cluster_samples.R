@@ -52,8 +52,8 @@ if (as.numeric(opt$switch)==1) {
 	pdf(file="metrics/report/snps_clustering.pdf", width=14, height=14)
 	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
-			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
-			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
+			  bottom.label.text.angle = 90, bottom.label.text.size = 2.5, bottom.label.size = .15,
+			  left.label.size = .15, left.label.text.size = 2.5, grid.hline.col = "grey90",
 			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = c(seq(from=0, to=.2, length=80), seq(from=.21, to=1, length=20)),
 			  print.plot = TRUE)
 	dev.off()
