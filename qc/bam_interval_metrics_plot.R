@@ -67,7 +67,8 @@ if (as.numeric(opt$type)==1) {
 	data = read_tsv(file="metrics/summary/metrics_insert.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert() %>%
 		   arrange(desc(MEDIAN_INSERT_SIZE)) %>%
-		   dplyr::rename(`Sample ID` = SAMPLE)
+		   dplyr::rename(`Sample ID` = SAMPLE) %>%
+		   mutate(`Sample ID` = factor(`Sample ID`, levels=unique(`Sample ID`), ordered=TRUE))
 		   
 	pdf(file="metrics/report/insert_size_summary.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEDIAN_INSERT_SIZE)) +
@@ -86,19 +87,18 @@ if (as.numeric(opt$type)==1) {
 		   type_convert()
 		   
 	pdf(file="metrics/report/insert_size_distribution.pdf", width=14)
-	tmp.0 = data
-	tmp.1 = list()
-	for (j in 1:ncol(tmp.0)) {
-		x = 1:nrow(tmp.0)
-		y = tmp.0[,j,drop=TRUE]
+	tmp = list()
+	for (j in 1:ncol(data)) {
+		x = 1:nrow(data)
+		y = data[,j,drop=TRUE]
 		x = x[!is.na(y)]
 		y = y[!is.na(y)]
 		z = smooth.spline(x=x, y=y, spar=0.3)
-		tmp.1[[j]] = data.frame(x=z$x, y=z$y) %>%
-			    	 mutate(`Sample ID` = colnames(tmp.0)[j])
+		tmp[[j]] = data.frame(x=z$x, y=z$y) %>%
+			       mutate(`Sample ID` = colnames(data)[j])
 	}
-	tmp.1 = do.call(rbind, tmp.1)
-	plot.0 = ggplot(tmp.1, aes(x=x, y=y, color=`Sample ID`)) +
+	tmp = do.call(rbind, tmp)
+	plot.0 = ggplot(tmp, aes(x=x, y=y, color=`Sample ID`)) +
 			 geom_point(size=.5) +
 			 geom_line() +
 			 theme_classic(base_size=15) +
@@ -231,149 +231,4 @@ if (as.numeric(opt$type)==1) {
 			  heat.pal.values = c(seq(0,.1,l=9), 10))
 	dev.off()
 
-} else if (as.numeric(opt$type)==15) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
-
-	data = read.csv(file="metrics/summary/snps_filtered-standard.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
-	data = data	 %>%
-		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
-		   type_convert()
-	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
-	data[is.na(data)] = 1
-	data[data==3] = 1
-	for (i in 1:2) {
-		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
-	}
-	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
-	dm = 1-((max(dm)-dm)/(max(dm) - min(dm)))
-	pdf(file="metrics/report/snps_clustering-standard.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
-			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
-			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
-			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = seq(from=0, to=1, length=100),
-			  print.plot = TRUE)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==16) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
-
-	data = read.csv(file="metrics/summary/snps_filtered-unfiltered.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
-	data = data	 %>%
-		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
-		   type_convert()
-	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
-	data[is.na(data)] = 1
-	data[data==3] = 1
-	for (i in 1:2) {
-		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
-	}
-	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
-	dm = 1-((max(dm)-dm)/(max(dm) - min(dm)))
-	pdf(file="metrics/report/snps_clustering-unfiltered.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
-			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
-			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
-			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = seq(from=0, to=1, length=100),
-			  print.plot = TRUE)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==17) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
-
-	data = read.csv(file="metrics/summary/snps_filtered-simplex.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
-	data = data	 %>%
-		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
-		   type_convert()
-	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
-	data[is.na(data)] = 1
-	data[data==3] = 1
-	for (i in 1:2) {
-		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
-	}
-	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
-	dm = 1-((max(dm)-dm)/(max(dm) - min(dm)))
-	pdf(file="metrics/report/snps_clustering-simplex.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
-			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
-			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
-			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = seq(from=0, to=1, length=100),
-			  print.plot = TRUE)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==18) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
-
-	data = read.csv(file="metrics/summary/snps_filtered-duplex.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
-	data = data	 %>%
-		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
-		   type_convert()
-	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
-	data[is.na(data)] = 1
-	data[data==3] = 1
-	for (i in 1:2) {
-		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
-	}
-	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
-	dm = 1-((max(dm)-dm)/(max(dm) - min(dm)))
-	pdf(file="metrics/report/snps_clustering-duplex.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
-			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
-			  bottom.label.text.angle = 90, bottom.label.text.size = 3.5, bottom.label.size = .15,
-			  left.label.size = .15, left.label.text.size = 3.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = seq(from=0, to=1, length=100),
-			  print.plot = TRUE)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==19) {
-
-	data = read_tsv(file="metrics/summary/metrics_ts.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   dplyr::rename(`Sample ID` = SAMPLE)
-
- 	pdf(file="metrics/report/read_alignment_summary.pdf", width=14)
-	tmp.1 = data %>%
-			arrange(desc(N_TOTAL)) %>%
-			filter(BAIT_SET=="Probe-A") %>%
-			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
-			select(`Sample ID`, N = N_ALIGNED) %>%
-			mutate(Type = "Probe-A")
-			
-	tmp.2 = data %>%
-			arrange(desc(N_TOTAL)) %>%
-			filter(BAIT_SET=="Probe-B") %>%
-			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
-			select(`Sample ID`, N = N_ALIGNED) %>%
-			mutate(Type = "Probe-B")
-			
-	tmp.3 = data %>%
-			arrange(desc(N_TOTAL)) %>%
-			filter(BAIT_SET=="Probe-AB") %>%
-			mutate(`Sample ID` = factor(`Sample ID`, levels = `Sample ID`, ordered=TRUE)) %>%
-			select(`Sample ID`, N = N_ALIGNED) %>%
-			mutate(Type = "Off-target")
-			
-	tmp.0 = bind_rows(tmp.1, tmp.2, tmp.3)
-			
-			
-	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=N, fill=Type)) +
-			 geom_bar(stat="identity") +
-			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6", "Off-target"="#fdae61")) +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(fill = "Type", x=" ", title="DISTRIBUTION OF READS", y="Number of read pairs\n") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-
-} 
+}
