@@ -121,7 +121,7 @@ if (as.numeric(opt$metric)==1) {
 } else if (as.numeric(opt$metric)==6) {
 
 	sample_names = unlist(strsplit(x=as.character(opt$samples), split=" ", fixed=TRUE))
-	hs_metrics
+	hs_metrics = list()
 	for (i in 1:length(sample_names)) {
 		hs_metrics[[i]] = read_tsv(file=paste0("metrics/picard/", sample_names[i], "-hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   			      slice(2:n()) %>%
