@@ -31,6 +31,9 @@ if (as.numeric(opt$switch)==1) {
 
 } else if (as.numeric(opt$switch)==2) {
 
+	suppressPackageStartupMessages(library("readr"))
+	suppressPackageStartupMessages(library("dplyr"))
+	suppressPackageStartupMessages(library("magrittr"))
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
 
