@@ -76,7 +76,7 @@ if (as.numeric(opt$type)==1) {
 		 	 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
 		 	 labs(x="Sample ID", y="Size (bp)\n", title="MEAN INSERT SIZE") +
 		 	 theme(plot.title = element_text(hjust = 0.5, size=16)) +
-		 	 ylim(0,200)
+		 	 ylim(0,250)
 	print(plot.0)
 	dev.off()
 
