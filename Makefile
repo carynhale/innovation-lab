@@ -373,6 +373,10 @@ qualimap :
 TARGETS += bam_stats
 bam_stats :
 	$(call RUN_MAKE,modules/qc/bam_stats.mk)
+	
+TARGETS += cluster_samples
+cluster_samples :
+	$(call RUN_MAKE,modules/qc/cluster_samples.mk)
 
 
 #==================================================
@@ -442,10 +446,6 @@ deconstruct_sigs :
 #==================================================
 # Miscellaneous
 #==================================================
-
-TARGETS += cluster_samples
-cluster_samples :
-	$(call RUN_MAKE,modules/contamination/cluster_samples.mk)
 
 TARGETS += contest
 contest :
