@@ -18,8 +18,8 @@ parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
-AF = 1
-CHR = "20"
+AF = 2
+CHR = "21"
 
 if (as.numeric(opt$type)==1) {
 
