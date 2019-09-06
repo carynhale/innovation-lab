@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 
 suppressPackageStartupMessages(library("optparse"))
-suppressPackageStartupMessages(library("VariantAnnotation"))
 
 if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
@@ -14,6 +13,8 @@ arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
 if (as.numeric(opt$switch)==1) {
+
+	suppressPackageStartupMessages(library("VariantAnnotation"))
 
 	vcf_file = "metrics/summary/snps_filtered.vcf"
 	vcf = readVcf(vcf_file, "b37")
