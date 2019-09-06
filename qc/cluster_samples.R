@@ -28,4 +28,8 @@ if (as.numeric(opt$switch)==1) {
 	gt = matrix(as.integer(factor(X)), nrow = nrow(gt), ncol = ncol(gt), dimnames = list(rownames(gt), colnames(gt)))
 	write.table(gt, file="metrics/summary/snps_filtered.tsv", sep="\t", col.names=TRUE, row.names=FALSE, quote=FALSE)
 
+} else if (as.numeric(opt$switch)==2) {
+
+
+
 }
