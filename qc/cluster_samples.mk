@@ -7,8 +7,8 @@ PHONE += metrics metrics/snps metrics/summary metrics/report
 cluster_samples : $(foreach sample,$(SAMPLES),metrics/snps/$(sample).vcf) \
 				  metrics/summary/snps_combined.vcf \
 				  metrics/summary/snps_filtered.vcf \
-				  metrics/summary/snps_filtered.tsv
-#				  metrics/report/snps_clustering.pdf
+				  metrics/summary/snps_filtered.tsv \
+				  metrics/report/snps_clustering.pdf
 
 ifeq ($(EXOME),true)
 DBSNP_SUBSET ?= $(HOME)/share/reference/dbsnp_137_exome.bed
@@ -44,12 +44,12 @@ metrics/summary/snps_filtered.vcf : metrics/summary/snps_combined.vcf
 metrics/summary/snps_filtered.tsv : metrics/summary/snps_filtered.vcf
 	$(INIT) $(CLUSTER_VCF) --switch 1
 	
-#metrics/report/snps_clustering.pdf : metrics/summary/snps_filtered.tsv
-#	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-#														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 15 && \
-#									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-standard-2.pdf metrics/report/snps_clustering-standard.pdf && \
-#									   					   rm metrics/report/snps_clustering-standard.pdf && \
-#									   					   mv metrics/report/snps_clustering-standard-2.pdf metrics/report/snps_clustering-standard.pdf")
+metrics/report/snps_clustering.pdf : metrics/summary/snps_filtered.tsv
+	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+														   $(RSCRIPT) $(CLUSTER_VCF) --switch 2 && \
+									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-2.pdf metrics/report/snps_clustering.pdf && \
+									   					   rm metrics/report/snps_clustering.pdf && \
+									   					   mv metrics/report/snps_clustering-2.pdf metrics/report/snps_clustering.pdf")
 		
 include modules/vcf_tools/vcftools.mk
 
