@@ -54,7 +54,7 @@ if (as.numeric(opt$switch)==1) {
 			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
 			  bottom.label.text.angle = 90, bottom.label.text.size = 2.5, bottom.label.size = .15,
 			  left.label.size = .15, left.label.text.size = 2.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = c(seq(from=0, to=.2, length=70), seq(from=.21, to=1, length=30)),
+			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = c(seq(from=0, to=.3, length=70), seq(from=.31, to=1, length=30)),
 			  print.plot = TRUE)
 	dev.off()
 
