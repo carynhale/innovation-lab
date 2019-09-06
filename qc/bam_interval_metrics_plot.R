@@ -51,7 +51,7 @@ if (as.numeric(opt$type)==1) {
 		   dplyr::rename(`Sample ID` = SAMPLE, Type = TYPE) %>%
 		   mutate(`Sample ID` = factor(`Sample ID`, levels=unique(`Sample ID`), ordered=TRUE))
 		   
-	pdf(file="metrics/report/aligment_summary.pdf", width=14)
+	pdf(file="metrics/report/alignment_summary.pdf", width=14)
 	plot.0 = ggplot(data, aes(x=`Sample ID`, y=N, fill=Type)) +
 			 geom_bar(stat="identity") +
 			 scale_fill_manual(values=c("Aligned"="#d7191c", "Unaligned"="#2c7bb6")) +
