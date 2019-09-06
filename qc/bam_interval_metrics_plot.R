@@ -182,7 +182,7 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_G,
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<10) %>%
+								  filter(Allele_Frequency<2.5) %>%
 								  filter(Chromosome=="21") %>%
 								  arrange(Position)
 	}
@@ -226,9 +226,7 @@ if (as.numeric(opt$type)==1) {
 			  bottom.label.size = .15,
 			  left.label.size = .15,
 			  left.label.text.size = 3.5,
-			  print.plot = TRUE,
-			  heat.pal = viridis(n=10),
-			  heat.pal.values = c(seq(0,.1,l=9), 10))
+			  print.plot = TRUE)
 	dev.off()
 
 }
