@@ -165,7 +165,7 @@ metrics/report/insert_size_distribution.pdf : metrics/summary/metrics_insert_dis
 									  
 metrics/report/non_reference_calls.pdf : $(wildcard metrics/pileup/$(SAMPLES)-pileup.txt)
 	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 5 --sample_names '$(SAMPLES)' && \
+														   $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 5 --sample_names '$(SAMPLES)' && \
 														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf && \
 														   rm metrics/report/non_reference_calls.pdf && \
 														   mv metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf")
