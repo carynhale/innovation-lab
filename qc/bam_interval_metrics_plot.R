@@ -35,98 +35,16 @@ if (as.numeric(opt$type)==1) {
 	print(plot.0)
 	dev.off()
 	
-} else if (as.numeric(opt$type)==8) {
-
-	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   filter(LIBRARY=="STANDARD") %>%
-		   arrange(desc(MEAN_TARGET_COVERAGE_NO_DEDUP)) %>%
-		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
-		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
-		   
-	pdf(file="metrics/report/mean_standard_target_coverage-nodedup.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE_NO_DEDUP, fill=BAIT_SET)) +
-			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN COVERAGE WITH DUPLICATES") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==9) {
-
-	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   filter(LIBRARY=="UNFILTERED") %>%
-		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
-		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
-		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
-	
-	pdf(file="metrics/report/mean_unfiltered_target_coverage.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN COLLAPSED COVERAGE") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==10) {
-
-	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   filter(LIBRARY=="DUPLEX") %>%
-		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
-		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
-		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
-		   
-	
-	pdf(file="metrics/report/mean_duplex_target_coverage.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN DUPLEX COVERAGE") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==11) {
-
-	data = read_tsv(file="metrics/summary/metrics_hs.tsv", col_types = cols(.default = col_character())) %>%
-		   type_convert() %>%
-		   filter(LIBRARY=="SIMPLEX") %>%
-		   arrange(desc(MEAN_TARGET_COVERAGE)) %>%
-		   mutate(`Sample ID` = factor(SAMPLE, levels=unique(SAMPLE), ordered=TRUE)) %>%
-		   mutate(BAIT_SET = ifelse(BAIT_SET=="MSK-ACCESS-v1_0-probe-A", "Probe-A", "Probe-B"))
-		   
-	
-	pdf(file="metrics/report/mean_simplex_target_coverage.pdf", width=14)
-	plot.0 = ggplot(data, aes(x=`Sample ID`, y=MEAN_TARGET_COVERAGE, fill=BAIT_SET)) +
-			 geom_bar(stat="identity", position="dodge") +
-			 scale_fill_manual(values=c("Probe-A"="#d7191c", "Probe-B"="#2c7bb6")) +
-			 theme_classic(base_size=15) +
-			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-			 labs(x="Sample ID", y="Depth\n", fill="Bait set", title="MEAN SIMPLEX COVERAGE") +
-			 theme(plot.title = element_text(hjust = 0.5, size=16))
-	print(plot.0)
-	dev.off()
-	
-} else if (as.numeric(opt$type)==12) {
+} else if (as.numeric(opt$type)==2) {
 
 	data = read_tsv(file="metrics/summary/metrics_idx.tsv", col_types = cols(.default = col_character())) %>%
 		   type_convert()
 		   
 	x = data %>%
-		dplyr::select(N = N_ALIGNED, SAMPLE, LIBRARY) %>%
+		dplyr::select(N = N_ALIGNED, SAMPLE) %>%
 		mutate(TYPE = "Aligned")
 	y = data %>%
-		dplyr::select(N = N_UNALIGNED, SAMPLE, LIBRARY) %>%
+		dplyr::select(N = N_UNALIGNED, SAMPLE) %>%
 		mutate(TYPE = "Unaligned")
 	data = bind_rows(x, y) %>%
 		   arrange(N) %>%
@@ -134,17 +52,14 @@ if (as.numeric(opt$type)==1) {
 		   mutate(`Sample ID` = factor(`Sample ID`, levels=unique(`Sample ID`), ordered=TRUE))
 		   
 	pdf(file="metrics/report/aligment_summary.pdf", width=14)
-	libnames = c("STANDARD" = "STANDARD", "COLLAPSED" = "UNFILTERED", "DUPLEX" = "DUPLEX", "SIMPLEX" = "SIMPLEX")
-	for (i in 1:length(libnames)) {
-		plot.0 = ggplot(data %>% filter(LIBRARY==libnames[i]), aes(x=`Sample ID`, y=N, fill=Type)) +
-				 geom_bar(stat="identity") +
-				 scale_fill_manual(values=c("Aligned"="#d7191c", "Unaligned"="#2c7bb6")) +
-		 		 theme_classic(base_size=15) +
-		 		 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
-		 		 labs(x="Sample ID", y="Number of read pairs\n", title=names(libnames)[i]) +
-		 		 theme(plot.title = element_text(hjust = 0.5, size=16))
-		print(plot.0)
-	}
+	plot.0 = ggplot(data, aes(x=`Sample ID`, y=N, fill=Type)) +
+			 geom_bar(stat="identity") +
+			 scale_fill_manual(values=c("Aligned"="#d7191c", "Unaligned"="#2c7bb6")) +
+		 	 theme_classic(base_size=15) +
+		 	 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
+		 	 labs(x="Sample ID", y="Number of read pairs\n", title="READ PAIR ALIGNMENT") +
+		 	 theme(plot.title = element_text(hjust = 0.5, size=16))
+	print(plot.0)
 	dev.off()
 
 } else if (as.numeric(opt$type)==13) {
