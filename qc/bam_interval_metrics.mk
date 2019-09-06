@@ -17,13 +17,12 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/summary/metrics_idx.tsv \
 				   metrics/summary/metrics_aln.tsv
 
-#				   metrics/summary/metrics_pileup.tsv 
-
 #				   metrics/summary/metrics_insert.tsv \
 #				   metrics/summary/metrics_insert_distribution.tsv \
 #				   metrics/summary/metrics_oxog.tsv \
 #				   metrics/summary/metrics_hs.tsv \
-#				   metrics/summary/metrics_coverage.tsv
+#				   metrics/summary/metrics_coverage.tsv \
+#				   metrics/summary/metrics_pileup.tsv 
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam

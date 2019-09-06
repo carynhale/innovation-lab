@@ -69,7 +69,7 @@ if (as.numeric(opt$metric)==1) {
 		   				   
 	}
 	aln_metrics = do.call(rbind, aln_metrics)
-	write_tsv(x=idx_metrics, path="metrics/summary/metrics_aln.tsv", na = "NA", append = FALSE, col_names = TRUE)
+	write_tsv(x=aln_metrics, path="metrics/summary/metrics_aln.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$metric)==3) {
 
