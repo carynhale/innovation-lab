@@ -15,8 +15,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-oxog_metrics.txt) \
 				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-hs_metrics.txt) \
 #				   metrics/summary/metrics_pileup.tsv 
-				   metrics/summary/metrics_idx.tsv
-				   metrics/summary/metrics_aln.tsv \
+				   metrics/summary/metrics_idx.tsv \
+				   metrics/summary/metrics_aln.tsv
 #				   metrics/summary/metrics_insert.tsv \
 #				   metrics/summary/metrics_insert_distribution.tsv \
 #				   metrics/summary/metrics_oxog.tsv \
