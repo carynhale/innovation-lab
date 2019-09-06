@@ -64,9 +64,9 @@ if (as.numeric(opt$type)==1) {
 		 frame.plot = FALSE,
 		 axes = FALSE)
 	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
-	axis(2, at=NULL, cex.axis=1.5, las=1, lwd=1.5)
-	mtext(side=1, text="Chromosome", line=4, cex=1.5)
-	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
+	axis(2, at=NULL, cex.axis=1, las=1, lwd=1.5)
+	mtext(side=1, text="Chromosome", line=4, cex=1.25)
+	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.25)
 	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
@@ -74,8 +74,8 @@ if (as.numeric(opt$type)==1) {
 		start = c(start, min(inx))
 		end = c(end, max(inx))
 	}
-	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1.5, lwd=1.5, tcl=.5)
-	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1.25)
+	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1, lwd=1.5, tcl=.5)
+	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1)
 	dev.off()
 
 } else if (as.numeric(opt$type)==2) {
@@ -110,9 +110,9 @@ if (as.numeric(opt$type)==1) {
  	}
  	lines(x=c(1, segmented_[1,"n"]), y=rep(segmented_[1,"log2"],2), lty=1, lwd=3.0, col="red")
 	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
-	axis(2, at=NULL, labels=NULL, cex.axis=1.5, las=1, lwd=1.5)
-	mtext(side=1, text="Chromosome", line=4, cex=1.5)
-	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
+	axis(2, at=NULL, labels=NULL, cex.axis=1, las=1, lwd=1.5)
+	mtext(side=1, text="Chromosome", line=4, cex=1.25)
+	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.25)
 	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
@@ -120,8 +120,8 @@ if (as.numeric(opt$type)==1) {
 		start = c(start, min(inx))
 		end = c(end, max(inx))
 	}
-	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1.5, lwd=1.5, tcl=.5)
-	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1.25)
+	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1, lwd=1.5, tcl=.5)
+	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1)
 	dev.off()
 
 } else if (as.numeric(opt$type)==3) {
@@ -167,9 +167,9 @@ if (as.numeric(opt$type)==1) {
 		 frame.plot = FALSE,
 		 axes = FALSE)
 	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
-	axis(2, at=NULL, cex.axis=1.5, las=1, lwd=1.5)
-	mtext(side=1, text="Chromosome", line=4, cex=1.5)
-	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
+	axis(2, at=NULL, cex.axis=1, las=1, lwd=1.5)
+	mtext(side=1, text="Chromosome", line=4, cex=1.25)
+	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.25)
 	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
@@ -177,8 +177,8 @@ if (as.numeric(opt$type)==1) {
 		start = c(start, min(inx))
 		end = c(end, max(inx))
 	}
-	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1.5, lwd=1.5, tcl=.5)
-	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1.25)
+	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1, lwd=1.5, tcl=.5)
+	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1)
 	dev.off()
 
 } else if (as.numeric(opt$type)==5) {
@@ -213,9 +213,9 @@ if (as.numeric(opt$type)==1) {
  	}
  	lines(x=c(1, segmented_[1,"n"]), y=rep(segmented_[1,"log2"],2), lty=1, lwd=3.0, col="red")
 	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
-	axis(2, at=NULL, labels=NULL, cex.axis=1.5, las=1, lwd=1.5)
-	mtext(side=1, text="Chromosome", line=4, cex=1.5)
-	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
+	axis(2, at=NULL, labels=NULL, cex.axis=1, las=1, lwd=1.5)
+	mtext(side=1, text="Chromosome", line=4, cex=1.25)
+	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.25)
 	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
@@ -223,8 +223,8 @@ if (as.numeric(opt$type)==1) {
 		start = c(start, min(inx))
 		end = c(end, max(inx))
 	}
-	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1.5, lwd=1.5, tcl=.5)
-	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1.25)
+	axis(1, at=c(1, end), labels=rep("", length(end)+1), cex.axis=1, lwd=1.5, tcl=.5)
+	axis(1, at=.5*(start+end), labels=sort(as.numeric(unique(log2_$chr))), tcl=-.5, lwd=0, lwd.ticks=1.25, tcl=-.5, cex.axis=1)
 	dev.off()
 
 } else if (as.numeric(opt$type)==6) {
