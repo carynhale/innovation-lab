@@ -21,18 +21,13 @@ suppressPackageStartupMessages(library("GAP"))
    	for (i in 1:23) {
    		index = c(index, seq(from = CytoBand[i, "start"], to=CytoBand[i, "end"], length=sum(x$chromosome==i)))
    	}
-	plot(index, x$log2, type="p", pch=".", cex=1.95, col="grey80", axes=FALSE, frame=TRUE, xlab="", ylab="", main="", ylim=c(-4,5))
+	plot(index, x$log2, type="p", pch=".", cex=1.95, col=c("grey80", "lightblue")[x$chromosome%%2 + 1], axes=FALSE, frame=FALSE, xlab="", ylab="", main="", ylim=c(-4.5,4.5))
+  	axis(1, at = c(start, end[length(end)]), labels=rep("", length(start)+1), tcl=.5)
+  	axis(1, at = .5*(start+end), labels=c(1:22, "X"), tcl=-.5, lwd=0, lwd.ticks=1, tcl=-.25)
   	axis(2, at = c(-4, -2, 0, 2, 4), labels = c(-4, -2, 0, 2, 4), cex.axis = 1, las = 1)
 	mtext(side = 2, text = expression(Log[2]~"Ratio"), line = 3.15, cex = 1.25)
-	abline(v=1, col="goldenrod3", lty=3, lwd=.5)
-	abline(h=0, col="red", lty=1, lwd=1)
-	for (j in 1:23) {
-		abline(v=CytoBand[j,"end"], col="goldenrod3", lty=3, lwd=.5)
-	}
-	axis(1, at = .5*(CytoBand[,"start"]+CytoBand[,"end"]), labels=c(1:22, "X"), cex.axis = 0.85, las = 1)
-	rect(xleft=1-1e10, xright=CytoBand[23,"end"]+1e10, ybottom=4, ytop=6, col="lightgrey", border="black", lwd=1.5)
-	title(main = title, line=-1, cex.main=.75, font.main=1)
-    box(lwd=1.5)
+	points(c(0-.05*max(index),max(index)+.01*max(index)), c(0,0), type="l", col="black", lwd=1)
+	title(main = title, cex.main=.75, font.main=1)
 }
 
 if (!interactive()) {

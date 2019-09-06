@@ -51,23 +51,23 @@ if (as.numeric(opt$type)==1) {
 	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, "-ontarget.txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
 	log2_ = subset(log2_, log2_$chr<=22 & !is.na(log2_$log2))
 	log2_ = winsorize(data = log2_[,c("chr", "start", "log2"),drop=FALSE], method = "mad", tau = 2.05, k = 15, verbose = FALSE)
-	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-ontarget.pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-ontarget.pdf"), width=10, height=4.25)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = c("grey80", "lightblue")[log2_$chr%%2 + 1],
 		 pch = 16,
 		 cex = .8,
-		 ylim = c(-3.5,3.5),
+		 ylim = c(-4.5,4.5),
 		 las = 1,
 		 xlab = "",
 		 ylab = "",
 		 frame.plot = FALSE,
 		 axes = FALSE)
-	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="red")
+	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
 	axis(2, at=NULL, cex.axis=1.5, las=1, lwd=1.5)
 	mtext(side=1, text="Chromosome", line=4, cex=1.5)
 	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
-	title(main=opt$sample_name, cex.main=1.5)
+	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
 		inx = which(log2_$chr==ii)
@@ -92,13 +92,13 @@ if (as.numeric(opt$type)==1) {
 	
 	segmented_ = prune_(x=segmented_, n=5)
 
-	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-ontarget.pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-ontarget.pdf"), width=10, height=4.25)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = c("grey80", "lightblue")[log2_$chr%%2 + 1],
 		 pch = 16,
 		 cex = .8,
-		 ylim = c(-4,4),
+		 ylim = c(-4.5,4.5),
 		 las = 1,
 		 xlab = "",
 		 ylab = "",
@@ -109,11 +109,11 @@ if (as.numeric(opt$type)==1) {
  		lines(x=c(segmented_[j-1,"n"], segmented_[j,"n"]), y=rep(segmented_[j,"log2"],2), lty=1, lwd=3.0, col="red")
  	}
  	lines(x=c(1, segmented_[1,"n"]), y=rep(segmented_[1,"log2"],2), lty=1, lwd=3.0, col="red")
-	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="red")
+	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
 	axis(2, at=seq(-3, 3, by=1), labels=seq(-3,3, by=1), cex.axis=1.5, las=1, lwd=1.5)
 	mtext(side=1, text="Chromosome", line=4, cex=1.5)
 	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
-	title(main=opt$sample_name, cex.main=1.5)
+	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
 		inx = which(log2_$chr==ii)
@@ -154,23 +154,23 @@ if (as.numeric(opt$type)==1) {
 	log2_ = read.csv(file=paste0("cnvaccess/log2/", opt$sample_name, "-offtarget.txt"), header=TRUE, sep="\t", stringsAsFactors=FALSE)
 	log2_ = subset(log2_, log2_$chromosome %in% c(1:22) & !is.na(log2_$log2))
 	log2_ = winsorize(data = log2_[,c("chromosome", "start", "log2"),drop=FALSE], method = "mad", tau = 1.5, k = 25, verbose = FALSE)
-	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-offtarget.pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-offtarget.pdf"), width=10, height=4.25)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = c("grey80", "lightblue")[as.numeric(log2_$chr)%%2 + 1],
 		 pch = 16,
 		 cex = .5,
-		 ylim = c(-3.5,3.5),
+		 ylim = c(-4.5,4.5),
 		 las = 1,
 		 xlab = "",
 		 ylab = "",
 		 frame.plot = FALSE,
 		 axes = FALSE)
-	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="red")
+	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
 	axis(2, at=NULL, cex.axis=1.5, las=1, lwd=1.5)
 	mtext(side=1, text="Chromosome", line=4, cex=1.5)
 	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
-	title(main=opt$sample_name, cex.main=1.5)
+	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
 		inx = which(log2_$chr==ii)
@@ -195,13 +195,13 @@ if (as.numeric(opt$type)==1) {
 	
 	segmented_ = prune_(x=segmented_, n=5)
 
-	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-offtarget.pdf"), width=14, height=5)
+	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-offtarget.pdf"), width=10, height=4.25)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
 		 col = c("grey80", "lightblue")[as.numeric(log2_$chr)%%2 + 1],
 		 pch = 16,
 		 cex = .5,
-		 ylim = c(-4,4),
+		 ylim = c(-4.5,4.5),
 		 las = 1,
 		 xlab = "",
 		 ylab = "",
@@ -212,11 +212,11 @@ if (as.numeric(opt$type)==1) {
  		lines(x=c(segmented_[j-1,"n"], segmented_[j,"n"]), y=rep(segmented_[j,"log2"],2), lty=1, lwd=3.0, col="red")
  	}
  	lines(x=c(1, segmented_[1,"n"]), y=rep(segmented_[1,"log2"],2), lty=1, lwd=3.0, col="red")
-	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="red")
+	points(c(0-.05*length(log2_$log2),length(log2_$log2)+.01*length(log2_$log2)), c(0,0), type="l", col="black")
 	axis(2, at=seq(-3, 3, by=1), labels=seq(-3,3, by=1), cex.axis=1.5, las=1, lwd=1.5)
 	mtext(side=1, text="Chromosome", line=4, cex=1.5)
 	mtext(side=2, text=expression(Log[2]~"Ratio"), line=4, cex=1.5)
-	title(main=opt$sample_name, cex.main=1.5)
+	title(main=opt$sample_name, cex.main=.75, font.main=1)
 	start = end = NULL
 	for (ii in sort(as.numeric(unique(log2_$chr)))) {
 		inx = which(log2_$chr==ii)
