@@ -18,6 +18,9 @@ parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
+AF = 1
+CHR = "1"
+
 if (as.numeric(opt$type)==1) {
 
 	suppressPackageStartupMessages(library("superheat"))
@@ -518,8 +521,8 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_G,
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<10) %>%
-								  filter(Chromosome=="21") %>%
+								  filter(Allele_Frequency<AF) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	standard_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
@@ -557,8 +560,8 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_G,
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<10) %>%
-								  filter(Chromosome=="21") %>%
+								  filter(Allele_Frequency<AF) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	standard_bam_dedup = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
@@ -596,8 +599,8 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_G,
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<10) %>%
-								  filter(Chromosome=="21") %>%
+								  filter(Allele_Frequency<AF) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	simplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
@@ -635,8 +638,8 @@ if (as.numeric(opt$type)==1) {
 													   pileup_metrics$AF_G,
 													   pileup_metrics$AF_T)) %>%
 								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<10) %>%
-								  filter(Chromosome=="21") %>%
+								  filter(Allele_Frequency<AF) %>%
+								  filter(Chromosome==CHR) %>%
 								  arrange(Position)
 	}
 	duplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
@@ -661,6 +664,8 @@ if (as.numeric(opt$type)==1) {
 			 
 	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
 	row_groups = paste0(nuc_pileup$Reference_Allele, " > ", nuc_pileup$Alternate_Allele, "         ")
+	
+	write_tsv(nuc_pileup, path="metrics/report/snp_pileup.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 	nuc_pileup = nuc_pileup %>%
 				 dplyr::select(-Chromosome, -Position, -Reference_Allele, -Alternate_Allele)
@@ -670,7 +675,7 @@ if (as.numeric(opt$type)==1) {
 	superheat(X = as.matrix(nuc_pileup[index,,drop=FALSE]),
 			  smooth.heat = FALSE,
 			  scale = FALSE,
-			  legend = FALSE,
+			  legend = TRUE,
 			  grid.hline = FALSE,
 			  grid.vline = FALSE,
 			  membership.cols=col_groups,
@@ -686,7 +691,7 @@ if (as.numeric(opt$type)==1) {
 			  left.label.text.size = 3.5,
 			  print.plot = TRUE,
 			  heat.pal = viridis(n=10),
-			  heat.pal.values = c(seq(0,.1,l=9), 10))
+			  heat.pal.values = c(seq(0,.4,l=9), 1))
 	dev.off()
 
 }
