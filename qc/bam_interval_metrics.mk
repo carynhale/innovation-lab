@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/bam_interval_metrics.$(NOW)
-PHONY += metrics metrics/pileup metrics/cov metrics/picard metrics/summary metrics/report
+PHONY += metrics metrics/pileup metrics/cov metrics/picard metrics/summary metrics/report cluster_samples
 
 TARGETS_LIST ?= $(HOME)/share/reference/target_panels/MSK-IMPACT-468.list
 
@@ -28,8 +28,7 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/report/non_reference_calls.pdf \
 				   metrics/report/oxog_error_rate.pdf \
 				   metrics/report/read_alignment_summary.pdf \
-				   metrics/report/combined_report.pdf \
-				   metrics/report/snps_clustering.pdf
+				   metrics/report/combined_report.pdf
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
