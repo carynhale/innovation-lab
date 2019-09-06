@@ -26,7 +26,9 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/report/insert_size_summary.pdf \
 				   metrics/report/insert_size_distribution.pdf \
 				   metrics/report/non_reference_calls.pdf \
-				   metrics/report/oxog_error_rate.pdf
+				   metrics/report/oxog_error_rate.pdf \
+				   metrics/report/read_alignment_summary.pdf \
+				   metrics/report/combined_report.pdf
 				   
 				   
 define pileup-metric
@@ -179,7 +181,23 @@ metrics/report/oxog_error_rate.pdf : metrics/summary/metrics_oxog.tsv
 														   rm metrics/report/oxog_error_rate.pdf && \
 														   mv metrics/report/oxog_error_rate-2.pdf metrics/report/oxog_error_rate.pdf")
 
-									  		
+metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_coverage.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 7")
+									  
+metrics/report/combined_report.pdf : metrics/report/target_coverage.pdf metrics/report/alignment_summary.pdf metrics/report/insert_size_summary.pdf metrics/report/insert_size_distribution.pdf metrics/report/non_reference_calls.pdf metrics/report/oxog_error_rate.pdf metrics/report/read_alignment_summary.pdf
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dAutoRotatePages=/None \
+									   -sOutputFile=metrics/report/combined_report.pdf \
+									   metrics/report/target_coverage.pdf \
+									   metrics/report/alignment_summary.pdf \
+									   metrics/report/insert_size_summary.pdf \
+									   metrics/report/insert_size_distribution.pdf \
+									   metrics/report/non_reference_calls.pdf \
+									   metrics/report/oxog_error_rate.pdf \
+									   metrics/report/read_alignment_summary.pdf \
+									   metrics/report/combined_report.pdf")
+
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: $(PHONY)

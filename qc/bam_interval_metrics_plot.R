@@ -18,7 +18,7 @@ parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
-AF = .1
+AF = 1
 CHR = "21"
 
 if (as.numeric(opt$type)==1) {
@@ -279,4 +279,37 @@ if (as.numeric(opt$type)==1) {
 			  print.plot = TRUE)
 	dev.off()	   		   
 	
+} else if (as.numeric(opt$type)==7) {
+
+	data = read_tsv(file="metrics/summary/metrics_coverage.tsv", col_types = cols(.default = col_character())) %>%
+		   type_convert()
+		   
+	pdf(file="metrics/report/read_alignment_summary.pdf", width=14)
+	tmp.1 = data %>%
+			arrange(desc(N_TOTAL)) %>%
+			filter(BAIT_SET=="On-target") %>%
+			mutate(`Sample ID` = factor(SAMPLE, levels = unique(SAMPLE), ordered=TRUE)) %>%
+			select(`Sample ID`, N = N_ALIGNED) %>%
+			mutate(Type = "On-target")
+			
+	tmp.2 = data %>%
+			arrange(desc(N_TOTAL)) %>%
+			filter(BAIT_SET=="Off-target") %>%
+			mutate(`Sample ID` = factor(SAMPLE, levels = unique(SAMPLE), ordered=TRUE)) %>%
+			select(`Sample ID`, N = N_ALIGNED) %>%
+			mutate(Type = "Off-target")
+			
+	tmp.0 = bind_rows(tmp.1, tmp.2)
+			
+			
+	plot.0 = ggplot(tmp.0, aes(x=`Sample ID`, y=N, fill=Type)) +
+			 geom_bar(stat="identity") +
+			 scale_fill_manual(values=c("On-target"="#d7191c", "Off-target"="#2c7bb6")) +
+			 theme_classic(base_size=15) +
+			 theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.title=element_text(size=13)) +
+			 labs(fill = "Type", x=" ", title="DISTRIBUTION OF READS", y="Number of read pairs\n") +
+			 theme(plot.title = element_text(hjust = 0.5, size=16))
+	print(plot.0)
+	dev.off()
+
 }
