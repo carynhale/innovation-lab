@@ -1,28 +1,44 @@
-'plot_sample_lrr_' <- function(x, fit)
+'plot_log2_' <- function(x, y, n=10, purity=NA, ploidy=NA, title = "")
 {
-    mat = x$jointseg
-    cncf = fit$cncf
-    dipLogR <- fit$dipLogR
-    par(mar = c(3, 3, 1, 1), mgp = c(2, 0.7, 0))
-    chr = mat$chrom
-    len = table(chr)
-    altcol = rep_len(c("light blue", "gray"), length(len))
-    chr.col = rep(altcol, len)
-    nmark = cncf$num.mark
-    tmp = cumsum(len)
-    start = c(1, tmp[-length(len)] + 1)
-    end = tmp
-    mid = start + len/2
-    plot(mat$cnlr, pch = ".", axes = F, cex = 1.5, ylim = c(-5,5), col = c("grey", "lightblue")[1 + rep(cncf$chrom - 2 * floor(cncf$chrom/2), cncf$num.mark)],
-         ylab = expression(Log[2]~"Ratio"), xlab="Chromosomes")
-    points(rep(cncf$cnlr.median, cncf$num.mark), pch = ".", cex = 2, col = "brown")
-    labs <- names(mid)
-    labs <- sub('21', '', labs)
-    labs <- sub('23', 'X', labs)
-    axis(side = 1, at = mid, labs, cex.axis = 1, las = 2)
-    axis(side = 2, cex.axis = 1, las=2)
-    abline(h=0, lty=2, col="lightgrey")
-    box()
+
+	cna = x$jointseg %>%
+		  select(chrom, pos = maploc, log2 = cnlr)
+	seg = y$cncf %>%
+		  select(chrom, start = start, end = end, log2 = cnlr.median, n=num.mark)
+	seg = prune_(x=seg, n) %>%
+		  mutate(n = cumsum(n))
+		  
+	purity = ifelse(is.na(purity), 1, purity)
+	ploidy = ifelse(is.na(ploidy), 2, ploidy)
+	
+	data(CytoBand)
+   	par(mar=c(5, 5, 4, 2)+.1)
+   	end = NULL
+   	for (i in 1:23) {
+   		end = c(end, max(CytoBand[CytoBand[,1]==i,"End"]))
+   	}
+   	end = cumsum(end)
+   	start = c(1, end[1:22]+1)
+   	CytoBand = cbind(start, end)
+   	index = NULL
+   	for (i in 1:23) {
+   		index = c(index, seq(from = CytoBand[i, "start"], to=CytoBand[i, "end"], length=sum(cn$chrom==i)))
+   	}
+	plot(index, cna$log2, type="p", pch=".", cex=1.95, col="grey80", axes=FALSE, frame=TRUE, xlab="", ylab="", main="", ylim=c(-4.5,4.5))
+ 	for (j in 1:nrow(seg)) {
+ 		if (j == 1) {
+ 			lines(x=c(1, index[seg[j,"n"]]), y=rep(seg[j,"log2"],2), lty=1, lwd=2.75, col="red")
+ 		} else {
+ 			lines(x=c(index[seg[j-1,"n"]], index[seg[j,"n"]]), y=rep(seg[j,"log2"],2), lty=1, lwd=2.75, col="red")
+ 		}
+  	}
+  	axis(side=1, at=c(CytoBand[,"start"],CytoBand[nrow(CytoBand),"end"]), labels=rep("", nrow(CytoBand)+1), tcl=.5)
+	axis(side=1, at=apply(CytoBand[,c("start", "end"),drop=FALSE], 1, mean), labels=c(1:22, "X"), tcl=-.5, lwd=0, lwd.ticks=1, tcl=-.25)
+  	axis(2, at = c(-4, -2, 0, 2, 4), labels = c(-4, -2, 0, 2, 4), cex.axis = 1, las = 1)
+	mtext(side = 2, text = expression(Log[2]~"Ratio"), line = 3.15, cex = 1.25)
+	points(c(0-.05*length(cna$log2),length(cna$log2)+.01*length(cna$log2)), c(0,0), type="l", col="black")
+	title(main = paste0(title, " | alpha = ", signif(purity, 3), " | psi = ", signif(ploidy, 3)), cex.main=.75, font.main=1)
+    box(lwd=1.5)
 }
 
 'plot_cncf_' <- function(x, emfit=NULL, clustered=FALSE, plot.type=c("em","naive","both","none"), sname=NULL)
@@ -124,53 +140,6 @@
     # mtext(side=1, line=1.75, "Chromosome", cex=0.8)
     if (!missing(sname)) mtext(sname, side=3, line=0, outer=TRUE, cex=0.8)
     par(def.par)  #- reset to default
-}
-
-'plot_log2_' <- function(x, y, n=10, purity=NA, ploidy=NA, title = "")
-{
-
-	cn = x$jointseg %>%
-		 select(chrom, pos = maploc, log2 = cnlr)
-	seg = y$cncf %>%
-		  select(chrom, start = start, end = end, log2 = cnlr.median, n=num.mark)
-	seg = prune_(x=seg, n) %>%
-		  mutate(n = cumsum(n))
-		  
-	purity = ifelse(is.na(purity), 1, purity)
-	ploidy = ifelse(is.na(ploidy), 2, ploidy)
-	
-	data(CytoBand)
-   	par(mar=c(5, 5, 4, 2)+.1)
-   	end = NULL
-   	for (i in 1:23) {
-   		end = c(end, max(CytoBand[CytoBand[,1]==i,"End"]))
-   	}
-   	end = cumsum(end)
-   	start = c(1, end[1:22]+1)
-   	CytoBand = cbind(start, end)
-   	index = NULL
-   	for (i in 1:23) {
-   		index = c(index, seq(from = CytoBand[i, "start"], to=CytoBand[i, "end"], length=sum(cn$chrom==i)))
-   	}
-	plot(index, cn$log2, type="p", pch=".", cex=1.95, col="grey80", axes=FALSE, frame=TRUE, xlab="", ylab="", main="", ylim=c(-4,5))
- 	for (j in 1:nrow(seg)) {
- 		if (j == 1) {
- 			lines(x=c(1, index[seg[j,"n"]]), y=rep(seg[j,"log2"],2), lty=1, lwd=2.75, col="red")
- 		} else {
- 			lines(x=c(index[seg[j-1,"n"]], index[seg[j,"n"]]), y=rep(seg[j,"log2"],2), lty=1, lwd=2.75, col="red")
- 		}
-  	}
-  	axis(2, at = c(-4, -2, 0, 2, 4), labels = c(-4, -2, 0, 2, 4), cex.axis = 1, las = 1)
-	mtext(side = 2, text = expression(Log[2]~"Ratio"), line = 3.15, cex = 1.25)
-	abline(v=1, col="goldenrod3", lty=3, lwd=.5)
-	for (j in 1:23) {
-		abline(v=CytoBand[j,"end"], col="goldenrod3", lty=3, lwd=.5)
-	}
-	axis(1, at = .5*(CytoBand[,"start"]+CytoBand[,"end"]), labels=c(1:22, "X"), cex.axis = 0.85, las = 1)
-	abline(h=0, col="brown", lty=1)
-	rect(xleft=1-1e10, xright=CytoBand[23,"end"]+1e10, ybottom=4, ytop=6, col="lightgrey", border="black", lwd=1.5)
-	title(main = paste0(title, " | alpha = ", signif(purity, 3), " | psi = ", signif(ploidy, 3)), line=-1, cex.main=.75, font.main=1)
-    box(lwd=1.5)
 }
 
 'psi' <- function (x, z)

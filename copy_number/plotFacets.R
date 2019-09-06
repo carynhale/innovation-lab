@@ -18,10 +18,10 @@ if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
 }
 
-
-optList <- list(make_option("--centromereFile", default = NULL, type = "character", action = "store", help ="centromere file"),
-                make_option("--pqLine", default = F, action = "store_true", help = "draw pq centromere line"),
-                make_option("--outPrefix", default = NULL, help = "output prefix"))
+optList <- list(
+	make_option("--centromereFile", default = NULL, type = "character", action = "store", help ="centromere file"),
+    make_option("--pqLine", default = F, action = "store_true", help = "draw pq centromere line"),
+    make_option("--outPrefix", default = NULL, help = "output prefix"))
 parser <- OptionParser(usage = "%prog [options] [facets Rdata file]", option_list = optList)
 arguments <- parse_args(parser, positional_arguments = T)
 opt <- arguments$options

@@ -17,19 +17,19 @@ if (!interactive()) {
 }
 
 optList <- list(
-                make_option("--snp_nbhd", default = 250, type = 'integer', help = "window size"),
-                make_option("--pre_cval", default = 50, type = 'integer', help = "pre-processing critical value"),
-                make_option("--cval1", default = 150, type = 'integer', help = "critical value for estimating diploid log Ratio"),
-                make_option("--cval2", default = 50, type = 'integer', help = "starting critical value for segmentation (increases by 10 until success)"),
-                make_option("--max_cval", default = 5000, type = 'integer', help = "maximum critical value for segmentation (increases by 10 until success)"),
-                make_option("--min_nhet", default = 25, type = 'integer', help = "minimum number of heterozygote snps in a segment used for bivariate t-statistic during clustering of segment"),
-                make_option("--het_threshold", default = 0.25, type = 'double', help = "AF threshold for heterozygous SNPs"),
-                make_option("--diplogr", default = NULL, type = 'double', help = "override diploid log-ratio"),
-                make_option("--ndepth_max", default = 1000, type = 'integer', help = "normal depth max"),
-                make_option("--use_emcncf2", default = F, action = 'store_true', help = "use emcncf version 2"),
-                make_option("--gene_loc_file", default = '~/share/reference/IMPACT410_genes_for_copynumber.txt', type = 'character', help = "file containing gene locations"),
-                make_option("--genome", default = 'b37', type = 'character', help = "genome of counts file"),
-                make_option("--out_prefix", default = NULL, help = "output prefix"))
+	make_option("--snp_nbhd", default = 250, type = 'integer', help = "window size"),
+    make_option("--pre_cval", default = 50, type = 'integer', help = "pre-processing critical value"),
+	make_option("--cval1", default = 150, type = 'integer', help = "critical value for estimating diploid log Ratio"),
+    make_option("--cval2", default = 50, type = 'integer', help = "starting critical value for segmentation (increases by 10 until success)"),
+    make_option("--max_cval", default = 5000, type = 'integer', help = "maximum critical value for segmentation (increases by 10 until success)"),
+    make_option("--min_nhet", default = 25, type = 'integer', help = "minimum number of heterozygote snps in a segment used for bivariate t-statistic during clustering of segment"),
+    make_option("--het_threshold", default = 0.25, type = 'double', help = "AF threshold for heterozygous SNPs"),
+    make_option("--diplogr", default = NULL, type = 'double', help = "override diploid log-ratio"),
+    make_option("--ndepth_max", default = 1000, type = 'integer', help = "normal depth max"),
+    make_option("--use_emcncf2", default = F, action = 'store_true', help = "use emcncf version 2"),
+    make_option("--gene_loc_file", default = '~/share/reference/IMPACT410_genes_for_copynumber.txt', type = 'character', help = "file containing gene locations"),
+    make_option("--genome", default = 'b37', type = 'character', help = "genome of counts file"),
+    make_option("--out_prefix", default = NULL, help = "output prefix"))
 parser <- OptionParser(usage = "%prog [options] [tumor-normal base counts file]", option_list = optList)
 arguments <- parse_args(parser, positional_arguments = T)
 opt <- arguments$options
@@ -121,7 +121,7 @@ if (!is.null(opt$diplogr)) {
     }
 }
 
-formatSegmentOutput=function(out,sampID) {
+'formatSegmentOutput' <- function(out,sampID) {
 	seg=list()
 	seg$ID=rep(sampID,nrow(out$out))
 	seg$chrom=out$out$chr
