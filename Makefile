@@ -445,7 +445,7 @@ deconstruct_sigs :
 
 TARGETS += cluster_samples
 cluster_samples :
-	$(call RUN_MAKE,modules/contamination/clusterSamples.mk)
+	$(call RUN_MAKE,modules/contamination/cluster_samples.mk)
 
 TARGETS += contest
 contest :
