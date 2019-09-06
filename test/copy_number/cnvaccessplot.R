@@ -157,7 +157,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file=paste0("cnvaccess/report/log2/", opt$sample_name, "-offtarget.pdf"), width=14, height=5)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
-		 col = c("grey80", "lightblue")[log2_$chr%%2 + 1],
+		 col = c("grey80", "lightblue")[as.numeric(log2_$chr)%%2 + 1],
 		 pch = 16,
 		 cex = .5,
 		 ylim = c(-3.5,3.5),
@@ -198,7 +198,7 @@ if (as.numeric(opt$type)==1) {
 	pdf(file=paste0("cnvaccess/report/segmented/", opt$sample_name, "-offtarget.pdf"), width=14, height=5)
 	par(mar=c(6.1, 6.5, 4.1, 1.1))
 	plot(log2_$log2,
-		 col = c("grey80", "lightblue")[log2_$chr%%2 + 1],
+		 col = c("grey80", "lightblue")[as.numeric(log2_$chr)%%2 + 1],
 		 pch = 16,
 		 cex = .5,
 		 ylim = c(-4,4),
