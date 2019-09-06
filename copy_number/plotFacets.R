@@ -73,16 +73,21 @@ pdf(file = str_c(gsub("log2", "cncf", opt$outPrefix, fixed=TRUE), ".pdf"), width
 plot_cncf_(out2, fit)
 dev.off()
 
-df <- left_join(out2$jointseg, out2$out)
-df$chrom <- as.character(df$chrom)
-df$chrom[df$chrom == "23"]  <- "X"
-df$chrom[df$chrom == "24"]  <- "Y"
+df <- left_join(out2$jointseg, out2$out) %>%
+	  mutate(chrom = as.character(chrom)) %>%
+	  mutate(chrom = ifelse(chrom=="23", "X", chrom)) %>%
+	  mutate(chrom = ifelse(chrom=="24", "Y", chrom))
 
 for (chr in unique(df$chrom)) {
      chdf <- filter(df, chrom == chr)
  
      if (nrow(chdf) > 0) {
-        pdf(paste(gsub("log2", "bychr", x=opt$outPrefix, fixed=TRUE), "_", chr, '.pdf', sep=""), height = 5, width = 5)
+     	x = gsub("facets/plots/log2/", "", opt$outPrefix, fixed=TRUE)
+     	y = paste0("facets/plots/bychr/", x)
+     	if (!dir.exists(y)) {
+     		dir.create(y)
+     	}
+        pdf(paste0(y, "Chr_", chr, ".pdf"), height = 5, width = 5)
         par(mar=c(5, 5, 4, 2)+.1)
         plot(chdf$cnlr, type="p", pch=20, col="grey80", xlab="", ylab="", main = "", ylim=c(-4,5), axes=FALSE, frame=TRUE)
         points(chdf$cnlr.median.clust, pch=20, col="red")
