@@ -28,10 +28,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/report/non_reference_calls.pdf \
 				   metrics/report/oxog_error_rate.pdf \
 				   metrics/report/read_alignment_summary.pdf \
-				   metrics/report/combined_report.pdf
-				   
-cluster_metric : cluster_samples
-				   
+				   metrics/report/combined_report.pdf \
+				   metrics/report/snps_clustering.pdf
 				   
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
