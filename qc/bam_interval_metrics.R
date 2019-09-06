@@ -73,5 +73,17 @@ if (as.numeric(opt$metric)==1) {
 
 } else if (as.numeric(opt$metric)==3) {
 
-	
+	sample_names = unlist(strsplit(x=as.character(opt$samples), split=" ", fixed=TRUE))
+	insert_metrics = list()
+	for (i in 1:length(sample_names)) {
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/picard/", sample_names[i], "-insert_metrics.txt"), comment="#", col_names = TRUE, n_max = 2, col_types = cols(.default = col_character())) %>%
+		   				      slice(2:n()) %>%
+		   				      type_convert() %>%
+		   				      mutate(SAMPLE = sample_names[i])
+		   				   
+	}
+	insert_metrics = do.call(rbind, insert_metrics)
+	write_tsv(x=insert_metrics, path="metrics/standard/metrics_insert.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
+
 }
