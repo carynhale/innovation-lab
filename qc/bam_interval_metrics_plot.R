@@ -182,7 +182,7 @@ if (as.numeric(opt$type)==1) {
 			 scale_color_manual(values = c("A"="#d7191c", "T"="#fdae61", "G"="#abd9e9", "C"="#2c7bb6")) +
 			 theme_classic(base_size = 18) +
 			 xlab("\n\nSubstitution type\n") +
-			 ylab("\nMean allele frequency (%)\n\n") +
+			 ylab("\Allele frequency (%)\n\n") +
 			 theme(legend.position = "none")
 	print(plot.0)
 	dev.off()
