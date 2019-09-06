@@ -86,4 +86,24 @@ if (as.numeric(opt$metric)==1) {
 	write_tsv(x=insert_metrics, path="metrics/summary/metrics_insert.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 
+} else if (as.numeric(opt$metric)==4) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$samples), split=" ", fixed=TRUE))
+	insert_metrics = list()
+	for (i in 1:length(sample_names)) {
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/picard/", sample_names[i], "-insert_metrics.txt"), comment="#", col_names = TRUE, skip = 3, col_types = cols(.default = col_character())) %>%
+		   				      slice(2:n()) %>%
+		   				      type_convert()
+	}
+	n = max(unlist(lapply(insert_metrics, function(x) {max(x$`insert_size`)})))
+	insert_distribution = matrix(NA, nrow=n, ncol=length(insert_metrics))
+	for (i in 1:length(insert_metrics)) {
+		ix = as.numeric(as.character(insert_metrics[[i]]$`insert_size`))
+		iy = as.numeric(as.character(insert_metrics[[i]]$`All_Reads.fr_count`))
+		insert_distribution[ix,i] = iy
+	}
+	colnames(insert_distribution) = sample_names
+	insert_distribution = as.data.frame(insert_distribution)
+	write_tsv(x=insert_distribution, path="metrics/summary/metrics_insert_distribution.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
 }
