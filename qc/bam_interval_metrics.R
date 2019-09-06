@@ -24,7 +24,7 @@ if (as.numeric(opt$metric)==1) {
 	for (i in 1:length(sample_names)) {
 		idx_metrics[[i]] = read_tsv(file=paste0("metrics/picard/", sample_names[i], "-idx_stats.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   				   type_convert() %>%
-		   				   select(X3, X4) %>%
+		   				   dplyr::select(X3, X4) %>%
 		   				   filter(!(is.na(X3) | is.na(X4))) %>%
 		   				   mutate(X3 = as.numeric(gsub("Aligned= ", "", X3, fixed=TRUE))) %>%
 		   				   mutate(X4 = as.numeric(gsub("Unaligned= ", "", X4, fixed=TRUE))) %>%
@@ -117,5 +117,41 @@ if (as.numeric(opt$metric)==1) {
 	}
 	oxog_metrics = do.call(rbind, oxog_metrics)
 	write_tsv(x=oxog_metrics, path="metrics/summary/metrics_oxog.tsv", na = "NA", append = FALSE, col_names = TRUE)
+
+} else if (as.numeric(opt$metric)==6) {
+
+	sample_names = unlist(strsplit(x=as.character(opt$samples), split=" ", fixed=TRUE))
+	hs_metrics
+	for (i in 1:length(sample_names)) {
+		hs_metrics[[i]] = read_tsv(file=paste0("metrics/picard/", sample_names[i], "-hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		   			      slice(2:n()) %>%
+		   				  type_convert() %>%
+		   				  mutate(SAMPLE = sample_names[i])
+	}
+	hs_metrics = do.call(rbind, hs_metrics) %>%
+				 arrange(SAMPLE) %>%
+				 dplyr::select(GENOME_SIZE,
+				 			   BAIT_SET,
+				 			   TARGET_TERRITORY,
+				 			   ON_TARGET_BASES,
+				 			   MEAN_TARGET_COVERAGE,
+				 			   PCT_TARGET_BASES_2X,
+				 			   PCT_TARGET_BASES_10X,
+				 			   PCT_TARGET_BASES_20X,
+				 			   PCT_TARGET_BASES_30X,
+				 			   PCT_TARGET_BASES_40X,
+				 			   PCT_TARGET_BASES_50X,
+				 			   PCT_TARGET_BASES_100X,
+				 			   AT_DROPOUT,
+				 			   GC_DROPOUT,
+				 			   SAMPLE) %>%
+				 mutate(PCT_TARGET_BASES_2X = 100*PCT_TARGET_BASES_2X,
+				 		PCT_TARGET_BASES_10X = 100*PCT_TARGET_BASES_10X,
+				 		PCT_TARGET_BASES_20X = 100*PCT_TARGET_BASES_20X,
+				 		PCT_TARGET_BASES_30X = 100*PCT_TARGET_BASES_30X,
+				 		PCT_TARGET_BASES_40X = 100*PCT_TARGET_BASES_40X,
+				 		PCT_TARGET_BASES_50X = 100*PCT_TARGET_BASES_50X,
+				 		PCT_TARGET_BASES_100X = 100*PCT_TARGET_BASES_100X)
+	write_tsv(x=hs_metrics, path="metrics/summary/metrics_hs.tsv", na = "NA", append = FALSE, col_names = TRUE)
 
 }

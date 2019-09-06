@@ -18,8 +18,8 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.t
 				   metrics/summary/metrics_aln.tsv \
 				   metrics/summary/metrics_insert.tsv \
 				   metrics/summary/metrics_insert_distribution.tsv \
-				   metrics/summary/metrics_oxog.tsv
-#				   metrics/summary/metrics_hs.tsv \
+				   metrics/summary/metrics_oxog.tsv \
+				   metrics/summary/metrics_hs.tsv
 #				   metrics/summary/metrics_coverage.tsv \
 #				   metrics/summary/metrics_pileup.tsv 
 				   
@@ -135,6 +135,10 @@ metrics/summary/metrics_oxog.tsv : $(wildcard metrics/picard/$(SAMPLES)-oxog_met
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 5 --samples '$(SAMPLES)'")									  
 		
+metrics/summary/metrics_hs.tsv : $(wildcard metrics/picard/$(SAMPLES)-hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) modules/qc/bam_interval_metrics.R --metric 6 --samples '$(SAMPLES)'")									  
+
 		
 .DELETE_ON_ERROR:
 .SECONDARY:
