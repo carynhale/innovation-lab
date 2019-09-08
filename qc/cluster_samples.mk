@@ -36,7 +36,8 @@ $(foreach sample,$(SAMPLES),\
 metrics/summary/snps_combined.vcf : $(foreach sample,$(SAMPLES),metrics/snps/$(sample).vcf)
 	$(call RUN,-s 16G -m 20G,"set -o pipefail && \
 							  $(call GATK_MEM,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
-							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA)")
+							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA) \
+							  --disable_auto_index_creation_and_locking_when_reading_rods")
 							  
 metrics/summary/snps_filtered.vcf : metrics/summary/snps_combined.vcf
 	$(INIT) grep '^#' $< > $@ && grep -e '0/1' -e '1/1' $< >> $@
