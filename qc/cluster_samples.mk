@@ -48,7 +48,7 @@ metrics/summary/snps_filtered.tsv : metrics/summary/snps_filtered.vcf
 metrics/report/snps_clustering.pdf : metrics/summary/snps_filtered.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 														   $(CLUSTER_VCF) --switch 2 && \
-									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-2.pdf metrics/report/snps_clustering.pdf && \
+									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -dAutoRotatePages=/None -sOutputFile=metrics/report/snps_clustering-2.pdf metrics/report/snps_clustering.pdf && \
 									   					   rm metrics/report/snps_clustering.pdf && \
 									   					   mv metrics/report/snps_clustering-2.pdf metrics/report/snps_clustering.pdf")
 		
