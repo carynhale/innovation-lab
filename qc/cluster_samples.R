@@ -12,6 +12,31 @@ parser = OptionParser(usage = "%prog", option_list = args_list)
 arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
+'read_yaml' <- function(file)
+{
+	yaml = read.csv(file=file, header=FALSE, sep="\t", stringsAsFactors=FALSE)
+	index = grep("- name: ", yaml[,1])
+	x = gsub(pattern="- name: ", replacement="", yaml[index,1])
+	y = list()
+	for (i in 1:length(index)) {
+		ii = index[i] + 1
+		if (i == length(index)) {
+			jj = nrow(yaml)
+		} else {
+			jj = index[i+1] - 1
+		}
+		string = yaml[ii:jj,1]
+		marker = c(" ", ":", "[", "]", "normal", "tumor")
+		for (j in 1:length(marker)) {
+			string = gsub(pattern=marker[j], replacement="", string, fixed=TRUE)
+		}
+		string = unlist(lapply(string, function(x) { unlist(strsplit(x, ",", fixed=TRUE)) }))
+		y[[i]] = string
+	}
+	names(y) = x
+	return(invisible(y))
+}
+
 if (as.numeric(opt$switch)==1) {
 
 	suppressPackageStartupMessages(library("VariantAnnotation"))
@@ -37,24 +62,56 @@ if (as.numeric(opt$switch)==1) {
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
 
+	yaml = read_yaml("samples.yaml")
 	data = read.csv(file="metrics/summary/snps_filtered.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
 		   type_convert()
-	data = data[apply(data, 1, function(x) {sum(is.na(x))})!=ncol(data),,drop=FALSE]
-	data[is.na(data)] = 1
+	data = data[apply(data, 1, function(x) {sum(is.na(x))})<=(.5*ncol(data)),,drop=FALSE]
+	index = is.na(data)
+	data[index] = 1
 	data[data==3] = 1
+	data[index] = NA
 	for (i in 1:2) {
 		data = data[apply(data, 1, function(x) {sum(x==i, na.rm=TRUE)})!=ncol(data),,drop=FALSE]
 	}
 	dm = as.matrix(dist(t(data), method="manhattan", diag=TRUE, upper=TRUE))
 	dm = 1-((max(dm)-dm)/(max(dm) - min(dm)))
+	col_groups = list()
+	for (i in 1:length(yaml)) {
+		col_groups[[i]] = rep(names(yaml)[i], length(yaml[[i]]))
+	}
+	col_groups = unlist(col_groups)
+	dm = dm[as.vector(unlist(yaml)),as.vector(unlist(yaml)),drop=FALSE]
+	
+	d = dist(dm, method = "euclidean")
+	h = hclust(d, method = "ward.D")
+	dm = dm[,h$order,drop=FALSE]
+	col_groups = col_groups[h$order]
+	
 	pdf(file="metrics/report/snps_clustering.pdf", width=14, height=14)
-	superheat(X = dm, smooth.heat = TRUE, scale = FALSE, legend = TRUE, grid.hline = TRUE, grid.vline = TRUE,
-			  row.dendrogram = TRUE, col.dendrogram = TRUE, force.grid.hline = TRUE, force.grid.vline = TRUE,
-			  bottom.label.text.angle = 90, bottom.label.text.size = 2.5, bottom.label.size = .15,
-			  left.label.size = .15, left.label.text.size = 2.5, grid.hline.col = "grey90",
-			  grid.vline.col = "grey90", heat.pal = viridis(n=100), heat.pal.values = c(seq(from=0, to=.3, length=70), seq(from=.31, to=1, length=30)),
+	superheat(X = dm,
+			  smooth.heat = FALSE,
+			  scale = FALSE,
+			  legend = TRUE,
+			  grid.hline = FALSE,
+			  grid.vline = FALSE,
+			  force.grid.hline = FALSE,
+			  force.grid.vline = FALSE,
+			  row.dendrogram = TRUE,
+			  col.dendrogram = FALSE,
+			  membership.cols = col_groups,
+			  clustering.method = "hierarchical",
+			  dist.method = "euclidean",
+			  linkage.method = "ward.D",
+			  bottom.label.text.angle = 90,
+			  bottom.label.text.size = 3.5,
+			  bottom.label.size = .1,
+			  left.label.text.size = 3.5,
+			  left.label.size = .1,
+			  left.label.text.alignment = "center",
+			  heat.pal = viridis(n=100),
+			  heat.pal.values = c(seq(from=0, to=.4, length=70), seq(from=.41, to=1, length=30)),
 			  print.plot = TRUE)
 	dev.off()
 
