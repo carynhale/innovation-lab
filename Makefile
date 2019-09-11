@@ -222,6 +222,10 @@ facets :
 TARGETS += ascat
 ascat :
 	$(call RUN_MAKE,modules/copy_number/ascat.mk)
+	
+TARGETS += cnvkit
+cnvkit :
+	$(call RUN_MAKE,modules/copy_number/cnvkit.mk)
 
 TARGETS += titan
 titan :
@@ -243,10 +247,6 @@ TARGETS += snp6
 snp6 :
 	$(call RUN_MAKE,modules/copy_number/snp6.mk)
 	
-TARGETS += cnvkit
-cnvkit :
-	$(call RUN_MAKE,modules/test/workflows/cnv_kit.mk)
-
 TARGETS += qdnaseq
 qdnaseq :
 	$(call RUN_MAKE,modules/test/workflows/qdna_seq.mk)
