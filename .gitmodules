@@ -1,6 +1,6 @@
 [submodule "external/fathmm"]
 	path = external/fathmm
 	url = https://github.com/jrflab/fathmm.git
-[submodules "runtime"]
+[submodule "runtime"]
 	path = runtime
 	url = https://github.com/ndbrown6/runtime.git
