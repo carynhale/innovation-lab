@@ -413,17 +413,17 @@ TARGETS += clonehd
 clonehd :
 	$(call RUN_MAKE,modules/clonality/clonehd.mk)
 
-TARGETS += absolute_seq
-absolute_seq :
-	$(call RUN_MAKE,modules/clonality/absolute_seq.mk)
+TARGETS += absolute
+absolute :
+	$(call RUN_MAKE,modules/clonality/absolute.mk)
 	
-TARGETS += ms_pyclone
-ms_pyclone :
-	$(call RUN_MAKE,modules/test/workflows/ms_pyclone.mk)
-	
-TARGETS += ss_pyclone
-ss_pyclone :
-	$(call RUN_MAKE,modules/test/workflows/ss_pyclone.mk)
+TARGETS += sspyclone
+sspyclone :
+	$(call RUN_MAKE,modules/clonality/sspyclone.mk)
+
+TARGETS += mspyclone
+mspyclone :
+	$(call RUN_MAKE,modules/clonality/mspyclone.mk)
 	
 
 #==================================================

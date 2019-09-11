@@ -1,7 +1,8 @@
 include modules/Makefile.inc
 include modules/vcf_tools/vcftools.mk
 
-LOGDIR = log/absolute_seq.$(NOW)
+LOGDIR = log/absolute.$(NOW)
+
 MEM := 4G
 PE := 1
 SHELL = modules/scripts/Rshell
@@ -25,9 +26,7 @@ USE_TITAN_COPYNUM ?= false
 USE_TITAN_ESTIMATES ?= false
 TITAN_RESULTS_DIR ?= titan/optclust_results_w10000_p2
 TITAN_ESTIMATE_FILE ?= $(TITAN_RESULTS_DIR)/titan_summary.txt
-
 USE_ONCOSCAN_COPYNUM ?= false
-
 USE_FACETS_COPYNUM ?= true
 
 define LIB_INIT

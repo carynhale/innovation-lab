@@ -94,6 +94,10 @@ MERGE_VCF = python $(SCRIPTS_DIR)/vcf_tools/merge_vcf.py
 KNIT = $(RSCRIPT) $(SCRIPTS_DIR)/runtime/knit.R
 PASS_FILTER_VCF = python $(SCRIPTS_DIR)/vcf_tools/pass_filter_vcf.py
 STAR_FUSION_TO_USV = python $(SCRIPTS_DIR)/structural_variants/starfusion2usv.py
+CLONEHD = $(HOME)/share/usr/bin/cloneHD
+FILTERHD = $(HOME)/share/usr/bin/filterHD
+PREFILTER = $(HOME)/share/usr/bin/pre-filter
+TABLE_TO_CLONEHD = $(PERL) $(SCRIPTS_DIR)/clonality/tableToCloneHDFormat.pl
 
 ANNOVAR = $(PERL) $(HOME)/share/usr/annovar-2017-07-16/table_annovar.pl
 VCF2MAF ?= $(PERL) $(HOME)/share/usr/bin/vcf2maf.pl
