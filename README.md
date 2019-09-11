@@ -8,7 +8,7 @@ This is an updated fork of the jrflab [modules](https://github.com/jrflab/module
 The easiest way to download this pipeline is to clone the repository.
 
 ```
-git clone https://github.com/ndbrown6/modules.git
+git clone --recurse-submodules https://github.com/ndbrown6/modules.git
 ```
 
 ## Dependencies
