@@ -5,7 +5,7 @@
 This is an updated fork of the jrflab [modules](https://github.com/jrflab/modules).
 
 ## Installation
-The easiest way to download this pipeline is to clone the repository.
+The easiest way to download this pipeline is to clone recursively the repository with its required submodules.
 
 ```
 git clone --recurse-submodules https://github.com/ndbrown6/modules.git
