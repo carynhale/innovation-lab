@@ -3,4 +3,4 @@
 	url = https://github.com/jrflab/fathmm.git
 [submodule "runtime"]
 	path = runtime
-	url = https://github.com/ndbrown6/runtime
+	url = https://github.com/ndbrown6/runtime.git
