@@ -4,7 +4,6 @@ include modules/genome_inc/b37.inc
 LOGDIR ?= log/fix_bam.$(NOW)
 PHONY += fixed_bam
 
-VPATH = fixed_bam unprocessed_bam
 PICARD_JAR = ~/share/usr/picard/bin/picard.jar
 
 fix_bam : $(foreach sample,$(SAMPLES),fixed_bam/$(sample).bam)
@@ -66,6 +65,7 @@ fixed_bam/%.bam : unprocessed_bam/%.dedup.bam
 endef
  $(foreach sample,$(SAMPLES),\
 		$(eval $(call fix-bam,$(sample))))
+
 
 .DELETE_ON_ERROR:
 .SECONDARY:

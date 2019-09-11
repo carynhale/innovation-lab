@@ -18,6 +18,7 @@ merged_bam/$1.header.sam : $$(merge.$1:.bam=.header.sam)
 merged_bam/$1.bam : merged_bam/$1.header.sam $$(merge.$1)
 	$$(call RUN,-s 12G -m 15G,"$$(SAMTOOLS2) merge -f -h $$< $$(@) $$(filter %.bam,$$^)")
 endef
+
 define rename-bam
 bam/$1.bam : $2
 	$$(INIT) ln -f $$< $$@
