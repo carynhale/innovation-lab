@@ -3,6 +3,7 @@ include modules/variant_callers/gatk.inc
 include modules/aligners/align.inc
 
 ALIGNER := bwa
+
 LOGDIR ?= log/bwa.$(NOW)
 
 SAMTOOLS_SORT_MEM = 2000000000
@@ -15,12 +16,6 @@ FASTQ_CHUNK_SEQ := $(shell seq 1 $(FASTQ_CHUNKS))
 FASTQUTILS = $(HOME)/share/usr/ngsutils/bin/fastqutils
 
 BWA_ALN_OPTS ?= 
-
-.SECONDARY:
-.DELETE_ON_ERROR: 
-.PHONY: bwa
-..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwa.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwa.txt )
-
 
 BWA_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 bwa : $(addsuffix ,$(BWA_BAMS)) $(addsuffix .bai,$(BWA_BAMS))
@@ -59,6 +54,11 @@ bwa/bam/%.bwa.bam : bwa/sai/%.1.sai bwa/sai/%.2.sai fastq/%.1.fastq.gz fastq/%.2
 fastq/%.fastq.gz : fastq/%.fastq
 	$(call RUN,,"gzip -c $< > $(@) && $(RM) $< ")
 
+
+.SECONDARY:
+.DELETE_ON_ERROR: 
+.PHONY: bwa
+..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwa.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwa.txt )
 
 include modules/bam_tools/process_bam.mk
 include modules/fastq_tools/fastq.mk

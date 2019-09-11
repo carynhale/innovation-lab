@@ -1,16 +1,13 @@
 include modules/Makefile.inc
 
+LOGDIR = log/star_fusion.$(NOW)
+PHONY += star_fusion
+
 STAR_CHIMERIC = true
-
 STAR_FUSION = STAR-Fusion
-
-STAR_FUSION_ENV = $(HOME)/share/usr/anaconda-envs/star-fusion-1.0.0
-
-STAR_FUSION_TO_USV = python modules/sv_callers/starfusion2usv.py
 
 $(if $(STAR_CTAT_DIR),,$(error no STAR CTAT dir))
 
-PHONY += star_fusion
 star_fusion : $(foreach sample,$(SAMPLES),star_fusion/$(sample).star_fusion_timestamp)
 
 star_fusion/%.star_fusion_timestamp : star/%.Chimeric.out.junction

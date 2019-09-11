@@ -34,7 +34,7 @@ CHASM_CLASSIFIER ?= BRCA
 vcf/%.chasm.vcf : vcf/%.vcf
 	$(call CHECK_VCF,$(call RUN,-c -s 8G -m 17G,"cp $(SNVBOX_CONF) $(SNVBOX_DIR)/snv_box.conf && $(CHASM) --genome $(REF) --classifier $(subst $( ),$(,),$(CHASM_CLASSIFIER)) --chasmDir $(CHASM_DIR) --snvBoxDir $(SNVBOX_DIR) --outFile $@ $<"))
 
-FATHMM = $(MY_RSCRIPT) modules/vcf_tools/fathmmVcf.R 
+FATHMM = $(RSCRIPT) modules/vcf_tools/fathmmVcf.R 
 FATHMM_DIR = $(PWD)/modules/external/fathmm
 FATHMM_OPTS = --genome $(REF) --ensemblTxdb $(ENSEMBL_TXDB) --ref $(REF_FASTA) \
 			  --fathmmDir $(FATHMM_DIR) --fathmmConfig $(FATHMM_CONF) \

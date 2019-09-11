@@ -10,14 +10,11 @@ SAMPLE_SPLIT_FILE ?= samples.split.txt
 ANACONDA_PYTHON ?= python
 PYTHON ?= python
 PERL ?= perl
-R ?= R
-MY_RSCRIPT ?= Rscript
 RSCRIPT ?= Rscript
-
-# python environment
-ANACONDA_27_ENV ?= $(HOME)/share/usr/anaconda-envs/anaconda-2.7
+R ?= R
 
 # anaconda environments
+ANACONDA_27_ENV ?= $(HOME)/share/usr/anaconda-envs/anaconda-2.7
 JRFLAB_MODULES_ENV ?= $(HOME)/share/usr/anaconda-envs/jrflab-modules-0.1.4
 SUFAM_ENV ?= $(HOME)/share/usr/anaconda-envs/sufam-dev
 MUTSIG_REPORT_ENV ?= $(HOME)/share/usr/anaconda-envs/mutsig-report-0.0.1
@@ -33,6 +30,7 @@ PHYLO_ENV ?= $(HOME)/share/usr/anaconda-envs/phylotools
 MEDICC_ENV ?= $(HOME)/share/usr/anaconda-envs/medicc
 ASCAT_ENV ?= $(HOME)/share/usr/anaconda-envs/ascat
 SUPERHEAT_ENV ?= $(HOME)/share/usr/anaconda-envs/superheat-1.0.0
+STAR_FUSION_ENV ?= $(HOME)/share/usr/anaconda-envs/star-fusion-1.0.0
 
 # general paths
 JARDIR ?= $(HOME)/share/usr/lib/java
@@ -40,7 +38,7 @@ JAVA6_BIN ?= $(HOME)/share/usr/jdk1.6.0_45/bin/java
 JAVA7_BIN ?= $(HOME)/share/usr/jdk1.7.0_45/bin/java
 JAVA8_BIN ?= $(HOME)/share/usr/jdk1.8.0_121/bin/java
 JAVA_BIN ?=  $(JAVA8_BIN)
-SCRIPTS_DIR ?= modules/scripts
+SCRIPTS_DIR ?= modules/runtime
 PICARD_DIR ?= $(JARDIR)/picard-1.92
 
 # application specific paths
@@ -83,16 +81,24 @@ CUFFLINKS ?= cufflinks
 CUFFCMP ?= cuffcompare
 TOPHAT ?= tophat
 
+SPLIT_BED = python $(SCRIPTS_DIR)/runtime/split_bed.py
+NORMAL_FILTER ?= $(PERL) $(SCRIPTS_DIR)/runtime/normalFilterVCF.pl
+SOMATIC_FILTER_VCF ?= $(PERL) $(SCRIPTS_DIR)/runtime/somaticFilterVCF.pl
+MERGE ?= $(SCRIPTS_DIR)/runtime/merge.R
+VCF_TO_TABLE ?= $(SCRIPTS_DIR)/runtime/vcfToTable.R
+INTRON_POSN_LOOKUP ?= $(SCRIPTS_DIR)/runtime/posnGeneLookup.pl
+RBIND ?= $(SCRIPTS_DIR)/runtime/rbind.R
+INDEL_FILTER_VCF = python $(SCRIPTS_DIR)/vcf_tools/indel_filter_vcf.py
+SNP_FILTER_VCF = python $(SCRIPTS_DIR)/vcf_tools/snp_filter_vcf.py
+MERGE_VCF = python $(SCRIPTS_DIR)/vcf_tools/merge_vcf.py
+KNIT = $(RSCRIPT) $(SCRIPTS_DIR)/runtime/knit.R
+PASS_FILTER_VCF = python $(SCRIPTS_DIR)/vcf_tools/pass_filter_vcf.py
+STAR_FUSION_TO_USV = python $(SCRIPTS_DIR)/structural_variants/starfusion2usv.py
+
+ANNOVAR = $(PERL) $(HOME)/share/usr/annovar-2017-07-16/table_annovar.pl
 VCF2MAF ?= $(PERL) $(HOME)/share/usr/bin/vcf2maf.pl
 MAF2MAF ?= $(PERL) $(HOME)/share/usr/bin/maf2maf.pl
 MAF2VCF ?= $(PERL) $(HOME)/share/usr/bin/maf2vcf.pl
-SPLIT_BED = python $(SCRIPTS_DIR)/split_bed.py
-INDEL_FILTER_VCF = python modules/vcf_tools/indel_filter_vcf.py
-SNP_FILTER_VCF = python modules/vcf_tools/snp_filter_vcf.py
-MERGE_VCF = python modules/vcf_tools/merge_vcf.py
-NORMAL_FILTER ?= $(PERL) $(SCRIPTS_DIR)/normalFilterVCF.pl
-SOMATIC_FILTER_VCF ?= $(PERL) $(SCRIPTS_DIR)/somaticFilterVCF.pl
-ANNOVAR = $(PERL) $(HOME)/share/usr/annovar-2017-07-16/table_annovar.pl
 
 UNZIP ?= /usr/bin/unzip
 FASTQC ?= $(PERL) $(HOME)/share/usr/FastQC/fastqc
@@ -104,16 +110,13 @@ IGVTOOLS ?= $(HOME)/share/usr/IGVTools/igvtools
 VCFTOOLS ?= $(HOME)/share/usr/bin/vcftools-0.1.10
 VCF_SORT ?= $(PERL) $(HOME)/share/usr/bin/vcfsorter.pl
 DEFUSE ?= $(PERL) $(HOME)/share/usr/defuse-0.6.1/scripts/defuse.pl
-MERGE ?= $(SCRIPTS_DIR)/merge.R
-VCF_TO_TABLE ?= $(SCRIPTS_DIR)/vcfToTable.R
-INTRON_POSN_LOOKUP ?= $(SCRIPTS_DIR)/posnGeneLookup.pl
-RBIND ?= $(SCRIPTS_DIR)/rbind.R
 GET_INSERT_SIZE ?= $(HOME)/share/usr/bin/getInsertSize.py
 VT ?= $(HOME)/share/usr/bin/vt
 TABIX ?= $(HOME)/share/usr/bin/tabix
 INTEGRATE ?= $(HOME)/share/usr/Integrate_0.2.0/bin/Integrate
 HISAT ?= $(HOME)/share/usr/hisat2-2.0.2-beta/hisat2
 TVC ?= $(HOME)/share/usr/bin/tvc
+TMAP ?= $(HOME)/share/usr/bin/tmap
 
 # resources
 DB_NSFP ?= $(HOME)/share/reference/snpEff-4.1/dbNSFP3.0b1a.hg19.txt.gz
@@ -122,31 +125,13 @@ NSFP_FIELDS ?= Uniprot_acc_Polyphen2 Uniprot_id_Polyphen2 Polyphen2_HVAR_score P
 UMI_QC_BED_FILE_A ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_B ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.bed
 
-CLUSTER_ENGINE ?= SGE
-ifeq ($(CLUSTER_ENGINE),PBS)
-MYSQLDB_HOST = cpu-6-2
-EMBL_MYSQLDB_HOST = cpu-6-2
-EMBL_MYSQLDB_PORT = 9992
-EMBL_MYSQLDB_USER = embl
-EMBL_MYSQLDB_PW = embl
-EMBL_MYSQLDB_DB = homo_sapiens_core_85_37
-endif
-ifeq ($(CLUSTER_ENGINE),LSF)
+# mysql configurations
 MYSQLDB_HOST = swan
 EMBL_MYSQLDB_HOST = swan
 EMBL_MYSQLDB_PORT = 38493
 EMBL_MYSQLDB_USER = embl
 EMBL_MYSQLDB_PW = embl
 EMBL_MYSQLDB_DB = homo_sapiens_core_75_37
-endif
-ifeq ($(CLUSTER_ENGINE),SGE)
-MYSQLDB_HOST = ika
-EMBL_MYSQLDB_HOST = ika
-EMBL_MYSQLDB_PORT = 38493
-EMBL_MYSQLDB_USER = embl
-EMBL_MYSQLDB_PW = embl
-EMBL_MYSQLDB_DB = homo_sapiens_core_75_37
-endif
 
 endif
 CONFIG_INC = true

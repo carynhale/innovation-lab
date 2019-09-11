@@ -1,20 +1,17 @@
 include modules/Makefile.inc
+include modules/aligners/align.inc
+
+ALIGNER := tophat
+
+LOGDIR = log/tophat.$(NOW)
 
 BAM_NO_REALN = true
 BAM_NO_RECAL = true
 BAM_NO_FILTER = true
 BAM_DUP_TYPE = none
-
-ALIGNER := tophat
-include modules/aligners/align.inc
-
-LOGDIR = log/tophat.$(NOW)
-
 TOPHAT_NUM_CORES ?= 4
 NO_NOVEL_SPLICING ?= false 
-
 TOPHAT_OPTS = --keep-fasta-order --no-sort-bam -G $(GENES_GTF) -p ${TOPHAT_NUM_CORES} --tmp-dir $(TMPDIR)/$*
-
 SEQ_PLATFORM ?= illumina
 
 ifeq ($(BAM_PHRED64),true)
@@ -24,10 +21,6 @@ ifeq ($(NO_NOVEL_SPLICING),true)
 	TOPHAT_OPTS += --no-novel-juncs
 endif
 
-..DUMMY := $(shell mkdir -p version; $(TOPHAT) --version &> version/tophat.txt; echo "options: $(TOPHAT_OPTS)" >> version/tophat.txt)
-.SECONDARY:
-.DELETE_ON_ERROR:
-.PHONY : tophat_bams
 	
 BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 tophat_bams : $(BAMS) $(addsuffix .bai,$(BAMS))
@@ -41,10 +34,10 @@ tophat/bam/%.tophat.sorted.bam : tophat/%/accepted_hits.sorted.bam tophat/%/unma
 define align-split-fastq
 tophat/$2/accepted_hits.bam : $3
 	$$(call RUN,-N $2_tophat -n 4 -s 6G -m 10G,"$$(TOPHAT) \
-		$$(TOPHAT_OPTS) \
-		--rg-id $2 --rg-library $1 \
-		--rg-platform $$(SEQ_PLATFORM) --rg-sample $1 \
-		-o tophat/$2 $$(BOWTIE_REF) $$(<) $$(<<)")
+												$$(TOPHAT_OPTS) \
+												--rg-id $2 --rg-library $1 \
+												--rg-platform $$(SEQ_PLATFORM) --rg-sample $1 \
+												-o tophat/$2 $$(BOWTIE_REF) $$(<) $$(<<)")
 tophat/$2/unmapped.bam : tophat/$2/accepted_hits.bam
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
@@ -53,10 +46,15 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 
 tophat/%/accepted_hits.bam : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
 	$(call RUN,-N $*_tophat -n 4 -s 6G -m 10G,"LBID=`echo \"$*\" | sed 's/_.\+//'`; \
-		$(TOPHAT) $(TOPHAT_OPTS) \
-		--rg-id $* --rg-library \"\$${LBID}\" \
-		--rg-platform \"${SEQ_PLATFORM}\" --rg-sample \"\$${LBID}\" \
-		-o tophat/$* $(BOWTIE_REF) $(<) $(<<)")
+											   $(TOPHAT) $(TOPHAT_OPTS) \
+											   --rg-id $* --rg-library \"\$${LBID}\" \
+											   --rg-platform \"${SEQ_PLATFORM}\" --rg-sample \"\$${LBID}\" \
+											   -o tophat/$* $(BOWTIE_REF) $(<) $(<<)")
+
+..DUMMY := $(shell mkdir -p version; $(TOPHAT) --version &> version/tophat.txt; echo "options: $(TOPHAT_OPTS)" >> version/tophat.txt)
+.SECONDARY:
+.DELETE_ON_ERROR:
+.PHONY : tophat_bams
 
 include modules/fastq_tools/fastq.mk
 include modules/bam_tools/process_bam.mk

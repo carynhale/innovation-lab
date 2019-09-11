@@ -85,7 +85,6 @@ export TMPDIR := $(HOME)/share/data/$(USER)/tmp
 PICARD_MEM = 10G
 PICARD_OPTS = VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=4000000
 PICARD_DIR ?= $(HOME)/share/usr/lib/java
-
 ANALYZE_COV = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/AnalyzeCovariates.jar $(PICARD_OPTS)
 SORT_SAM = $(call SORT_SAM_MEM,$(PICARD_MEM))
 SORT_SAM_MEM = $(JAVA) -Xmx$1 -jar $(PICARD_DIR)/SortSam.jar $(PICARD_OPTS) TMP_DIR=$(TMPDIR)
@@ -99,7 +98,6 @@ CREATE_SEQ_DICT = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CreateSequenceDic
 CALC_HS_METRICS = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CalculateHsMetrics.jar $(PICARD_OPTS)
 COLLECT_MULT_METRICS = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CollectMultipleMetrics.jar $(PICARD_OPTS)
 COLLECT_TARGETED_METRICS = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CollectTargetedPcrMetrics.jar $(PICARD_OPTS)
-
 FIX_MATE = $(call FIX_MATE_MEM,$(PICARD_MEM))
 FIX_MATE_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/FixMateInformation.jar $(PICARD_OPTS) TMP_DIR=$(TMPDIR)
 SAM_TO_FASTQ = $(call SAM_TO_FASTQ_MEM,$(PICARD_MEM))
@@ -161,17 +159,6 @@ export PATH := $(JRFLAB_MODULES_ENV)/bin:$(PATH)
 ECHO_ACTIVATE_ENV = unset PYTHONPATH; OLDPATH=\$$PATH; tries=0; until [[ \$$tries -gt 10 ]] || source $1/bin/activate $1; do export PATH=\$$OLDPATH; tries=\`expr \$$tries + 1\`; jitter=\`expr \$$RANDOM % 10 + 1\`; sleep \`expr \$$jitter \\* \$$tries\`; done
 ACTIVATE_ENV = unset PYTHONPATH; OLDPATH=$$PATH; tries=0; until [[ $$tries -gt 10 ]] || source $1/bin/activate $1; do export PATH=$$OLDPATH; tries=`expr $$tries + 1`; jitter=`expr $$RANDOM % 10 + 1`; sleep `expr $$jitter \* $$tries`; done
 
-### SGE
-QUEUE ?=
-WALLTIMES = MEM SHORT LONG
-SGE_PARALLEL_ENV = smp
-SGE_NODES = e02 e06
-SGE_QSUB_SCRIPT = python modules/scripts/qsub.py
-export SGE_ROOT = /common/sge
-
-### PBS
-PBS_NODES = gpu-2-14 cpu-6-1 gpu-1-4
-
 MAKE_PID := $(shell echo $$PPID)
 JOB_FLAG := $(filter -j%, $(subst -j ,-j,$(shell ps T | grep "^\s*$(MAKE_PID).*$(MAKE)")))
 JOBS := $(subst -j,,$(JOB_FLAG))
@@ -181,14 +168,14 @@ RUN_FIRST = umask $(UMASK); $(if $(and $(findstring true,$(USE_CLUSTER)),$(JOBS)
 INIT = $(RUN_FIRST); $(call ACTIVATE_ENV,$(JRFLAB_MODULES_ENV)); umask $(UMASK); set -o pipefail;
 INIT_ENV = $(RUN_FIRST); $(call ACTIVATE_ENV,$1); umask $(UMASK); set -o pipefail;
 
-CLUSTER_ENGINE ?= SGE
+CLUSTER_ENGINE ?= LSF
 USE_CLUSTER ?= true
 
 RUN_OPTS = $(if $(findstring false,$(USE_CLUSTER)),-l) -o $@ $(if $(CLUSTER_ENGINE),-g $(CLUSTER_ENGINE)) \
 		   --default_env $(JRFLAB_MODULES_ENV) -S $(SHELL) \
 		   --log_file $(LOG) $(if $($(CLUSTER_ENGINE)_NODES),--servers $($(CLUSTER_ENGINE)_NODES)) \
 		   $(if $(PROJECT_NAME),-p $(PROJECT_NAME))
-RUN = echo $2 | python modules/scripts/run.py $(RUN_OPTS) $1
+RUN = echo $2 | python $(SCRIPTS_DIR)/runtime/run.py $(RUN_OPTS) $1
 
 MD5 = md5sum $(@:.md5=) > $@
 CHECK_MD5 = for i in {0..20}; do if md5sum -c $(filter %.md5,$^); then break; fi; sleep 5; done;
@@ -216,14 +203,11 @@ VERIFY_VCF_GZ = if zgrep -q '^\#CHROM' $1; then mv $1 $2 && if [ -s $1.tbi ]; th
 <<<<< = $(word 5,$^)
 5< = $(word 5,$^)
 
-KNIT = $(RSCRIPT) modules/scripts/knit.R
-
-PASS_FILTER_VCF = python modules/vcf_tools/pass_filter_vcf.py
-
 define R_INIT
 dir.create('$(@D)', showWarnings = F, recursive = T)
 qw <- function(x) unlist(strsplit(x, "[[:space:]]+"))
 endef
+
 ifeq ($(USE_CLUSTER),true)
 ifeq ($(CLUSTER_ENGINE),SGE)
 export DRMAA_LIBRARY_PATH = /common/sge/lib/lx24-amd64/libdrmaa.so.1.0

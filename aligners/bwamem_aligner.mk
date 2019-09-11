@@ -8,9 +8,6 @@ LOGDIR ?= log/bwamem.$(NOW)
 
 SAMTOOLS_SORT_MEM = 2000000000
 SEQ_PLATFORM = illumina
-
-VPATH ?= unprocessed_bam
-
 FASTQ_CHUNKS := 10
 FASTQ_CHUNK_SEQ := $(shell seq 1 $(FASTQ_CHUNKS))
 FASTQUTILS = $(HOME)/share/usr/ngsutils/bin/fastqutils
@@ -19,12 +16,6 @@ BWA_ALN_OPTS ?= -M
 BWAMEM_REF_FASTA ?= $(REF_FASTA)
 BWAMEM_THREADS = 8
 BWAMEM_MEM_PER_THREAD = $(if $(findstring true,$(PDX)),4G,2G)
-
-..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwamem.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwamem.txt )
-.SECONDARY:
-.DELETE_ON_ERROR: 
-.PHONY: bwamem
-
 
 BWA_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
@@ -49,6 +40,12 @@ bwamem/bam/%.bwamem.bam : fastq/%.fastq.gz
 
 fastq/%.fastq.gz : fastq/%.fastq
 	$(call RUN,,"gzip -c $< > $(@) && $(RM) $<")
+
+
+..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwamem.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwamem.txt )
+.SECONDARY:
+.DELETE_ON_ERROR: 
+.PHONY: bwamem
 
 include modules/bam_tools/process_bam.mk
 include modules/fastq_tools/fastq.mk

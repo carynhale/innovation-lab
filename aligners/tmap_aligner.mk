@@ -3,23 +3,17 @@ include modules/variant_callers/gatk.inc
 include modules/aligners/align.inc
 
 ALIGNER := tmap
+
 LOGDIR := log/tmap.$(NOW)
 
 SAMTOOLS_SORT_MEM = 2000000000
-
 FASTQ_CHUNKS := 10
 FASTQ_CHUNK_SEQ := $(shell seq 1 $(FASTQ_CHUNKS))
 FASTQUTILS = $(HOME)/share/usr/ngsutils/bin/fastqutils
-
-TMAP = $(HOME)/share/usr/bin/tmap
 TMAP_MODE ?= map3
 TMAP_OPTS =
-
 SEQ_PLATFORM = IONTORRENT
 
-.SECONDARY:
-.DELETE_ON_ERROR: 
-.PHONY: tmap
 
 TMAP_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 tmap : $(TMAP_BAMS) $(addsuffix .bai,$(TMAP_BAMS))
@@ -43,6 +37,11 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 
 tmap/bam/%.tmap.bam : fastq/%.fastq.gz
 	$(call RUN,-c -n 4 -s 6G -m 8G,"zcat $< | $(TMAP) $(TMAP_MODE) $(TMAP_OPTS) -f $(REF_FASTA) -i fastq -s $(@) -Q 0 -o 1 -n 4 -R ID:$* -R SM:$* -R PL:$(SEQ_PLATFORM) -R PU:00000000 ")
+
+
+.SECONDARY:
+.DELETE_ON_ERROR: 
+.PHONY: tmap
 
 include modules/bam_tools/process_bam.mk
 include modules/fastq_tools/fastq.mk
