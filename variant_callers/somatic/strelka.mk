@@ -10,9 +10,9 @@ PHONY += strelka strelka_vcfs strelka_mafs
 
 CONFIGURE_STRELKA = $(PERL) $(HOME)/share/usr/bin/configureStrelkaWorkflow.pl
 STRELKA_CONFIG = $(HOME)/share/usr/etc/strelka_config.ini
-STRELKA_SOURCE_ANN_VCF = python modules/vcf_tools/annotate_source_vcf.py --source strelka
+STRELKA_SOURCE_ANN_VCF = python $(SCRIPTS_DIR)/vcf_tools/annotate_source_vcf.py --source strelka
 
-strelka : strelka_vcfs #strelka_mafs
+strelka : strelka_vcfs
 	
 STRELKA_VARIANT_TYPES := strelka_snps strelka_indels
 strelka_vcfs : $(foreach type,$(STRELKA_VARIANT_TYPES),$(foreach pair,$(SAMPLE_PAIRS),vcf/$(pair).$(type).vcf))
@@ -26,7 +26,7 @@ strelka/$1_$2/task.complete : strelka/$1_$2/Makefile
 	$$(call RUN,-N $1_$2.strelka -n 10 -s 1G -m 1.5G,"make -j 10 -C $$(<D)")
 
 strelka/vcf/$1_$2.%.vcf.tmp : strelka/vcf/$1_$2.%.vcf
-	$$(call RUN,-s 1G -m 2G,"$$(RSCRIPT) modules/scripts/swapvcf.R --file $$< --tumor $1 --normal $2")
+	$$(call RUN,-s 1G -m 2G,"$$(RSCRIPT) $(SCRIPTS_DIR)/runtime/swapvcf.R --file $$< --tumor $1 --normal $2")
 
 vcf/$1_$2.%.vcf : strelka/vcf/$1_$2.%.vcf.tmp
 	$$(INIT) perl -ne 'if (/^#CHROM/) { s/NORMAL/$2/; s/TUMOR/$1/; } print;' $$< > $$@ && $$(RM) $$<
