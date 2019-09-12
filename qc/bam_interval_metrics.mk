@@ -125,62 +125,62 @@ $(foreach sample,$(SAMPLES),\
 		
 metrics/summary/metrics_idx.tsv : $(wildcard metrics/picard/$(SAMPLES)-idx_stats.txt)
 	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 1 --samples '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_summary.R --metric 1 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_aln.tsv : $(wildcard metrics/picard/$(SAMPLES)-aln_metrics.txt)
 	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 2 --samples '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_summary.R --metric 2 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_insert.tsv : $(wildcard metrics/picard/$(SAMPLES)-insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 3 --samples '$(SAMPLES)'")
+									  $(RSCRIPT) modu$(SCRIPTS_DIR)les/qc/bam_interval_metrics_summary.R --metric 3 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_insert_distribution.tsv : $(wildcard metrics/picard$(SAMPLES)-insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 4 --samples '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_summary.R --metric 4 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_oxog.tsv : $(wildcard metrics/picard/$(SAMPLES)-oxog_metrics.txt)
 	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 5 --samples '$(SAMPLES)'")									  
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_summary.R --metric 5 --samples '$(SAMPLES)'")									  
 		
 metrics/summary/metrics_hs.tsv : $(wildcard metrics/picard/$(SAMPLES)-hs_metrics.txt)
 	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 6 --samples '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_summary.R --metric 6 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_coverage.tsv : $(wildcard metrics/cov/$(SAMPLES)-ontarget.txt) $(wildcard metrics/cov/$(SAMPLES)-offtarget.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_summary.R --metric 7 --samples '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_summary.R --metric 7 --samples '$(SAMPLES)'")
 									  
 metrics/report/target_coverage.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 1")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_plot.R --type 1")
 
 metrics/report/alignment_summary.pdf : metrics/summary/metrics_aln.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 2")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_plot.R --type 2")
 
 metrics/report/insert_size_summary.pdf : metrics/summary/metrics_insert.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 3")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_plot.R --type 3")
 									  
 metrics/report/insert_size_distribution.pdf : metrics/summary/metrics_insert_distribution.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 4")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_plot.R --type 4")
 									  
 metrics/report/non_reference_calls.pdf : $(wildcard metrics/pileup/$(SAMPLES)-pileup.txt)
 	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 5 --sample_names '$(SAMPLES)'")
+														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_plot.R --type 5 --sample_names '$(SAMPLES)'")
 									  
 metrics/report/oxog_error_rate.pdf : metrics/summary/metrics_oxog.tsv
 	$(call RUN, -c -n 1 -s 8G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 6 && \
+														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_plot.R --type 6 && \
 														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/oxog_error_rate-2.pdf metrics/report/oxog_error_rate.pdf && \
 														   rm metrics/report/oxog_error_rate.pdf && \
 														   mv metrics/report/oxog_error_rate-2.pdf metrics/report/oxog_error_rate.pdf")
 
 metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_coverage.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/qc/bam_interval_metrics_plot.R --type 7")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_plot.R --type 7")
 									  
 metrics/report/combined_report.pdf : metrics/report/target_coverage.pdf metrics/report/alignment_summary.pdf metrics/report/insert_size_summary.pdf metrics/report/insert_size_distribution.pdf metrics/report/non_reference_calls.pdf metrics/report/oxog_error_rate.pdf metrics/report/read_alignment_summary.pdf metrics/report/snps_clustering.pdf
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \

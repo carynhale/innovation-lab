@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/cluster_samples.$(NOW)
 PHONE += metrics metrics/snps metrics/summary metrics/report
@@ -15,7 +15,7 @@ DBSNP_SUBSET ?= $(HOME)/share/reference/dbsnp_137_exome.bed
 else
 DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
 endif
-CLUSTER_VCF = $(RSCRIPT) modules/qc/cluster_samples.R
+CLUSTER_VCF = $(RSCRIPT) $(SCRIPTS_DIR)/qc/cluster_samples.R
 
 define genotype-snps
 metrics/snps/$1.vcf : bam/$1.bam
