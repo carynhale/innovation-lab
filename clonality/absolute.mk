@@ -5,7 +5,7 @@ LOGDIR = log/absolute.$(NOW)
 
 MEM := 4G
 PE := 1
-SHELL = modules/scripts/Rshell
+SHELL = $(SCRIPTS_DIR)/runtime/Rshell
 .SHELLFLAGS = $(if $(findstring true,$(USE_CLUSTER)),-s) -m $(MEM) -p $(PE) -n $(@F) -l $(LOGDIR) -e 
 
 .ONESHELL:
