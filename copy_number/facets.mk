@@ -86,7 +86,7 @@ facets/cncf/%.txt facets/cncf/%.Rdata : facets/pileup/%.gz
 
 facets/plots/log2/%.pdf : facets/cncf/%.Rdata
 	$(call RUN,-v $(FACETS_ENV) -s 4G -m 6G,"set -o pipefail && \
-											 $(RUN_FACETS) --option 2 --centromereFile $(CENTROMERE_TABLE) --outPrefix $(@D)/$* $<")
+											 $(RUN_FACETS) --option 2 --centromereFile $(CENTROMERE_TABLE) --out_prefix $(*)")
 
 #facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
 #	$(call RUN,-c -s 8G -m 30G,"set -o pipefail && \
