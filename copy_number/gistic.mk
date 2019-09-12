@@ -2,7 +2,7 @@ include modules/Makefile.inc
 
 LOGDIR = log/gistic.$(NOW)
 
-SHELL = modules/scripts/Rshell
+SHELL = $(SCRIPTS_DIR)/runtime/Rshell
 .SHELLFLAGS = -m $(MEM) -s -p $(PE) -n $(@F) -l $(LOGDIR) -e 
 
 .ONESHELL:
