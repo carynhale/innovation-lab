@@ -4,7 +4,6 @@ LOGDIR ?= log/facets.$(NOW)
 PHONY += facets facets/vcf facets/pileup facets/cncf facets/plots facets/plots/log2 facets/plots/cncf facets/plots/bychr facets/summary
 
 RUN_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R
-PLOT_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/plotFacets.R
 CREATE_FACETS_SUMMARY = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/createFacetsSummary.R
 MERGE_TN = python $(SCRIPTS_DIR)/copy_number/facets_merge_tn.py
 FACETS_GENE_CN = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facetsGeneCN.R
@@ -47,10 +46,10 @@ FACETS_PLOT_GENE_CN_OPTS = --sampleColumnPostFix '_LRR_threshold'
 
 
 facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt) \
-		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
-		 facets/summary/bygene.txt \
-		 facets/summary/bygene.pdf \
-		 facets/summary/summary.tsv
+		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf)
+#		 facets/summary/bygene.txt \
+#		 facets/summary/bygene.pdf \
+#		 facets/summary/summary.tsv
 
 facets/summary/summary.tsv : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
 	$(call RUN,-c -s 8G -m 12G,"set -o pipefail && \
@@ -83,19 +82,19 @@ endif
 
 facets/cncf/%.txt facets/cncf/%.Rdata : facets/pileup/%.gz
 	$(call RUN,-c -v $(FACETS_ENV) -s 8G -m 60G,"set -o pipefail && \
-												 $(RUN_FACETS) $(call FACETS_OPTS,$*) --out_prefix $(@D)/$* $<")
+												 $(RUN_FACETS) --option 1 $(call FACETS_OPTS,$*) --out_prefix $(@D)/$* $<")
 
 facets/plots/log2/%.pdf : facets/cncf/%.Rdata
 	$(call RUN,-v $(FACETS_ENV) -s 4G -m 6G,"set -o pipefail && \
-											 $(PLOT_FACETS) --centromereFile $(CENTROMERE_TABLE) --outPrefix $(@D)/$* $<")
+											 $(RUN_FACETS) --option 2 --centromereFile $(CENTROMERE_TABLE) --outPrefix $(@D)/$* $<")
 
-facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
-	$(call RUN,-c -s 8G -m 30G,"set -o pipefail && \
-								$(FACETS_GENE_CN) $(FACETS_GENE_CN_OPTS) --outFile $@ $^")
-
-facets/summary/bygene.pdf : facets/summary/bygene.txt
-	$(call RUN,-s 8G -m 10G,"set -o pipefail && \
-							 $(FACETS_PLOT_GENE_CN) $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
+#facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
+#	$(call RUN,-c -s 8G -m 30G,"set -o pipefail && \
+#								$(FACETS_GENE_CN) $(FACETS_GENE_CN_OPTS) --outFile $@ $^")
+#
+#facets/summary/bygene.pdf : facets/summary/bygene.txt
+#	$(call RUN,-s 8G -m 10G,"set -o pipefail && \
+#							 $(FACETS_PLOT_GENE_CN) $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
 
 include modules/variant_callers/gatk.mk
 include modules/bam_tools/process_bam.mk
