@@ -46,8 +46,8 @@ FACETS_PLOT_GENE_CN_OPTS = --sampleColumnPostFix '_LRR_threshold'
 
 facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt) \
 		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
-		 facets/summary/bygene.txt
-#		 facets/summary/bygene.pdf \
+		 facets/summary/bygene.txt \
+		 facets/summary/bygene.pdf
 #		 facets/summary/summary.tsv
 
 facets/summary/summary.tsv : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
@@ -91,9 +91,9 @@ facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).R
 	$(call RUN,-c -s 8G -m 30G,"set -o pipefail && \
 								$(RUN_FACETS) --option 3 $(FACETS_GENE_CN_OPTS) --outFile $@ $^")
 
-#facets/summary/bygene.pdf : facets/summary/bygene.txt
-#	$(call RUN,-s 8G -m 10G,"set -o pipefail && \
-#							 $(FACETS_PLOT_GENE_CN) $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
+facets/summary/bygene.pdf : facets/summary/bygene.txt
+	$(call RUN,-s 8G -m 10G,"set -o pipefail && \
+							 $(RUN_FACETS) --option 4 $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
 
 include modules/variant_callers/gatk.mk
 include modules/bam_tools/process_bam.mk
