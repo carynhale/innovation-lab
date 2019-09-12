@@ -41,7 +41,7 @@ recurrent_mutations/sufam/all_sufam.txt: $(foreach sample,$(SAMPLES),recurrent_m
 recurrent_mutations/sufam/sufam.ipynb: recurrent_mutations/sufam/all_sufam.txt recurrent_mutations/sufam/all_mutations.vcf
 	$(INIT) unset PYTHONPATH && \
 		source $(ANACONDA_27_ENV)/bin/activate $(ANACONDA_27_ENV) && \
-		cd $(@D) && cat ../../modules/scripts/recurrent_mutations_sufam.ipynb | \
+		cd $(@D) && cat ../../$(SCRIPTS_DIR)/runtime/recurrent_mutations_sufam.ipynb | \
 		sed "s:ALL_SUFAM:`basename $<`:" | sed "s:SUFAM_ANNOTATIONS_VCF:`basename $(<<)`:" | sed 's:MIN_NR_SAMPLES_WITH_MUTATION:$(SUFAM_PLOT_MIN_NR_SAMPLES_WITH_MUTATION):' | \
 		sed 's:SAMPLE_ORDER:$(SUFAM_PLOT_SAMPLE_ORDER):' | \
 		runipy --no-chdir - `basename $@`
