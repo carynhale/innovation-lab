@@ -3,8 +3,8 @@ include modules/variant_callers/gatk.inc
 
 LOGDIR = log/mut_sig.$(NOW)
 
-VCF2VRANGES = $(RSCRIPT) modules/signatures/vcf_2_vranges.R
-KNIT = $(RSCRIPT) modules/scripts/knit.R
+VCF2VRANGES = $(RSCRIPT) $(SCRIPTS_DIR)/signatures/vcf_2_vranges.R
+KNIT = $(RSCRIPT) $(SCRIPTS_DIR)/runtime/knit.R
 ALEXANDROV_DATA = $(HOME)/share/reference/sanger_30_mutsig_prob.txt
 MUTSIG_REPORT = modules/signatures/mut_sig_report.Rmd
 MUTSIG_REPORT_OPTS = --name $(PROJECT_NAME) \
