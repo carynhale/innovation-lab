@@ -4,7 +4,6 @@ LOGDIR ?= log/facets.$(NOW)
 PHONY += facets facets/vcf facets/pileup facets/cncf facets/plots facets/plots/log2 facets/plots/cncf facets/plots/bychr facets/summary
 
 RUN_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R
-CREATE_FACETS_SUMMARY = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/createFacetsSummary.R
 MERGE_TN = python $(SCRIPTS_DIR)/copy_number/facets_merge_tn.py
 FACETS_PLOT_GENE_CN = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facetsGeneCNPlot.R
 FACETS_PRE_CVAL ?= 50
@@ -47,12 +46,8 @@ FACETS_PLOT_GENE_CN_OPTS = --sampleColumnPostFix '_LRR_threshold'
 facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt) \
 		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
 		 facets/summary/bygene.txt \
-		 facets/summary/bygene.pdf
-#		 facets/summary/summary.tsv
-
-facets/summary/summary.tsv : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
-	$(call RUN,-c -s 8G -m 12G,"set -o pipefail && \
-								$(CREATE_FACETS_SUMMARY) --outFile $@ $^")
+		 facets/summary/bygene.pdf \
+		 facets/summary/summary.tsv
 
 facets/vcf/dbsnp_het_gatk.snps.vcf : $(FACETS_DBSNP) $(foreach sample,$(SAMPLES),gatk/vcf/$(sample).variants.snps.het.pass.vcf)
 	$(call RUN,-c -s 4G -m 6G,"set -o pipefail && \
@@ -94,6 +89,10 @@ facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).R
 facets/summary/bygene.pdf : facets/summary/bygene.txt
 	$(call RUN,-s 8G -m 10G,"set -o pipefail && \
 							 $(RUN_FACETS) --option 4 $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
+							 
+facets/summary/summary.tsv : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
+	$(call RUN,-c -s 8G -m 12G,"set -o pipefail && \
+								$(RUN_FACETS) --option 5 --outFile $@ $^")
 
 include modules/variant_callers/gatk.mk
 include modules/bam_tools/process_bam.mk
