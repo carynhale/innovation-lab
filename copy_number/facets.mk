@@ -60,7 +60,7 @@ facets/vcf/targets_dbsnp.vcf : $(TARGETS_FILE)
 	$(INIT) $(BEDTOOLS) intersect -header -u -a $(DBSNP) -b $< > $@
 
 ifeq ($(CONVERT_BASECOUNT),true)
-CONVERT_BC_TO_SNP_PILEUP = python modules/copy_number/convert_basecount_to_snp_pileup.py
+CONVERT_BC_TO_SNP_PILEUP = python $(SCRIPTS_DIR)/copy_number/convert_basecount_to_snp_pileup.py
 facets/pileup/%.gz : facets/base_count/%.bc.gz
 	$(call RUN,-s 12G -m 14G,"set -o pipefail && \
 							  $(CONVERT_BC_TO_SNP_PILEUP) $< | gzip -c > $@")
