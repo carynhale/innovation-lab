@@ -4,12 +4,11 @@ include modules/variant_callers/gatk.inc
 LOGDIR = log/deseq.$(NOW)
 
 DESEQ_RNW = modules/rnaseq/deseq.Rnw
-SWEAVE = $(RSCRIPT) modules/scripts/Sweave.R
+SWEAVE = $(RSCRIPT) $(SCRIPTS_DIR)/runtime/Sweave.R
 
 DESEQ_CONDITION ?= condition
 DESEQ_REF_CONDITION ?= ref
 
-# pheno file: sample\tpheno with header
 PHENO_FILE ?= pheno.txt
 
 .DELETE_ON_ERROR: 
