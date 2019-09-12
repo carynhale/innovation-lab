@@ -6,7 +6,6 @@ PHONY += facets facets/vcf facets/pileup facets/cncf facets/plots facets/plots/l
 RUN_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R
 CREATE_FACETS_SUMMARY = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/createFacetsSummary.R
 MERGE_TN = python $(SCRIPTS_DIR)/copy_number/facets_merge_tn.py
-FACETS_GENE_CN = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facetsGeneCN.R
 FACETS_PLOT_GENE_CN = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facetsGeneCNPlot.R
 FACETS_PRE_CVAL ?= 50
 FACETS_CVAL1 ?= 150
@@ -46,8 +45,8 @@ FACETS_PLOT_GENE_CN_OPTS = --sampleColumnPostFix '_LRR_threshold'
 
 
 facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt) \
-		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf)
-#		 facets/summary/bygene.txt \
+		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
+		 facets/summary/bygene.txt
 #		 facets/summary/bygene.pdf \
 #		 facets/summary/summary.tsv
 
@@ -88,10 +87,10 @@ facets/plots/log2/%.pdf : facets/cncf/%.Rdata
 	$(call RUN,-v $(FACETS_ENV) -s 4G -m 6G,"set -o pipefail && \
 											 $(RUN_FACETS) --option 2 --centromereFile $(CENTROMERE_TABLE) --sample_name $(*)")
 
-#facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
-#	$(call RUN,-c -s 8G -m 30G,"set -o pipefail && \
-#								$(FACETS_GENE_CN) $(FACETS_GENE_CN_OPTS) --outFile $@ $^")
-#
+facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
+	$(call RUN,-c -s 8G -m 30G,"set -o pipefail && \
+								$(RUN_FACETS) --option 3 $(FACETS_GENE_CN_OPTS) --outFile $@ $^")
+
 #facets/summary/bygene.pdf : facets/summary/bygene.txt
 #	$(call RUN,-s 8G -m 10G,"set -o pipefail && \
 #							 $(FACETS_PLOT_GENE_CN) $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
