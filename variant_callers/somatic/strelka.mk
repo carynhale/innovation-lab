@@ -1,8 +1,5 @@
-# Run strelka on tumour-normal matched pairs
-
 include modules/Makefile.inc
 include modules/variant_callers/gatk.inc
-##### DEFAULTS ######
 
 
 LOGDIR ?= log/strelka.$(NOW)

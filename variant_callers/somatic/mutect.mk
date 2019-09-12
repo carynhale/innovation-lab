@@ -30,7 +30,7 @@ mut_report : mutect/report/index.html mutect/lowAFreport/index.html mutect/highA
 .SECONDARY: 
 .PHONY : $(PHONY)
 
-SPLIT_BED = python modules/scripts/split_bed.py
+SPLIT_BED = python $(SCRIPTS_DIR)/runtime/split_bed.py
 NUM_MUTECT_CHUNKS = 100
 MUTECT_CHUNKS = $(shell seq -w 1 $(NUM_MUTECT_CHUNKS))
 
