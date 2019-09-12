@@ -1,22 +1,15 @@
-# GATK_HARD_FILTER_SNPS = true/false (default: true)
-# GATK_POOL_SNP_RECAL = true/false (default: false)
-# SPLIT_CHR = true/false (default: true)
-
 ifndef GATK_MK
 
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR ?= log/gatk.$(NOW)
 
-# defaults
+VARIANT_EVAL_GATK_REPORT = $(RSCRIPT) $(SCRIPTS_DIR)/variant_callers/variantEvalGatkReport.R
 
 GATK_HARD_FILTER_SNPS ?= true
 GATK_POOL_SNP_RECAL ?= false
 SPLIT_CHR ?= true
-
-VARIANT_EVAL_GATK_REPORT = $(RSCRIPT) modules/variant_callers/variantEvalGatkReport.R
-
 VARIANT_CALL_THRESHOLD = 30
 VARIANT_EMIT_THRESHOLD = 10
 VARIANT_RECAL_TRUTH_SENSITIVITY_LEVEL = 99.0
@@ -201,7 +194,6 @@ reports/%/index.html : reports/%.dp_ft.grp metrics/hs_metrics.txt
 	$(call RUN,,"$(VARIANT_EVAL_GATK_REPORT) --metrics $(word 2,$^) --outDir $(@D) $<")
 
 
-# merge variants 
 include modules/bam_tools/process_bam.mk
 include modules/vcf_tools/vcftools.mk
 

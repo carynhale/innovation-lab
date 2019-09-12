@@ -3,15 +3,12 @@ include modules/Makefile.inc
 LOGDIR ?= log/facets.$(NOW)
 PHONY += facets facets/vcf facets/pileup facets/cncf facets/plots facets/plots/log2 facets/plots/cncf facets/plots/bychr facets/summary
 
-FACETS_ENV = $(HOME)/share/usr/anaconda-envs/facets-0.5.6/
-
-RUN_FACETS = $(RSCRIPT) modules/copy_number/runFacets.R
-PLOT_FACETS = $(RSCRIPT) modules/copy_number/plotFacets.R
-CREATE_FACETS_SUMMARY = $(RSCRIPT) modules/copy_number/createFacetsSummary.R
-MERGE_TN = python modules/copy_number/facets_merge_tn.py
-FACETS_GENE_CN = $(RSCRIPT) modules/copy_number/facetsGeneCN.R
-FACETS_PLOT_GENE_CN = $(RSCRIPT) modules/copy_number/facetsGeneCNPlot.R
-
+RUN_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R
+PLOT_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/plotFacets.R
+CREATE_FACETS_SUMMARY = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/createFacetsSummary.R
+MERGE_TN = python $(SCRIPTS_DIR)/copy_number/facets_merge_tn.py
+FACETS_GENE_CN = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facetsGeneCN.R
+FACETS_PLOT_GENE_CN = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facetsGeneCNPlot.R
 FACETS_PRE_CVAL ?= 50
 FACETS_CVAL1 ?= 150
 FACETS_CVAL2 ?= 50
@@ -49,16 +46,23 @@ FACETS_GENE_CN_OPTS = $(if $(GENES_FILE),--genesFile $(GENES_FILE)) \
 FACETS_PLOT_GENE_CN_OPTS = --sampleColumnPostFix '_LRR_threshold'
 
 
-facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt facets/plots/log2/$(pair).pdf) facets/summary/bygene.txt facets/summary/bygene.pdf facets/summary/summary.tsv
+facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt) \
+		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
+		 facets/summary/bygene.txt \
+		 facets/summary/bygene.pdf \
+		 facets/summary/summary.tsv
 
 facets/summary/summary.tsv : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
-	$(call RUN,-c -s 8G -m 12G,"$(CREATE_FACETS_SUMMARY) --outFile $@ $^")
+	$(call RUN,-c -s 8G -m 12G,"set -o pipefail && \
+								$(CREATE_FACETS_SUMMARY) --outFile $@ $^")
 
 facets/vcf/dbsnp_het_gatk.snps.vcf : $(FACETS_DBSNP) $(foreach sample,$(SAMPLES),gatk/vcf/$(sample).variants.snps.het.pass.vcf)
-	$(call RUN,-c -s 4G -m 6G,"$(call GATK_MEM,3G) $(if $(TARGETS_FILE),-L $(TARGETS_FILE)) -T CombineVariants --minimalVCF $(foreach i,$^, --variant $i) -R $(REF_FASTA) -o $@")
+	$(call RUN,-c -s 4G -m 6G,"set -o pipefail && \
+							   $(call GATK_MEM,3G) $(if $(TARGETS_FILE),-L $(TARGETS_FILE)) -T CombineVariants --minimalVCF $(foreach i,$^, --variant $i) -R $(REF_FASTA) -o $@")
 
 %.het.vcf : %.vcf
-	$(call RUN,-c -s 9G -m 12G,"$(call GATK_MEM,8G) -V $< -T VariantFiltration -R $(REF_FASTA) --genotypeFilterName 'hom' --genotypeFilterExpression 'isHet == 0' -o $@")
+	$(call RUN,-c -s 9G -m 12G,"set -o pipefail && \
+								$(call GATK_MEM,8G) -V $< -T VariantFiltration -R $(REF_FASTA) --genotypeFilterName 'hom' --genotypeFilterExpression 'isHet == 0' -o $@")
 
 facets/vcf/targets_dbsnp.vcf : $(TARGETS_FILE)
 	$(INIT) $(BEDTOOLS) intersect -header -u -a $(DBSNP) -b $< > $@
@@ -66,27 +70,32 @@ facets/vcf/targets_dbsnp.vcf : $(TARGETS_FILE)
 ifeq ($(CONVERT_BASECOUNT),true)
 CONVERT_BC_TO_SNP_PILEUP = python modules/copy_number/convert_basecount_to_snp_pileup.py
 facets/pileup/%.gz : facets/base_count/%.bc.gz
-	$(call RUN,-s 12G -m 14G,"$(CONVERT_BC_TO_SNP_PILEUP) $< | gzip -c > $@")
+	$(call RUN,-s 12G -m 14G,"set -o pipefail && \
+							  $(CONVERT_BC_TO_SNP_PILEUP) $< | gzip -c > $@")
 else
 define snp-pileup-tumor-normal
 facets/pileup/$1_$2.gz : bam/$1.bam bam/$2.bam $$(FACETS_SNP_VCF)
-	$$(call RUN,-c -s 8G -m 20G,"rm -f $$@ && $$(SNP_PILEUP) $$(SNP_PILEUP_OPTS) $$(<<<) $$@ $$(<<) $$(<)")
+	$$(call RUN,-c -s 8G -m 20G,"set -o pipefail && \
+								 rm -f $$@ && $$(SNP_PILEUP) $$(SNP_PILEUP_OPTS) $$(<<<) $$@ $$(<<) $$(<)")
 endef
 $(foreach pair,$(SAMPLE_PAIRS),$(eval $(call snp-pileup-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)))))
 endif
 
-
 facets/cncf/%.txt facets/cncf/%.Rdata : facets/pileup/%.gz
-	$(call RUN,-c -v $(FACETS_ENV) -s 8G -m 60G,"$(RUN_FACETS) $(call FACETS_OPTS,$*) --out_prefix $(@D)/$* $<")
+	$(call RUN,-c -v $(FACETS_ENV) -s 8G -m 60G,"set -o pipefail && \
+												 $(RUN_FACETS) $(call FACETS_OPTS,$*) --out_prefix $(@D)/$* $<")
 
 facets/plots/log2/%.pdf : facets/cncf/%.Rdata
-	$(call RUN,-v $(FACETS_ENV) -s 4G -m 6G,"$(PLOT_FACETS) --centromereFile $(CENTROMERE_TABLE) --outPrefix $(@D)/$* $<")
+	$(call RUN,-v $(FACETS_ENV) -s 4G -m 6G,"set -o pipefail && \
+											 $(PLOT_FACETS) --centromereFile $(CENTROMERE_TABLE) --outPrefix $(@D)/$* $<")
 
 facets/summary/bygene.txt : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).Rdata)
-	$(call RUN,-c -s 8G -m 30G,"$(FACETS_GENE_CN) $(FACETS_GENE_CN_OPTS) --outFile $@ $^")
+	$(call RUN,-c -s 8G -m 30G,"set -o pipefail && \
+								$(FACETS_GENE_CN) $(FACETS_GENE_CN_OPTS) --outFile $@ $^")
 
 facets/summary/bygene.pdf : facets/summary/bygene.txt
-	$(call RUN,-s 8G -m 10G,"$(FACETS_PLOT_GENE_CN) $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
+	$(call RUN,-s 8G -m 10G,"set -o pipefail && \
+							 $(FACETS_PLOT_GENE_CN) $(FACETS_PLOT_GENE_CN_OPTS) $< $@")
 
 include modules/variant_callers/gatk.mk
 include modules/bam_tools/process_bam.mk

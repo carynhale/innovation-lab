@@ -31,6 +31,7 @@ MEDICC_ENV ?= $(HOME)/share/usr/anaconda-envs/medicc
 ASCAT_ENV ?= $(HOME)/share/usr/anaconda-envs/ascat
 SUPERHEAT_ENV ?= $(HOME)/share/usr/anaconda-envs/superheat-1.0.0
 STAR_FUSION_ENV ?= $(HOME)/share/usr/anaconda-envs/star-fusion-1.0.0
+FACETS_ENV ?= $(HOME)/share/usr/anaconda-envs/facets-0.5.6
 
 # general paths
 JARDIR ?= $(HOME)/share/usr/lib/java
