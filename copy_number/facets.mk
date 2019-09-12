@@ -5,7 +5,6 @@ PHONY += facets facets/vcf facets/pileup facets/cncf facets/plots facets/plots/l
 
 RUN_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R
 MERGE_TN = python $(SCRIPTS_DIR)/copy_number/facets_merge_tn.py
-FACETS_PLOT_GENE_CN = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facetsGeneCNPlot.R
 FACETS_PRE_CVAL ?= 50
 FACETS_CVAL1 ?= 150
 FACETS_CVAL2 ?= 50
