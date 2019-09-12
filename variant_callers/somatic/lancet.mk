@@ -1,6 +1,3 @@
-# lancet variant detection
-# vim: set ft=make :
-
 include modules/Makefile.inc
 include modules/variant_callers/gatk.inc
 
@@ -9,16 +6,13 @@ LOGDIR ?= log/lancet.$(NOW)
 LANCET_TARGET_ONLY ?= false
 NUM_LANCET_CHUNKS = 50
 LANCET_CHUNKS = $(shell seq -f "%03g" $(NUM_LANCET_CHUNKS))
-
 LANCET_MIN_COV ?= 5
 LANCET_DIR = $(HOME)/share/usr/lancet
 LANCET = export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(LANCET_DIR)/bamtools-2.3.0/lib/; \
 	$(LANCET_DIR)/lancet
-
 LANCET_THREADS = 4
 LANCET_RUN_OPTS = -c -n $(LANCET_THREADS) -s 2G -m 3G -w 36:00:00
 LANCET_OPTS = --ref $(REF_FASTA) --cov-thr $(LANCET_MIN_COV) --num-threads $(LANCET_THREADS)
-
 LANCET_SOURCE_ANN_VCF = python modules/vcf_tools/annotate_source_vcf.py --source lancet
 TUMOR_VARIANT_READ_FILTER_VCF = python modules/vcf_tools/tumor_variant_read_filter_vcf.py --pass_only
 
@@ -29,8 +23,6 @@ TUMOR_VARIANT_READ_FILTER_VCF = python modules/vcf_tools/tumor_variant_read_filt
 .PHONY: all lancet_vcfs
 
 lancet : lancet_vcfs
-
-
 lancet_vcfs : $(foreach pair,$(SAMPLE_PAIRS),vcf/$(pair).lancet_indels.vcf)
 
 ifeq ($(LANCET_TARGET_ONLY),true)
