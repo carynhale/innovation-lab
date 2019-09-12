@@ -63,11 +63,11 @@ define cnvkit-totalcopy
 cnvkit/segmented/%.pdf cnvkit/totalcopy/%.RData : cnvkit/cnr/%.cnr
 	$$(call RUN,-c -v $(ASCAT_ENV) -s 6G -m 12G,"mkdir -p cnvkit/segmented && \
 												 mkdir -p cnvkit/totalcopy && \
-												 $(RSCRIPT) modules/copy_number/cnvkit.R --type '3' --sample_name $$(*)")
+												 $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '3' --sample_name $$(*)")
 												 
 cnvkit/called/%.RData : cnvkit/totalcopy/%.RData
 	$$(call RUN,-c -v $(ASCAT_ENV) -s 6G -m 12G,"mkdir -p cnvkit/called && \
-												 $(RSCRIPT) modules/copy_number/cnvkit.R --type '4' --sample_name $$(*)")
+												 $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '4' --sample_name $$(*)")
 
 endef
  $(foreach sample,$(TUMOR_SAMPLES),\
@@ -76,7 +76,7 @@ endef
 
 cnvkit/summary/bygene.txt : $(foreach sample,$(TUMOR_SAMPLES),cnvkit/called/$(sample).RData)
 	$(call RUN,-c -s 24G -m 48G,"mkdir -p cnvkit/summary && \
-							 	 $(RSCRIPT) modules/copy_number/cnvkit.R --type '5' --sample_name '$(TUMOR_SAMPLES)'")
+							 	 $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '5' --sample_name '$(TUMOR_SAMPLES)'")
 		
 		
 .DELETE_ON_ERROR:
