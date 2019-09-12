@@ -84,6 +84,5 @@ Under development
  - See full list [here](https://github.com/ndbrown6/modules/graphs/contributors)
  
 ## Honorable mentions
-- Contributors who provided codes
-	- Nadeem Riaz
-	- Fong Chun Chan
+- With contributions from Nadeem Riaz & Fong Chun Chan
+
