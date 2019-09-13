@@ -133,7 +133,7 @@ metrics/summary/metrics_aln.tsv : $(wildcard metrics/picard/$(SAMPLES)-aln_metri
 									  
 metrics/summary/metrics_insert.tsv : $(wildcard metrics/picard/$(SAMPLES)-insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modu$(SCRIPTS_DIR)les/qc/bam_interval_metrics_summary.R --metric 3 --samples '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_interval_metrics_summary.R --metric 3 --samples '$(SAMPLES)'")
 									  
 metrics/summary/metrics_insert_distribution.tsv : $(wildcard metrics/picard$(SAMPLES)-insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
