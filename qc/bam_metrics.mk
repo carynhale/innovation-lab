@@ -7,8 +7,7 @@ PHONY += metrics
 COLLECT_METRICS = $(JAVA) -Xmx12G -jar $(PICARD_DIR)/CollectMultipleMetrics.jar VALIDATION_STRINGENCY=LENIENT
 COLLECT_WGS_METRICS = $(JAVA) -Xmx12G -jar $(PICARD_JAR) CollectWgsMetrics VALIDATION_STRINGENCY=LENIENT
 COLLECT_GC_METRICS = $(JAVA) -Xmx12G -jar $(PICARD_DIR)/CollectGcBiasMetrics.jar VALIDATION_STRINGENCY=LENIENT
-
-SUMMARIZE_IDXSTATS = python modules/qc/summarize_idxstats.py
+SUMMARIZE_IDXSTATS = python $(SCRIPTS_DIR)/qc/summarize_idxstats.py
 
 bam_metrics : summary_metrics gc flagstats wgs_metrics
 
