@@ -1,6 +1,6 @@
 include modules/Makefile.inc
 include modules/config/gatk.inc
-include modules/aligners/align.inc
+include modules/config/align.inc
 
 ifndef PROCESS_BAM_MK
 

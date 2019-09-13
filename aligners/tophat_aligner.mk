@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/aligners/align.inc
+include modules/config/align.inc
 
 ALIGNER := tophat
 
