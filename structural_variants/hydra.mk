@@ -1,4 +1,5 @@
-# run hydra
+include modules/Makefile.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/hydra.$(NOW)
 
@@ -9,18 +10,12 @@ BAM_TO_BED = /opt/common/bedtools/bedtools-2.17.0/bin/bamToBed
 DEDUP_DISCORDANTS = $(HOME)/share/usr/bin/dedupDiscordants.py
 PAIR_DISCORDANTS = $(HOME)/share/usr/bin/pairDiscordants.py
 
-include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
 
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: all
 
 all : $(foreach sample,$(SAMPLES),hydra/breaks/$(sample).breaks)
-
-
-#hydra/disc_fastq/%.disc.1.fastq.gz hydra/disc_fastq/%.disc.2.fastq.gz : bam/%.bam
-#$(INIT) $(SAMTOOLS) view -uF 2 $< | $(BAM_TO_FASTQ) -bam stdin -fq1 >( gzip -c > hydra/disc_fastq/$*.disc.1.fastq.gz) -fq2  >( gzip -c > hydra/disc_fastq/$*.disc.2.fastq.gz)
 
 hydra/bam/%.disc.bam : bam/%.bam
 	$(call RUN,,"$(SAMTOOLS) view -bF 2 $< > $@")

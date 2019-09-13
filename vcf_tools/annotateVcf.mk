@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR ?= log/annotate_vcf.$(NOW)
 override VARIANT_TYPES = gatk_snps gatk_indels

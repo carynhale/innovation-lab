@@ -1,9 +1,8 @@
-# run lumpy
+include modules/Makefile.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/lumpy.$(NOW)
 
-include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
 
 LUMPY_DIR = $(HOME)/share/usr/lumpy-sv
 LUMPY_SCRIPTS_DIR = $(LUMPY_DIR)/scripts
@@ -14,16 +13,8 @@ LUMPYEXPRESS_OPTS = -K $(LUMPY_DIR)/bin/lumpyexpress.config
 LUMPY_HISTO = $(PERL) $(LUMPY_SCRIPTS_DIR)/pairend_distro.pl
 LUMPY_UNMAPPED_TO_FASTQ = $(PERL) $(LUMPY_SCRIPTS_DIR)/split_unmapped_to_fasta.pl
 LUMPY_UNMAPPED_TO_FASTQ_OPTS = -b 20
-
 SAMBLASTER = $(HOME)/share/usr/bin/samblaster
-
-# deprecated, using lumpyexpress instead
-#LUMPY_OPTS = -g $(REF_FASTA) -tt 1e-3 -mw 4
-#LUMPY_PE_PARAMS = min_non_overlap:150$(,)discordant_z:4$(,)back_distance:20$(,)weight:1$(,)id:1$(,)min_mapping_threshold:1
-#LUMPY_SR_PARAMS = back_distance:20$(,)weight:1$(,)id:1$(,)min_mapping_threshold:1
-
 BWASW_OPTS = -H
-
 ANNOVAR_PROTOCOL = refGene$(,)cytoBand$(,)genomicSuperDups
 ANNOVAR_OPERATION = g$(,)r$(,)r
 
@@ -74,4 +65,3 @@ vcf/%.lumpy.vcf : lumpy/vcf/%.lumpy.vcf
 include modules/vcf_tools/vcftools.mk
 
 .PHONY: $(PHONY)
-

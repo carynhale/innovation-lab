@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 MUTECT_MAX_ALT_IN_NORMAL ?= 500
 MUTECT_MAX_ALT_IN_NORMAL_FRACTION ?= 0.05

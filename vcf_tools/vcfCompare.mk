@@ -1,9 +1,7 @@
-# Compare vcf files
-##### DEFAULTS ######
 include modules/Makefile.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/vcfComp.$(NOW)
-##### MAKE INCLUDES #####
 
 .DELETE_ON_ERROR:
 .SECONDARY: 
@@ -33,4 +31,4 @@ cmp_vcf/grp/%.variant_eval.grp : $(foreach type,$(EVAL_TYPES),vcf/%.$(type).vcf)
 	$(call RUN,-s 9G -m 12G,"$(call GATK_MEM,8G) -T VariantEval --dbsnp $(DBSNP) -R $(REF_FASTA) $(foreach i,$(EVAL_TYPES),--eval:$i vcf/$*.$i.vcf ) $(foreach i,$(COMP_TYPES),--comp:$i vcf/$*.$i.vcf ) -o $@")
 #$(call RUN,-s 4G -m 6G,"$(call GATK_MEM,4G) -T VariantEval --dbsnp $(DBSNP) -R $(REF_FASTA)  --eval:$(<F:.$(FILTER_SUFFIX).vcf=) $< $(foreach i,$(wordlist 2,$(words $^),$^),--comp:$(notdir $(i:.$(FILTER_SUFFIX).vcf=)) $i ) -o $@")
 
-include modules/variant_callers/gatk.inc
+

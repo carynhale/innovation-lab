@@ -1,24 +1,15 @@
-# soapfuse
-# vim: set ft=make :
-
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/soapfuse.$(NOW)
 
 SOAPFUSE = $(HOME)/usr/SOAPfuse-v1.26/SOAPfuse-RUN.pl 
 SOAPFUSE_CONFIG = $(HOME)/share/usr/SOAPfuse-v1.26/config/config.txt
-PREPARE_SOAPFUSE = modules/sv_callers/prepareSoapFuse.pl
-
-SOAPFUSE_NORMAL_FILTER = $(PERL) modules/sv_callers/normalFilterSoapFuse.pl
+PREPARE_SOAPFUSE = modules/structural_variants/prepareSoapFuse.pl
+SOAPFUSE_NORMAL_FILTER = $(PERL) modules/structural_variants/normalFilterSoapFuse.pl
 SOAPFUSE_NORMAL_FILTER_OPTS = -w 1000
-
 ONCOFUSE_MEM = $(JAVA) -Xmx$1 -jar $(HOME)/share/usr/oncofuse-v1.0.6/Oncofuse.jar
 ONCOFUSE_TISSUE_TYPE ?= EPI
-
-.SECONDARY:
-.DELETE_ON_ERROR:
-.PHONY: all sample_tables soapfuse
 
 ifdef NORMAL_SOAPFUSE_RESULTS
 ALL_SUFFIX = nft.oncofuse.merged
@@ -58,4 +49,8 @@ soapfuse/alltables/all.isoform_sfuse%coord.txt : soapfuse/alltables/all.isoform_
 soapfuse/alltables/all.%.nft.txt : soapfuse/alltables/all.%.txt
 	$(INIT) $(SOAPFUSE_NORMAL_FILTER) $(SOAPFUSE_NORMAL_FILTER_OPTS) $(NORMAL_SOAPFUSE_RESULTS) $< > $@
 
-include modules/sv_callers/oncofuse.mk
+include modules/structural_variants/oncofuse.mk
+
+.SECONDARY:
+.DELETE_ON_ERROR:
+.PHONY: all sample_tables soapfuse

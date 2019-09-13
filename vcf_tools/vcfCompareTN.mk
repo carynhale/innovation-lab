@@ -1,15 +1,8 @@
-# Compare vcf files
-##### DEFAULTS ######
+include modules/Makefile.inc
+include modules/config/gatk.inc
+
 REF ?= hg19
 LOGDIR = log/vcfCompTN.$(NOW)
-
-##### MAKE INCLUDES #####
-include modules/Makefile.inc
-
-.DELETE_ON_ERROR:
-.SECONDARY: 
-.PHONY : all variant_eval gt_concordance
-
 
 FILTER_SUFFIX := dp_ft
 VARIANT_TYPES := mutect museq
@@ -47,4 +40,7 @@ cmp_vcf/grp/%.gt_concord.grp : $(foreach type,$(VCF_TYPES),cmp_vcf/vcf/%.$(VCF_S
 cmp_vcf/grp/%.variant_eval.grp : $(foreach type,$(VCF_TYPES),cmp_vcf/vcf/%.$(VCF_SUFFIX.$(type)).vcf)
 	$(call RUN,-s 9G -m 12G,"$(call GATK_MEM,8G) -T VariantEval --dbsnp $(DBSNP) -R $(REF_FASTA) $(foreach i,$^,--eval:$(notdir $(i:.$(FILTER_SUFFIX).vcf=)) $i ) $(foreach i,$^,--comp:$(notdir $(i:.$(FILTER_SUFFIX).vcf=)) $i ) -o $@")
 
-include modules/variant_callers/gatk.inc
+
+.DELETE_ON_ERROR:
+.SECONDARY: 
+.PHONY : all variant_eval gt_concordance

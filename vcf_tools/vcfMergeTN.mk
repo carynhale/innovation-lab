@@ -1,12 +1,5 @@
-# Merge vcf files
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
-
-.DELETE_ON_ERROR:
-.SECONDARY: 
-.PHONY : all 
+include modules/config/gatk.inc
 
 LOGDIR = log/vcf_merge.$(NOW)
 VCF_TYPES = gatk_snps gatk_indels varscan_snps varscan_indels mutect som_sniper scalpel
@@ -43,3 +36,6 @@ alltables/%.ft.txt : alltables/%.txt
 
 include modules/vcf_tools/vcftools.mk
 
+.DELETE_ON_ERROR:
+.SECONDARY: 
+.PHONY : all 

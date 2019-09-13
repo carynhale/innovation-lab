@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/mut_sig.$(NOW)
 
@@ -13,10 +13,6 @@ MUTSIG_REPORT_OPTS = --name $(PROJECT_NAME) \
 
 SNV_TYPE ?= mutect
 
-.SECONDARY:
-.DELETE_ON_ERROR:
-.PHONY: mutect_mutsig_reports
-
 mutect_mutsig_reports : mutsig_report/mutect/mutsig_report.timestamp
 
 mutsig_report/mutect/mutsig_report.timestamp : $(foreach pair,$(SAMPLE_PAIRS),mutsig_report/vrange/$(pair).$(SNV_TYPE).ft.VRanges.Rdata)
@@ -26,3 +22,7 @@ mutsig_report/vrange/%.VRanges.Rdata : vcf/%.vcf
 	$(call RUN,-v $(MUTSIG_REPORT_ENV) -s 7G -m 10G,"$(VCF2VRANGES) --genome $(REF) --outFile $@ $<")
 
 include modules/vcf_tools/vcftools.mk
+
+.SECONDARY:
+.DELETE_ON_ERROR:
+.PHONY: mutect_mutsig_reports

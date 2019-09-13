@@ -1,5 +1,5 @@
-# annotate external vcfs
 include modules/Makefile.inc
+include modules/config/gatk.inc
 
 LOGDIR ?= log/ext_vcf.$(NOW)
 
@@ -41,4 +41,4 @@ vcf_ann/%.$(EXT_NAME).vcf : $(if $(strip $(SOMATIC_ANN2)),$(foreach ann,$(SOMATI
 .PHONY: $(PHONY) 
 
 include modules/vcf_tools/vcftools.mk
-include modules/variant_callers/gatk.inc
+

@@ -9,7 +9,7 @@ EMU_PREPARE_OPTS += --regions $(EMU_TARGETS_FILE)
 endif
 EMU = $(HOME)/usr/bin/EMu
 
-PLOT_EMU = $(RSCRIPT) modules/signatures/plot_emu_signatures.R
+PLOT_EMU = $(RSCRIPT) $(SCRIPTS_DIR)/signatures/plot_emu_signatures.R
 
 NO_CNV ?= false
 

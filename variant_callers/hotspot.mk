@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR ?= log/hotspot.$(NOW)
 PHONY += hotspot hotspot_vcfs hotspot_tables

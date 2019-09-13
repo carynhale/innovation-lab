@@ -1,5 +1,5 @@
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 include modules/variant_callers/gatk.mk
 include modules/variant_callers/samtoolsHet.mk
 

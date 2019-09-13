@@ -1,12 +1,5 @@
-# Merge vcf files
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
-
-.DELETE_ON_ERROR:
-.SECONDARY: 
-.PHONY : all 
+include modules/config/gatk.inc
 
 LOGDIR = log/vcf_merge.$(NOW)
 PLATFORMS = rnaseq exonseq
@@ -58,3 +51,8 @@ merged_tables/all.%.txt : $(foreach tumor,$(TUMOR_SAMPLES),merged_tables/$(tumor
 	$(INIT) $(RBIND) --sampleName $< $^ > $@
 
 include modules/vcf_tools/vcftools.mk
+
+.DELETE_ON_ERROR:
+.SECONDARY: 
+.PHONY : all 
+

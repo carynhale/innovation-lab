@@ -1,19 +1,10 @@
-# This module runs ContEst on snp vcf files from gatk
-# Author: inodb, limr
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR ?= log/contest.$(NOW)
 
-.SECONDARY:
-.DELETE_ON_ERROR:
-.PHONY: contest
-
 contest : contest/all_contest.txt
 
-# ContEst doing on-the-fly genotyping
 define contest-tumor-normal
 contest/$1_$2.contest.txt : bam/$1.bam bam/$2.bam
 	$$(call RUN,-s 12G -m 12G,"$$(call GATK_MEM2,4G) -T ContEst -I:eval $$(<) -I:genotype $$(<<) \
@@ -28,3 +19,8 @@ contest/all_contest.txt : $(foreach pair,$(SAMPLE_PAIRS),contest/$(pair).contest
 			grep -P "META\t" $$s | sed "s/^/`basename $$s _contamination.txt`/"; \
 		done | sort -rnk5,5; \
 	) > $@
+
+
+.SECONDARY:
+.DELETE_ON_ERROR:
+.PHONY: contest

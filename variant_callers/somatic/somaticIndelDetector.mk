@@ -1,8 +1,5 @@
-# GATK Somatic indel detector for tumour-normal matched samples
-# vim: set ft=make :
-
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/gatk_som_indel.$(NOW)
 SPLIT_CHR ?= true
