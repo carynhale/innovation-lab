@@ -262,80 +262,80 @@ copynumber_summary:
 
 TARGETS += star_fusion
 star_fusion:
-	$(call RUN_MAKE,modules/sv_callers/starFusion.mk)
+	$(call RUN_MAKE,modules/structural_variants/starFusion.mk)
 
 TARGETS += tophat_fusion
 tophat_fusion : 
-	$(call RUN_MAKE,modules/sv_callers/tophatFusion.mk)
+	$(call RUN_MAKE,modules/structural_variants/tophatFusion.mk)
 
 TARGETS += manta_rnaseq
 manta_rnaseq :
-	$(call RUN_MAKE,modules/sv_callers/mantaRnaseq.mk)
+	$(call RUN_MAKE,modules/structural_variants/mantaRnaseq.mk)
 
 TARGETS += manta
 manta :
-	$(call RUN_MAKE,modules/sv_callers/manta.mk)
+	$(call RUN_MAKE,modules/structural_variants/manta.mk)
 
 TARGETS += mantaTN
 mantaTN :
-	$(call RUN_MAKE,modules/sv_callers/mantaTN.mk)
+	$(call RUN_MAKE,modules/structural_variants/mantaTN.mk)
 
 TARGETS += brass
 brass :
-	$(call RUN_MAKE,modules/sv_callers/brass.mk)
+	$(call RUN_MAKE,modules/structural_variants/brass.mk)
 
 TARGETS += integrate_rnaseq
 integrate_rnaseq :
-	$(call RUN_MAKE,modules/sv_callers/integrateRnaseq.mk)
+	$(call RUN_MAKE,modules/structural_variants/integrateRnaseq.mk)
 
 TARGETS += integrate
 integrate :
-	$(call RUN_MAKE,modules/sv_callers/integrate.mk)
+	$(call RUN_MAKE,modules/structural_variants/integrate.mk)
 
 TARGETS += defuse
 defuse :
-	$(call RUN_MAKE,modules/sv_callers/defuse.mk)
+	$(call RUN_MAKE,modules/structural_variants/defuse.mk)
 
 NUM_CHIMSCAN_JOBS ?= 5
 TARGETS += chimscan
 chimscan :
-	$(call RUN_MAKE_J,modules/sv_callers/chimerascan.mk,$(NUM_CHIMSCAN_JOBS))
+	$(call RUN_MAKE_J,modules/structural_variants/chimerascan.mk,$(NUM_CHIMSCAN_JOBS))
 
 TARGETS += oncofuse
 oncofuse :
-	$(call RUN_MAKE,modules/sv_callers/oncofuse.mk)
+	$(call RUN_MAKE,modules/structural_variants/oncofuse.mk)
 
 TARGETS += lumpy
 lumpy :
-	$(call RUN_MAKE,modules/sv_callers/lumpy.mk)
+	$(call RUN_MAKE,modules/structural_variants/lumpy.mk)
 
 TARGETS += hydra
 hydra :
-	$(call RUN_MAKE,modules/sv_callers/hydra.mk)
+	$(call RUN_MAKE,modules/structural_variants/hydra.mk)
 
 TARGETS += nfuse_wgss_wtss
 nfuse_wgss_wtss :
-	$(call RUN_MAKE,modules/sv_callers/nfuseWGSSWTSS.mk)
+	$(call RUN_MAKE,modules/structural_variants/nfuseWGSSWTSS.mk)
 
 TARGETS += soapfuse
 soapfuse :
-	$(call RUN_MAKE,modules/sv_callers/soapFuse.mk)
+	$(call RUN_MAKE,modules/structural_variants/soapFuse.mk)
 
 TARGETS += mapsplice
 mapsplice :
-	$(call RUN_MAKE,modules/sv_callers/mapsplice.mk)
+	$(call RUN_MAKE,modules/structural_variants/mapsplice.mk)
 
 TARGETS += fusioncatcher
 fusioncatcher :
-	$(call RUN_MAKE,modules/sv_callers/fusioncatcher.mk)
+	$(call RUN_MAKE,modules/structural_variants/fusioncatcher.mk)
 
 TARGETS += crest
 crest :
-	$(call RUN_MAKE,modules/sv_callers/crest.mk)
+	$(call RUN_MAKE,modules/structural_variants/crest.mk)
 
 TARGETS += delly
 delly :
-	$(call RUN_MAKE,modules/sv_callers/delly.mk)
+	$(call RUN_MAKE,modules/structural_variants/delly.mk)
 
 
 #==================================================
