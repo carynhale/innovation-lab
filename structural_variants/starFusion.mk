@@ -7,7 +7,7 @@ STAR_FUSION = STAR-Fusion
 STAR_FUSION_ENV = $(HOME)/share/usr/anaconda-envs/star-fusion-1.0.0
 STAR_FUSION_OPTS = --genome_lib_dir $(STAR_CTAT_DIR)
 
-STAR_FUSION_TO_USV = python modules/sv_callers/starfusion2usv.py
+STAR_FUSION_TO_USV = python $(SCRIPTS_DIR)/structural_variants/starfusion2usv.py
 
 
 PHONY += star_fusion

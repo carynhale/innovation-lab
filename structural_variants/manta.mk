@@ -1,7 +1,5 @@
-# run manta on tumour-normal matched pairs
-
 include modules/Makefile.inc
-include modules/sv_callers/manta.inc
+include modules/config/manta.inc
 
 LOGDIR ?= log/manta.$(NOW)
 PHONY += manta manta_vcfs

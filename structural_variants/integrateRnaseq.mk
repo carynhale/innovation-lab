@@ -7,12 +7,12 @@ LOGDIR = log/integrate_rnaseq.$(NOW)
 INTEGRATE_MINW ?= 2.0
 INTEGRATE_LARGENUM ?= 4
 INTEGRATE_OPTS = -minW $(INTEGRATE_MINW) -largeNum $(INTEGRATE_LARGENUM)
-INTEGRATE_ONCOFUSE = $(RSCRIPT) modules/sv_callers/integrateOncofuse.R
+INTEGRATE_ONCOFUSE = $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/integrateOncofuse.R
 INTEGRATE_ONCOFUSE_OPTS = --oncofuseJar $(ONCOFUSE_JAR) --oncofuseTissueType $(ONCOFUSE_TISSUE_TYPE) --java $(JAVA_BIN) \
 						  --mysqlHost $(EMBL_MYSQLDB_HOST) --mysqlPort $(EMBL_MYSQLDB_PORT) --mysqlUser $(EMBL_MYSQLDB_USER) \
 						  $(if $(EMBL_MYSQLDB_PW),--mysqlPassword $(EMBL_MYSQLDB_PW)) --mysqlDb $(EMBL_MYSQLDB_DB)
 ONCOFUSE_TISSUE_TYPE ?= EPI
-INTEGRATE_TO_USV = python modules/sv_callers/integrate2usv.py
+INTEGRATE_TO_USV = python $(SCRIPTS_DIR)/structural_variants/integrate2usv.py
 
 
 integrate_rnaseq: integrate_rnaseq/all.integrate.oncofuse.txt #$(foreach sample,$(TUMOR_SAMPLES),integrate_rnaseq/usv/$(sample).integrate_rnaseq.tsv)

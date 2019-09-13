@@ -1,14 +1,10 @@
-# integrate on wgseq, rnaseq
-# pre-req: tophat
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
 
 LOGDIR = log/integrate_rnaseq.$(NOW)
 
 ..DUMMY := $(shell mkdir -p version; echo "$(INTEGRATE) &> version/integrate.txt")
 
-INTEGRATE_ONCOFUSE = $(RSCRIPT) modules/sv_callers/integrateOncofuse.R
+INTEGRATE_ONCOFUSE = $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/integrateOncofuse.R
 INTEGRATE_ONCOFUSE_OPTS = --oncofuseJar $(ONCOFUSE_JAR) --oncofuseTissueType $(ONCOFUSE_TISSUE_TYPE) --java $(JAVA_BIN) 
 ONCOFUSE_TISSUE_TYPE ?= EPI
 
@@ -20,10 +16,6 @@ T = $(shell cut -f2 $(RNA_TUMOR_NORMAL_FILE))
 N = $(shell cut -f3 $(RNA_TUMOR_NORMAL_FILE))
 $(foreach i,$(shell seq 1 $(words $(SAMPLES))),$(eval tumor.$(word $i,$(SAMPLES)) = $(word $i,$(T))))
 $(foreach i,$(shell seq 1 $(words $(SAMPLES))),$(eval normal.$(word $i,$(SAMPLES)) = $(word $i,$(N))))
-
-.SECONDARY:
-.DELETE_ON_ERROR:
-.PHONY: integrate
 
 integrate : $(foreach sample,$(SAMPLES),integrate/oncofuse/$(sample).oncofuse.txt)
 
@@ -40,5 +32,6 @@ integrate/oncofuse/%.oncofuse.txt : integrate/sum/%.sum.tsv
 		--breakpointsFile integrate/breakpoints/$*.breakpoints.tsv \
 		--outPrefix $(@D)/$*")
 
-
-
+.SECONDARY:
+.DELETE_ON_ERROR:
+.PHONY: integrate

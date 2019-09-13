@@ -1,13 +1,8 @@
-# Run mapsplice
-##### DEFAULTS ######
+include modules/Makefile.inc
 
 LOGDIR = log/mapsplice.$(NOW)
 
-##### MAKE INCLUDES #####
-include modules/Makefile.inc
-
-MAPSPLICE_TO_USV = python modules/sv_callers/mapsplice2usv.py
-
+MAPSPLICE_TO_USV = python $(SCRIPTS_DIR)/structural_variants/mapsplice2usv.py
 MAPSPLICE_ENV = $(HOME)/share/usr/anaconda-envs/mapsplice-2.2.1
 MAPSPLICE = mapsplice.py
 MAPSPLICE_OPTS = -c $(MAPSPLICE_REF_DIR) -x $(MAPSPLICE_REF_BASENAME) --bam --gene-gtf $(GENES_GTF) --fusion
