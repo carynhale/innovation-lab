@@ -1,13 +1,12 @@
 include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
+include modules/config/gatk.inc
 
 LOGDIR = log/sum_reads.$(NOW)
 
 DEFAULT_ENV = $(HOME)/share/usr/anaconda-envs/jrflab-modules-0.1.6
-
-SUM_READS_RSCRIPT = ${RSCRIPT} modules/rnaseq/summarizeRNASeqReads.R
-SUM_EXONS_RSCRIPT = ${RSCRIPT} modules/rnaseq/summarizeRNASeqReadsByExon.R
-SUM_INTRONS_RSCRIPT = ${RSCRIPT} modules/rnaseq/summarizeRNASeqReadsByIntron.R
+SUM_READS_RSCRIPT = ${RSCRIPT} $(SCRIPTS_DIR)/rnaseq/summarizeRNASeqReads.R
+SUM_EXONS_RSCRIPT = ${RSCRIPT} $(SCRIPTS_DIR)/rnaseq/summarizeRNASeqReadsByExon.R
+SUM_INTRONS_RSCRIPT = ${RSCRIPT} $(SCRIPTS_DIR)/rnaseq/summarizeRNASeqReadsByIntron.R
 SUM_READS_OPTS =
 
 .DELETE_ON_ERROR: 
