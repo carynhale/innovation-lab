@@ -1,16 +1,11 @@
-## defaults
+include modules/Makefile.inc
+include modules/config/gatk.inc
+
 VPATH ?= bam
 LOGDIR = log/rnaseq_metrics.$(NOW)
 
-## includes
-include modules/Makefile.inc
-include modules/variant_callers/gatk.inc
 
-PLOT_RNASEQ_METRICS = $(RSCRIPT) modules/qc/plotRnaseqMetrics.R
-
-.DELETE_ON_ERROR:
-.SECONDARY: 
-.PHONY: all report
+PLOT_RNASEQ_METRICS = $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R
 
 COLLECT_RNASEQ_METRICS = $(JAVA) -Xmx7G -jar $(JARDIR)/CollectRnaSeqMetrics.jar VALIDATION_STRINGENCY=LENIENT
 STRAND_SPECIFICITY ?= NONE
@@ -31,3 +26,7 @@ metrics/all.normalized_coverage.rnaseq_metrics : $(foreach sample,$(SAMPLES),met
 
 metrics/rnaseq_report/index.html : metrics/all.rnaseq_metrics metrics/all.normalized_coverage.rnaseq_metrics
 	$(PLOT_RNASEQ_METRICS) --outDir $(@D) $^
+
+.DELETE_ON_ERROR:
+.SECONDARY: 
+.PHONY: all report
