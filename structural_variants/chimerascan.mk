@@ -1,6 +1,3 @@
-# Chimerascan
-
-##### MAKE INCLUDES #####
 include modules/Makefile.inc
 
 LOGDIR = log/chimscan.$(NOW)
@@ -8,13 +5,10 @@ LOGDIR = log/chimscan.$(NOW)
 CHIMSCAN_PYTHONPATH := /home/limr/share/usr/lib/python:/home/limr/share/usr/lib/python2.7
 CHIMSCAN_PYTHON := $(HOME)/share/usr/bin/python
 CHIMSCAN_INDEX := $(HOME)/share/reference/chimerascan_index
-CHIMSCAN_NORMAL_FILTER = modules/sv_callers/normalFilterChimerascan.pl
-
-RECURRENT_FUSIONS = $(RSCRIPT) modules/sv_callers/recurrentFusions.R
-
+CHIMSCAN_NORMAL_FILTER = $(SCRIPTS_DIR)/structural_variants/normalFilterChimerascan.pl
+RECURRENT_FUSIONS = $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/recurrentFusions.R
 ONCOFUSE_MEM = $(JAVA) -Xmx$1 -jar $(ONCOFUSE_JAR)
 ONCOFUSE_TISSUE_TYPE ?= EPI
-
 
 USE_BIG_MEM ?= false
 ifeq ($(USE_BIG_MEM),true)
@@ -47,12 +41,9 @@ all : $(ALL)
 CHIMERASCAN = PYTHONPATH=$(CHIMSCAN_PYTHONPATH) $(CHIMSCAN_PYTHON) /home/limr/share/usr/lib/python/chimerascan/chimerascan_run.py
 CHIMERASCAN_OPTS ?= 
 
-#chimerascan/tables/all.chimscan_results.txt : $(foreach sample,$(SAMPLES),chimerascan/$(sample).chimscan_timestamp)
-#$(INIT) head -1 $(basename $<)/chimeras.bedpe > $@ && for x in $(addsuffix /chimeras.bedpe,$(basename $^)); do sed '1d' $$x >> $@; done
-
 chimscan/bedpe/%.chimscan.bedpe : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
 	$(call LAUNCH_CHIMSCAN,$(CHIMSCAN_CORES),$(CHIMSCAN_MEM),$(CHIMSCAN_MEM),"$(CHIMERASCAN) $(CHIMERASCAN_OPTS) -v --quals illumina -p $(CHIMSCAN_CORES) $(CHIMSCAN_INDEX) $^ chimscan/$* && cp -f chimscan/$*/chimeras.bedpe $@ && rm -r chimscan/$*")
-# was 8 and 20
+
 %.chimscan.nft.bedpe : %.chimscan.bedpe
 	$(call RUN,-s 2G -m 4G,"$(PERL) $(CHIMSCAN_NORMAL_FILTER) -w 1000 $(NORMAL_CHIMSCAN_RESULTS) $< > $@")
 
@@ -65,4 +56,4 @@ chimscan/recur_tables/recurFusions.%.gene.txt : chimscan/alltables/all.%.txt
 chimscan/alltables/all.chimscan%coord.txt : chimscan/alltables/all.chimscan%txt
 	$(INIT) perl -lane 'if ($$. > 1) { $$coord5 = (($$F[9] eq "+")? $$F[3] + 1 : $$F[2] - 1) + 1; $$coord3 = (($$F[10] eq "+")? $$F[5] - 1 : $$F[6] + 1) + 1; print "$$F[1]\t$$coord5\t$$F[4]\t$$coord3\tEPI"; }' $< > $@
 
-include modules/sv_callers/oncofuse.mk
+include $(SCRIPTS_DIR)/structural_variants/oncofuse.mk
