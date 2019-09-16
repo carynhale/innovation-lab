@@ -1,6 +1,6 @@
 [submodule "external/fathmm"]
 	path = external/fathmm
 	url = https://github.com/jrflab/fathmm.git
-[submodule "runtime"]
-	path = runtime
-	url = https://github.com/ndbrown6/runtime.git
+[submodule "dodo-cloning-kit"]
+	path = dodo-cloning-kit
+	url = https://github.com/ndbrown6/dodo-cloning-kit.git
