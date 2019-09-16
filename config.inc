@@ -39,7 +39,7 @@ JAVA6_BIN ?= $(HOME)/share/usr/jdk1.6.0_45/bin/java
 JAVA7_BIN ?= $(HOME)/share/usr/jdk1.7.0_45/bin/java
 JAVA8_BIN ?= $(HOME)/share/usr/jdk1.8.0_121/bin/java
 JAVA_BIN ?=  $(JAVA8_BIN)
-SCRIPTS_DIR ?= modules/runtime
+SCRIPTS_DIR ?= modules/dod-cloning-kit
 PICARD_DIR ?= $(JARDIR)/picard-1.92
 
 # application specific paths
