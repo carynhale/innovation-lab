@@ -30,7 +30,7 @@ PARSSNP_VCF = $(RSCRIPT) $(SCRIPTS_DIR)/vcf_tools/parsSNPVcf.R
 
 ANNOTATE_FACETS_VCF = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/annotateFacets2Vcf.R
 ANNOTATE_FACETS_CCF_VCF = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/annotateFacetsCCF2Vcf.R
-CCF_RSCRIPT = $$(SCRIPTS_DIR)/copy_number/facetsccf.R
+CCF_RSCRIPT = $$(SCRIPTS_DIR)/copy_number/ccf.R
 
 vcf/%.snp_pathogen.vcf : vcf/%.vcf
 	$(call CHECK_VCF,$(call RUN,-c -s 5G -m 8G,"$(CLASSIFY_SNV_PATHOGENICITY) $(CLASSIFY_SNV_PATHOGENICITY_OPTS) $< \
