@@ -100,7 +100,7 @@ $(foreach pair,$(SAMPLE_PAIRS),$(eval $(call somatic-merge-vcf-tumor-normal,$(tu
 variant_count.tsv : $(foreach pair,$(SAMPLE_PAIRS),$(foreach type,$(VARIANT_TYPES),vcf_ann/$(pair).$(type).vcf))
 	grep -c -v '^#' $^ | sed 's:.*/::; s/\.vcf//; s/:/\t/; s/\./\t/g;' > $@
 
-SOMATIC_VCF2TSV = python modules/vcf_tools/somatic_vcf2tsv.py
+SOMATIC_VCF2TSV = python $(SCRIPTS_DIR)/vcf_tools/somatic_vcf2tsv.py
 define somatic-vcf2tsv-type
 tsv/%.$1.tsv : vcf_ann/%.$1.vcf
 	$$(call RUN,-c -s 4G -m 6G,"$$(SOMATIC_VCF2TSV) --normal $$(normal.$$*) $$< > $$@")

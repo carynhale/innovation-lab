@@ -4,9 +4,9 @@ LOGDIR = log/sufam_ss.$(NOW)
 
 SUFAM_ENV = $(HOME)/share/usr/anaconda-envs/sufam-dev
 SUFAM_OPTS = --format vcf --mpileup-parameters='-A -q 15 -Q 15 -d 15000'
-SOMATIC_VCF2TSV = python modules/vcf_tools/somatic_vcf2tsv.py
+SOMATIC_VCF2TSV = python $(SCRIPTS_DIR)/vcf_tools/somatic_vcf2tsv.py
 
-ANNOTATE_SUFAM_GT_VCF = python modules/vcf_tools/annotate_sufam_gt_vcf.py
+ANNOTATE_SUFAM_GT_VCF = python $(SCRIPTS_DIR)/vcf_tools/annotate_sufam_gt_vcf.py
 
 .DELETE_ON_ERROR:
 .SECONDARY:
