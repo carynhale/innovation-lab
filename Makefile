@@ -585,5 +585,9 @@ TARGETS += cnv_access
 cnv_access :
 	$(call RUN_MAKE,modules/test/workflows/cnv_access.mk)
 	
+TARGETS += rnaseq_fusion
+rnaseq_fusion:
+	$(call RUN_MAKE,modules/test/workflows/rnaseq_fusion.mk)
+	
 
 .PHONY : $(TARGETS)
