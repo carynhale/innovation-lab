@@ -35,12 +35,12 @@ fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).
 
 define fusion-catcher
 fusion_catcher/$1/$1.1.fastq.gz : fastq/$1.1.fastq.gz
-	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$$(*) && \
-								cp fastq/$$(*).1.fastq.gz fusion_catcher/$$(*)/$$(*).1.fastq.gz")
+	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$1 && \
+								cp fastq/$1.1.fastq.gz fusion_catcher/$1/$1.1.fastq.gz")
 								
 fusion_catcher/$1/$1.2.fastq.gz : fastq/$1.2.fastq.gz
-	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$$(*) && \
-								cp fastq/$$(*).2.fastq.gz fusion_catcher/$$(*)/$$(*).2.fastq.gz")
+	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$1 && \
+								cp fastq/$1.2.fastq.gz fusion_catcher/$1/$1.2.fastq.gz")
 
 endef
 $(foreach sample,$(SAMPLES),\
