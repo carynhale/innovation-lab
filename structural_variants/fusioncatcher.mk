@@ -20,8 +20,8 @@ PATH=$(HOME)/share/usr/src/fusioncatcher/tools/pigz/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/samtools/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/BBMap_37.28/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/picard/:$PATH
-FUSION_CATCHER_EXE = $(HOME)/share/usr/fusioncatcher/bin/fusioncatcher
-FUSION_CATCHER_OPTS = -p 8 -d $(HOME)/share/usr/fusioncatcher/data/human_v90
+FUSION_CATCHER_EXE = $(HOME)/share/usr/src/fusioncatcher/bin/fusioncatcher
+FUSION_CATCHER_OPTS = -p 8 -d $(HOME)/share/usr/src/fusioncatcher/data/human_v90
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).2.fastq.gz) \
