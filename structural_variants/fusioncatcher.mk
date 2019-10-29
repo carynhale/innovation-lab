@@ -46,7 +46,6 @@ $(foreach sample,$(SAMPLES),\
 
 
 #fusioncatcher -d ~/share/usr/src/fusioncatcher/data/human_v90 -i rawdata/PITT_0392/Sample_MCM101T_IGO_04835_J_1/ -o
-
 #fusion_catcher/%/%.taskcomplete : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
 #	$(call RUN,-n 8 -s 1G -m 4G,"$(FUSIONCATCHER) $(FUSIONCATCHER_OPTS) -p 8 -o $(@D)/$* -i $<$(,)$(<<) && \
 #								 touch fusion-ctahcer")
