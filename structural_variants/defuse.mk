@@ -1,5 +1,4 @@
 include modules/Makefile.inc
-include modules/fastq_tools/merge_split_fastq.mk
 
 LOGDIR ?= log/defuse.$(NOW)
 .PHONY: defuse
@@ -42,12 +41,17 @@ SV_ALL = ${HSA}/Annotation/Variation/
 SV_NE = ${HSA}/Annotation/Variation/
 PERL = /usr/bin/perl
 
-defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
+defuse : $(foreach sample,$(SAMPLES),fastq/$(sample).1.fastq.gz fastq/$(sample).2.fastq.gz) \
+		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
 
-DEFUSE_WORKFLOW += fastq
-DEFUSE_WORKFLOW += defuse
-
-defuse : $(DEFUSE_WORKFLOW)
+define merged-fastq
+fastq/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) | gzip -c > $$(@)")
+fastq/$1.2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) | gzip -c > $$(@)")
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 define defuse-single-sample
 fastq/%.1.fastq fastq/%.2.fastq : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
