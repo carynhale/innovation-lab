@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 
 LOGDIR ?= log/defuse.$(NOW)
-.PHONY: defuse
+PHONY += defuse
 
 DEFUSE_SCRIPTS = /opt/common/CentOS_7/defuse/defuse-0.8.0/scripts
 CONFIG = modules/config/defuse.conf
