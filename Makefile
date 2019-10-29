@@ -326,7 +326,7 @@ mapsplice :
 	$(call RUN_MAKE,modules/structural_variants/mapsplice.mk)
 
 TARGETS += fusion_catcher
-fusioncatcher :
+fusion_catcher :
 	$(call RUN_MAKE,modules/structural_variants/fusioncatcher.mk)
 
 TARGETS += crest
