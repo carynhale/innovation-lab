@@ -30,8 +30,8 @@ FUSIONCATCHER_OPTS = -d $(HOME)/share/usr/fusioncatcher/data/current --extract-b
 #
 #	
 
-fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
-		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).2.fastq.gz)
+fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample).1.fastq.gz) \
+		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample).2.fastq.gz)
 
 define fusion-catcher
 fusion_catcher/$1.1.fastq.gz : fastq/$1.1.fastq.gz
