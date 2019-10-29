@@ -325,7 +325,7 @@ TARGETS += mapsplice
 mapsplice :
 	$(call RUN_MAKE,modules/structural_variants/mapsplice.mk)
 
-TARGETS += fusioncatcher
+TARGETS += fusion_catcher
 fusioncatcher :
 	$(call RUN_MAKE,modules/structural_variants/fusioncatcher.mk)
 
