@@ -20,7 +20,7 @@ PATH=$(HOME)/share/usr/src/fusioncatcher/tools/pigz/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/samtools/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/BBMap_37.28/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/picard/:$PATH
-FUSION_CATCHER_ = $(HOME)/share/usr/fusioncatcher/bin/fusioncatcher
+FUSION_CATCHER = $(HOME)/share/usr/fusioncatcher/bin/fusioncatcher
 FUSIONCATCHER_OPTS = -d $(HOME)/share/usr/fusioncatcher/data/current --extract-buffer-size=35000000000
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
