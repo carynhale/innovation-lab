@@ -41,17 +41,27 @@ SV_ALL = ${HSA}/Annotation/Variation/
 SV_NE = ${HSA}/Annotation/Variation/
 PERL = /usr/bin/perl
 
-defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
+defuse : $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).1.fastq) \
+		 $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).2.fastq) \
+		 $(foreach sample,$(SAMPLES),defuse/$(sample)/taskcomplete)
 
 define defuse-single-sample
-fastq/%.1.fastq fastq/%.2.fastq : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
-	$$(call RUN,-c -s 4G -m 9G,"gzip -d $$(<) $$(<<)")
+defuse/%/%.1.fastq defuse/%/.2.fastq : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
+	$$(call RUN,-c -s 4G -m 9G,"cp fastq/$$(*).1.fastq.gz defuse/$$(*)/$$(*).1.fastq.gz && \
+								cp fastq/$$(*).2.fastq.gz defuse/$$(*)/$$(*).2.fastq.gz && \
+								gzip -d defuse/$$(*)/$$(*).1.fastq.gz && \
+								gzip -d defuse/$$(*)/$$(*).2.fastq.gz")
 
-defuse/tables/%.results.filtered.tsv : fastq/%.1.fastq fastq/%.2.fastq
-	$$(call RUN,-c -n 10 -s 3G -m 4G -w 540,"$$(PERL) $$(DEFUSE_SCRIPTS)/defuse_run.pl -c $$(CONFIG) -d $$(DEFUSE75) -o defuse/$$* --res defuse/tables/$$*.results.tsv -resfil defuse/tables/$$*.results.filtered.tsv -1 fastq/$$*.1.fastq -2 fastq/$$*.2.fastq -p 10 -s direct")
+defuse/%/%.results.filtered.tsv : defuse/%/%.1.fastq defuse/%/%.2.fastq
+	$$(call RUN,-c -n 10 -s 3G -m 4G -w 540,"$$(PERL) $$(DEFUSE_SCRIPTS)/defuse_run.pl \
+											 -c $$(CONFIG) -d $$(DEFUSE75) -o defuse/$$(*) \
+											 --res defuse/$$(*)/$$(*).results.tsv \
+											 -resfil defuse/$$(*)/$$*.results.filtered.tsv \
+											 -1 defuse/$$(*)/$$(*).1.fastq \
+											 -2 defuse/$$(*)/$$(*).2.fastq -p 10 -s direct")
 	
-defuse/%.taskcomplete : defuse/tables/%.results.filtered.tsv
-	$$(call RUN,-c -s 1G -m 3G,"echo $$* > defuse/$$*.taskcomplete")
+defuse/%/taskcomplete : defuse/%/%.results.filtered.tsv
+	$$(call RUN,-c -s 1G -m 2G,"echo $$(*) > defuse/$$(*)/taskcomplete")
 endef
 
 $(foreach sample,$(SAMPLES),\
