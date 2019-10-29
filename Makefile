@@ -589,5 +589,9 @@ TARGETS += rnaseq_fusion
 rnaseq_fusion:
 	$(call RUN_MAKE,modules/test/workflows/rnaseq_fusion.mk)
 	
+TARGETS += fusion_summary
+fusion_summary:
+	$(call RUN_MAKE,modules/summary/fusion_summary.mk)
+
 
 .PHONY : $(TARGETS)

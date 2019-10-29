@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 
 LOGDIR ?= log/rnaseq_fusion.$(NOW)
-PHONY += fastq defuse fusion_catcher
+PHONY += fastq defuse fusion_catcher integrate_rnaseq
 
 RNASEQ_FUSION_WORKFLOW += fastq
 RNASEQ_FUSION_WORKFLOW += defuse
