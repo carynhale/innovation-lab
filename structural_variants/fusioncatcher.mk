@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 
 LOGDIR ?= log/fusion_catcher.$(NOW)
-PHONY += catch_fusion
+PHONY += fusion_catcher
 
 PATH=$(HOME)/share/usr/src/fusioncatcher/bin:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/bowtie-1.1.2-linux-x86_64:$PATH
@@ -30,15 +30,15 @@ FUSIONCATCHER_OPTS = -d $(HOME)/share/usr/fusioncatcher/data/current --extract-b
 #
 #	
 
-catch_fusion : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
+fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).2.fastq.gz)
 
 define fusion-catcher
-fusion_catcher/$1/$1.1.fastq.gz : fastq/$1.1.fastq.gz
+fusion_catcher/$1.1.fastq.gz : fastq/$1.1.fastq.gz
 	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$$(*) && \
 								cp fastq/$$(*).1.fastq.gz fusion_catcher/$$(*)/$$(*).1.fastq.gz")
 								
-fusion_catcher/$1/$1.2.fastq.gz : fastq/$1.2.fastq.gz
+fusion_catcher/$1.2.fastq.gz : fastq/$1.2.fastq.gz
 	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$$(*) && \
 								cp fastq/$$(*).2.fastq.gz fusion_catcher/$$(*)/$$(*).2.fastq.gz")
 
