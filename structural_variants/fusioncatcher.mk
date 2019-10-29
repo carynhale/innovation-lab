@@ -21,26 +21,26 @@ PATH=$(HOME)/share/usr/src/fusioncatcher/tools/samtools/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/BBMap_37.28/:$PATH
 PATH=$(HOME)/share/usr/src/fusioncatcher/tools/picard/:$PATH
 FUSION_CATCHER_EXE = $(HOME)/share/usr/fusioncatcher/bin/fusioncatcher
-FUSIONCATCHER_OPTS = -d $(HOME)/share/usr/fusioncatcher/data/current --extract-buffer-size=35000000000
-
-#fusioncatcher -d ~/share/usr/src/fusioncatcher/data/human_v90 -i rawdata/PITT_0392/Sample_MCM101T_IGO_04835_J_1/ -o
-#fusion_catcher/%/%.taskcomplete : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
-#	$(call RUN,-n 8 -s 1G -m 4G,"$(FUSIONCATCHER) $(FUSIONCATCHER_OPTS) -p 8 -o $(@D)/$* -i $<$(,)$(<<) && \
-#								 touch fusion-ctahcer")
-#
-#	
+FUSION_CATCHER_OPTS = -p 8 -d $(HOME)/share/usr/fusioncatcher/data/human_v90
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).2.fastq.gz)
 
 define fusion-catcher
 fusion_catcher/$1/$1.1.fastq.gz : fastq/$1.1.fastq.gz
-	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$1 && \
+	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
+								mkdir -p fusion_catcher/$1 && \
 								cp fastq/$1.1.fastq.gz fusion_catcher/$1/$1.1.fastq.gz")
 								
 fusion_catcher/$1/$1.2.fastq.gz : fastq/$1.2.fastq.gz
-	$$(call RUN,-c -s 2G -m 4G,"mkdir -p fusion_catcher/$1 && \
+	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
+								mkdir -p fusion_catcher/$1 && \
 								cp fastq/$1.2.fastq.gz fusion_catcher/$1/$1.2.fastq.gz")
+								
+fusion_catcher/$1/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catcher/$1/$1.2.fastq.gz
+	$$(call RUN,-c -n 8 -s 2G -m 4G,"set -o pipefail && \
+									 $(FUSION_CATCHER_EXE) $(FUSION_CATCHER_OPTS) -i fusion_catcher/$1 -o fusion_catcher/$1 && \
+									 echo $1 > fusion_catcher/$1/taskcomplete")
 
 endef
 $(foreach sample,$(SAMPLES),\
