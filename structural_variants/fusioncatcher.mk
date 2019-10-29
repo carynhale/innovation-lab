@@ -40,6 +40,7 @@ fusion_catcher/$1/$1.2.fastq.gz : fastq/$1.2.fastq.gz
 								
 fusion_catcher/$1/out/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catcher/$1/$1.2.fastq.gz
 	$$(call RUN,-c -n 8 -s 2G -m 4G,"set -o pipefail && \
+									 mkdir -p fusion_catcher/$1/out && \
 									 $(FUSION_CATCHER_EXE) $(FUSION_CATCHER_OPTS) -i fusion_catcher/$1 -o fusion_catcher/$1/out && \
 									 echo $1 > fusion_catcher/$1/out/taskcomplete")
 
