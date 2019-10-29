@@ -15,12 +15,20 @@ ONCOFUSE_TISSUE_TYPE ?= EPI
 INTEGRATE_TO_USV = python $(SCRIPTS_DIR)/structural_variants/integrate2usv.py
 
 
-integrate_rnaseq: integrate_rnaseq/all.integrate.oncofuse.txt #$(foreach sample,$(TUMOR_SAMPLES),integrate_rnaseq/usv/$(sample).integrate_rnaseq.tsv)
+integrate_rnaseq: integrate_rnaseq/all.integrate.oncofuse.txt
 
 define init-integrate
 integrate_rnaseq/reads/%.reads.txt integrate_rnaseq/sum/%.sum.tsv integrate_rnaseq/exons/%.exons.tsv integrate_rnaseq/breakpoints/%.breakpoints.tsv : bam/%.bam bam/%.bam.bai
-	$$(call RUN,-s 8G -m 40G,"mkdir -p integrate_rnaseq/reads integrate_rnaseq/sum integrate_rnaseq/exons integrate_rnaseq/breakpoints && \
-							  $$(INTEGRATE) fusion $$(INTEGRATE_OPTS) -reads integrate_rnaseq/reads/$$(*).reads.txt -sum integrate_rnaseq/sum/$$(*).sum.tsv -ex integrate_rnaseq/exons/$$(*).exons.tsv -bk integrate_rnaseq/breakpoints/$$(*).breakpoints.tsv $$(REF_FASTA) $$(INTEGRATE_ANN) $$(INTEGRATE_BWTS) $$(<) $$(<)")
+	$$(call RUN,-s 8G -m 40G,"mkdir -p integrate_rnaseq/reads && \
+							  mkdir -p integrate_rnaseq/sum && \
+							  mkdir -p integrate_rnaseq/exons && \
+							  mkdir -p integrate_rnaseq/breakpoints && \
+							  $$(INTEGRATE) fusion $$(INTEGRATE_OPTS) \
+							  -reads integrate_rnaseq/reads/$$(*).reads.txt \
+							  -sum integrate_rnaseq/sum/$$(*).sum.tsv \
+							  -ex integrate_rnaseq/exons/$$(*).exons.tsv \
+							  -bk integrate_rnaseq/breakpoints/$$(*).breakpoints.tsv \
+							  $$(REF_FASTA) $$(INTEGRATE_ANN) $$(INTEGRATE_BWTS) $$(<) $$(<)")
 
 endef
 $(foreach sample,$(TUMOR_SAMPLES),\
