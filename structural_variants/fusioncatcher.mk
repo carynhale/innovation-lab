@@ -25,7 +25,7 @@ FUSION_CATCHER_OPTS = -p 8 -d $(HOME)/share/usr/src/fusioncatcher/data/human_v90
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).2.fastq.gz) \
-		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/taskcomplete)
+		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/out/taskcomplete)
 
 define fusion-catcher
 fusion_catcher/$1/$1.1.fastq.gz : fastq/$1.1.fastq.gz
@@ -38,10 +38,10 @@ fusion_catcher/$1/$1.2.fastq.gz : fastq/$1.2.fastq.gz
 								mkdir -p fusion_catcher/$1 && \
 								cp fastq/$1.2.fastq.gz fusion_catcher/$1/$1.2.fastq.gz")
 								
-fusion_catcher/$1/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catcher/$1/$1.2.fastq.gz
+fusion_catcher/$1/out/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catcher/$1/$1.2.fastq.gz
 	$$(call RUN,-c -n 8 -s 2G -m 4G,"set -o pipefail && \
-									 $(FUSION_CATCHER_EXE) $(FUSION_CATCHER_OPTS) -i fusion_catcher/$1 -o fusion_catcher/$1 && \
-									 echo $1 > fusion_catcher/$1/taskcomplete")
+									 $(FUSION_CATCHER_EXE) $(FUSION_CATCHER_OPTS) -i fusion_catcher/$1 -o fusion_catcher/$1/out && \
+									 echo $1 > fusion_catcher/$1/out/taskcomplete")
 
 endef
 $(foreach sample,$(SAMPLES),\
