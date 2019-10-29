@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/fastq_tools/merge_split_fastq.mk
 
 LOGDIR ?= log/defuse.$(NOW)
-.PHONY: defuse_workflow
+.PHONY: DEFUSE_WORKFLOW
 
 DEFUSE_SCRIPTS = /opt/common/CentOS_7/defuse/defuse-0.8.0/scripts
 CONFIG = modules/config/defuse.conf
