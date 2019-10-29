@@ -47,10 +47,12 @@ defuse : $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).1.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample)/taskcomplete)
 
 define defuse-single-sample
-defuse/%/%.1.fastq defuse/%/%.2.fastq : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
-	$$(call RUN,-c -s 4G -m 9G,"cp fastq/$$(*).1.fastq.gz defuse/$$(*)/$$(*).1.fastq.gz && \
-								cp fastq/$$(*).2.fastq.gz defuse/$$(*)/$$(*).2.fastq.gz && \
-								gzip -d defuse/$$(*)/$$(*).1.fastq.gz && \
+defuse/%/%.1.fastq : fastq/%.1.fastq.gz
+	$$(call RUN,-c -s 2G -m 4G,"cp fastq/$$(*).1.fastq.gz defuse/$$(*)/$$(*).1.fastq.gz && \
+								gzip -d defuse/$$(*)/$$(*).1.fastq.gz")
+								
+defuse/%/%.2.fastq : fastq/%.2.fastq.gz
+	$$(call RUN,-c -s 2G -m 4G,"cp fastq/$$(*).2.fastq.gz defuse/$$(*)/$$(*).2.fastq.gz && \
 								gzip -d defuse/$$(*)/$$(*).2.fastq.gz")
 
 defuse/%/%.results.filtered.tsv : defuse/%/%.1.fastq defuse/%/%.2.fastq
