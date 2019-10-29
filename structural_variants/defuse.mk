@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/fastq_tools/merge_split_fastq.mk
 
 LOGDIR ?= log/defuse.$(NOW)
-.PHONY: DEFUSE_WORKFLOW
+.PHONY: defuse
 
 DEFUSE_SCRIPTS = /opt/common/CentOS_7/defuse/defuse-0.8.0/scripts
 CONFIG = modules/config/defuse.conf
@@ -47,7 +47,7 @@ defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
 DEFUSE_WORKFLOW += fastq
 DEFUSE_WORKFLOW += defuse
 
-defuse_workflow : $(DEFUSE_WORKFLOW)
+defuse : $(DEFUSE_WORKFLOW)
 
 define defuse-single-sample
 fastq/%.1.fastq fastq/%.2.fastq : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
