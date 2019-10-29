@@ -47,15 +47,6 @@ endef
 $(foreach sample,$(TUMOR_SAMPLES),\
 		$(eval $(call init-oncofuse,$(sample))))
 
-define integrate-usv
-integrate_rnaseq/usv/%.integrate_rnaseq.tsv : integrate_rnaseq/breakpoints/%.breakpoints.tsv integrate_rnaseq/sum/%.sum.tsv integrate_rnaseq/exons/%.exons.tsv
-	$$(call RUN, -s 8G -m 24G,"$$(INTEGRATE_TO_USV) --breakpoints_file $$(<) --sum_file $$(<<) --exons_file $$(<<<) > $$(@)")
-	
-endef
-$(foreach sample,$(TUMOR_SAMPLES),\
-		$(eval $(call integrate-usv,$(sample))))
-
-
 integrate_rnaseq/all.integrate.oncofuse.txt : $(foreach sample,$(TUMOR_SAMPLES),integrate_rnaseq/oncofuse/$(sample).oncofuse.txt)
 	$(INIT) (head -1 $< | sed 's/^/sample\t/'; for x in $^; do sed "1d;s/^/$$(basename $${x%%.oncofuse.txt})\t/" $$x; done) > $@
 
