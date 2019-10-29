@@ -43,6 +43,7 @@ PERL = /usr/bin/perl
 
 defuse : $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).1.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).2.fastq) \
+		 $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).results.filtered.tsv) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample)/taskcomplete)
 
 define defuse-single-sample
