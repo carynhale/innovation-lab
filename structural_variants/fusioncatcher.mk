@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 
 LOGDIR ?= log/fusion_catcher.$(NOW)
-.PHONY += fusion_catcher
+PHONY += fusion_catcher
 
 #PATH=$(HOME)/share/usr/src/fusioncatcher/bin:$PATH
 #PATH=$(HOME)/share/usr/src/fusioncatcher/tools/bowtie-1.1.2-linux-x86_64:$PATH
