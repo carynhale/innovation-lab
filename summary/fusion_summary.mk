@@ -3,8 +3,6 @@ include modules/Makefile.inc
 LOGDIR ?= log/fusion_summary.$(NOW)
 PHONY += fusion_summary
 
-DEFUSE ?= $(wildcard $(foreach set,$(SAMPLE_PAIRS),genome_stats/$(set).lst))
-
 fusion_summary : summary/tsv/fusion_summary.tsv \
 				 summary/fusion_summary.xlsx
 
