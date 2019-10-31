@@ -44,7 +44,8 @@ PERL = /usr/bin/perl
 defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample).results.filtered.tsv) \
-		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
+		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete) \
+		 defuse/summary.tsv
 
 define defuse-single-sample
 defuse/%.1.fastq : fastq/%.1.fastq.gz
@@ -71,6 +72,10 @@ endef
 
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call defuse-single-sample,$(sample))))
+		
+defuse/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),defuse/$(sample).taskcomplete))
+	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
+				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/defuse.R --samples '$(TUMOR_SAMPLES)'")		
 		
 .DELETE_ON_ERROR:
 .SECONDARY:

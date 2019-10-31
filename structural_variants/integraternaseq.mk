@@ -14,7 +14,6 @@ INTEGRATE_ONCOFUSE_OPTS = --oncofuseJar $(ONCOFUSE_JAR) --oncofuseTissueType $(O
 ONCOFUSE_TISSUE_TYPE ?= EPI
 INTEGRATE_TO_USV = python $(SCRIPTS_DIR)/structural_variants/integrate2usv.py
 
-
 integrate_rnaseq: integrate_rnaseq/summary.tsv
 
 define init-integrate
