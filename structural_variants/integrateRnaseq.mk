@@ -2,7 +2,7 @@ include modules/Makefile.inc
 include modules/bam_tools/process_bam.mk
 
 LOGDIR = log/integrate_rnaseq.$(NOW)
-.PHONY: integrate_rnaseq integrate_rnaseq/oncofuse integrate_rnaseq/reads integrate_rnaseq/sum integrate_rnaseq/exons integrate_rnaseq/breakpoints integrate_rnaseq/usv
+.PHONY: integrate_rnaseq
 
 INTEGRATE_MINW ?= 2.0
 INTEGRATE_LARGENUM ?= 4
@@ -15,7 +15,7 @@ ONCOFUSE_TISSUE_TYPE ?= EPI
 INTEGRATE_TO_USV = python $(SCRIPTS_DIR)/structural_variants/integrate2usv.py
 
 
-integrate_rnaseq: integrate_rnaseq/all.integrate.oncofuse.txt
+integrate_rnaseq: integrate_rnaseq/summary.tsv
 
 define init-integrate
 integrate_rnaseq/reads/%.reads.txt integrate_rnaseq/sum/%.sum.tsv integrate_rnaseq/exons/%.exons.tsv integrate_rnaseq/breakpoints/%.breakpoints.tsv : bam/%.bam bam/%.bam.bai
@@ -47,9 +47,9 @@ endef
 $(foreach sample,$(TUMOR_SAMPLES),\
 		$(eval $(call init-oncofuse,$(sample))))
 
-integrate_rnaseq/all.integrate.oncofuse.txt : $(foreach sample,$(TUMOR_SAMPLES),integrate_rnaseq/oncofuse/$(sample).oncofuse.txt)
-	$(INIT) (head -1 $< | sed 's/^/sample\t/'; for x in $^; do sed "1d;s/^/$$(basename $${x%%.oncofuse.txt})\t/" $$x; done) > $@
-
+integrate_rnaseq/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),integrate_rnaseq/oncofuse/$(sample).oncofuse.txt))
+	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
+				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/integraternaseq.R --samples '$TUMOR_SAMPLES'")
 
 .DELETE_ON_ERROR:
 .SECONDARY:

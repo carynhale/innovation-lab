@@ -286,7 +286,7 @@ brass :
 
 TARGETS += integrate_rnaseq
 integrate_rnaseq :
-	$(call RUN_MAKE,modules/structural_variants/integrateRnaseq.mk)
+	$(call RUN_MAKE,modules/structural_variants/integraternaseq.mk)
 
 TARGETS += integrate
 integrate :
