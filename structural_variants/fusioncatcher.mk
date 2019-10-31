@@ -8,7 +8,8 @@ FUSION_CATCHER_OPTS = -p 8 -d $(HOME)/share/usr/src/fusioncatcher/data/human_v90
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/$(sample).2.fastq.gz) \
-		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/out/taskcomplete)
+		 		 $(foreach sample,$(SAMPLES),fusion_catcher/$(sample)/out/taskcomplete) \
+		 		 fusion_catcher/summary.tsv
 
 define fusion-catcher
 fusion_catcher/$1/$1.1.fastq.gz : fastq/$1.1.fastq.gz
@@ -47,6 +48,10 @@ fusion_catcher/$1/out/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catc
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
+		
+fusion_catcher/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),fusion_catcher/$(sample)/out/taskcomplete))
+	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
+				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/fusioncatcher.R --samples '$(TUMOR_SAMPLES)'")
 					
 
 .DELETE_ON_ERROR:
