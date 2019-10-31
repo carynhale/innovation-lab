@@ -12,8 +12,8 @@ rnaseq_fusion_workflow : $(RNASEQ_FUSION_WORKFLOW)
 
 include modules/fastq_tools/merge_split_fastq.mk
 include modules/structural_variants/defuse.mk
-include modules/structural_variants/fusioncatcher.mk
-include modules/structural_variants/integraternaseq.mk
+include modules/structural_variants/fusion_catcher.mk
+include modules/structural_variants/integrate_rnaseq.mk
 
 .DELETE_ON_ERROR:
 .SECONDARY:

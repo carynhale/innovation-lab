@@ -188,7 +188,7 @@ haplotype_caller :
 	
 TARGETS += samtools_het
 samtools_het :
-	$(call RUN_MAKE,modules/variant_callers/samtoolsHet.mk)
+	$(call RUN_MAKE,modules/variant_callers/samtools_het.mk)
 
 TARGETS += hotspot
 hotspot: 
@@ -196,11 +196,11 @@ hotspot:
 	
 TARGETS += genotype_hotspot
 genotype_hotspot:
-	$(call RUN_MAKE,modules/variant_callers/genotypehotspots.mk)
+	$(call RUN_MAKE,modules/variant_callers/genotype_hotspots.mk)
 	
 TARGETS += genotype_pdx
 genotype_pdx:
-	$(call RUN_MAKE,modules/variant_callers/genotypepdx.mk)
+	$(call RUN_MAKE,modules/variant_callers/genotype_pdx.mk)
 	
 TARGETS += sufam
 sufam:
@@ -208,7 +208,7 @@ sufam:
 	
 TARGETS += sufam_summary
 sufam_summary:
-	$(call RUN_MAKE,modules/variant_callers/sufammultisample.mk)
+	$(call RUN_MAKE,modules/variant_callers/sufam_multisample.mk)
 
 
 #==================================================
@@ -247,8 +247,8 @@ TARGETS += snp6
 snp6 :
 	$(call RUN_MAKE,modules/copy_number/snp6.mk)
 	
-TARGETS += qdnaseq
-qdnaseq :
+TARGETS += qdna_seq
+qdna_seq :
 	$(call RUN_MAKE,modules/test/workflows/qdna_seq.mk)
 	
 TARGETS += cnv_access
@@ -266,35 +266,35 @@ rnaseq_fusion:
 
 TARGETS += star_fusion
 star_fusion:
-	$(call RUN_MAKE,modules/structural_variants/starFusion.mk)
+	$(call RUN_MAKE,modules/structural_variants/star_fusion.mk)
 
 TARGETS += tophat_fusion
 tophat_fusion : 
-	$(call RUN_MAKE,modules/structural_variants/tophatFusion.mk)
+	$(call RUN_MAKE,modules/structural_variants/tophat_fusion.mk)
 
 TARGETS += manta_rnaseq
 manta_rnaseq :
-	$(call RUN_MAKE,modules/structural_variants/mantaRnaseq.mk)
+	$(call RUN_MAKE,modules/structural_variants/manta_rnaseq.mk)
 
 TARGETS += manta
 manta :
 	$(call RUN_MAKE,modules/structural_variants/manta.mk)
 
-TARGETS += mantaTN
-mantaTN :
-	$(call RUN_MAKE,modules/structural_variants/mantaTN.mk)
+TARGETS += manta_tn
+manta_tn :
+	$(call RUN_MAKE,modules/structural_variants/manta_tn.mk)
 
 TARGETS += brass
 brass :
 	$(call RUN_MAKE,modules/structural_variants/brass.mk)
 
-TARGETS += integrate_rnaseq
-integrate_rnaseq :
-	$(call RUN_MAKE,modules/structural_variants/integraternaseq.mk)
-
 TARGETS += integrate
 integrate :
 	$(call RUN_MAKE,modules/structural_variants/integrate.mk)
+	
+TARGETS += integrate_rnaseq
+integrate_rnaseq :
+	$(call RUN_MAKE,modules/structural_variants/integrate_rnaseq.mk)
 
 TARGETS += defuse
 defuse :
@@ -321,17 +321,17 @@ TARGETS += nfuse_wgss_wtss
 nfuse_wgss_wtss :
 	$(call RUN_MAKE,modules/structural_variants/nfuseWGSSWTSS.mk)
 
-TARGETS += soapfuse
-soapfuse :
-	$(call RUN_MAKE,modules/structural_variants/soapFuse.mk)
+TARGETS += soap_fuse
+soap_fuse :
+	$(call RUN_MAKE,modules/structural_variants/soap_fuse.mk)
 
-TARGETS += mapsplice
-mapsplice :
-	$(call RUN_MAKE,modules/structural_variants/mapsplice.mk)
+TARGETS += map_splice
+map_splice :
+	$(call RUN_MAKE,modules/structural_variants/map_splice.mk)
 
 TARGETS += fusion_catcher
 fusion_catcher :
-	$(call RUN_MAKE,modules/structural_variants/fusioncatcher.mk)
+	$(call RUN_MAKE,modules/structural_variants/fusion_catcher.mk)
 
 TARGETS += crest
 crest :
