@@ -251,14 +251,18 @@ TARGETS += qdnaseq
 qdnaseq :
 	$(call RUN_MAKE,modules/test/workflows/qdna_seq.mk)
 	
-TARGETS += copynumber_summary
-copynumber_summary:
-	$(call RUN_MAKE,modules/test/workflows/copynumber_summary.mk)
+TARGETS += cnv_access
+cnv_access :
+	$(call RUN_MAKE,modules/test/workflows/cnv_access.mk)
 	
 
 #==================================================
 # Structural variant callers
 #==================================================
+
+TARGETS += rnaseq_fusion
+rnaseq_fusion:
+	$(call RUN_MAKE,modules/test/workflows/rnaseq_fusion.mk)
 
 TARGETS += star_fusion
 star_fusion:
@@ -389,7 +393,7 @@ cufflinks :
 
 TARGETS += sum_reads
 sum_reads :
-	$(call RUN_MAKE,modules/rnaseq/sumRNASeqReads.mk)
+	$(call RUN_MAKE,modules/rnaseq/sumrnaseqreads.mk)
 
 TARGETS += exon_counts
 exon_counts :
@@ -500,7 +504,19 @@ mutation_summary :
 TARGETS += cravat_summary
 cravat_summary :
 	$(call RUN_MAKE,modules/summary/cravat_summary.mk)
-
+	
+TARGETS += copynumber_summary
+copynumber_summary:
+	$(call RUN_MAKE,modules/test/workflows/copynumber_summary.mk)
+	
+TARGETS += somatic_indels
+somatic_indels:
+	$(call RUN_MAKE,modules/test/workflows/somatic_indels.mk)
+	
+TARGETS += somatic_variants
+somatic_variants:
+	$(call RUN_MAKE,modules/test/workflows/somatic_variants.mk)
+	
 
 #==================================================
 # Annotations
@@ -569,29 +585,8 @@ cnvkit_qc :
 # Beta testing
 #==================================================
 
-TARGETS += somatic_indels
-somatic_indels:
-	$(call RUN_MAKE,modules/test/workflows/somatic_indels.mk)
-	
-TARGETS += somatic_variants
-somatic_variants:
-	$(call RUN_MAKE,modules/test/workflows/somatic_variants.mk)
-	
 TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,modules/test/workflows/fgbio_access.mk)
 	
-TARGETS += cnv_access
-cnv_access :
-	$(call RUN_MAKE,modules/test/workflows/cnv_access.mk)
-	
-TARGETS += rnaseq_fusion
-rnaseq_fusion:
-	$(call RUN_MAKE,modules/test/workflows/rnaseq_fusion.mk)
-	
-TARGETS += fusion_summary
-fusion_summary:
-	$(call RUN_MAKE,modules/summary/fusion_summary.mk)
-
-
 .PHONY : $(TARGETS)
