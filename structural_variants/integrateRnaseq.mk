@@ -49,7 +49,7 @@ $(foreach sample,$(TUMOR_SAMPLES),\
 
 integrate_rnaseq/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),integrate_rnaseq/oncofuse/$(sample).oncofuse.txt))
 	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
-				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/integraternaseq.R --samples '$TUMOR_SAMPLES'")
+				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/integraternaseq.R --samples '$(TUMOR_SAMPLES)'")
 
 .DELETE_ON_ERROR:
 .SECONDARY:
