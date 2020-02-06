@@ -26,30 +26,29 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 
 
 #==================================================
-# Aligners
+# FASTQ file aligners
 #==================================================
 
 TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,modules/aligners/bwa_mem.mk)
 
-TARGETS += msk_access
-msk_access :
-	$(call RUN_MAKE,modules/test/workflows/msk_access.mk)
-
-
 #==================================================
-# Utilities BAM file processing
+# BAM file processing utilities
 #==================================================
+
+TARGETS += unmapped_fasta
+unmapped_fasta :
+	$(call RUN_MAKE,modules/bam_tools/unmapped_fasta.mk)
+	
+TARGETS += unmapped_bam
+unmapped_bam :
+	$(call RUN_MAKE,modules/bam_tools/unmapped_bam.mk)
 
 TARGETS += fix_bam
 fix_bam :
 	$(call RUN_MAKE,modules/bam_tools/fix_bam.mk)
 
-TARGETS += fix_rg
-fix_rg :
-	$(call RUN_MAKE,modules/bam_tools/fix_rg.mk)
-	
 TARGETS += process_bam
 process_bam : 
 	$(call RUN_MAKE,modules/bam_tools/process_bam.mk)
@@ -58,17 +57,9 @@ TARGETS += merge_bam
 merge_bam :
 	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
 	
-TARGETS += extract_unmapped
-extract_unmapped :
-	$(call RUN_MAKE,modules/bam_tools/extract_unmapped.mk)
-	
-TARGETS += bam_fasta
-bam_fasta :
-	$(call RUN_MAKE,modules/bam_tools/bam_fasta.mk)
-
 	
 #==================================================
-# Utilities FASTQ file processing
+# FASTQ file processing utilities
 #==================================================
 
 TARGETS += extract_fastq
@@ -549,6 +540,11 @@ cnvkit_qc :
 #==================================================
 # Beta testing
 #==================================================
+
+TARGETS += msk_access
+msk_access :
+	$(call RUN_MAKE,modules/test/workflows/msk_access.mk)
+
 
 TARGETS += fgbio_access
 fgbio_access :

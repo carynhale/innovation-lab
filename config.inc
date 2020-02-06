@@ -57,6 +57,7 @@ SNP_SIFT_JAR ?= $(JARDIR)/SnpSift-4.3.jar
 ONCOFUSE_JAR ?= $(HOME)/share/usr/oncofuse-1.0.9b2/Oncofuse.jar
 VARSCAN_JAR ?= $(JARDIR)/VarScan.v2.3.9.jar
 PICARD_JAR ?= $(JARDIR)/picard-tools-1.141/picard.jar
+PICARD_DEF ?= $(HOME)/share/usr/picard/bin/picard.jar
 GATK_JAR ?= $(JARDIR)/GenomeAnalysisTK.jar
 GATK_JAR2 ?= $(JARDIR)/GenomeAnalysisTK-3.7.jar
 MARIANAS ?= $(HOME)/share/usr/marianas-1.8.1/Marianas-1.8.1.jar

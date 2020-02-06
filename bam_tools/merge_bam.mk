@@ -1,10 +1,7 @@
 include modules/Makefile.inc
+include modules/bam_tools/process_bam.mk
 
 LOGDIR = log/merge_bam.$(NOW)
-
-.SECONDARY:
-.DELETE_ON_ERROR: 
-.PHONY : merged_bam
 
 merged_bam : $(foreach sample,$(MERGE_SAMPLES),bam/$(sample).bam bam/$(sample).bam.bai)
 
@@ -29,8 +26,11 @@ $(foreach sample,$(MERGE_SAMPLES),\
 	$(if $(merge.$(sample)),\
 	$(eval $(call rename-bam,$(sample),$(merge.$(sample)))))))
 
-
 bam/%.bam : merged_bam/%.rg.bam
 	$(INIT) ln -f $< $@
 
-include modules/bam_tools/process_bam.mk
+
+..DUMMY := $(shell mkdir -p version; $(SAMTOOLS2) &> version/merge_bam.txt; $(PICARD_DEF) >> version/merge_bam.txt )
+.SECONDARY:
+.DELETE_ON_ERROR: 
+.PHONY : merged_bam

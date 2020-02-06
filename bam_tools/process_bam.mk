@@ -2,9 +2,10 @@ include modules/Makefile.inc
 include modules/config/gatk.inc
 include modules/config/align.inc
 
+LOGDIR ?= log/process_bam.$(NOW)
+
 ifndef PROCESS_BAM_MK
 
-LOGDIR ?= log/process_bam.$(NOW)
 MERGE_SPLIT_BAMS ?= false
 BAM_CHR1_BASE_RECAL ?= false
 BAM_BASE_RECAL_OPTS = -knownSites $(DBSNP) $(if $(findstring true,$(BAM_CHR1_BASE_RECAL)),-L $(word 1,$(CHROMOSOMES)))

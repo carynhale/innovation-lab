@@ -1,8 +1,8 @@
 include modules/Makefile.inc
 
-LOGDIR ?= log/extract_unmapped.$(NOW)
+LOGDIR ?= log/unmapped_bam.$(NOW)
 
-extract_unmapped : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).bam)
+unmapped_bam : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).bam)
 
 define extract-unmapped-reads
 unmapped_reads/%.bam : bam/%.bam
@@ -12,7 +12,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call extract-unmapped-reads,$(sample))))
 
 
-..DUMMY := $(shell mkdir -p version; $(SAMTOOLS2) &> version/samtools.txt )
+..DUMMY := $(shell mkdir -p version; $(SAMTOOLS2) &> version/unmapped_bam.txt )
 .SECONDARY:
 .DELETE_ON_ERROR: 
-.PHONY: extract_unmapped
+.PHONY: unmapped_bam

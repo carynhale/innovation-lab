@@ -19,7 +19,7 @@ BWAMEM_THREADS = 8
 BWAMEM_MEM_PER_THREAD = $(if $(findstring true,$(PDX)),4G,2G)
 BWA_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
-bwamem : $(BWA_BAMS) $(addsuffix .bai,$(BWA_BAMS))
+bwa_mem : $(BWA_BAMS) $(addsuffix .bai,$(BWA_BAMS))
 
 fastq/%.fastq.gz : fastq/%.fastq
 	$(call RUN,,"gzip -c $< > $(@) && $(RM) $<")
@@ -42,7 +42,7 @@ bam/%.bam : bwamem/bam/%.bwamem.$(BAM_SUFFIX)
 	$(call RUN,,"ln -f $(<) $(@)")
 
 
-..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwa.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwa.txt )
+..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwa_mem.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwa_mem.txt )
 .SECONDARY:
 .DELETE_ON_ERROR: 
-.PHONY: bwamem
+.PHONY: bwa_mem
