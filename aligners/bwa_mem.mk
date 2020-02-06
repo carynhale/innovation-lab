@@ -1,9 +1,9 @@
-include modules/Makefile.inc
-include modules/config/gatk.inc
-include modules/config/align.inc
-include modules/bam_tools/process_bam.mk
-include modules/fastq_tools/fastq.mk
-include modules/aligners/align.mk
+include innovation-lab/Makefile.inc
+include innovation-lab/config/gatk.inc
+include innovation-lab/config/align.inc
+include innovation-lab/bam_tools/process_bam.mk
+include innovation-lab/fastq_tools/fastq.mk
+include innovation-lab/aligners/align.mk
 
 LOGDIR ?= log/bwa_mem.$(NOW)
 
