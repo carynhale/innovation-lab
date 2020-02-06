@@ -1,6 +1,6 @@
-include modules/Makefile.inc
-include modules/config/gatk.inc
-include modules/config/align.inc
+include innovation-lab/Makefile.inc
+include innovation-lab/config/gatk.inc
+include innovation-lab/config/align.inc
 
 LOGDIR ?= log/process_bam.$(NOW)
 

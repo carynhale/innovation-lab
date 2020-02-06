@@ -1,5 +1,5 @@
-include modules/Makefile.inc
-include modules/genome_inc/b37.inc
+include innovation-lab/Makefile.inc
+include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/fix_bam.$(NOW)
 PHONY += fix_bam

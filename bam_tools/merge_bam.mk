@@ -1,5 +1,5 @@
-include modules/Makefile.inc
-include modules/bam_tools/process_bam.mk
+include innovation-lab/Makefile.inc
+include innovation-lab/bam_tools/process_bam.mk
 
 LOGDIR = log/merge_bam.$(NOW)
 
