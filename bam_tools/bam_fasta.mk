@@ -1,9 +1,8 @@
 include modules/Makefile.inc
 
-LOGDIR ?= log/bam_to_fasta.$(NOW)
-PHONY += unmapped_reads
+LOGDIR ?= log/bam_fasta.$(NOW)
 
-bam_to_fasta : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).fasta)
+bam_fasta : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).fasta)
 
 define bam-to-fasta
 unmapped_reads/%.fasta : unmapped_reads/%.bam
@@ -13,6 +12,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call bam-to-fasta,$(sample))))
 
 
-.DELETE_ON_ERROR:
+.DUMMY := $(shell mkdir -p version; $(SAMTOOLS2) &> version/samtools.txt )
 .SECONDARY:
-.PHONY: $(PHONY)
+.DELETE_ON_ERROR: 
+.PHONY: bam_fasta

@@ -29,52 +29,17 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 # Aligners
 #==================================================
 
-TARGETS += bwamem
-bwamem :
-	$(call RUN_MAKE,modules/aligners/bwamem_aligner.mk)
+TARGETS += bwa_mem
+bwa_mem :
+	$(call RUN_MAKE,modules/aligners/bwa_mem.mk)
 
-TARGETS += bwa
-bwa : NUM_ATTEMPTS = 50
-bwa :
-	$(call RUN_MAKE,modules/aligners/bwa_aligner.mk)
-
-TARGETS += bowtie
-bowtie : NUM_ATTEMPTS = 50
-bowtie :
-	$(call RUN_MAKE,modules/aligners/bowtie_aligner.mk)
-
-TARGETS += tmap
-tmap : NUM_ATTEMPTS = 50
-tmap :
-	$(call RUN_MAKE,modules/aligners/tmap_aligner.mk)
-
-TARGETS += hisat
-hisat : 
-	$(call RUN_MAKE,modules/aligners/hisat_aligner.mk)
-
-TARGETS += tophat
-tophat : 
-	$(call RUN_MAKE,modules/aligners/tophat_aligner.mk)
-
-TARGETS += star
-star:
-	$(call RUN_MAKE,modules/aligners/star_aligner.mk)
-
-TARGETS += starfusion
-starfusion:
-	$(call RUN_MAKE,modules/aligners/starfusion_aligner.mk)
-	
-TARGETS += blast
-blast :
-	$(call RUN_MAKE,modules/aligners/blast_aligner.mk)
-	
 TARGETS += msk_access
 msk_access :
 	$(call RUN_MAKE,modules/test/workflows/msk_access.mk)
 
 
 #==================================================
-# BAM file processing
+# Utilities BAM file processing
 #==================================================
 
 TARGETS += fix_bam
@@ -97,13 +62,13 @@ TARGETS += extract_unmapped
 extract_unmapped :
 	$(call RUN_MAKE,modules/bam_tools/extract_unmapped.mk)
 	
-TARGETS += bam_to_fasta
-bam_to_fasta :
-	$(call RUN_MAKE,modules/bam_tools/bam_to_fasta.mk)
+TARGETS += bam_fasta
+bam_fasta :
+	$(call RUN_MAKE,modules/bam_tools/bam_fasta.mk)
 
 	
 #==================================================
-# FASTQ file processing
+# Utilities FASTQ file processing
 #==================================================
 
 TARGETS += extract_fastq

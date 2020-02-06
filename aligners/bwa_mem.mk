@@ -1,28 +1,28 @@
 include modules/Makefile.inc
 include modules/config/gatk.inc
 include modules/config/align.inc
+include modules/bam_tools/process_bam.mk
+include modules/fastq_tools/fastq.mk
+include modules/aligners/align.mk
+
+LOGDIR ?= log/bwa_mem.$(NOW)
 
 ALIGNER := bwamem
-
-LOGDIR ?= log/bwamem.$(NOW)
-
 SAMTOOLS_SORT_MEM = 2000000000
 SEQ_PLATFORM = illumina
 FASTQ_CHUNKS := 10
 FASTQ_CHUNK_SEQ := $(shell seq 1 $(FASTQ_CHUNKS))
-FASTQUTILS = $(HOME)/share/usr/ngsutils/bin/fastqutils
 
 BWA_ALN_OPTS ?= -M
 BWAMEM_REF_FASTA ?= $(REF_FASTA)
 BWAMEM_THREADS = 8
 BWAMEM_MEM_PER_THREAD = $(if $(findstring true,$(PDX)),4G,2G)
-
 BWA_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 bwamem : $(BWA_BAMS) $(addsuffix .bai,$(BWA_BAMS))
 
-bam/%.bam : bwamem/bam/%.bwamem.$(BAM_SUFFIX)
-	$(call RUN,,"ln -f $(<) $(@)")
+fastq/%.fastq.gz : fastq/%.fastq
+	$(call RUN,,"gzip -c $< > $(@) && $(RM) $<")
 
 define align-split-fastq
 bwamem/bam/$2.bwamem.bam : $3
@@ -38,15 +38,11 @@ bwamem/bam/%.bwamem.bam : fastq/%.fastq.gz
 	LBID=`echo "$*" | sed 's/_[A-Za-z0-9]\+//'`; \
 	$(call RUN,-n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"$(BWA) mem -t $(BWAMEM_THREADS) $(BWA_ALN_OPTS) -R \"@RG\tID:$*\tLB:$${LBID}\tPL:${SEQ_PLATFORM}\tSM:$${LBID}\" $(BWAMEM_REF_FASTA) $^ | $(SAMTOOLS) view -bhS - > $@")
 
-fastq/%.fastq.gz : fastq/%.fastq
-	$(call RUN,,"gzip -c $< > $(@) && $(RM) $<")
+bam/%.bam : bwamem/bam/%.bwamem.$(BAM_SUFFIX)
+	$(call RUN,,"ln -f $(<) $(@)")
 
 
-..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwamem.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwamem.txt )
+..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwa.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwa.txt )
 .SECONDARY:
 .DELETE_ON_ERROR: 
 .PHONY: bwamem
-
-include modules/bam_tools/process_bam.mk
-include modules/fastq_tools/fastq.mk
-include modules/aligners/align.mk
