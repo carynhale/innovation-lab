@@ -26,7 +26,7 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 
 
 #==================================================
-# FASTQ file aligners
+# FASTQ / BAM file aligners
 #==================================================
 
 TARGETS += bwa_mem
