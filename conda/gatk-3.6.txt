@@ -1,4 +1,0 @@
-# packages in environment at /home/brownd7/share/usr/anaconda-envs/gatk-3.6:
-#
-# Name                    Version                   Build  Channel
-java-jdk                  8.0.45                        0    bioconda
