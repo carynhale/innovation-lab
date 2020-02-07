@@ -4,7 +4,7 @@ endif
 ifneq ("$(wildcard project_config.inc)", "")
 	include project_config.inc
 endif
-include modules/config.inc
+include innovation-lab/config.inc
 
 export
 
@@ -13,7 +13,7 @@ NOW := $(shell date +"%F")
 MAKELOG = log/$(@).$(NOW).log
 
 USE_CLUSTER ?= true
-QMAKE = modules/dodo-cloning-kit/runtime/qmake.pl -n $@.$(NOW) $(if $(SLACK_CHANNEL),-c $(SLACK_CHANNEL)) -r $(NUM_ATTEMPTS) -m -s -- make
+QMAKE = innovation-lab/dodo-cloning-kit/runtime/qmake.pl -n $@.$(NOW) $(if $(SLACK_CHANNEL),-c $(SLACK_CHANNEL)) -r $(NUM_ATTEMPTS) -m -s -- make
 NUM_JOBS ?= 100
 
 define RUN_QMAKE
@@ -31,7 +31,7 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 
 TARGETS += bwa_mem
 bwa_mem :
-	$(call RUN_MAKE,modules/aligners/bwa_mem.mk)
+	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
 
 #==================================================
 # BAM file processing utilities
@@ -39,23 +39,23 @@ bwa_mem :
 
 TARGETS += unmapped_fasta
 unmapped_fasta :
-	$(call RUN_MAKE,modules/bam_tools/unmapped_fasta.mk)
+	$(call RUN_MAKE,innovation-lab/bam_tools/unmapped_fasta.mk)
 	
 TARGETS += unmapped_bam
 unmapped_bam :
-	$(call RUN_MAKE,modules/bam_tools/unmapped_bam.mk)
+	$(call RUN_MAKE,innovation-lab/bam_tools/unmapped_bam.mk)
 
 TARGETS += fix_bam
 fix_bam :
-	$(call RUN_MAKE,modules/bam_tools/fix_bam.mk)
+	$(call RUN_MAKE,innovation-lab/bam_tools/fix_bam.mk)
 
 TARGETS += process_bam
 process_bam : 
-	$(call RUN_MAKE,modules/bam_tools/process_bam.mk)
+	$(call RUN_MAKE,innovation-lab/bam_tools/process_bam.mk)
 
 TARGETS += merge_bam
 merge_bam :
-	$(call RUN_MAKE,modules/bam_tools/merge_bam.mk)
+	$(call RUN_MAKE,innovation-lab/bam_tools/merge_bam.mk)
 	
 	
 #==================================================
@@ -102,15 +102,6 @@ lancet :
 TARGETS += platypus
 platypus:
 	$(call RUN_MAKE,modules/variant_callers/somatic/platypus.mk)
-	
-	
-TARGETS += somatic_sniper
-somatic_sniper :
-	$(call RUN_MAKE,modules/variant_callers/somatic/somatic_sniper.mk)
-
-TARGETS += tvc_tn
-tvc_tn:
-	$(call RUN_MAKE,modules/variant_callers/somatic/tvc_tn.mk)
 	
 	
 #==================================================
