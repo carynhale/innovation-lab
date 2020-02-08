@@ -7,11 +7,10 @@ use Cwd;
 my $cwd = getcwd;
 my $err_slack = "pipeline_error";
 my $fin_slack = "pipeline_finished";
+my $slack_url = "";
 
 my %slack_map = (
-    brownd7 => "U6F3B13B4",
-    ferrandl => "UEE8Z6QQ7",
-    dacruzpa => "U6PAUB3C6"
+    brownd7 => "UTCP32DNV",
 );
 
 sub HELP_MESSAGE {
@@ -27,7 +26,6 @@ sub HELP_MESSAGE {
 
 sub slack {
     my ($slack_channel, $slack_message) = @_;
-    my $slack_url = "";
     if ($slack_channel eq "pipeline_error") {
     	$slack_url = $ENV{SLACK_URL_ERR};
     } elsif ($slack_channel eq "pipeline_finished") {
@@ -62,43 +60,36 @@ my $args = join " ", @ARGV;
 my $n = 0;
 my $retcode;
 do {
-	my $logdir = "$logparent/$name";
-	my $logfile = "$logdir.log";
-	my $i = 0;
-	while (-e $logdir || -e $logfile) {
-		$logdir = "log/$name.$i";
-    	$logfile = "$logdir.log";
-    	$i++;
-	}
-	mkpath $logdir;
-	my $pid = fork;
-	if ($pid == 0) {
-		exec "$qmake $args LOGDIR=$logdir &> $logfile";
-	} else {
-		waitpid(-1, 0);
-		$retcode = $? >> 8;
-    	my $flag = 0;
-    	for my $auth_user (keys %slack_map) {
-        	if ($username eq $auth_user) {
-        		$flag = 1;
-        	}
-		}
-    	if ($flag) {
-        	my $pipeline_channel_msg = "<\@${slackname}|cal> $project_name :";
-        	if ($opt{s} && ($retcode == 0 || $n == 0 || $n + 1 == $attempts)) {
-            	if ($retcode == 0) {
-                	my $slack_msg = "*COMPLETE* $name :ok_hand:";
-                	&slack($fin_slack, "$pipeline_channel_msg $slack_msg");
-                	&slack($opt{c}, $slack_msg) if $opt{c};
-                } else {
-                	my $slack_msg = "*FAILURE* $cwd/$logfile";
-                	if ($n + 1 == $attempts) {
-                		$slack_msg = ":-1: $slack_msg";
-                		&slack($opt{c}, $slack_msg) if $opt{c};
-                	}
-                	&slack($err_slack, "$pipeline_channel_msg $slack_msg");
-                	sleep 30;
+    my $logdir = "$logparent/$name";
+    my $logfile = "$logdir.log";
+    my $i = 0;
+    while (-e $logdir || -e $logfile) {
+        $logdir = "log/$name.$i";
+        $logfile = "$logdir.log";
+        $i++;
+    }
+    mkpath $logdir;
+    my $pid = fork;
+    if ($pid == 0) {
+        exec "$qmake $args LOGDIR=$logdir &> $logfile";
+    } else {
+        waitpid(-1, 0);
+        $retcode = $? >> 8;
+        my $pipeline_channel_msg = "<\@${slackname}|cal> $project_name :";
+        if ($opt{s} && ($retcode == 0 || $n == 0 || $n + 1 == $attempts)) {
+            if ($retcode == 0) {
+                my $slack_msg = "*COMPLETE* $name :ok_hand:";
+                &slack($fin_slack, "$pipeline_channel_msg $slack_msg");
+                &slack($opt{c}, $slack_msg) if $opt{c};
+            } else {
+                my $slack_msg = "*FAILURE* $cwd/$logfile";
+                if ($n + 1 == $attempts) {
+                    # final attempt
+                    $slack_msg = ":-1: $slack_msg";
+                    &slack($opt{c}, $slack_msg) if $opt{c};
                 }
+                &slack($err_slack, "$pipeline_channel_msg $slack_msg");
+                sleep 30;
             }
         }
     }
