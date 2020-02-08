@@ -16,7 +16,7 @@ bam_fix_rg: false
 bam_phred64: false
 bam_reprocess: false
 
-targets_file: ~/share/reference/target_panels/
+targets_file: ~/share/lib/bed_files/MSK-IMPACT-v3.bed
 
 qsub_priority: 0
 ...
