@@ -1,4 +1,4 @@
-include modules/Makefile.inc
+include innovation-lab/Makefile.inc
 
 VPATH ?= unprocessed_bam
 
