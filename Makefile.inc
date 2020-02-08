@@ -10,7 +10,7 @@ ifneq ("$(wildcard config.inc)", "")
 endif
 
 REF ?= b37
-include modules/genome_inc/$(REF).inc
+include innovation-lab/genome_inc/$(REF).inc
 
 ifndef MAKEFILE_INC
 
