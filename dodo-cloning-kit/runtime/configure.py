@@ -8,16 +8,14 @@ import collections
 """ convert yaml files to make include files
 """
 
-
 def lowerBool(x):
     if isinstance(x, bool):
         return str(x).lower()
     else:
         return x
 
-
 def sample_yaml2mk(samples_file, out):
-    samples = yaml.load(open(args.samples_file, 'r'))
+    samples = yaml.full_load(open(args.samples_file, 'r'))
 
     tumors = set()
     normals = set()
@@ -95,7 +93,7 @@ def sample_yaml2mk(samples_file, out):
 
 def sample_attr_yaml2mk(sample_attr_file, out):
     print("\n# sample_attr_file", file=out)
-    sample_attr = yaml.load(open(sample_attr_file, 'r'))
+    sample_attr = yaml.full_load(open(sample_attr_file, 'r'))
     for attr, m in sample_attr.items():
         for k, v in m.items():
             print("{}.{} = {}".format(attr, k, v), file=out)
@@ -103,7 +101,7 @@ def sample_attr_yaml2mk(sample_attr_file, out):
 
 def sample_fastq_yaml2mk(sample_fastq_file, out):
     print("\n# sample_fastq_file", file=out)
-    sample_fastq = yaml.load(open(sample_fastq_file, 'r'))
+    sample_fastq = yaml.full_load(open(sample_fastq_file, 'r'))
     split_samples = set()
     for k, v in sample_fastq.items():
         for idx, fastq in enumerate(v):
@@ -122,7 +120,7 @@ def sample_fastq_yaml2mk(sample_fastq_file, out):
 
 def sample_merge_yaml2mk(sample_merge_file, out):
     print("\n# sample_merge_file", file=out)
-    sample_merge = yaml.load(open(args.sample_merge_file, 'r'))
+    sample_merge = yaml.full_load(open(args.sample_merge_file, 'r'))
     print("MERGE_SAMPLES = {}".format(" ".join(list(sample_merge.keys()))), file=out)
     for k, v in sample_merge.items():
         print("merge.{} = {}".format(k, " ".join(v)), file=out)
@@ -142,7 +140,7 @@ if __name__ == '__main__':
 
     of = open(args.out_file, 'w')
 
-    config = yaml.load(open(args.project_config_file, 'r'))
+    config = yaml.full_load(open(args.project_config_file, 'r'))
     for k, v in config.items():
         print("{} = {}".format(k.upper(), lowerBool(v)), file=of)
 
