@@ -18,7 +18,7 @@ SAMPLE_SET_FILE ?= sample_sets.txt
 SAMPLE_FILE ?= samples.txt
 SAMPLE_SPLIT_FILE ?= samples.split.txt
 
-PROJECT_NAME = $(shell pwd | sed 's:.*/projects/::; s:.*/data/::; s:.*kinglab/::; s:/:_:g')
+PROJECT_NAME = $(shell pwd | sed 's:.*/projects/::; s:.*/data/::; s:/:_:g')
 
 ifneq ($(wildcard $(SAMPLE_FILE)),)
   SAMPLES ?= $(shell sed '/^\#/d' $(SAMPLE_FILE))
@@ -80,7 +80,7 @@ ALL_SAMPLES = $(SAMPLE_PAIRS) $(SAMPLES)
 
 SHELL = /bin/bash
 
-export TMPDIR := $(HOME)/share/data/$(USER)/tmp
+export TMPDIR := $(HOME)/share/tmp
 
 PICARD_MEM = 10G
 PICARD_OPTS = VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=4000000
