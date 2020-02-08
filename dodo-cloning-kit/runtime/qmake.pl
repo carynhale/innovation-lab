@@ -45,7 +45,12 @@ getopts('n:smr:l:c:', \%opt);
 
 my $username = $ENV{LOGNAME} || $ENV{USER} || getpwuid($<);
 my $slackname = $slack_map{$username} || $username;
-my $project_name = $ENV{PROJECT_NAME};
+my $project_name = $cwd;
+$project_name =~ s:.*/juno/::;
+$project_name =~ s:.*/work/::;
+$project_name =~ s:.*/bergerm1/::;
+$project_name =~ s:.*/Innovation/::;
+$project_name =~ s:/:_:g;
 my $attempts = 1;
 my $name = "qmake";
 my $logparent = "log";
