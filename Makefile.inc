@@ -1,7 +1,7 @@
 ifneq ("$(wildcard project_config.inc)", "")
 	include project_config.inc
 endif
-include modules/config.inc
+include innovation-lab/config.inc
 ifdef PROJECT_CONFIG
 include $(PROJECT_CONFIG)
 endif
