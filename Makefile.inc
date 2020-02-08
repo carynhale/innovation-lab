@@ -18,7 +18,7 @@ SAMPLE_SET_FILE ?= sample_sets.txt
 SAMPLE_FILE ?= samples.txt
 SAMPLE_SPLIT_FILE ?= samples.split.txt
 
-PROJECT_NAME = $(shell pwd | sed 's:.*juno::; s:.*/work/::; s:.*/bergerm1/::; s:.*/Innovation/::; s:/:_:g')
+PROJECT_NAME = $(shell pwd | sed 's:.*/home/::; s:.*/share/::; s:.*/$(USER)/::; s:/:_:g')
 
 ifneq ($(wildcard $(SAMPLE_FILE)),)
   SAMPLES ?= $(shell sed '/^\#/d' $(SAMPLE_FILE))
