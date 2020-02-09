@@ -4,7 +4,7 @@ endif
 ifneq ("$(wildcard project_config.inc)", "")
 	include project_config.inc
 endif
-include innovation-lab/config.inc
+include innovation-lab/config/config.inc
 
 export
 
