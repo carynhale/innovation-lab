@@ -14,13 +14,12 @@ my %slack_map = (
 );
 
 sub HELP_MESSAGE {
-    print "Usage: qmake.pl -n [name] -m -r [numAttempts]\n";
-    print "-m: e-mail notifications\n";
+    print "Usage: qmake.pl -n [name] -r [numAttempts]\n";
+    print "-n: job name\n";
+    print "-r: number of attempts (default: 1)\n";
     print "-s: slack notifications\n";
     print "-c: slack channel\n";
-    print "-r: number of attempts (default: 1)\n";
     print "-l: parent log dir (default: log)\n";
-    print "-n: job name\n";
     exit(1);
 }
 
