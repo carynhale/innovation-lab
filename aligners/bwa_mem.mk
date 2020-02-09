@@ -1,9 +1,6 @@
 include innovation-lab/Makefile.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/config/align.inc
-include innovation-lab/bam_tools/process_bam.mk
-include innovation-lab/fastq_tools/fastq.mk
-include innovation-lab/aligners/align.mk
 
 LOGDIR ?= log/bwa_mem.$(NOW)
 
@@ -46,3 +43,7 @@ fastq/%.fastq.gz : fastq/%.fastq
 .SECONDARY:
 .DELETE_ON_ERROR: 
 .PHONY: bwa_mem
+
+include innovation-lab/bam_tools/process_bam.mk
+include innovation-lab/fastq_tools/fastq.mk
+include innovation-lab/aligners/align.mk
