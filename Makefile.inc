@@ -79,11 +79,11 @@ endif
 ALL_SAMPLES = $(SAMPLE_PAIRS) $(SAMPLES)
 
 SHELL = /bin/bash
-
 export TMPDIR := $(HOME)/share/tmp
 
 PICARD_MEM = 10G
 PICARD_OPTS = VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=4000000
+PICARD = $(JAVA8) -Xmx$2 -jar $(PICARD2_JAR) $1 $(PICARD_OPTS)
 
 ANALYZE_COV = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/AnalyzeCovariates.jar $(PICARD_OPTS)
 SORT_SAM = $(call SORT_SAM_MEM,$(PICARD_MEM))
@@ -108,18 +108,9 @@ CLEANBAM_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/CleanSam.jar $(PICARD_OPTS)
 ADD_RG = $(call ADD_RG_MEM,$(PICARD_MEM))
 ADD_RG_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/AddOrReplaceReadGroups.jar $(PICARD_OPTS)
 VALIDATE_SAM = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/ValidateSamFile.jar $(PICARD_OPTS)
-
-PICARD = $(JAVA8) -Xmx$2 -jar $(PICARD2_JAR) $1 $(PICARD_OPTS)
-
 VARSCAN = $(JAVA8) -Xmx10G -jar $(VARSCAN_JAR)
 
 COUNT_SAMPLES = $(shell expr `sed 's/\..*//; s:.*/::' <<< $1 | grep -o "_" | wc -l` + 1)
-
-JAVA_ARGS = -Djava.io.tmpdir=$(TMPDIR)
-JAVA := java $(JAVA_ARGS)
-JAVA6 := $(JAVA6_BIN) $(JAVA_ARGS)
-JAVA7 := $(JAVA7_BIN) $(JAVA_ARGS)
-JAVA8 := $(JAVA8_BIN) $(JAVA_ARGS)
 
 NO_RM ?= false
 ifeq ($(NO_RM),true)
@@ -139,16 +130,14 @@ $(space) +=
 strip-suffix = $(firstword $(subst ., ,$(1)))
 
 LINK = ln -svf $(notdir $1) $(2) && touch $1
-
-NOW := $(shell date +"%F")
-
 MKDIR = mkdir -p -m 775
 MKDIRS = $(MKDIR) $(LOGDIR)/$(@D) $(@D)
 LOG = $(PWD)/$(LOGDIR)/$(@).log
+NOW := $(shell date +"%F")
 
 UMASK = 002
 
-export PATH := $(JRFLAB_MODULES_ENV)/bin:$(PATH)
+export PATH := $(INNOVATION_LAB_001)/bin:$(PATH)
 ECHO_ACTIVATE_ENV = unset PYTHONPATH; OLDPATH=\$$PATH; tries=0; until [[ \$$tries -gt 10 ]] || source $1/bin/activate $1; do export PATH=\$$OLDPATH; tries=\`expr \$$tries + 1\`; jitter=\`expr \$$RANDOM % 10 + 1\`; sleep \`expr \$$jitter \\* \$$tries\`; done
 ACTIVATE_ENV = unset PYTHONPATH; OLDPATH=$$PATH; tries=0; until [[ $$tries -gt 10 ]] || source $1/bin/activate $1; do export PATH=$$OLDPATH; tries=`expr $$tries + 1`; jitter=`expr $$RANDOM % 10 + 1`; sleep `expr $$jitter \* $$tries`; done
 
@@ -161,11 +150,11 @@ RUN_FIRST = umask $(UMASK); $(if $(and $(findstring true,$(USE_CLUSTER)),$(JOBS)
 INIT = $(RUN_FIRST); $(call ACTIVATE_ENV,$(JRFLAB_MODULES_ENV)); umask $(UMASK); set -o pipefail;
 INIT_ENV = $(RUN_FIRST); $(call ACTIVATE_ENV,$1); umask $(UMASK); set -o pipefail;
 
-CLUSTER_ENGINE ?= LSF
 USE_CLUSTER ?= true
+CLUSTER_ENGINE ?= LSF
 
 RUN_OPTS = $(if $(findstring false,$(USE_CLUSTER)),-l) -o $@ $(if $(CLUSTER_ENGINE),-g $(CLUSTER_ENGINE)) \
-		   --default_env $(JRFLAB_MODULES_ENV) -S $(SHELL) \
+		   --default_env $(INNOVATION_LAB_001) -S $(SHELL) \
 		   --log_file $(LOG) $(if $($(CLUSTER_ENGINE)_NODES),--servers $($(CLUSTER_ENGINE)_NODES)) \
 		   $(if $(PROJECT_NAME),-p $(PROJECT_NAME))
 RUN = echo $2 | python $(SCRIPTS_DIR)/runtime/run.py $(RUN_OPTS) $1
@@ -177,18 +166,6 @@ CHECK_MD5 = for i in {0..20}; do if md5sum -c $(filter %.md5,$^); then break; fi
 @M = $(@:.md5=)
 <<M = $(word 2,$(^M))
 <<<M = $(word 3,$(^M))
-
-# check for valid header i.e. non-empty vcf file
-# usage: $(call CHECK_VCF,vcf.file,target,command)
-CHECK_VCF = mkdir -p $(@D); if [ `grep -v '^\#' $< | wc -l` -eq 0 ] && [ `grep '^\#CHROM' $< | wc -l` -eq 1 ]; then cp $< $@; else $1; fi
-CHECK_MAF = mkdir -p $(@D); if [ `grep -v '^\#' $< | wc -l` -eq 1 ] && [ `grep '^Hugo_Symbol' $< | wc -l` -eq 1 ]; then cp $< $@; else $1; fi
-CHECK_UVCF = mkdir -p $(@D); if [ `grep -v '^\#' $< | wc -l` -eq 0 ] && [ `grep '^\#CHROM' $< | wc -l` -eq 1 ]; then sed 's/FILTER\tINFO/FILTER\tUPS-COORDINATE\tINFO/' $< > $@; else $1; fi
-
-# verify that vcf files have #CHROM
-# usage: $(call VERIFY_VCF,tmp,final_dest)
-VERIFY_VCF = if grep -q '^\#CHROM' $1; then mv $1 $2 && if [ -s $1.idx ]; then mv $1.idx $2.idx; fi ; else false; fi
-VERIFY_VCF_GZ = if zgrep -q '^\#CHROM' $1; then mv $1 $2 && if [ -s $1.tbi ]; then mv $1.tbi $2.tbi; fi ; else false; fi
-
 << = $(word 2,$^)
 <<< = $(word 3,$^)
 <<<< = $(word 4,$^)
