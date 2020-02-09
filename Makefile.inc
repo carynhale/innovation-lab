@@ -9,7 +9,6 @@ ifneq ("$(wildcard config.inc)", "")
 	include config.inc
 endif
 
-REF ?= b37
 include innovation-lab/genome_inc/$(REF).inc
 
 ifndef MAKEFILE_INC
@@ -81,35 +80,6 @@ ALL_SAMPLES = $(SAMPLE_PAIRS) $(SAMPLES)
 SHELL = /bin/bash
 export TMPDIR := $(HOME)/share/tmp
 
-PICARD_MEM = 10G
-PICARD_OPTS = VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=4000000
-PICARD = $(JAVA8) -Xmx$2 -jar $(PICARD2_JAR) $1 $(PICARD_OPTS)
-
-ANALYZE_COV = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/AnalyzeCovariates.jar $(PICARD_OPTS)
-SORT_SAM = $(call SORT_SAM_MEM,$(PICARD_MEM))
-SORT_SAM_MEM = $(JAVA) -Xmx$1 -jar $(PICARD_DIR)/SortSam.jar $(PICARD_OPTS) TMP_DIR=$(TMPDIR)
-REORDER_SAM = $(call REORDER_SAM_MEM,$(PICARD_MEM))
-REORDER_SAM_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/ReorderSam.jar $(PICARD_OPTS)
-MARK_DUP = $(call $(MARK_DUP_MEM,$(PICARD_MEM)))
-MARK_DUP_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/MarkDuplicates.jar $(PICARD_OPTS)
-MERGE_SAMS = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/MergeSamFiles.jar $(PICARD_OPTS)
-INTERVAL_LIST_TOOL = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/IntervalListTools.jar $(PICARD_OPTS)
-CREATE_SEQ_DICT = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CreateSequenceDictionary.jar $(PICARD_OPTS)
-CALC_HS_METRICS = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CalculateHsMetrics.jar $(PICARD_OPTS)
-COLLECT_MULT_METRICS = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CollectMultipleMetrics.jar $(PICARD_OPTS)
-COLLECT_TARGETED_METRICS = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/CollectTargetedPcrMetrics.jar $(PICARD_OPTS)
-FIX_MATE = $(call FIX_MATE_MEM,$(PICARD_MEM))
-FIX_MATE_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/FixMateInformation.jar $(PICARD_OPTS) TMP_DIR=$(TMPDIR)
-SAM_TO_FASTQ = $(call SAM_TO_FASTQ_MEM,$(PICARD_MEM))
-SAM_TO_FASTQ_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/SamToFastq.jar $(PICARD_OPTS)
-CLEANBAM = $(call CLEANBAM_MEM,$(PICARD_MEM))
-CLEANBAM_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/CleanSam.jar $(PICARD_OPTS)
-
-ADD_RG = $(call ADD_RG_MEM,$(PICARD_MEM))
-ADD_RG_MEM = $(JAVA) -Xmx$(1) -jar $(PICARD_DIR)/AddOrReplaceReadGroups.jar $(PICARD_OPTS)
-VALIDATE_SAM = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/ValidateSamFile.jar $(PICARD_OPTS)
-VARSCAN = $(JAVA8) -Xmx10G -jar $(VARSCAN_JAR)
-
 COUNT_SAMPLES = $(shell expr `sed 's/\..*//; s:.*/::' <<< $1 | grep -o "_" | wc -l` + 1)
 
 NO_RM ?= false
@@ -137,7 +107,7 @@ NOW := $(shell date +"%F")
 
 UMASK = 002
 
-export PATH := $(INNOVATION_LAB_001)/bin:$(PATH)
+export PATH := $(INNOVATION_LAB_ENV)/bin:$(PATH)
 ECHO_ACTIVATE_ENV = unset PYTHONPATH; OLDPATH=\$$PATH; tries=0; until [[ \$$tries -gt 10 ]] || source $1/bin/activate $1; do export PATH=\$$OLDPATH; tries=\`expr \$$tries + 1\`; jitter=\`expr \$$RANDOM % 10 + 1\`; sleep \`expr \$$jitter \\* \$$tries\`; done
 ACTIVATE_ENV = unset PYTHONPATH; OLDPATH=$$PATH; tries=0; until [[ $$tries -gt 10 ]] || source $1/bin/activate $1; do export PATH=$$OLDPATH; tries=`expr $$tries + 1`; jitter=`expr $$RANDOM % 10 + 1`; sleep `expr $$jitter \* $$tries`; done
 
@@ -147,14 +117,14 @@ JOBS := $(subst -j,,$(JOB_FLAG))
 
 ### LOCAL
 RUN_FIRST = umask $(UMASK); $(if $(and $(findstring true,$(USE_CLUSTER)),$(JOBS)),sleep $$[ ( $$RANDOM % 20 ) + 1 ]s;) $(MKDIRS)
-INIT = $(RUN_FIRST); $(call ACTIVATE_ENV,$(JRFLAB_MODULES_ENV)); umask $(UMASK); set -o pipefail;
+INIT = $(RUN_FIRST); $(call ACTIVATE_ENV,$(INNOVATION_LAB_ENV)); umask $(UMASK); set -o pipefail;
 INIT_ENV = $(RUN_FIRST); $(call ACTIVATE_ENV,$1); umask $(UMASK); set -o pipefail;
 
 USE_CLUSTER ?= true
 CLUSTER_ENGINE ?= LSF
 
 RUN_OPTS = $(if $(findstring false,$(USE_CLUSTER)),-l) -o $@ $(if $(CLUSTER_ENGINE),-g $(CLUSTER_ENGINE)) \
-		   --default_env $(INNOVATION_LAB_001) -S $(SHELL) \
+		   --default_env $(INNOVATION_LAB_ENV) -S $(SHELL) \
 		   --log_file $(LOG) $(if $($(CLUSTER_ENGINE)_NODES),--servers $($(CLUSTER_ENGINE)_NODES)) \
 		   $(if $(PROJECT_NAME),-p $(PROJECT_NAME))
 RUN = echo $2 | python $(SCRIPTS_DIR)/runtime/run.py $(RUN_OPTS) $1
