@@ -21,8 +21,8 @@ BWA_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 bwa_mem : $(BWA_BAMS) $(addsuffix .bai,$(BWA_BAMS))
 
-fastq/%.fastq.gz : fastq/%.fastq
-	$(call RUN,,"gzip -c $< > $(@) && $(RM) $<")
+bam/%.bam : bwamem/bam/%.bwamem.$(BAM_SUFFIX)
+	$(call RUN,,"ln -f $(<) $(@)")
 
 define align-split-fastq
 bwamem/bam/$2.bwamem.bam : $3
@@ -38,8 +38,8 @@ bwamem/bam/%.bwamem.bam : fastq/%.fastq.gz
 	LBID=`echo "$*" | sed 's/_[A-Za-z0-9]\+//'`; \
 	$(call RUN,-n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"$(BWA) mem -t $(BWAMEM_THREADS) $(BWA_ALN_OPTS) -R \"@RG\tID:$*\tLB:$${LBID}\tPL:${SEQ_PLATFORM}\tSM:$${LBID}\" $(BWAMEM_REF_FASTA) $^ | $(SAMTOOLS) view -bhS - > $@")
 
-bam/%.bam : bwamem/bam/%.bwamem.$(BAM_SUFFIX)
-	$(call RUN,,"ln -f $(<) $(@)")
+fastq/%.fastq.gz : fastq/%.fastq
+	$(call RUN,,"gzip -c $< > $(@) && $(RM) $<")
 
 
 ..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwa_mem.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwa_mem.txt )
