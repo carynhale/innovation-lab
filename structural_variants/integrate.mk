@@ -1,37 +1,55 @@
 include modules/Makefile.inc
+include modules/bam_tools/process_bam.mk
 
 LOGDIR = log/integrate_rnaseq.$(NOW)
+.PHONY: integrate_rnaseq
 
-..DUMMY := $(shell mkdir -p version; echo "$(INTEGRATE) &> version/integrate.txt")
-
+INTEGRATE_MINW ?= 2.0
+INTEGRATE_LARGENUM ?= 4
+INTEGRATE_OPTS = -minW $(INTEGRATE_MINW) -largeNum $(INTEGRATE_LARGENUM)
 INTEGRATE_ONCOFUSE = $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/integrateOncofuse.R
-INTEGRATE_ONCOFUSE_OPTS = --oncofuseJar $(ONCOFUSE_JAR) --oncofuseTissueType $(ONCOFUSE_TISSUE_TYPE) --java $(JAVA_BIN) 
+INTEGRATE_ONCOFUSE_OPTS = --oncofuseJar $(ONCOFUSE_JAR) --oncofuseTissueType $(ONCOFUSE_TISSUE_TYPE) --java $(JAVA_BIN) \
+						  --mysqlHost $(EMBL_MYSQLDB_HOST) --mysqlPort $(EMBL_MYSQLDB_PORT) --mysqlUser $(EMBL_MYSQLDB_USER) \
+						  $(if $(EMBL_MYSQLDB_PW),--mysqlPassword $(EMBL_MYSQLDB_PW)) --mysqlDb $(EMBL_MYSQLDB_DB)
 ONCOFUSE_TISSUE_TYPE ?= EPI
+INTEGRATE_TO_USV = python $(SCRIPTS_DIR)/structural_variants/integrate2usv.py
 
-WGSEQ_DIR = ../wgseq
+integrate_rnaseq: integrate_rnaseq/summary.tsv
 
-RNA_TUMOR_NORMAL_FILE ?= rnaseq_tumor_normal.txt
-SAMPLES = $(shell cut -f1 $(RNA_TUMOR_NORMAL_FILE))
-T = $(shell cut -f2 $(RNA_TUMOR_NORMAL_FILE))
-N = $(shell cut -f3 $(RNA_TUMOR_NORMAL_FILE))
-$(foreach i,$(shell seq 1 $(words $(SAMPLES))),$(eval tumor.$(word $i,$(SAMPLES)) = $(word $i,$(T))))
-$(foreach i,$(shell seq 1 $(words $(SAMPLES))),$(eval normal.$(word $i,$(SAMPLES)) = $(word $i,$(N))))
+define init-integrate
+integrate_rnaseq/reads/%.reads.txt integrate_rnaseq/sum/%.sum.tsv integrate_rnaseq/exons/%.exons.tsv integrate_rnaseq/breakpoints/%.breakpoints.tsv : bam/%.bam bam/%.bam.bai
+	$$(call RUN,-s 8G -m 40G,"mkdir -p integrate_rnaseq/reads && \
+							  mkdir -p integrate_rnaseq/sum && \
+							  mkdir -p integrate_rnaseq/exons && \
+							  mkdir -p integrate_rnaseq/breakpoints && \
+							  $$(INTEGRATE) fusion $$(INTEGRATE_OPTS) \
+							  -reads integrate_rnaseq/reads/$$(*).reads.txt \
+							  -sum integrate_rnaseq/sum/$$(*).sum.tsv \
+							  -ex integrate_rnaseq/exons/$$(*).exons.tsv \
+							  -bk integrate_rnaseq/breakpoints/$$(*).breakpoints.tsv \
+							  $$(REF_FASTA) $$(INTEGRATE_ANN) $$(INTEGRATE_BWTS) $$(<) $$(<)")
 
-integrate : $(foreach sample,$(SAMPLES),integrate/oncofuse/$(sample).oncofuse.txt)
-
-define integrate-rna-tumor-normal
-integrate/sum/$1.sum.tsv : bam/$1.bam $$(WGSEQ_DIR)/bam/$2.bam $$(WGSEQ_DIR)/bam/$3.bam bam/$1.bam.bai $$(WGSEQ_DIR)/bam/$2.bam.bai $$(WGSEQ_DIR)/bam/$3.bam.bai
-	$$(call RUN,-s 8G -m 80G,"mkdir -p integrate/reads integrate/sum integrate/exons integrate/breakpoints; $$(INTEGRATE) fusion -reads integrate/reads/$1.reads.txt -sum integrate/sum/$1.sum.tsv -ex integrate/exons/$1.exons.tsv -bk integrate/breakpoints/$1.breakpoints.tsv $$(REF_FASTA) $$(INTEGRATE_ANN) $$(INTEGRATE_BWTS) $$(<) $$(<) $$(<<) $$(<<<)")
 endef
-$(foreach sample,$(SAMPLES),$(eval $(call integrate-rna-tumor-normal,$(sample),$(tumor.$(sample)),$(normal.$(sample)))))
+$(foreach sample,$(TUMOR_SAMPLES),\
+		$(eval $(call init-integrate,$(sample))))
 
-integrate/oncofuse/%.oncofuse.txt : integrate/sum/%.sum.tsv
-	$(call RUN,-s 7G -m 10G,"$(INTEGRATE_ONCOFUSE) $(INTEGRATE_ONCOFUSE_OPTS) \
-		--sumFile $< \
-		--exonsFile integrate/exons/$*.exons.tsv \
-		--breakpointsFile integrate/breakpoints/$*.breakpoints.tsv \
-		--outPrefix $(@D)/$*")
+define init-oncofuse
+integrate_rnaseq/oncofuse/%.oncofuse.txt : integrate_rnaseq/sum/%.sum.tsv integrate_rnaseq/exons/%.exons.tsv integrate_rnaseq/breakpoints/%.breakpoints.tsv
+	$$(call RUN,-s 7G -m 10G,"$$(INTEGRATE_ONCOFUSE) $$(INTEGRATE_ONCOFUSE_OPTS) \
+							  --ref $$(REF) \
+					  		  --sumFile $$(<) \
+							  --exonsFile $$(<<) \
+							  --breakpointsFile $$(<<<) \
+							  --outPrefix $$(@D)/$$(*)")
+		
+endef
+$(foreach sample,$(TUMOR_SAMPLES),\
+		$(eval $(call init-oncofuse,$(sample))))
 
-.SECONDARY:
+integrate_rnaseq/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),integrate_rnaseq/oncofuse/$(sample).oncofuse.txt))
+	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
+				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/integraternaseq.R --samples '$(TUMOR_SAMPLES)'")
+
 .DELETE_ON_ERROR:
-.PHONY: integrate
+.SECONDARY:
+.PHONY: $(PHONY)
