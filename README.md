@@ -2,12 +2,26 @@
 [![Build Status](https://travis-ci.com/ndbrown6/innovation-lab.svg?token=WQkjmC3gu8Nd4XcQmFkn&branch=master)](https://travis-ci.com/ndbrown6/innovation-lab)
 
 ## Introduction
-This is a lightweight fork of the jrflab [modules](https://github.com/jrflab/modules).
+This is a lightweight fork of a previous project [modules](https://github.com/ndbrown6/modules).
 
 ## Installation
-The easiest way to download this pipeline is to clone the repository.
+For outside users, the easiest way to download/ execute this pipeline is to install
+locally miniconda with its dependencies and clone this git repository
 
 ```
+wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O $HOME/miniconda.sh
+bash $HOME/miniconda.sh -b -p $HOME/.miniconda
+export PATH="$HOME/.miniconda/bin:$PATH"
+hash -r
+conda config --set always_yes yes --set changeps1 no
+conda update -q conda
+conda info -a
+conda config --add channels r
+conda config --add channels bioconda
+mkdir -p $HOME/share $HOME/share/usr $HOME/share/usr/env
+export INNOVATION_ENV_VERSION=0.0.1
+conda create -q -n $HOME/share/usr/env/innovation-lab-$INNOVATION_ENV_VERSION
+source activate $HOME/share/usr/env/innovation-lab-$INNOVATION_ENV_VERSION
 git clone https://github.com/ndbrown6/innovation-lab.git
 ```
 
