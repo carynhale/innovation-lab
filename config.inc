@@ -47,6 +47,5 @@ ANALYZE_COV = GATK -Xmx10G -T AnalyzeCovariates
 # paths
 SCRIPTS_DIR ?= modules/dodo-cloning-kit
 
-
 endif
 CONFIG_INC = true
