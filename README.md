@@ -20,7 +20,7 @@ conda config --add channels r
 conda config --add channels bioconda
 mkdir -p $HOME/share $HOME/share/usr $HOME/share/usr/env
 export INNOVATION_ENV_VERSION=0.0.1
-conda create -q -n $HOME/share/usr/env/innovation-lab-$INNOVATION_ENV_VERSION
+conda create -q -p $HOME/share/usr/env/innovation-lab-$INNOVATION_ENV_VERSION
 source activate $HOME/share/usr/env/innovation-lab-$INNOVATION_ENV_VERSION
 git clone https://github.com/ndbrown6/innovation-lab.git
 ```
