@@ -21,19 +21,6 @@ install:
   - conda info -a
   - conda config --add channels r
   - conda config --add channels bioconda 
-  - conda config --add channels auto
-  - conda config --add channels jrderuiter
-  - conda config --add channels biobuilds
-  - conda create -q -n jrflab --file conda_env/jrflab_modules_env.txt
-  - conda create -q -n r-env --file conda_env/R3.2.2.txt
+  - conda create -q -n innovation-lab
 script:
-# TODO: copy number heatmap test not working:
-# source activate r-env
-# bash -x test/copy_number/test_copynumber_heatmap.sh
-  - source activate jrflab
-  - bash -x test/vcf_tools/test_common_filter.sh
-  - bash -x test/vcf_tools/test_hotspot.sh
-  - bash -x test/vcf_tools/test_pathogenicity.sh
-  - bash -x test/scripts/test_create_sample_yaml.sh
-  - bash -x test/scripts/test_configure.sh
-
+  - source activate innovation-lab
