@@ -1,11 +1,11 @@
-# modules
+# innovation-lab
 [![Build Status](https://travis-ci.org/cBioPortal/cbioportal.svg?branch=master)](https://travis-ci.org/jrflab/modules)
 
 ## Introduction
-This is an updated fork of the jrflab [modules](https://github.com/jrflab/modules).
+This is a lightweight fork of the jrflab [modules](https://github.com/jrflab/modules).
 
 ## Installation
-The easiest way to download this pipeline is to clone recursively the repository with its required submodules.
+The easiest way to download this pipeline is to clone the repository.
 
 ```
 git clone --recurse-submodules https://github.com/ndbrown6/modules.git
