@@ -1,7 +1,7 @@
 ---
-# sample_order: [AWT, AWX1, AWX2, AWX3, AWX4, AWL, AWM1, AWM2, AWX5]
-# gene_blacklist: [TTN]
+# sample_order: [A0P1, A0P2, A0M1, A0M2, A0M3, A0M4, A0M5]
+# gene_blacklist: [TTN, CACNA1A]
 # sample_rename:
-#    AWM1: AWM1BR
-#    AWM2: AWM2BO
+#    A0P1: A0-P1
+#    A0P2: A0-P2
 ...

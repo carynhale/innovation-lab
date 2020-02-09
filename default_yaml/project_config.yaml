@@ -1,10 +1,13 @@
 ---
-cluster_engine: LSF
 
+# job submission
+cluster_engine: LSF
 use_cluster: true
 
+# reference genome
 ref: b37
 
+# bwa mem options
 aligner: bwamem
 bam_chr1_base_recal: true
 bam_dup_type: markdup
@@ -16,7 +19,7 @@ bam_fix_rg: false
 bam_phred64: false
 bam_reprocess: false
 
+# target bed file
 targets_file: ~/share/lib/bed_files/MSK-IMPACT-v3.bed
 
-qsub_priority: 0
 ...
