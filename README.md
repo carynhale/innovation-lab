@@ -1,5 +1,5 @@
 # innovation-lab
-[![Build Status](https://travis-ci.org/cBioPortal/cbioportal.svg?branch=master)](https://travis-ci.org/jrflab/modules)
+[![Build Status]](https://travis-ci.com/ndbrown6/innovation-lab/)
 
 ## Introduction
 This is a lightweight fork of the jrflab [modules](https://github.com/jrflab/modules).
