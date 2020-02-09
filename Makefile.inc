@@ -115,7 +115,6 @@ MAKE_PID := $(shell echo $$PPID)
 JOB_FLAG := $(filter -j%, $(subst -j ,-j,$(shell ps T | grep "^\s*$(MAKE_PID).*$(MAKE)")))
 JOBS := $(subst -j,,$(JOB_FLAG))
 
-### LOCAL
 RUN_FIRST = umask $(UMASK); $(if $(and $(findstring true,$(USE_CLUSTER)),$(JOBS)),sleep $$[ ( $$RANDOM % 20 ) + 1 ]s;) $(MKDIRS)
 INIT = $(RUN_FIRST); $(call ACTIVATE_ENV,$(INNOVATION_LAB_ENV)); umask $(UMASK); set -o pipefail;
 INIT_ENV = $(RUN_FIRST); $(call ACTIVATE_ENV,$1); umask $(UMASK); set -o pipefail;
