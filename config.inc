@@ -18,14 +18,14 @@ PICRAD ?= picard
 GATK ?= gatk3
 
 # java
-JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java
-JAVA7 ?= $(HOME)/share/usr/java/jdk1.7.0_80/bin/java
-JAVA8 ?= $(HOME)/share/usr/java/jdk1.8.0_202/bin/java
+JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
+JAVA7 ?= $(HOME)/share/usr/java/jdk1.7.0_80/bin/java -Djava.io.tmpdir=$(TMPDIR)
+JAVA8 ?= $(HOME)/share/usr/java/jdk1.8.0_202/bin/java -Djava.io.tmpdir=$(TMPDIR)
 
 # uncategorized
 REF ?= b37
 SEQ_PLATFORM ?= illumina
-SCRIPTS ?= modules/dodo-cloning-kit
+SCRIPTS_DIR ?= modules/dodo-cloning-kit
 
 endif
 CONFIG_INC = true

@@ -84,7 +84,7 @@ export TMPDIR := $(HOME)/share/tmp
 
 PICARD_MEM = 10G
 PICARD_OPTS = VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=4000000
-PICARD_DIR ?= $(HOME)/share/usr/lib/java
+
 ANALYZE_COV = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/AnalyzeCovariates.jar $(PICARD_OPTS)
 SORT_SAM = $(call SORT_SAM_MEM,$(PICARD_MEM))
 SORT_SAM_MEM = $(JAVA) -Xmx$1 -jar $(PICARD_DIR)/SortSam.jar $(PICARD_OPTS) TMP_DIR=$(TMPDIR)
@@ -112,13 +112,6 @@ VALIDATE_SAM = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/ValidateSamFile.jar 
 PICARD = $(JAVA8) -Xmx$2 -jar $(PICARD2_JAR) $1 $(PICARD_OPTS)
 
 VARSCAN = $(JAVA8) -Xmx10G -jar $(VARSCAN_JAR)
-
-SNP_EFF = $(call SNP_EFF_MEM,$(DEFAULT_JAVA_MEM))
-SNP_EFF_MEM = $(JAVA8) -Xmx$1 -jar $(SNP_EFF_JAR)
-SNP_SIFT_MEM = $(JAVA8) -Xmx$1 -jar $(SNP_SIFT_JAR)
-SNP_SIFT = $(call SNP_SIFT_MEM,$(DEFAULT_JAVA_MEM))
-VCF_EFF_ONE_PER_LINE = $(HOME)/share/usr/snpEff-4.1/scripts/vcfEffOnePerLine.pl
-VCF_JOIN_EFF = $(SCRIPTS_DIR)/runtime/join_eff.pl
 
 COUNT_SAMPLES = $(shell expr `sed 's/\..*//; s:.*/::' <<< $1 | grep -o "_" | wc -l` + 1)
 
@@ -210,12 +203,10 @@ endef
 
 ifeq ($(USE_CLUSTER),true)
 ifeq ($(CLUSTER_ENGINE),SGE)
-export DRMAA_LIBRARY_PATH = /common/sge/lib/lx24-amd64/libdrmaa.so.1.0
+export DRMAA_LIBRARY_PATH = /common/sge/lib/lx24-amd64/libdrmaa.so
 else
 ifeq ($(CLUSTER_ENGINE),LSF)
-export DRMAA_LIBRARY_PATH = /admin/lsf/10.1/linux3.10-glibc2.17-x86_64/lib/libdrmaa.so
-else
-export DRMAA_LIBRARY_PATH = /opt/torque/lib/libdrmaa.so.1
+export DRMAA_LIBRARY_PATH = /common/juno/OS7/10.1/linux3.10-glibc2.17-x86_64/lib/libdrmaa.so
 endif
 endif
 endif
