@@ -21,22 +21,11 @@ GATK ?= gatk3
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java
 JAVA7 ?= $(HOME)/share/usr/java/jdk1.7.0_80/bin/java
 JAVA8 ?= $(HOME)/share/usr/java/jdk1.8.0_202/bin/java
-JAVA ?=  $(JAVA8)
 
-# java applications
-MUTECT_JAR ?= $(JARDIR)/muTect-1.1.7.jar
-VARSCAN_JAR ?= $(JARDIR)/VarScan.v2.3.9.jar
-MARIANAS ?= $(HOME)/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
-WALTZ ?= $(HOME)/share/usr/marianas-1.8.1/Waltz-3.0.jar
-PICARD_DIR ?= $(JARDIR)/picard-1.92
-
-# SCRIPTS_DIR ?= modules/dodo-cloning-kit
-# VCF2MAF ?= $(PERL) $(HOME)/share/usr/bin/vcf2maf.pl
-# MAF2MAF ?= $(PERL) $(HOME)/share/usr/bin/maf2maf.pl
-# MAF2VCF ?= $(PERL) $(HOME)/share/usr/bin/maf2vcf.pl
-
+# uncategorized
 REF ?= b37
 SEQ_PLATFORM ?= illumina
+SCRIPTS ?= modules/dodo-cloning-kit
 
 endif
 CONFIG_INC = true
