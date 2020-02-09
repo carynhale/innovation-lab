@@ -1,7 +1,7 @@
 ifndef GATK_INC
-DEFAULT_JAVA_MEM = 18G
-GATK = $(call GATK_MEM,$(DEFAULT_JAVA_MEM))
-GATK_MEM = $(JAVA7) -Xmx$(1) -jar $(GATK_JAR) -S LENIENT
+GATK_MEM = 18G
+GATK_CMD = $(call GATK_OPT,$(GATK_MEM))
+GATK_OPT = $(GATK) -Xmx$(1) -S LENIENT
 
 endif
 GATK_INC = true
