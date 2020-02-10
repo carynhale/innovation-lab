@@ -49,10 +49,6 @@ TARGETS += unmapped_bam
 unmapped_bam :
 	$(call RUN_MAKE,innovation-lab/bam_tools/unmapped_bam.mk)
 
-TARGETS += process_bam
-process_bam : 
-	$(call RUN_MAKE,innovation-lab/bam_tools/process_bam.mk)
-
 TARGETS += merge_bam
 merge_bam :
 	$(call RUN_MAKE,innovation-lab/bam_tools/merge_bam.mk)
