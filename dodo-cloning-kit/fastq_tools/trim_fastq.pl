@@ -5,7 +5,7 @@ use strict;
 use Getopt::Std;
 
 my %opt;
-getopts('hs:e:l:', \%opt);
+getopts('h:s:e:l:', \%opt);
 
 my $usage = <<ENDL;
 Usage: trim_fastq.pl -l [read length] 
