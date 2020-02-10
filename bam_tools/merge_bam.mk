@@ -10,7 +10,7 @@ define merged-bam
 	$$(INIT) $$(SAMTOOLS) view -H $$< > $$@
 
 merged_bam/$1.header.sam : $$(merge.$1:.bam=.header.sam)
-	$$(call RUN,-s 16G -m 18G,"$$(call PICARD,MergeSamFiles,13G) $$(foreach sam,$$^,I=$$(sam) ) O=$$@")
+	$$(call RUN,-s 16G -m 18G,"$$(MERGE_SAM) $$(foreach sam,$$^,I=$$(sam) ) O=$$@")
 
 merged_bam/$1.bam : merged_bam/$1.header.sam $$(merge.$1)
 	$$(call RUN,-s 12G -m 15G,"$$(SAMTOOLS) merge -f -h $$< $$(@) $$(filter %.bam,$$^)")

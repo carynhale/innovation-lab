@@ -12,7 +12,7 @@ FASTQ_CHUNK_SEQ := $(shell seq 1 $(FASTQ_CHUNKS))
 BWA_ALN_OPTS ?= -M
 BWAMEM_REF_FASTA ?= $(REF_FASTA)
 BWAMEM_THREADS = 8
-BWAMEM_MEM_PER_THREAD = $(if $(findstring true,$(PDX)),4G,2G)
+BWAMEM_MEM_PER_THREAD = 2G
 BWA_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 bwa_mem : $(BWA_BAMS) $(addsuffix .bai,$(BWA_BAMS))
