@@ -45,7 +45,7 @@ VALIDATE_SAM = $(JAVA) -Xmx$(PICARD_MEM) -jar $(PICARD_DIR)/ValidateSamFile.jar 
 ANALYZE_COV = GATK -Xmx10G -T AnalyzeCovariates 
 
 # paths
-SCRIPTS_DIR ?= modules/dodo-cloning-kit
+SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
 
 endif
 CONFIG_INC = true
