@@ -1,11 +1,9 @@
 include innovation-lab/Makefile.inc
 
-VPATH ?= unprocessed_bam
-
 LOGDIR ?= log/fastq.$(NOW)
 
-EXTRACT_TOOL ?= picard
-BAM2FASTX = $(HOME)/usr/bin/bam2fastx
+VPATH ?= unprocessed_bam
+EXTRACT_TOOL ?= $(PICARD)
 FASTQ_TRIMMER = $(PERL) $(SCRIPTS_DIR)/fastq_tools/trim_fastq.pl
 
 ifeq ($(TRIM_READS),true)

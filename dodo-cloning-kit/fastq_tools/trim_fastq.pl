@@ -1,16 +1,14 @@
 #!/usr/bin/env perl
-# trim fastq file
 
-use strict;
 use warnings;
-
+use strict;
 use Getopt::Std;
 
 my %opt;
 getopts('hs:e:l:', \%opt);
 
 my $usage = <<ENDL;
-Usage: filterFastq.pl -l [read length] 
+Usage: trim_fastq.pl -l [read length] 
 -h: this help message
 -l [integer]: max length
 -s [integer]: trim x bases from start of read
