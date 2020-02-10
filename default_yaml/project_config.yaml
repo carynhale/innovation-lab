@@ -1,5 +1,4 @@
 ---
-
 # job submission
 cluster_engine: LSF
 use_cluster: true
@@ -21,5 +20,4 @@ bam_reprocess: false
 
 # target bed file
 targets_file: ~/share/lib/bed_files/MSK-IMPACT-v3.bed
-
 ...
