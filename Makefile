@@ -37,6 +37,10 @@ bwa_mem :
 # BAM file processing utilities
 #==================================================
 
+TARGETS += fix_bam
+fix_bam :
+	$(call RUN_MAKE,innovation-lab/bam_tools/fix_bam.mk)
+
 TARGETS += unmapped_fasta
 unmapped_fasta :
 	$(call RUN_MAKE,innovation-lab/bam_tools/unmapped_fasta.mk)
@@ -44,10 +48,6 @@ unmapped_fasta :
 TARGETS += unmapped_bam
 unmapped_bam :
 	$(call RUN_MAKE,innovation-lab/bam_tools/unmapped_bam.mk)
-
-TARGETS += fix_bam
-fix_bam :
-	$(call RUN_MAKE,innovation-lab/bam_tools/fix_bam.mk)
 
 TARGETS += process_bam
 process_bam : 

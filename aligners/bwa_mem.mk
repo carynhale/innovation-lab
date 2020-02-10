@@ -38,9 +38,17 @@ fastq/%.fastq.gz : fastq/%.fastq
 	$(call RUN,,"gzip -c $< > $(@) && $(RM) $<")
 
 
-..DUMMY := $(shell mkdir -p version; $(BWA) &> version/bwa_mem.txt; echo "options: $(BWA_ALN_OPTS)" >> version/bwa_mem.txt )
+..DUMMY := $(shell mkdir -p version && \
+			 $(BWA) &> version/tmp.txt && \
+			 head -3 version/tmp.txt | tail -2 > version/bwa_mem.txt && \
+			 rm version/tmp.txt && \
+			 $(SAMTOOLS) --version >> version/bwa_mem.txt && \
+			 echo "gatk3" >> version/bwa_mem.txt && \
+			 $(GATK) --version >> version/bwa_mem.txt && \
+			 echo "picard" >> version/bwa_mem.txt && \
+			 $(PICARD) MarkDuplicates --version >> version/bwa_mem.txt)
 .SECONDARY:
-.DELETE_ON_ERROR: 
+.DELETE_ON_ERROR:
 .PHONY: bwa_mem
 
 include innovation-lab/bam_tools/process_bam.mk

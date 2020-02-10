@@ -27,7 +27,7 @@ JAVA7 ?= $(HOME)/share/usr/java/jdk1.7.0_80/bin/java -Djava.io.tmpdir=$(TMPDIR)
 JAVA8 ?= $(HOME)/share/usr/java/jdk1.8.0_202/bin/java -Djava.io.tmpdir=$(TMPDIR)
 
 # picard command lines
-PICARD_MEM = 10G
+PICARD_MEM = 12G
 PICARD_OPTS = VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=4000000 TMP_DIR=$(TMPDIR)
 SORT_SAM = $(PICARD) -Xmx$(PICARD_MEM) SortSam $(PICARD_OPTS)
 REORDER_SAM = $(PICARD) -Xmx$(PICARD_MEM) ReorderSam $(PICARD_OPTS)
@@ -43,6 +43,8 @@ SAM_TO_FASTQ = $(PICARD) -Xmx$(PICARD_MEM) SamToFastq $(PICARD_OPTS)
 CLEAN_BAM = $(PICARD) -Xmx$(PICARD_MEM) CleanSam $(PICARD_OPTS)
 ADD_RG = $(PICARD) -Xmx$(PICARD_MEM) AddOrReplaceReadGroups $(PICARD_OPTS)
 VALIDATE_SAM = $(PICARD) -Xmx$(PICARD_MEM) ValidateSamFile $(PICARD_OPTS)
+REVERT_SAM = $(PICARD) -Xmx$(PICARD_MEM) RevertSam $(PICARD_OPTS)
+MERGE_ALIGNMENTS = $(PICARD) -Xmx$(PICARD_MEM) MergeBamAlignment $(PICAD_OPTS)
 
 # gatk command lines
 GATK_MEM = 18G
