@@ -7,21 +7,6 @@ use Getopt::Std;
 my %opt;
 getopts('h:s:e:l:', \%opt);
 
-my $usage = <<ENDL;
-Usage: trim_fastq.pl -l [read length] 
--h: this help message
--l [integer]: max length
--s [integer]: trim x bases from start of read
--e [integer]: trim x bases from end of read
-ENDL
-
-sub HELP_MESSAGE {
-    print STDERR $usage;
-    exit(1);
-}
-
-print "Missing read-trim length\n" and HELP_MESSAGE() unless ($opt{l} || $opt{s} || $opt{e});
-
 my $i = 0;
 while (<STDIN>) {
     chomp;
