@@ -44,28 +44,40 @@ yaml.dump(sample_fastqs, args.sample_fastq_file,
     allow_unicode=None,
     line_break=None)
 
-# normals = set()
-# tumors = set()
-# for s in list(sample_fastqs.keys()):
-#     if s.endswith('N'):
-#         normals.add(s)
-#     else:
-#         tumors.add(s)
-# 
-# samples = []
-# unmatched_tumors = tumors
-# for norm in normals:
-#     name = re.sub(r'N$', '', norm)
-#     tums = [x for x in tumors if x.startswith(name)]
-#     if tums is not None:
-#         for x in tums:
-#             unmatched_tumors.discard(x)
-#         samples.append({'name': name, 'normal': norm, 'tumor': tums})
-#     else:
-#         samples.append({'name': name, 'normal': norm})
-# 
-# for unmatched_tum in unmatched_tumors:
-#     name = re.sub(r'T$', '', unmatched_tum)
-#     samples.append({'name': name, 'tumor': [unmatched_tum]})
-# 
-# yaml.dump(samples, args.sample_file)
+normals = set()
+tumors = set()
+for s in list(sample_fastqs.keys()):
+    if s.endswith('N'):
+        normals.add(s)
+    else:
+        tumors.add(s)
+
+samples = []
+unmatched_tumors = tumors
+for norm in normals:
+    name = re.sub(r'N$', '', norm)
+    tums = [x for x in tumors if x.startswith(name)]
+    if tums is not None:
+        for x in tums:
+            unmatched_tumors.discard(x)
+        samples.append({'name': name, 'normal': norm, 'tumor': tums})
+    else:
+        samples.append({'name': name, 'normal': norm})
+
+for unmatched_tum in unmatched_tumors:
+    name = re.sub(r'T$', '', unmatched_tum)
+    samples.append({'name': name, 'tumor': [unmatched_tum]})
+
+yaml.dump(samples, args.sample_file,
+    default_style=None,
+    default_flow_style=None,
+    encoding='utf-8',
+    explicit_start=None,
+    explicit_end=None,
+    version=None,
+    tags=None,
+    canonical=None,
+    indent=None,
+    width=None,
+    allow_unicode=None,
+    line_break=None)
