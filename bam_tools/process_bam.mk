@@ -114,7 +114,7 @@ endef
 $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-realn,$(chr))))
 
 %.realn.bam : $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_realn.bam) $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_realn.bai)
-	$(call RUN,-n 2 -s 10G -m 11G,"$(MERGE_SAMS) $(foreach i,$(filter %.bam,$^), I=$(i)) SORT_ORDER=coordinate O=$@ USE_THREADING=true && \
+	$(call RUN,-n 2 -s 10G -m 11G,"$(MERGE_SAM) $(foreach i,$(filter %.bam,$^), I=$(i)) SORT_ORDER=coordinate O=$@ USE_THREADING=true && \
 								   $(RM) $^ $(@:.realn.bam=.bam)")
 
 %.recal.bam : $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_recal.bam) $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_recal.bai)
