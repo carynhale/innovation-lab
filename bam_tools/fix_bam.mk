@@ -62,7 +62,7 @@ endef
 
 ..DUMMY := $(shell mkdir -p version && \
 			 echo "picard" > version/fix_bam.txt && \
-			 $(PICARD) MarkDuplicates --version >> version/fix_bam.txt
+			 $(PICARD) MarkDuplicates --version >> version/fix_bam.txt && \
 			 $(SAMTOOLS) --version >> version/fix_bam.txt)
 .SECONDARY:
 .DELETE_ON_ERROR: 
