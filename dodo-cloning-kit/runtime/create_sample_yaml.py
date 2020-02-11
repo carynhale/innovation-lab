@@ -16,7 +16,7 @@ paired_fastqs = []
 for fastq_dir in args.fastq_dir:
     fastqFiles = glob2.glob(fastq_dir + '/*/**/*' + args.fastq_suffix)
     r1fastqs = [x for x in fastqFiles if re.search(r'_S\d+_R1_', x)]
-	for r1fastq in r1fastqs:
+    for r1fastq in r1fastqs:
        r2fastq = re.sub('_(S\d+)_R1_', '_\g<1>_R2_', r1fastq)
        assert(any([r2fastq == x for x in fastqFiles]))
        paired_fastqs.append([r1fastq, r2fastq])
