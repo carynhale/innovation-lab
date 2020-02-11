@@ -5,16 +5,11 @@ import yaml
 import argparse
 import re
 
-parser = argparse.ArgumentParser(prog='create_sample_yaml.py',
-                                 description='Create samples.fastq.yaml and samples.yaml(best guess) from a rawdata \
-                                 dir')
+parser = argparse.ArgumentParser(prog='create_sample_yaml.py', description='Create samples.fastq.yaml and samples.yaml from a fastq directory')
 parser.add_argument('fastq_dir', nargs = '+')
 parser.add_argument('--fastq_suffix', default='.fastq.gz')
-parser.add_argument('--sample_fastq_file', help='sample fastq file yaml output',
-                    type=argparse.FileType('w'), nargs='?',
-                    default='sample.fastq.yaml')
-parser.add_argument('--sample_file', help='sample yaml output file', type=argparse.FileType('w'), nargs='?',
-                    default='samples.yaml')
+parser.add_argument('--sample_fastq_file', help='sample fastq file yaml output', type=argparse.FileType('w'), nargs='?', default='sample.fastq.yaml')
+parser.add_argument('--sample_file', help='sample yaml output file', type=argparse.FileType('w'), nargs='?', default='samples.yaml')
 args = parser.parse_args()
 
 paired_fastqs = []
