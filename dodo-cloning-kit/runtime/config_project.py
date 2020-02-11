@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-from __future__ import print_function
 
+from __future__ import print_function
 import yaml
 import argparse
 import collections
-
-""" convert yaml files to make include files
-"""
 
 def lowerBool(x):
     if isinstance(x, bool):

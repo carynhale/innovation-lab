@@ -2,7 +2,6 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/msk_access.$(NOW)
-PHONY += marianas bam metrics
 
 MSK_ACCESS_WORKFLOW += clip_umi
 MSK_ACCESS_WORKFLOW += align_fastq
@@ -70,6 +69,7 @@ include modules/test/qc/umiqc.mk
 include modules/test/qc/plotmetrics.mk
 include modules/test/qc/clustersamples.mk
 
+..DUMMY := $(shell mkdir -p version)
 .DELETE_ON_ERROR:
 .SECONDARY:
-.PHONY: $(PHONY)
+.PHONY: msk_access
