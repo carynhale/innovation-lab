@@ -8,8 +8,8 @@ fix_bam : $(foreach sample,$(SAMPLES),fixed_bam/$(sample).bam)
 define fix-bam
 unprocessed_bam/%.ubam : unprocessed_bam/%.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"$$(REVERT_SAM) \
-									   I=$$(<) \
-									   O=unprocessed_bam/$$(*).ubam \
+									   INPUT=$$(<) \
+									   OUTPUT=unprocessed_bam/$$(*).ubam \
 									   SANITIZE=true \
 									   MAX_DISCARD_FRACTION=0.005 \
 									   ATTRIBUTE_TO_CLEAR=XT \
@@ -23,10 +23,10 @@ unprocessed_bam/%.ubam : unprocessed_bam/%.bam
 									   REMOVE_ALIGNMENT_INFORMATION=true")
 unprocessed_bam/%.fixed.bam : unprocessed_bam/%.ubam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"$$(MERGE_ALIGNMENTS) \
-										R=$$(DMP_FASTA) \
+										REFERENCE_SEQUENCE=$$(DMP_FASTA) \
 										UNMAPPED_BAM=$$(<) \
 										ALIGNED_BAM=unprocessed_bam/$$(*).bam \
-										O=unprocessed_bam/$$(*).fixed.bam \
+										OUTPUT=unprocessed_bam/$$(*).fixed.bam \
 										CREATE_INDEX=true \
 										ADD_MATE_CIGAR=true \
 										CLIP_ADAPTERS=true \
@@ -36,14 +36,14 @@ unprocessed_bam/%.fixed.bam : unprocessed_bam/%.ubam
 										rm -rf unprocessed_bam/$$(*).ubam")
 unprocessed_bam/%.dedup.bam : unprocessed_bam/%.fixed.bam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"$$(MARK_DUP) \
-										I=$$(<) \
-										O=unprocessed_bam/$$(*).dedup.bam \
-										M=unprocessed_bam/$$(*).txt && \
+										INPUT=$$(<) \
+										OUTPUT=unprocessed_bam/$$(*).dedup.bam \
+										METRICS_FILE=unprocessed_bam/$$(*).txt && \
 										rm -rf unprocessed_bam/$$(*).fixed.bam")
 fixed_bam/%.bam : unprocessed_bam/%.dedup.bam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"$$(ADD_RG) \
-										I=$$(<) \
-										O=fixed_bam/$$(*).bam \
+										INPUT=$$(<) \
+										OUTPUT=fixed_bam/$$(*).bam \
 										RGID=$$(*) \
 										RGLB=$$(*) \
 										RGPL=illumina \
