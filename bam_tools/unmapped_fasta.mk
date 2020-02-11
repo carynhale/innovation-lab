@@ -12,7 +12,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call extract-unmapped-reads,$(sample))))
 
 
-..DUMMY := $(shell mkdir -p version && \
+..DUMMY := $(shell mkdir -p version; \
 			 $(SAMTOOLS) --version > version/unmapped_fasta.txt)
 .SECONDARY:
 .DELETE_ON_ERROR: 
