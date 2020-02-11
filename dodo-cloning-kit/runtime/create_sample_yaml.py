@@ -14,12 +14,12 @@ args = parser.parse_args()
 
 paired_fastqs = []
 for fastq_dir in args.fastq_dir:
-    fastqFiles = glob2.glob(fastq_dir + '/**/*' + args.fastq_suffix)
+    fastqFiles = glob2.glob(fastq_dir + '/*/**/*' + args.fastq_suffix)
     r1fastqs = [x for x in fastqFiles if re.search(r'_S\d+_R1_', x)]
-    for r1fastq in r1fastqs:
-        r2fastq = re.sub('_(S\d+)_R1_', '_\g<1>_R2_', r1fastq)
-        assert(any([r2fastq == x for x in fastqFiles]))  # r2 fastq doesn't exist
-        paired_fastqs.append([r1fastq, r2fastq])
+	for r1fastq in r1fastqs:
+       r2fastq = re.sub('_(S\d+)_R1_', '_\g<1>_R2_', r1fastq)
+       assert(any([r2fastq == x for x in fastqFiles]))
+       paired_fastqs.append([r1fastq, r2fastq])
 
 sample_fastqs = {}
 for pair in paired_fastqs:
@@ -32,29 +32,28 @@ for pair in paired_fastqs:
 
 yaml.dump(sample_fastqs, args.sample_fastq_file)
 
-# output best guess for samples.yaml
-normals = set()
-tumors = set()
-for s in list(sample_fastqs.keys()):
-    if s.endswith('N'):
-        normals.add(s)
-    else:
-        tumors.add(s)
-
-samples = []
-unmatched_tumors = tumors
-for norm in normals:
-    name = re.sub(r'N$', '', norm)
-    tums = [x for x in tumors if x.startswith(name)]
-    if tums is not None:
-        for x in tums:
-            unmatched_tumors.discard(x)
-        samples.append({'name': name, 'normal': norm, 'tumor': tums})
-    else:
-        samples.append({'name': name, 'normal': norm})
-
-for unmatched_tum in unmatched_tumors:
-    name = re.sub(r'T$', '', unmatched_tum)
-    samples.append({'name': name, 'tumor': [unmatched_tum]})
-
-yaml.dump(samples, args.sample_file)
+# normals = set()
+# tumors = set()
+# for s in list(sample_fastqs.keys()):
+#     if s.endswith('N'):
+#         normals.add(s)
+#     else:
+#         tumors.add(s)
+# 
+# samples = []
+# unmatched_tumors = tumors
+# for norm in normals:
+#     name = re.sub(r'N$', '', norm)
+#     tums = [x for x in tumors if x.startswith(name)]
+#     if tums is not None:
+#         for x in tums:
+#             unmatched_tumors.discard(x)
+#         samples.append({'name': name, 'normal': norm, 'tumor': tums})
+#     else:
+#         samples.append({'name': name, 'normal': norm})
+# 
+# for unmatched_tum in unmatched_tumors:
+#     name = re.sub(r'T$', '', unmatched_tum)
+#     samples.append({'name': name, 'tumor': [unmatched_tum]})
+# 
+# yaml.dump(samples, args.sample_file)
