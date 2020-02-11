@@ -53,6 +53,7 @@ ANALYZE_COV = $(GATK) -Xmx$(GATK_MEM) -T AnalyzeCovariates $(GATK_OPT)
 
 # paths
 SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
+TMPDIR ?= $(HOME)/share/tmp
 
 endif
 CONFIG_INC = true
