@@ -24,6 +24,14 @@ endef
 
 RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+$(MAKE) -f $1,$(call RUN_QMAKE,$1,$(NUM_JOBS)))
 
+#==================================================
+# Workflows
+#==================================================
+
+TARGETS += msk_access
+msk_access :
+	$(call RUN_MAKE,modules/workflows/msk_access.mk)
+
 
 #==================================================
 # FASTQ / BAM file aligners
@@ -170,26 +178,6 @@ TARGETS += cnvkit
 cnvkit :
 	$(call RUN_MAKE,modules/copy_number/cnvkit.mk)
 
-TARGETS += titan
-titan :
-	$(call RUN_MAKE,modules/copy_number/titan.mk)
-
-TARGETS += varscan_cnv
-varscan_cnv :
-	$(call RUN_MAKE,modules/copy_number/varscan.mk)
-
-TARGETS += hmmcopy
-hmmcopy :
-	$(call RUN_MAKE,modules/copy_number/hmmcopy.mk)
-
-TARGETS += gistic
-gistic :
-	$(call RUN_MAKE,modules/copy_number/gistic.mk)
-	
-TARGETS += snp6
-snp6 :
-	$(call RUN_MAKE,modules/copy_number/snp6.mk)
-	
 TARGETS += qdna_seq
 qdna_seq :
 	$(call RUN_MAKE,modules/test/workflows/qdna_seq.mk)
@@ -344,64 +332,21 @@ exon_counts :
 	
 
 #==================================================
-# Ploidy
-#==================================================
-
-TARGETS += pyloh
-pyloh :
-	$(call RUN_MAKE,modules/ploidy/pyloh.mk)
-
-
-#==================================================
 # Clonality
 #==================================================
-
-TARGETS += clonehd
-clonehd :
-	$(call RUN_MAKE,modules/clonality/clonehd.mk)
 
 TARGETS += absolute
 absolute :
 	$(call RUN_MAKE,modules/clonality/absolute.mk)
 	
-TARGETS += sspyclone
-sspyclone :
-	$(call RUN_MAKE,modules/clonality/sspyclone.mk)
-
-TARGETS += mspyclone
-mspyclone :
-	$(call RUN_MAKE,modules/clonality/mspyclone.mk)
-	
-
-#==================================================
-# Mutational signatures
-#==================================================
-
-TARGETS += emu
-emu :
-	$(call RUN_MAKE,modules/signatures/emu.mk)
-	
-TARGETS += mut_sig
-mut_sig :
-	$(call RUN_MAKE,modules/signatures/mut_sig.mk)
-	
-TARGETS += deconstruct_sigs
-deconstruct_sigs :
-	$(call RUN_MAKE,modules/signatures/deconstruct_sigs.mk)
-
+TARGETS += pyclone
+pyclone :
+	$(call RUN_MAKE,modules/clonality/pyclone.mk)
 
 #==================================================
 # Miscellaneous
 #==================================================
 
-TARGETS += contest
-contest :
-	$(call RUN_MAKE,modules/contamination/contest.mk)
-
-TARGETS += virus_detection_bowtie2
-virus_detection_bowtie2 :
-	$(call RUN_MAKE,modules/virus/virus_detection_bowtie2.mk)
-	
 TARGETS += viral_detection
 viral_detection:
 	$(call RUN_MAKE,modules/test/workflows/viral_detection.mk)
@@ -523,15 +468,6 @@ TARGETS += cnvkit_qc
 cnvkit_qc :
 	$(call RUN_MAKE,modules/copy_number/cnvkitqc.mk)
 	
-
-#==================================================
-# Beta testing
-#==================================================
-
-TARGETS += msk_access
-msk_access :
-	$(call RUN_MAKE,modules/test/workflows/msk_access.mk)
-
 
 TARGETS += fgbio_access
 fgbio_access :

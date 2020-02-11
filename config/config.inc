@@ -51,6 +51,9 @@ GATK_MEM = 18G
 GATK_OPTS = -S LENIENT
 ANALYZE_COV = $(GATK) -Xmx$(GATK_MEM) -T AnalyzeCovariates $(GATK_OPT)
 
+# marianas command line
+MARIANAS ?= $(JAVA8) -server -Xms2G -Xmx8G -cp $(HOME)/share/.../...
+
 # paths
 SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
 TMPDIR ?= $(HOME)/share/tmp

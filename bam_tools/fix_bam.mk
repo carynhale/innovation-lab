@@ -25,7 +25,7 @@ unprocessed_bam/%.fixed.bam : unprocessed_bam/%.ubam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"$$(MERGE_ALIGNMENTS) \
 										REFERENCE_SEQUENCE=$$(DMP_FASTA) \
 										UNMAPPED_BAM=$$(<) \
-										ALIGNED_BAM=unprocessed_bam/$$(*).bam \
+										ALIGNED_BAM=bam/$$(*).bam \
 										OUTPUT=unprocessed_bam/$$(*).fixed.bam \
 										CREATE_INDEX=true \
 										ADD_MATE_CIGAR=true \
