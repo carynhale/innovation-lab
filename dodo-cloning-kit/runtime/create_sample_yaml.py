@@ -30,7 +30,7 @@ for pair in paired_fastqs:
         sample_fastqs[sample] = []
     sample_fastqs[sample].append(pair)
 
-yaml.dump(sample_fastqs, args.sample_fastq_file)
+yaml.dump(sample_fastqs, args.sample_fastq_file, canonical=True)
 
 # normals = set()
 # tumors = set()
