@@ -6,7 +6,7 @@ LOGDIR ?= log/fix_bam.$(NOW)
 fix_bam : $(foreach sample,$(SAMPLES),fixed_bam/$(sample).bam)
 
 define fix-bam
-unprocessed_bam/%.ubam : unprocessed_bam/%.bam
+unprocessed_bam/%.ubam : bam/%.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"$$(REVERT_SAM) \
 									   INPUT=$$(<) \
 									   OUTPUT=unprocessed_bam/$$(*).ubam \
