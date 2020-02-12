@@ -14,9 +14,7 @@ LOGDIR ?= log/msk_access.$(NOW)
 # MSK_ACCESS_WORKFLOW += cluster_samples
 
 msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R2.fastq.gz) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R2_umi-clipped.fastq.gz)
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz)
 
 MARIANAS_UMI_LENGTH ?= 3
 MARIANAS_MIN_MAPQ ?= 1
