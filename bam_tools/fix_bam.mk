@@ -7,7 +7,8 @@ fix_bam : $(foreach sample,$(SAMPLES),fixed_bam/$(sample).bam)
 
 define fix-bam
 unprocessed_bam/%.ubam : bam/%.bam
-	$$(call RUN,-c -n 1 -s 12G -m 16G,"$$(REVERT_SAM) \
+	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   $$(REVERT_SAM) \
 									   INPUT=$$(<) \
 									   OUTPUT=unprocessed_bam/$$(*).ubam \
 									   SANITIZE=true \
@@ -22,7 +23,8 @@ unprocessed_bam/%.ubam : bam/%.bam
 									   REMOVE_DUPLICATE_INFORMATION=true \
 									   REMOVE_ALIGNMENT_INFORMATION=true")
 unprocessed_bam/%.fixed.bam : unprocessed_bam/%.ubam
-	$$(call RUN, -c -n 1 -s 12G -m 16G,"$$(MERGE_ALIGNMENTS) \
+	$$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+										$$(MERGE_ALIGNMENTS) \
 										REFERENCE_SEQUENCE=$$(DMP_FASTA) \
 										UNMAPPED_BAM=$$(<) \
 										ALIGNED_BAM=bam/$$(*).bam \
@@ -35,13 +37,15 @@ unprocessed_bam/%.fixed.bam : unprocessed_bam/%.ubam
 										MAX_INSERTIONS_OR_DELETIONS=-1 && \
 										rm -rf unprocessed_bam/$$(*).ubam")
 unprocessed_bam/%.dedup.bam : unprocessed_bam/%.fixed.bam
-	$$(call RUN, -c -n 1 -s 12G -m 16G,"$$(MARK_DUP) \
+	$$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+										$$(MARK_DUP) \
 										INPUT=$$(<) \
 										OUTPUT=unprocessed_bam/$$(*).dedup.bam \
 										METRICS_FILE=unprocessed_bam/$$(*).txt && \
 										rm -rf unprocessed_bam/$$(*).fixed.bam")
 fixed_bam/%.bam : unprocessed_bam/%.dedup.bam
-	$$(call RUN, -c -n 1 -s 12G -m 16G,"$$(ADD_RG) \
+	$$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+										$$(ADD_RG) \
 										INPUT=$$(<) \
 										OUTPUT=fixed_bam/$$(*).bam \
 										RGID=$$(*) \
