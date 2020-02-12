@@ -27,14 +27,14 @@ MARIANAS_MIN_CONSENSUS ?= 90
 WALTZ_MIN_MAPQ ?= 20
 
 define copy-fastq
-marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz : $3
+marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz : $(fq.$1.0)
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 									 mkdir -p marianas/$1 && \
 								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R --sample_name $1 --fastq_files '$$^'")
 
 endef
-$(foreach ss,$(SPLIT_SAMPLES),\
-	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call copy-fastq,$(sample))))
  
 
 define clip-umi
