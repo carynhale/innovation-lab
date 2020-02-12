@@ -19,10 +19,6 @@ for bam_file in all_bams:
         bam_file = bam_file[:-4]
         bam_files.append([bam_file])
         
-all_samples = []
-for sample in bam_files:
-    all_samples.append({'name': sample, 'tumor': [sample]})
-
 yaml.dump(all_samples, args.sample_file,
     default_style=None,
     default_flow_style=None,
@@ -36,3 +32,21 @@ yaml.dump(all_samples, args.sample_file,
     width=None,
     allow_unicode=None,
     line_break=None)
+        
+# all_samples = []
+# for sample in bam_files:
+#     all_samples.append({'name': sample, 'tumor': [sample]})
+# 
+# yaml.dump(all_samples, args.sample_file,
+#     default_style=None,
+#     default_flow_style=None,
+#     encoding='utf-8',
+#     explicit_start=None,
+#     explicit_end=None,
+#     version=None,
+#     tags=None,
+#     canonical=None,
+#     indent=None,
+#     width=None,
+#     allow_unicode=None,
+#     line_break=None)
