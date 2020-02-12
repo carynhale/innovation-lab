@@ -63,11 +63,18 @@ endif
 						  	$(RM) $<")
 
 %.fixmate.bam : %.bam
-	$(call RUN,-s 9G -m 14G,"$(FIX_MATE) I=$< O=$@ && \
+	$(call RUN,-s 9G -m 14G,"$(FIX_MATE) \
+							 INPUT=$< \
+							 OUTPUT=$@ && \
 							 $(RM) $<")
 
 %.recal_report.grp : %.bam %.bai
-	$(call RUN,-s 15G -m 15G,"$(call GATK_CMD,7G) -T BaseRecalibrator -R $(REF_FASTA) $(BAM_BASE_RECAL_OPTS) -I $< -o $@")
+	$(call RUN,-s 15G -m 15G,"$(call GATK_CMD,7G) \
+							  -T BaseRecalibrator \
+							  -R $(REF_FASTA) \
+							  $(BAM_BASE_RECAL_OPTS) \
+							  -I $< \
+							  -o $@")
 
 %.sorted.bam : %.bam
 	$(call RUN,-s 30G -m 30G,"$(SORT_SAM) I=$< O=$@ SO=coordinate VERBOSITY=ERROR && \
@@ -75,7 +82,10 @@ endif
 
 %.markdup.bam : %.bam
 	$(call RUN,-s 22G -m 22G,"$(MKDIR) metrics && \
-							  $(MARK_DUP) I=$< O=$@ METRICS_FILE=metrics/$(call strip-suffix,$(@F)).dup_metrics.txt && \
+							  $(MARK_DUP) \
+							  INPUT=$< \
+							  OUTPUT=$@ \
+							  METRICS_FILE=metrics/$(call strip-suffix,$(@F)).dup_metrics.txt && \
 							  $(RM) $<")
 
 %.rmdup.bam : %.bam
@@ -83,10 +93,14 @@ endif
 							$(RM) $<")
 
 %.clean.bam : %.bam
-	$(call RUN,-s 6G -m 12G,"$(CLEAN_BAM) I=$< O=$@")
+	$(call RUN,-s 6G -m 12G,"$(CLEAN_BAM) \
+							 INPUT=$< \
+							 OUTPUT=$@")
 
 %.rg.bam : %.bam
-	$(call RUN,-s 12G -m 16G,"$(ADD_RG) I=$< O=$@ \
+	$(call RUN,-s 12G -m 16G,"$(ADD_RG) \
+							  INPUT=$< \
+							  OUTPUT=$@ \
 							  RGLB=$(call strip-suffix,$(@F)) \
 							  RGPL=$(SEQ_PLATFORM) RGPU=00000000 \
 							  RGSM=$(call strip-suffix,$(@F)) \
@@ -97,7 +111,8 @@ endif
 ifeq ($(SPLIT_CHR),true)
 define chr-target-realn
 %.$1.chr_split.intervals : %.bam %.bam.bai
-	$$(call RUN,-n 4 -s 4G -m 4G,"$$(call GATK_CMD,5G) -T RealignerTargetCreator \
+	$$(call RUN,-n 4 -s 4G -m 4G,"$$(call GATK_CMD,5G) \
+								  -T RealignerTargetCreator \
 								  -I $$(<) \
 								  -L $1 \
 								  -nt 4 -R $$(REF_FASTA)  -o $$@ $$(BAM_REALN_TARGET_OPTS)")
