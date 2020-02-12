@@ -30,7 +30,7 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 
 TARGETS += msk_access
 msk_access :
-	$(call RUN_MAKE,modules/workflows/msk_access.mk)
+	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
 
 
 #==================================================
