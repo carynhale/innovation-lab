@@ -24,7 +24,7 @@ BAM2FASTX ?= bam2fastx
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
 JAVA7 ?= $(HOME)/share/usr/java/jdk1.7.0_80/bin/java -Djava.io.tmpdir=$(TMPDIR)
-JAVA8 ?= $(HOME)/share/usr/java/jdk1.8.0_202/bin/java -Djava.io.tmpdir=$(TMPDIR)
+JAVA8 ?= $(HOME)/share/usr/java/jdk1.8.0_74/bin/java -Djava.io.tmpdir=$(TMPDIR)
 
 # picard command lines
 PICARD_MEM = 12G
