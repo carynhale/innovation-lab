@@ -23,7 +23,7 @@ all_samples = []
 for sample in bam_files:
     all_samples.append({'name': sample, 'tumor': [sample]})
 
-yaml.dump(all_samples, sample_file,
+yaml.dump(all_samples, args.sample_file,
     default_style=None,
     default_flow_style=None,
     encoding='utf-8',
