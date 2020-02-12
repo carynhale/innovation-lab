@@ -30,7 +30,7 @@ define copy-fastq
 marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 									 mkdir -p marianas/$1 && \
-								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copyfastq.R --sample_name $1 --fastq_files '$$^'")
+								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R --sample_name $1 --fastq_files '$$^'")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
