@@ -7,7 +7,7 @@ import re
 
 parser = argparse.ArgumentParser(prog='bam_2_yaml.py', description='Create samples.yaml from a bam directory')
 parser.add_argument('bam_dir', nargs = '+')
-parser.add_argument('--bam_suffix', default='.bam')
+parser.add_argument('--bam_suffix', default='bam')
 parser.add_argument('--sample_file', help='sample yaml output file', type=argparse.FileType('w'), nargs='?', default='samples.yaml')
 args = parser.parse_args()
 
