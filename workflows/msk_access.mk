@@ -92,7 +92,7 @@ marianas/$1/$1.intervals : marianas/$1/$1.fixed.bam
 									   							   -nt $$(GATK_THREADS) \
 									   							   -R $$(REF_FASTA) \
 									   							   -o $$(@) \
-									   							   --known $$(KNOWN_INDELS)")
+									   							   -known $$(KNOWN_INDELS)")
 
 marianas/$1/$1.realn.bam : marianas/$1/$1.sorted.bam marianas/$1/$1.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
@@ -102,7 +102,7 @@ marianas/$1/$1.realn.bam : marianas/$1/$1.sorted.bam marianas/$1/$1.intervals
 							   							   		   -R $$(REF_FASTA) \
 							   							   		   -targetIntervals $$(<<) \
 							   							   		   -o $$(@) \
-									   							   --known $$(KNOWN_INDELS)")
+									   							   -known $$(KNOWN_INDELS)")
 									   							   
 marianas/$1/$1.dedup.bam : marianas/$1/$1.realn.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
