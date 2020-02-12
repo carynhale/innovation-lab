@@ -52,10 +52,10 @@ GATK_OPTS = -S LENIENT
 ANALYZE_COV = $(GATK) -Xmx$(GATK_MEM) -T AnalyzeCovariates $(GATK_OPT)
 
 # marianas command line
-MARIANAS ?= $(HOME)/share/usr/bin/marianas-1.8.1/Marianas-1.8.1.jar
+MARIANAS ?= $(HOME)/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
 
 # waltz command line
-WALTZ ?= $(HOME)/share/usr/bin/marianas-1.8.1/Waltz-3.0.jar
+WALTZ ?= $(HOME)/share/usr/marianas-1.8.1/Waltz-3.0.jar
 
 # paths
 SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
