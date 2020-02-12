@@ -12,7 +12,7 @@ parser.add_argument('--sample_file', help='sample yaml output file', type=argpar
 args = parser.parse_args()
 
 bam_files = []
-all_bams = glob2.glob(args.bam_dir + '*' + args.bam_suffix)
+all_bams = glob2.glob(args.bam_dir + '*' + '.bam')
 # for bam_file in all_bams:
 #     if bam_file.startswith('bam/') and bam_file.endswith('.bam'):
 #         bam_file = bam_file[4:]
