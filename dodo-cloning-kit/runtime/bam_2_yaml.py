@@ -5,16 +5,15 @@ import yaml
 import argparse
 import re
 
-parser = argparse.ArgumentParser(prog='fastq_2_yaml.py', description='Create samples.fastq.yaml and samples.yaml from a fastq directory')
-parser.add_argument('fastq_dir', nargs = '+')
-parser.add_argument('--fastq_suffix', default='.fastq.gz')
-parser.add_argument('--sample_fastq_file', help='sample fastq file yaml output', type=argparse.FileType('w'), nargs='?', default='sample.fastq.yaml')
+parser = argparse.ArgumentParser(prog='bam_2_yaml.py', description='Create samples.yaml from a bam directory')
+parser.add_argument('bam_dir', nargs = '+')
+parser.add_argument('--bam_suffix', default='.bam')
 parser.add_argument('--sample_file', help='sample yaml output file', type=argparse.FileType('w'), nargs='?', default='samples.yaml')
 args = parser.parse_args()
 
-paired_fastqs = []
-for fastq_dir in args.fastq_dir:
-    fastqFiles = glob2.glob(fastq_dir + '*/**/*' + args.fastq_suffix)
+bam_files = []
+for bams_dir in args.bam_dir:
+    bamFiles = glob2.glob(bam_dir + '*' + args.bam_suffix)
     r1fastqs = [x for x in fastqFiles if re.search(r'_S\d+_R1_', x)]
     for r1fastq in r1fastqs:
        r2fastq = re.sub('_(S\d+)_R1_', '_\g<1>_R2_', r1fastq)
