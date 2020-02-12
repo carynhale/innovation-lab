@@ -38,7 +38,7 @@ $(foreach ss,$(SPLIT_SAMPLES),\
  
 
 define clip-umi
-marianas/$1/$1_R1_umi-clipped.fastq.gz marianas/$1/$1_R2_umi-clipped.fastq.gz : marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz
+marianas/$1/$1_R1_umi-clipped.fastq.gz : marianas/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  cd marianas/$1/ && \
 									  $(call MARIANAS_CMD,2G,8G) \
