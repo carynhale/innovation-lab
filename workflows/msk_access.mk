@@ -49,10 +49,10 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 define clip-umi
 marianas/$1/$1_R1_umi-clipped.fastq.gz : marianas/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  cd marianas/$$(1)/ && \
+									  cd marianas/$1/ && \
 									  $$(call MARIANAS_CMD,2G,8G) \
 									  org.mskcc.marianas.umi.duplex.fastqprocessing.ProcessLoopUMIFastq \
-									  $$(1)_R1.fastq.gz $$(1)_R2.fastq.gz \
+									  $1_R1.fastq.gz $1_R2.fastq.gz \
 									  $$(MARIANAS_UMI_LENGTH) && \
 									  cd ../..")
 
@@ -64,13 +64,13 @@ define fastq-to-bam
 marianas/$1/$1.bwamem.bam : marianas/$1/$1_R1_umi-clipped.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
-																		   -R \"@RG\tID:$$(1)\tLB:$$(1)\tPL:$$(SEQ_PLATFORM)\tSM:$$(1)\" $$(REF_FASTA) marianas/$$(1)/$$(1)_R1_umi-clipped.fastq.gz marianas/$$(1)/$$(1)_R2_umi-clipped.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
+																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) marianas/$1/$1_R1_umi-clipped.fastq.gz marianas/$1/$1_R2_umi-clipped.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
 																		           
 marianas/$1/$1.sorted.bam : marianas/$1/$1.bwamem.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 									  									   $$(SAMTOOLS) index $$(@) && \
-									  									   cp marianas/$$(1)/$$(1).sorted.bam.bai marianas/$$(1)/$$(1).sorted.bai")
+									  									   cp marianas/$1/$1.sorted.bam.bai marianas/$1/$1.sorted.bai")
 									  									   		   
 marianas/$1/$1.fixed.bam : marianas/$1/$1.sorted.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
@@ -134,13 +134,13 @@ marianas/$1/$1.standard.bam : marianas/$1/$1.recal.bam
 										$$(ADD_RG) \
 										INPUT=$$(<) \
 										OUTPUT=$$(@) \
-										RGID=$$(1) \
-										RGLB=$$(1) \
+										RGID=$1 \
+										RGLB=$1 \
 										RGPL=illumina \
 										RGPU=NA \
-										RGSM=$$(1) && \
+										RGSM=$1 && \
 										$$(SAMTOOLS) index $$(@) && \
-										cp marianas/$$(1)/$$(1).standard.bam.bai marianas/$$(1)/$$(1).standard.bai")
+										cp marianas/$1/$1.standard.bam.bai marianas/$1/$1.standard.bai")
 
 
 endef
