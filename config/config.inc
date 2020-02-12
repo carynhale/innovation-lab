@@ -20,6 +20,7 @@ TABIX ?= tabix
 PICARD ?= picard
 GATK ?= gatk3
 BAM2FASTX ?= bam2fastx
+GETBASECOUNTS ?= $(HOME)/share/usr/bin/GetBaseCounts
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
