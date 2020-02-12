@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cwd=$(pwd)
+cwd=${pwd}
 cd innovation-lab
 git pull
-cd $(cwd)
+cd ${cwd}
