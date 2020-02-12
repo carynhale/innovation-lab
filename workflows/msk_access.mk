@@ -1,5 +1,6 @@
 include innovation-lab/Makefile.inc
 include innovation-lab/config/marianas.inc
+include innovation-lab/config/waltz.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
 
@@ -26,6 +27,7 @@ MARIANAS_WOBBLE ?= 1
 MARIANAS_MIN_CONSENSUS ?= 90
 
 WALTZ_MIN_MAPQ ?= 20
+WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.waltz.bed
 
 BWA_ALN_OPTS ?= -M
 BWAMEM_THREADS = 12
@@ -152,13 +154,13 @@ define genotype-and-collapse
 marianas/$1/$1.standard-pileup.txt : marianas/$1/$1.standard.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  $(JAVA) -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1.standard.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
+									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1.standard.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
 									  cd ../..")
 									  
 marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1.standard-pileup.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  $(JAVA) -server -Xms2G -Xmx8G -cp $(MARIANAS) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqFirstPass \
+									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqFirstPass \
 									  $1.standard.bam \
 									  $1.standard-pileup.txt \
 									  $(MARIANAS_MIN_MAPQ) \
@@ -174,7 +176,7 @@ marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1.standard-pileup
 marianas/$1/second-pass-alt-alleles.txt : marianas/$1/first-pass.mate-position-sorted.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  $(JAVA) -server -Xms2G -Xmx8G -cp $(MARIANAS) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqSecondPass \
+									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqSecondPass \
 									  $1.standard.bam \
 									  $1.standard-pileup.txt \
 									  $(MARIANAS_MIN_MAPQ) \
@@ -189,7 +191,6 @@ marianas/$1/second-pass-alt-alleles.txt : marianas/$1/first-pass.mate-position-s
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call genotype-and-collapse,$(sample))))
-
 
 # include modules/test/bam_tools/aligncollapsed.mk
 # include modules/test/bam_tools/copybam.mk
