@@ -17,7 +17,6 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R2_umi-clipped.fastq.gz)
 
-JAVA = $(HOME)/share/usr/jdk1.8.0_74/bin/java
 MARIANAS_UMI_LENGTH ?= 3
 MARIANAS_MIN_MAPQ ?= 1
 MARIANAS_MIN_BAQ ?= 20
@@ -41,7 +40,7 @@ define clip-umi
 marianas/$1/$1_R1_umi-clipped.fastq.gz marianas/$1/$1_R2_umi-clipped.fastq.gz : marianas/$1/$1_R1.fastq.gz marianas/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  cd marianas/$1/ && \
-									  $(JAVA) -Djava.io.tmpdir=$(TMPDIR) -server -Xms2G -Xmx8G -cp $(MARIANAS) \
+									  $(call MARIANAS_CMD,2G,8G) \
 									  org.mskcc.marianas.umi.duplex.fastqprocessing.ProcessLoopUMIFastq \
 									  $1_R1.fastq.gz $1_R2.fastq.gz \
 									  $(MARIANAS_UMI_LENGTH) && \
