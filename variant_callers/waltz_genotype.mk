@@ -7,7 +7,8 @@ LOGDIR ?= log/waltz_genotype.$(NOW)
 waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-STANDARD-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-COLLAPSED-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-SIMPLEX-pileup.txt.gz) \
-				 $(foreach sample,$(SAMPLES),waltz/$(sample)-DUPLEX-pileup.txt.gz)
+				 $(foreach sample,$(SAMPLES),waltz/$(sample)-DUPLEX-pileup.txt.gz) \
+				 $(foreach sample,$(SAMPLES),waltz/noise-metrics.txt)
 
 WALTZ_MIN_MAPQ ?= 15
 
@@ -68,7 +69,11 @@ waltz/$1-DUPLEX-pileup.txt.gz : bam/$1-DUPLEX.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
-
+		
+		
+waltz/noise_metrics.txt : $(wildcard waltz/$(SAMPLES)-STANDARD-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)-COLLAPSED-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)-SIMPLEX-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)-DUPLEX-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 1 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(JAVA8) -version &> version/waltz_genotype.txt)
