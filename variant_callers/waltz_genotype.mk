@@ -15,9 +15,9 @@ define waltz-genotype
 waltz/$1-STANDARD.txt.gz : bam/$1-STANDARD.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 mkdir -p waltz && \
-									 ln -s bam/$1-STANDARD.bam waltz/$1-STANDARD.bam && \
-									 ln -s bam/$1-STANDARD.bai waltz/$1-STANDARD.bai && \
-									 cd waltz/$1 && \
+									 cd waltz && \
+									 ln -s ../bam/$1-STANDARD.bam $1-STANDARD.bam && \
+									 ln -s ../bam/$1-STANDARD.bai $1-STANDARD.bai && \
 									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1-STANDARD.bam $(DMP_FASTA) $(TARGETS_FILE) && \
 									 mv $1-STANDARD-pileup.txt $1-STANDARD.txt && \
 									 gzip $1-STANDARD.txt && \
