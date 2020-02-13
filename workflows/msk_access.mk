@@ -243,7 +243,7 @@ marianas/$1/$1.collapsed.bam : marianas/$1/$1.collapsed.realn.bam
 										RGLB=$1 \
 										RGPL=illumina \
 										RGPU=NA \
-										RGSM=$1 \
+										RGSM=$1 && \
 										$$(SAMTOOLS) index $$(@) && \
 										cp marianas/$1/$1.collapsed.bam.bai marianas/$1/$1.collapsed.bai")
 												
