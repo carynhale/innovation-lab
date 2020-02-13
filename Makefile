@@ -337,19 +337,6 @@ fetch_impact :
 
 
 #==================================================
-# Phylogeny
-#==================================================
-
-TARGETS += medicc
-medicc :
-	$(call RUN_MAKE,innovation-lab/test/workflows/medicc.mk)
-	
-TARGETS += pratchet
-pratchet :
-	$(call RUN_MAKE,innovation-lab/test/workflows/pratchet.mk)
-
-
-#==================================================
 # Reports
 #==================================================
 
