@@ -5,11 +5,11 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/waltz_genotype.$(NOW)
 
 waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-STANDARD-pileup.txt.gz)
-#				 $(foreach sample,$(SAMPLES),waltz/$(sample)-COLLAPSED-pileup.txt.gz) \
-#				 $(foreach sample,$(SAMPLES),waltz/$(sample)-SIMPLEX-pileup.txt.gz) \
-#				 $(foreach sample,$(SAMPLES),waltz/$(sample)-DUPLEX-pileup.txt.gz)
+				 $(foreach sample,$(SAMPLES),waltz/$(sample)-COLLAPSED-pileup.txt.gz) \
+				 $(foreach sample,$(SAMPLES),waltz/$(sample)-SIMPLEX-pileup.txt.gz) \
+				 $(foreach sample,$(SAMPLES),waltz/$(sample)-DUPLEX-pileup.txt.gz)
 
-WALTZ_MIN_MAPQ ?= 20
+WALTZ_MIN_MAPQ ?= 15
 
 define waltz-genotype
 waltz/$1-STANDARD-pileup.txt.gz : bam/$1-STANDARD.bam
@@ -24,12 +24,54 @@ waltz/$1-STANDARD-pileup.txt.gz : bam/$1-STANDARD.bam
 									 gzip $1-STANDARD-intervals.txt && \
 									 gzip $1-STANDARD-intervals-without-duplicates.txt && \
 									 cd ..")
+									 
+waltz/$1-COLLAPSED.txt.gz : bam/$1-COLLAPSED.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 mkdir -p waltz && \
+									 cd waltz && \
+									 ln -sf ../bam/$1-COLLAPSED.bam $1-COLLAPSED.bam && \
+									 ln -sf ../bam/$1-COLLAPSED.bai $1-COLLAPSED.bai && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1-COLLAPSED.bam $(DMP_FASTA) $(TARGETS_FILE) && \
+									 gzip $1-COLLAPSED-pileup.txt && \
+									 gzip $1-COLLAPSED-pileup-without-duplicates.txt && \
+									 gzip $1-COLLAPSED-intervals.txt && \
+									 gzip $1-COLLAPSED-intervals-without-duplicates.txt && \
+									 cd ..")
+									 
+waltz/$1-SIMPLEX.txt.gz : bam/$1-SIMPLEX.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 mkdir -p waltz && \
+									 cd waltz && \
+									 ln -sf ../bam/$1-SIMPLEX.bam $1-SIMPLEX.bam && \
+									 ln -sf ../bam/$1-SIMPLEX.bai $1-SIMPLEX.bai && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1-SIMPLEX.bam $(DMP_FASTA) $(TARGETS_FILE) && \
+									 gzip $1-SIMPLEX-pileup.txt && \
+									 gzip $1-SIMPLEX-pileup-without-duplicates.txt && \
+									 gzip $1-SIMPLEX-intervals.txt && \
+									 gzip $1-SIMPLEX-intervals-without-duplicates.txt && \
+									 cd ..")
+									 
+waltz/$1-DUPLEX.txt.gz : bam/$1-DUPLEX.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 mkdir -p waltz && \
+									 cd waltz && \
+									 ln -sf ../bam/$1-DUPLEX.bam $1-DUPLEX.bam && \
+									 ln -sf ../bam/$1-DUPLEX.bai $1-DUPLEX.bai && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1-DUPLEX.bam $(DMP_FASTA) $(TARGETS_FILE) && \
+									 gzip $1-DUPLEX-pileup.txt && \
+									 gzip $1-DUPLEX-pileup-without-duplicates.txt && \
+									 gzip $1-DUPLEX-intervals.txt && \
+									 gzip $1-DUPLEX-intervals-without-duplicates.txt && \
+									 cd ..")
+
+
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
 
 
-..DUMMY := $(shell mkdir -p version)
+..DUMMY := $(shell mkdir -p version; \
+			 $(JAVA8) -version &> version/waltz_genotype.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: waltz_genotype

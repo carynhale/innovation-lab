@@ -46,7 +46,7 @@ fastq/%.fastq.gz : fastq/%.fastq
 			 echo "gatk3" >> version/bwa_mem.txt; \
 			 $(GATK) --version >> version/bwa_mem.txt; \
 			 echo "picard" >> version/bwa_mem.txt; \
-			 $(PICARD) MarkDuplicates --version >> version/bwa_mem.txt)
+			 $(PICARD) MarkDuplicates --version &>> version/bwa_mem.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: bwa_mem
