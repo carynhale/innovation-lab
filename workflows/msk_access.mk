@@ -6,8 +6,6 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/msk_access.$(NOW)
 
-# MSK_ACCESS_WORKFLOW += umi_collapse
-# MSK_ACCESS_WORKFLOW += align_collapsed
 # MSK_ACCESS_WORKFLOW += copy_bam
 # MSK_ACCESS_WORKFLOW += interval_metrics
 # MSK_ACCESS_WORKFLOW += umi_qc
@@ -17,7 +15,8 @@ LOGDIR ?= log/msk_access.$(NOW)
 msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).standard.bam) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt)
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp)
 		   	 
 MARIANAS_UMI_LENGTH ?= 3
 MARIANAS_MIN_MAPQ ?= 1
@@ -154,7 +153,7 @@ define genotype-and-collapse
 marianas/$1/$1.standard-pileup.txt : marianas/$1/$1.standard.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1.standard.bam $(REF_FASTA) $(WALTZ_BED_FILE) && \
+									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.standard.bam $$(REF_FASTA) $$(WALTZ_BED_FILE) && \
 									  cd ../..")
 									  
 marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1.standard-pileup.txt
@@ -163,12 +162,12 @@ marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1.standard-pileup
 									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqFirstPass \
 									  $1.standard.bam \
 									  $1.standard-pileup.txt \
-									  $(MARIANAS_MIN_MAPQ) \
-									  $(MARIANAS_MIN_BAQ) \
-									  $(MARIANAS_MISMATCH) \
-									  $(MARIANAS_WOBBLE) \
-									  $(MARIANAS_MIN_CONSENSUS) \
-									  $(REF_FASTA) && \
+									  $$(MARIANAS_MIN_MAPQ) \
+									  $$(MARIANAS_MIN_BAQ) \
+									  $$(MARIANAS_MISMATCH) \
+									  $$(MARIANAS_WOBBLE) \
+									  $$(MARIANAS_MIN_CONSENSUS) \
+									  $$(REF_FASTA) && \
 									  sort -n -s -S 6G -k 6 -k 8 first-pass.txt > first-pass.mate-position-sorted.txt && \
 									  cd ../..")
 
@@ -179,20 +178,88 @@ marianas/$1/second-pass-alt-alleles.txt : marianas/$1/first-pass.mate-position-s
 									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqSecondPass \
 									  $1.standard.bam \
 									  $1.standard-pileup.txt \
-									  $(MARIANAS_MIN_MAPQ) \
-									  $(MARIANAS_MIN_BAQ) \
-									  $(MARIANAS_MISMATCH) \
-									  $(MARIANAS_WOBBLE) \
-									  $(MARIANAS_MIN_CONSENSUS) \
-									  $(REF_FASTA) \
+									  $$(MARIANAS_MIN_MAPQ) \
+									  $$(MARIANAS_MIN_BAQ) \
+									  $$(MARIANAS_MISMATCH) \
+									  $$(MARIANAS_WOBBLE) \
+									  $$(MARIANAS_MIN_CONSENSUS) \
+									  $$(REF_FASTA) \
 									  first-pass.mate-position-sorted.txt && \
 									  cd ../..")
 									  									  
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call genotype-and-collapse,$(sample))))
+	
+define fastq-to-collapsed-bam
+marianas/$1/$1.collapsed.bwamem.bam : marianas/$1/second-pass-alt-alleles.txt
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
+																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
+																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) marianas/$1/collapsed_R1_.fastq marianas/$1/collapsed_R2_.fastq | $$(SAMTOOLS) view -bhS - > $$(@)")
+																		           
+marianas/$1/$1.collapsed.sorted.bam : marianas/$1/$1.collapsed.bwamem.bam
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
+								  									   	   $$(SAMTOOLS) sort -@ $(SAMTOOLS_THREADS) -m $(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $(TMPDIR) && \
+								  									   	   $$(SAMTOOLS) index $$(@) && \
+								  									   	   cp marianas/$1/$1.collapsed.sorted.bam.bai marianas/$1/$1.collapsed.sorted.bai")
+								  									   		   
+marianas/$1/$1.collapsed.fixed.bam : marianas/$1/$1.collapsed.sorted.bam
+	$$(call RUN,-c -n 1 -s 12G -m 18G,"set -o pipefail && \
+									   $$(FIX_MATE) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   SORT_ORDER=coordinate \
+									   COMPRESSION_LEVEL=0 \
+									   CREATE_INDEX=true")
+									  		   
+marianas/$1/$1.collapsed.intervals : marianas/$1/$1.collapsed.fixed.bam
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+									   							   $$(call GATK_CMD,1G,12G)	\
+									   							   -allowPotentiallyMisencodedQuals \
+									   							   -T RealignerTargetCreator \
+									   							   -I $$(^) \
+									   							   -nt 8 \
+									   							   -R $(REF_FASTA) \
+									   							   -o $$(@) \
+									   							    -known $$(KNOWN_INDELS)")
 
-# include modules/test/bam_tools/aligncollapsed.mk
+marianas/$1/$1.collapsed.realn.bam : marianas/$1/$1.collapsed.sorted.bam marianas/$1/$1.collapsed.intervals
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+									   							   $$(call GATK_CMD,1G,12G)	\
+									   							   -allowPotentiallyMisencodedQuals \
+									   							   -T IndelRealigner \
+									   							   -I $$(<) \
+									   							   -R $(REF_FASTA) \
+									   							   -targetIntervals $$(<<) \
+									   							   -o $$(@) \
+									   							   -known $$(KNOWN_INDELS)")
+									  		   
+marianas/$1/$1.collapsed.bam : marianas/$1/$1.collapsed.realn.bam
+	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
+										$$(ADD_RG) \
+										INPUT=$$(<) \
+										OUTPUT=$$(@) \
+										RGID=$1 \
+										RGLB=$1 \
+										RGPL=illumina \
+										RGPU=NA \
+										RGSM=$1 \
+										$$(SAMTOOLS) index $$(@) && \
+										cp marianas/$1/$1.collapsed.bam.bai marianas/$1/$1.collapsed.bai")
+												
+marianas/$1/timestamp : marianas/$1/$1.collapsed.bam
+	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  cd marianas/$1 && \
+									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.postprocessing.SeparateBams $1.collapsed.bam && \
+									  echo 'Done!\n' > timestamp && \
+									  cd ../..")
+									  
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call fastq-to-collapsed-bam,$(sample))))
+	
+
+
 # include modules/test/bam_tools/copybam.mk
 # include modules/test/qc/intervalmetrics.mk
 # include modules/test/qc/umiqc.mk
@@ -207,7 +274,7 @@ $(foreach sample,$(SAMPLES),\
 			 echo "gatk3" >> version/msk_access.txt; \
 			 $(GATK) --version >> version/msk_access.txt; \
 			 echo "picard" >> version/msk_access.txt; \
-			 $(PICARD) MarkDuplicates --version >> version/msk_access.txt)
+			 $(PICARD) MarkDuplicates --version &>> version/msk_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: msk_access
