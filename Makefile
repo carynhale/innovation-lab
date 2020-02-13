@@ -40,6 +40,7 @@ msk_access :
 TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
+	
 
 #==================================================
 # BAM file processing utilities
@@ -109,7 +110,7 @@ platypus:
 	
 	
 #==================================================
-# Specialty somatic variant callers
+# Specialty variant callers
 #==================================================
 	
 TARGETS += hla_polysolver
@@ -131,6 +132,10 @@ genotype_hotspot:
 TARGETS += multisample_genotype
 multisample_genotype:
 	$(call RUN_MAKE,modules/variant_callers/multisample_genotype.mk)
+	
+TARGETS += waltz_genotype
+waltz_genotype:
+	$(call RUN_MAKE,modules/variant_callers/waltz_genotype.mk)
 
 
 #==================================================
