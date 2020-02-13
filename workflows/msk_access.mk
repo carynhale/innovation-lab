@@ -6,7 +6,6 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/msk_access.$(NOW)
 
-# MSK_ACCESS_WORKFLOW += copy_bam
 # MSK_ACCESS_WORKFLOW += interval_metrics
 # MSK_ACCESS_WORKFLOW += umi_qc
 # MSK_ACCESS_WORKFLOW += plot_metrics
@@ -16,8 +15,13 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).standard.bam) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp)
-		   	 
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)-standard.bam) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)-unfiltered.bam) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)-simplex.bam) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)-duplex.bam)
+
+
 MARIANAS_UMI_LENGTH ?= 3
 MARIANAS_MIN_MAPQ ?= 1
 MARIANAS_MIN_BAQ ?= 20
@@ -257,10 +261,36 @@ marianas/$1/timestamp : marianas/$1/$1.collapsed.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-collapsed-bam,$(sample))))
-	
+		
+define copy-to-bam
+bam/$1-standard.bam : marianas/$1/$1.standard.bam
+	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
+								 cp $$(<) $$(@) && \
+								 cp marianas/$1/$1.standard.bam.bai bam/$1-standard.bam.bai && \
+								 cp marianas/$1/$1.standard.bai bam/$1-standard.bai")
 
+bam/$1-unfiltered.bam : marianas/$1/$1.collapsed.bam
+	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
+								 cp $$(<) $$(@) && \
+								 cp marianas/$1/$1.collapsed.bam.bai bam/$1-unfiltered.bam.bai && \
+								 cp marianas/$1/$1.collapsed.bai bam/$1-unfiltered.bai")
+												
+bam/$1-simplex.bam : marianas/$1/timestamp
+	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
+								 cp marianas/$1/$1.collapsed-simplex.bam $$(@) && \
+								 cp marianas/$1/$1.collapsed-simplex.bai bam/$1-simplex.bam.bai && \
+								 cp marianas/$1/$1.collapsed-simplex.bai bam/$1-simplex.bai")
+												
+bam/$1-duplex.bam : marianas/$1/timestamp
+	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
+								 cp marianas/$1/$1.collapsed-duplex.bam $$(@) && \
+								 cp marianas/$1/$1.collapsed-duplex.bai bam/$1-duplex.bam.bai && \
+								 cp marianas/$1/$1.collapsed-duplex.bai bam/$1-duplex.bai")
 
-# include modules/test/bam_tools/copybam.mk
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call copy-to-bam,$(sample))))
+
 # include modules/test/qc/intervalmetrics.mk
 # include modules/test/qc/umiqc.mk
 # include modules/test/qc/plotmetrics.mk
