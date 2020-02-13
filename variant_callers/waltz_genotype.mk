@@ -8,7 +8,7 @@ waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-STANDARD-pileup.txt
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-COLLAPSED-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-SIMPLEX-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-DUPLEX-pileup.txt.gz) \
-				 $(foreach sample,$(SAMPLES),waltz/noise-metrics.txt)
+				 $(foreach sample,$(SAMPLES),waltz/noise_metrics.txt)
 
 WALTZ_MIN_MAPQ ?= 15
 
