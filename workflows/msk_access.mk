@@ -7,7 +7,6 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/msk_access.$(NOW)
 
 # MSK_ACCESS_WORKFLOW += interval_metrics
-# MSK_ACCESS_WORKFLOW += umi_qc
 # MSK_ACCESS_WORKFLOW += plot_metrics
 # MSK_ACCESS_WORKFLOW += cluster_samples
 
@@ -19,8 +18,11 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),bam/$(sample)-standard.bam) \
 			 $(foreach sample,$(SAMPLES),bam/$(sample)-unfiltered.bam) \
 			 $(foreach sample,$(SAMPLES),bam/$(sample)-simplex.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)-duplex.bam)
-
+			 $(foreach sample,$(SAMPLES),bam/$(sample)-duplex.bam) \
+			 $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
+			 metrics/summary/umi_frequencies.tsv \
+			 metrics/summary/umi_composite.tsv \
+			 metrics/summary/umi_families.tsv
 
 MARIANAS_UMI_LENGTH ?= 3
 MARIANAS_MIN_MAPQ ?= 1
@@ -31,6 +33,9 @@ MARIANAS_MIN_CONSENSUS ?= 90
 
 WALTZ_MIN_MAPQ ?= 20
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.waltz.bed
+
+UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
+UMI_QC_BED_FILE_B ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-B.sorted.bed
 
 BWA_ALN_OPTS ?= -M
 BWAMEM_THREADS = 12
@@ -291,8 +296,29 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call copy-to-bam,$(sample))))
 
+define family-size-metric
+marianas/$1/family-sizes.txt : marianas/$1/second-pass-alt-alleles.txt
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   cd marianas/$1 && \
+									   source ../../$$(SCRIPTS_DIR)/qc/umi_metrics.sh $$(UMI_QC_BED_FILE_A) $$(UMI_QC_BED_FILE_B) $1")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call family-size-metric,$(sample))))
+		 
+metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 1 --sample_names '$(SAMPLES)'")
+	
+metrics/summary/umi_composite.tsv : $(wildcard marianas/$(SAMPLES)/composite-umi-frequencies.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 2 --sample_names '$(SAMPLES)'")
+
+metrics/summary/umi_families.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 3 --sample_names '$(SAMPLES)'")
+
 # include modules/test/qc/intervalmetrics.mk
-# include modules/test/qc/umiqc.mk
 # include modules/test/qc/plotmetrics.mk
 # include modules/test/qc/clustersamples.mk
 
@@ -304,7 +330,8 @@ $(foreach sample,$(SAMPLES),\
 			 echo "gatk3" >> version/msk_access.txt; \
 			 $(GATK) --version >> version/msk_access.txt; \
 			 echo "picard" >> version/msk_access.txt; \
-			 $(PICARD) MarkDuplicates --version &>> version/msk_access.txt)
+			 $(PICARD) MarkDuplicates --version &>> version/msk_access.txt; \
+			 R --version >> version.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: msk_access
