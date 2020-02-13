@@ -4,7 +4,7 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/waltz_genotype.$(NOW)
 
-waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-STANDARD-pileup.txt.gz)
+waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-STANDARD-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-COLLAPSED-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-SIMPLEX-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-DUPLEX-pileup.txt.gz)
