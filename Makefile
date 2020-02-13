@@ -85,27 +85,27 @@ merge_split_fastq :
 
 TARGETS += mutect
 mutect :
-	$(call RUN_MAKE,modules/variant_callers/somatic/mutect.mk)
+	$(call RUN_MAKE,modules/variant_callers/mutect.mk)
 	
 TARGETS += varscan
 varscan :
-	$(call RUN_MAKE,modules/variant_callers/somatic/varscan.mk)
+	$(call RUN_MAKE,modules/variant_callers/varscan.mk)
 	
 TARGETS += strelka
 strelka :
-	$(call RUN_MAKE,modules/variant_callers/somatic/strelka.mk)
+	$(call RUN_MAKE,modules/variant_callers/strelka.mk)
 	
 TARGETS += scalpel
 scalpel :
-	$(call RUN_MAKE,modules/variant_callers/somatic/scalpel.mk)
+	$(call RUN_MAKE,modules/variant_callers/scalpel.mk)
     
 TARGETS += lancet
 lancet :
-	$(call RUN_MAKE,modules/variant_callers/somatic/lancet.mk)
+	$(call RUN_MAKE,modules/variant_callers/lancet.mk)
 	
 TARGETS += platypus
 platypus:
-	$(call RUN_MAKE,modules/variant_callers/somatic/platypus.mk)
+	$(call RUN_MAKE,modules/variant_callers/platypus.mk)
 	
 	
 #==================================================
@@ -119,47 +119,18 @@ hla_polysolver :
 TARGETS += msi_sensor
 msi_sensor :
 	$(call RUN_MAKE,modules/variant_callers/somatic/msi_sensor.mk)
-	
 
-#==================================================
-# Single sample variant callers
-#==================================================
-
-TARGETS += tvc
-tvc:
-	$(call RUN_MAKE,modules/variant_callers/tvc.mk)
-
-TARGETS += gatk
-gatk : 
-	$(call RUN_MAKE,modules/variant_callers/gatk.mk)
-	
 TARGETS += haplotype_caller
 haplotype_caller : 
 	$(call RUN_MAKE,modules/variant_callers/haplotype_caller.mk)
 	
-TARGETS += samtools_het
-samtools_het :
-	$(call RUN_MAKE,modules/variant_callers/samtools_het.mk)
-
-TARGETS += hotspot
-hotspot: 
-	$(call RUN_MAKE,modules/variant_callers/hotspot.mk)
-	
 TARGETS += genotype_hotspot
-genotype_hotspot:
+genotype_hotspot: 
 	$(call RUN_MAKE,modules/variant_callers/genotype_hotspots.mk)
 	
-TARGETS += genotype_pdx
-genotype_pdx:
-	$(call RUN_MAKE,modules/variant_callers/genotype_pdx.mk)
-	
-TARGETS += sufam
-sufam:
-	$(call RUN_MAKE,modules/variant_callers/sufamsampleset.mk)
-	
-TARGETS += sufam_summary
-sufam_summary:
-	$(call RUN_MAKE,modules/variant_callers/sufam_multisample.mk)
+TARGETS += multisample_genotype
+multisample_genotype:
+	$(call RUN_MAKE,modules/variant_callers/multisample_genotype.mk)
 
 
 #==================================================
@@ -178,12 +149,12 @@ TARGETS += cnvkit
 cnvkit :
 	$(call RUN_MAKE,modules/copy_number/cnvkit.mk)
 
-TARGETS += qdna_seq
-qdna_seq :
+TARGETS += qdnaseq
+qdnaseq :
 	$(call RUN_MAKE,modules/test/workflows/qdna_seq.mk)
 	
-TARGETS += cnv_access
-cnv_access :
+TARGETS += cnvaccess
+cnvaccess :
 	$(call RUN_MAKE,modules/test/workflows/cnv_access.mk)
 	
 

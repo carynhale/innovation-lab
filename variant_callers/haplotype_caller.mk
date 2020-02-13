@@ -1,14 +1,20 @@
+ifndef GATK_MK
+
 include modules/Makefile.inc
 include modules/config/gatk.inc
 
-LOGDIR = log/haplotype_caller.$(NOW)
+LOGDIR ?= log/gatk.$(NOW)
 
-COVARIATES = -cov ReadGroupCovariate -cov QualityScoreCovariate -cov DinucCovariate -cov CycleCovariate
+VARIANT_EVAL_GATK_REPORT = $(RSCRIPT) $(SCRIPTS_DIR)/variant_callers/variantEvalGatkReport.R
 
+GATK_HARD_FILTER_SNPS ?= true
+GATK_POOL_SNP_RECAL ?= false
+SPLIT_CHR ?= true
 VARIANT_CALL_THRESHOLD = 30
+VARIANT_EMIT_THRESHOLD = 10
 VARIANT_RECAL_TRUTH_SENSITIVITY_LEVEL = 99.0
 VARIANT_RECAL_ANNOTATIONS = QD MQRankSum FS MQ ReadPosRankSum
-override HAPLOTYPE_CALLER_OPTS = --dbsnp $(DBSNP) -rf BadCigar -stand_call_conf $(VARIANT_CALL_THRESHOLD) -R $(REF_FASTA) --emitRefConfidence GVCF -variant_index_type LINEAR -variant_index_parameter 128000
+HAPLOTYPE_CALLER_OPTS = --dbsnp $(DBSNP) -rf BadCigar -stand_call_conf $(VARIANT_CALL_THRESHOLD) -R $(REF_FASTA)
 
 INDEL_FILTERS = --filterName 'QD' --filterExpression 'QD < 2.0' --filterName 'ReadPosRankSum' --filterExpression 'ReadPosRankSum < -20.0'  --filterName 'InbreedingCoeff' --filterExpression 'InbreedingCoeff < -0.8'  --filterName 'FS' --filterExpression 'FS > 200.0' --filterName 'DP' --filterExpression 'DP < 5'
 
@@ -26,96 +32,170 @@ endif
 
 REPORT_STRATIFICATION := Filter
 
-GATK_HARD_FILTER_SNPS ?= true
-GATK_POOL_SNP_RECAL ?= false
-GATK_SPLIT_CHR ?= true
-
-.PHONY: gatk
 .SECONDARY:
 .DELETE_ON_ERROR:
+.PHONY: gatk_vcfs
 
-gatk : $(foreach type,indels snps,vcf/all.gatk_hc.$(type).vcf)
+gatk_vcfs : $(foreach sample,$(SAMPLES),vcf_ann/$(sample).gatk_snps.vcf vcf_ann/$(sample).gatk_indels.vcf)
+gatk_vcfs : $(foreach sample,$(SAMPLES),vcf_ann/$(sample).gatk_snps.vcf vcf_ann/$(sample).gatk_indels.vcf)
+
+vcf_ann/%.gatk_snps.vcf : vcf/%.gatk_snps.pass.eff.vcf
+	mkdir -p $(@D); ln -f $< $@
+vcf_ann/%.gatk_indels.vcf : vcf/%.gatk_indels.pass.eff.vcf
+	mkdir -p $(@D); ln -f $< $@
+
+###### RECIPES #######
 
 %.intervals : %.vcf
 	$(INIT) sed '/^#/d' $< | awk '{print $$1":"$$2 }' > $@
 
 #### if SPLIT_CHR is set to true, we will split gatk processing by chromosome
-ifeq ($(GATK_SPLIT_CHR),true)
+ifeq ($(SPLIT_CHR),true)
+
+## call sample sets
+ifdef SAMPLE_SET_PAIRS
+define hapcall-vcf-sets-chr
+gatk/chr_vcf/$1.$2.variants.vcf : $$(foreach sample,$$(samples.$1),gatk/chr_vcf/$$(sample).$2.variants.intervals) $$(foreach sample,$$(samples.$1),bam/$$(sample).bam bam/$$(sample).bai)
+	$$(call RUN,-c -s 9G -m 12G -w 24:00:00,"$$(call GATK_MEM,8G) -T HaplotypeCaller $$(HAPLOTYPE_CALLER_OPTS) \
+		$$(foreach bam,$$(filter %.bam,$$^),-I $$(bam) ) $$(foreach intervals,$$(filter %.intervals,$$^),-L $$(intervals) ) -o $$@")
+endef
+$(foreach chr,$(CHROMOSOMES),$(foreach set,$(SAMPLE_SET_PAIRS),$(eval $(call hapcall-vcf-sets-chr,$(set),$(chr)))))
+
+define merge-chr-variants-sets
+gatk/vcf/$1.variants.vcf : $$(foreach chr,$$(CHROMOSOMES),gatk/chr_vcf/$1.$$(chr).variants.vcf)
+	$$(call RUN,-c -s 4G -m 6G,"$$(call GATK_MEM,3G) -T CombineVariants \
+	--assumeIdenticalSamples $$(foreach i,$$^, --variant $$i) -R $$(REF_FASTA) -o $$@")
+endef
+$(foreach set,$(SAMPLE_SET_PAIRS),$(eval $(call merge-chr-variants-sets,$(set))))
+endif # def SAMPLE_SETS
 
 define chr-variants
-gatk/chr_gvcf/%.$1.variants.g.vcf.gz : bam/%.bam  #bam/%.bai
-	$$(call RUN,-c -s 8G -m 12G,"$$(call GATK_MEM2,8G) -T HaplotypeCaller \
-	-L $1 -I $$< -o $$@ $$(HAPLOTYPE_CALLER_OPTS)")
-
-gatk/chr_vcf/all.$1.variants.vcf.gz : $$(foreach sample,$$(SAMPLES),gatk/chr_gvcf/$$(sample).$1.variants.g.vcf.gz)
-	$$(call RUN,-c -s 20G -m 20G -w 24:00:00,"$$(call GATK_MEM2,16G) -T GenotypeGVCFs -R $$(REF_FASTA) \
-		$$(foreach vcf,$$^,--variant $$(vcf)) -o $$@")
-
+gatk/chr_vcf/%.$1.variants.vcf : bam/%.bam bam/%.bai
+	$$(call RUN,-s 8G -m 12G -w 24:00:00,"$$(call GATK_MEM,8G) -T HaplotypeCaller \
+	-L $1 -I $$< -o $$@ \
+	$$(HAPLOTYPE_CALLER_OPTS)")
 endef
 $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-variants,$(chr))))
 
-gatk/vcf/all.variants.vcf.gz : $(foreach chr,$(CHROMOSOMES),gatk/chr_vcf/all.$(chr).variants.vcf.gz)
-	$(call RUN,-c -s 4G -m 6G,"$(call GATK_MEM2,3G) -T CombineVariants --disable_auto_index_creation_and_locking_when_reading_rods --assumeIdenticalSamples $(foreach i,$^, --variant $i) -R $(REF_FASTA) -o $@")
-
+define merge-chr-variants
+gatk/vcf/$1.variants.vcf : $$(foreach chr,$$(CHROMOSOMES),gatk/chr_vcf/$1.$$(chr).variants.vcf)
+	$$(call RUN,-s 4G -m 6G -c,"$$(call GATK_MEM,3G) -T CombineVariants --assumeIdenticalSamples $$(foreach i,$$^, --variant $$i) -R $$(REF_FASTA) -o $$@")
+endef
+$(foreach sample,$(SAMPLES),$(eval $(call merge-chr-variants,$(sample))))
 
 else #### no splitting by chr ####
 
+## call sample sets
+ifdef SAMPLE_SETS
+define hapcall-vcf-sets
+gatk/vcf/$1.variants.vcf : $$(foreach sample,$$(samples.$1),gatk/vcf/$$(sample).variants.vcf) $$(foreach sample,$$(samples.$1),bam/$$(sample).bam bam/$$(sample).bai)
+	$$(call RUN,-s 9G -m 12G -c,"$$(call GATK_MEM,8G) -T HaplotypeCaller -R $$(REF_FASTA) --dbsnp $$(DBSNP) $$(foreach bam,$$(filter %.bam,$$^),-I $$(bam) ) $$(foreach vcf,$$(filter %.vcf,$$^),-L $$(vcf) ) -o $$@")
+endef
+$(foreach set,$(SAMPLE_SET_PAIRS),$(eval $(call hapcall-vcf-sets,$(set))))
+endif
+
 define hapcall-vcf
-gatk/gvcf/$1.variants.g.vcf.gz : bam/$1.bam
-	$$(call RUN,-c -s 8G -m 12G,"$$(call GATK_MEM2,8G) -T HaplotypeCaller \
-	-I $$< $$(HAPLOTYPE_CALLER_OPTS) -o $$@")
+gatk/vcf/$1.variants.vcf : bam/$1.bam bam/$1.bai
+	$$(call RUN,-s 8G -m 12G -c,"$$(call GATK_MEM,8G) -T HaplotypeCaller \
+	-I $$< --dbsnp $$(DBSNP) -o $$@  -rf BadCigar \
+	-stand_call_conf $$(VARIANT_CALL_THRESHOLD) -stand_emit_conf $$(VARIANT_EMIT_THRESHOLD) -R $$(REF_FASTA)")
 endef
 $(foreach sample,$(SAMPLES),$(eval $(call hapcall-vcf,$(sample))))
 
-gatk/vcf/all.variants.vcf.gz : $(foreach sample,$(SAMPLES),gatk/gvcf/$(sample).variants.g.vcf.gz)
-	$(call RUN,-c -s 8G -m 12G,"$(call GATK_MEM2,8G) -T GenotypeGVCFs --disable_auto_index_creation_and_locking_when_reading_rods \
-		-R $(REF_FASTA) $(foreach vcf,$^,--variant $(vcf) ) -o $@")
-
 endif # split by chr
 
-gatk/vcf/all.variants.snps.vcf.gz : gatk/vcf/all.variants.vcf.gz
-	$(call RUN,-c -s 8G -m 12G,"$(call GATK_MEM2,8G) -T SelectVariants  -R $(REF_FASTA)  --variant $< -o $@ \
+# select snps % = sample
+gatk/vcf/%.variants.snps.vcf : gatk/vcf/%.variants.vcf 
+	$(call RUN,-s 8G -m 12G,"$(call GATK_MEM,8G) -T SelectVariants  -R $(REF_FASTA)  --variant $<  -o $@ \
 	 -selectType SNP")
 
-gatk/vcf/all.variants.indels.vcf.gz : gatk/vcf/all.variants.vcf.gz
-	$(call RUN,-c -s 8G -m 12G,"$(call GATK_MEM2,8G) -T SelectVariants  -R $(REF_FASTA)  --variant $< -o $@ \
-	 -selectType INDEL")
+# select indels % = indels
+gatk/vcf/%.variants.indels.vcf : gatk/vcf/%.variants.vcf 
+	$(call RUN,-s 8G -m 12G,"$(call GATK_MEM,8G) -T SelectVariants -R $(REF_FASTA) --variant $<  -o $@ \
+	-selectType INDEL")
 
-ifeq ($(GATK_HARD_FILTER_SNPS),true)
-gatk/vcf/all.variants.snps.filtered.vcf.gz : gatk/vcf/all.variants.snps.vcf.gz
-	$(call RUN,-c -s 9G -m 12G,"$(call GATK_MEM2,8G) -T VariantFiltration -R $(REF_FASTA) $(SNP_FILTERS) -o $@ \
-	--variant $<")
-else 
-# run variant recal function
-gatk/vcf/all.variants.snps.recal.vcf.gz : gatk/vcf/all.variants.snps.vcf.gz
-	$(call RUN,-c -n 6 -s 4G -m 5G,"$(call GATK_MEM2,22G) -T VariantRecalibrator \
-		-R $(REF_FASTA) -nt 6 \
-	-resource:hapmap$(,)known=false$(,)training=true$(,)truth=true$(,)prior=15.0 $(HAPMAP) \
-		-resource:omni$(,)known=false$(,)training=true$(,)truth=false$(,)prior=12.0 $(OMNI) \
-		-resource:dbsnp$(,)known=true$(,)training=false$(,)truth=false$(,)prior=8.0 $(DBSNP) \
-		-input $< \
-		-recalFile $@ \
-		-tranchesFile $(patsubst %.vcf.gz,%.tranches,$@) \
-		-rscriptFile $(patsubst %.vcf.gz,%.snps.plots.R,$@)")
+#$(call VARIANT_RECAL,$@,$^)
+define VARIANT_RECAL
+$(call RUN,-n 6 -s 4G -m 5G,"$(call GATK_MEM,22G) -T VariantRecalibrator \
+	-R $(REF_FASTA) -nt 6 \
+-resource:hapmap$(,)known=false$(,)training=true$(,)truth=true$(,)prior=15.0 $(HAPMAP) \
+	-resource:omni$(,)known=false$(,)training=true$(,)truth=false$(,)prior=12.0 $(OMNI) \
+	-resource:dbsnp$(,)known=true$(,)training=false$(,)truth=false$(,)prior=8.0 $(DBSNP) \
+	$(foreach i,$(VARIANT_RECAL_ANNOTATIONS), -an $i) \
+	$(foreach i,$(filter %.vcf,$2), -input $i) \
+	-recalFile $1 -tranchesFile $(basename $1).tranches -rscriptFile $(basename $1).snps.plots.R")
+endef
+
 
 # apply variant recal function
-gatk/vcf/all.variants.snps.filtered.vcf.gz : gatk/vcf/all.variants.snps.vcf.gz gatk/vcf/all.variants.snps.recal.vcf.gz
-	$(call RUN,-c -s 9G -m 12G,"$(call GATK_MEM2,8G) -T ApplyRecalibration  -R $(REF_FASTA) \
-		-input $< \
-		-recalFile $(<<) \
-		--ts_filter_level $(VARIANT_RECAL_TRUTH_SENSITIVITY_LEVEL) \
-		-tranchesFile $(patsubst %.vcf.gz,%.tranches,$(<<)) \
-		-o $@")
+# arguments: vcf, recal file
+#$(call APPLY_VARIANT_RECAL,$@,input,recal-file)
+define APPLY_VARIANT_RECAL
+$(call RUN,-s 9G -m 12G,"$(call GATK_MEM,8G) -T ApplyRecalibration  -R $(REF_FASTA) \
+	-input $2 \
+	-recalFile $3 \
+	--ts_filter_level $(VARIANT_RECAL_TRUTH_SENSITIVITY_LEVEL) \
+	-tranchesFile $(basename $3).tranches -o $1")
+endef
+
+# apply variant recal %=sample
+ifeq ($(GATK_HARD_FILTER_SNPS),true)
+gatk/vcf/%.variants.snps.filtered.vcf : gatk/vcf/%.variants.snps.vcf
+	$(call RUN,-s 9G -m 12G,"$(call GATK_MEM,8G) -T VariantFiltration -R $(REF_FASTA) $(SNP_FILTERS) -o $@ \
+	--variant $<")
+else 
+
+# pool sample vcfs for recalibration
+ifeq ($(GATK_POOL_SNP_RECAL),true)
+gatk/vcf/samples.snps.recal.vcf : $(foreach sample,$(SAMPLES),gatk/vcf/$(sample).variants.snps.vcf)
+	$(call VARIANT_RECAL,$@,$^)
+define sample-apply-recal
+gatk/vcf/$1.variants.snps.filtered.vcf : gatk/vcf/$1.variants.snps.vcf gatk/vcf/samples.snps.recal.vcf 
+	$$(call APPLY_VARIANT_RECAL,$$@,$$<,$$(word 2,$$^))
+endef
+$(foreach sample,$(SAMPLES),$(eval $(call sample-apply-recal,$(sample))))
+
+ifdef SAMPLE_SETS
+gatk/vcf/sets.snps.recal.vcf : $(foreach set,$(SAMPLE_SET_PAIRS),gatk/vcf/$(set).variants.snps.vcf )
+	$(call VARIANT_RECAL,$@,$^)
+define sets-apply-recal
+gatk/vcf/$1.variants.snps.filtered.vcf : gatk/vcf/$1.variants.snps.vcf gatk/vcf/sets.snps.recal.vcf
+	$$(call APPLY_VARIANT_RECAL,$$@,$$<,$$(word 2,$$^))
+endef
+$(foreach set,$(SAMPLE_SET_PAIRS),$(eval $(call sets-apply-recal,$(set))))
+endif
+
+else 
+gatk/vcf/%.variants.snps.recal.vcf : gatk/vcf/%.variants.snps.vcf
+	$(call VARIANT_RECAL,$@,$^)
+gatk/vcf/%.variants.snps.filtered.vcf : gatk/vcf/%.variants.snps.vcf gatk/vcf/%.variants.snps.recal.vcf
+	$(call APPLY_VARIANT_RECAL,$@,$<,$(word 2,$^))
+endif
 endif
 
 # hard filter indels %=sample
-gatk/vcf/all.variants.indels.filtered.vcf.gz : gatk/vcf/all.variants.indels.vcf.gz
-	$(call RUN,-c -s 9G -m 12G,"$(call GATK_MEM2,8G) -T VariantFiltration -R $(REF_FASTA) $(INDEL_FILTERS) -o $@ \
-		--variant $<")
+gatk/vcf/%.variants.indels.filtered.vcf : gatk/vcf/%.variants.indels.vcf
+	$(call RUN,-c -s 9G -m 12G,"$(call GATK_MEM,8G) -T VariantFiltration -R $(REF_FASTA) $(INDEL_FILTERS) -o $@ \
+	--variant $<")
 
-vcf/all.gatk_hc.%.vcf : gatk/vcf/all.variants.%.filtered.vcf.gz
-	mkdir -p $(@D); ln $< $@
+# filter for only novel snps/indels
+%.novel.txt : %.txt
+	$(INIT) /bin/awk 'NR == 1 || $$4 == "."' $< > $@
+
+
+vcf/%.gatk_snps.vcf : gatk/vcf/%.variants.snps.filtered.vcf
+	$(INIT) ln -f $< $@
+
+vcf/%.gatk_indels.vcf : gatk/vcf/%.variants.indels.filtered.vcf
+	$(INIT) ln -f $< $@
+
+
+reports/%/index.html : reports/%.dp_ft.grp metrics/hs_metrics.txt
+	$(call RUN,,"$(VARIANT_EVAL_GATK_REPORT) --metrics $(word 2,$^) --outDir $(@D) $<")
 
 
 include modules/bam_tools/process_bam.mk
 include modules/vcf_tools/vcftools.mk
+
+endif
+GATK_MK = true
