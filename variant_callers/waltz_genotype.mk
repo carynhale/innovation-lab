@@ -25,7 +25,7 @@ waltz/$1-STANDARD-pileup.txt.gz : bam/$1-STANDARD.bam
 									 gzip $1-STANDARD-intervals-without-duplicates.txt && \
 									 cd ..")
 									 
-waltz/$1-COLLAPSED.txt.gz : bam/$1-COLLAPSED.bam
+waltz/$1-COLLAPSED-pileup.txt.gz : bam/$1-COLLAPSED.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 mkdir -p waltz && \
 									 cd waltz && \
@@ -38,7 +38,7 @@ waltz/$1-COLLAPSED.txt.gz : bam/$1-COLLAPSED.bam
 									 gzip $1-COLLAPSED-intervals-without-duplicates.txt && \
 									 cd ..")
 									 
-waltz/$1-SIMPLEX.txt.gz : bam/$1-SIMPLEX.bam
+waltz/$1-SIMPLEX-pileup.txt.gz : bam/$1-SIMPLEX.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 mkdir -p waltz && \
 									 cd waltz && \
@@ -51,7 +51,7 @@ waltz/$1-SIMPLEX.txt.gz : bam/$1-SIMPLEX.bam
 									 gzip $1-SIMPLEX-intervals-without-duplicates.txt && \
 									 cd ..")
 									 
-waltz/$1-DUPLEX.txt.gz : bam/$1-DUPLEX.bam
+waltz/$1-DUPLEX-pileup.txt.gz : bam/$1-DUPLEX.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 mkdir -p waltz && \
 									 cd waltz && \
