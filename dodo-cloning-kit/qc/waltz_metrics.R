@@ -41,33 +41,33 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
 		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:5])
+		   	 						alt = as.numeric(x[2:6])
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
 		   	 							index = c(1:4)[-3]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
 		   	 							index = c(1:4)[-4]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
@@ -100,33 +100,33 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
 		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:5])
+		   	 						alt = as.numeric(x[2:6])
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
 		   	 							index = c(1:4)[-3]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
 		   	 							index = c(1:4)[-4]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
@@ -159,33 +159,33 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
 		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:5])
+		   	 						alt = as.numeric(x[2:6])
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
 		   	 							index = c(1:4)[-3]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
 		   	 							index = c(1:4)[-4]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
@@ -218,33 +218,33 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
 		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:5])
+		   	 						alt = as.numeric(x[2:6])
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
 		   	 							index = c(1:4)[-3]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
 		   	 							index = c(1:4)[-4]
-		   	 							if (any(x[index]>.02*x[6])) {
+		   	 							if (any(x[index]>.02*x[5])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
