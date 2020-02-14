@@ -26,7 +26,7 @@ if (as.numeric(opt$type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x1 = x2 = x3 = x4 = list()
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-STANDARD-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
@@ -85,7 +85,7 @@ if (as.numeric(opt$type)==1) {
 	x1 = do.call(rbind, x1) %>%
 		 mutate(sample_names = sample_names, bam_file = "standard")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-COLLAPSED-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
@@ -144,7 +144,7 @@ if (as.numeric(opt$type)==1) {
 	x2 = do.call(rbind, x2) %>%
 		 mutate(sample_names = sample_names, bam_file = "collapsed")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-SIMPLEX-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-simplex-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
@@ -203,7 +203,7 @@ if (as.numeric(opt$type)==1) {
 	x3 = do.call(rbind, x3) %>%
 		 mutate(sample_names = sample_names, bam_file = "simplex")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-DUPLEX-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-duplex.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
@@ -271,7 +271,7 @@ if (as.numeric(opt$type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x1 = x2 = x3 = x4 = list()
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-STANDARD-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
@@ -330,7 +330,7 @@ if (as.numeric(opt$type)==1) {
 	x1 = do.call(rbind, x1) %>%
 		 mutate(sample_names = sample_names, bam_file = "standard")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-COLLAPSED-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
@@ -389,7 +389,7 @@ if (as.numeric(opt$type)==1) {
 	x2 = do.call(rbind, x2) %>%
 		 mutate(sample_names = sample_names, bam_file = "collapsed")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-SIMPLEX-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-simplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
@@ -448,7 +448,7 @@ if (as.numeric(opt$type)==1) {
 	x3 = do.call(rbind, x3) %>%
 		 mutate(sample_names = sample_names, bam_file = "simplex")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-DUPLEX-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-duplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   	 readr::type_convert() %>%
 		   	 dplyr::select(`chrom`	= X1,
 		   	 			   `pos`	= X2,
