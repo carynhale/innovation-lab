@@ -11,7 +11,7 @@ if (!interactive()) {
 }
 
 args_list = list(make_option("--type", default = NA, type = 'character', help = "analysis type"),
-				 make_option("--target_file", default = NA, type= 'character', help = 'target file')
+				 make_option("--target_file", default = NA, type= 'character', help = 'target file'),
 				 make_option("--sample_names", default = NA, type = 'character', help = "sample names"))
 				  
 parser = OptionParser(usage = "%prog", option_list = args_list)
