@@ -22,6 +22,7 @@ cutoffAF = 0.02
 chr = 21
 
 if (as.numeric(opt$type)==1) {
+
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   			   type_convert() %>%
 		   			   rename(chrom = X1, pos = X2) %>%
@@ -266,7 +267,9 @@ if (as.numeric(opt$type)==1) {
 		 mutate(sample_names = sample_names, bam_file = "duplex")
 	x = rbind(x1, x2, x3, x4)
 	write_tsv(x, path="waltz/noise_metrics_with_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+	
 } else if (as.numeric(opt$type)==2) {
+
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   			   type_convert() %>%
 		   			   rename(chrom = X1, pos = X2) %>%
@@ -511,167 +514,327 @@ if (as.numeric(opt$type)==1) {
 		 mutate(sample_names = sample_names, bam_file = "duplex")
 	x = rbind(x1, x2, x3, x4)
 	write_tsv(x, path="waltz/noise_metrics_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+	
 } else if (as.numeric(opt$type)==3) {
+
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 		   			   type_convert() %>%
 		   			   rename(chrom = X1, pos = X2) %>%
 		   			   mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
-	x1 = list()
+	x = list()
 	for (i in 1:length(sample_names)) {
 		df = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
 			 readr::type_convert() %>%
-			 dplyr::select(chrom = X1,
-									   Position = X2,
-									   Reference_Allele = X3,
-									   Total_Depth = X4,
-									   A = X5,
-									   C = X6,
-									   G = X7,
-									   T = X8) %>%
-						 mutate(AF_A = 100*A/Total_Depth,
-								AF_C = 100*C/Total_Depth,
-								AF_G = 100*G/Total_Depth,
-								AF_T = 100*T/Total_Depth)
-		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
-								  Position = rep(pileup_metrics$Position, 4),
-								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
-								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
-													   rep("C", nrow(pileup_metrics)),
-													   rep("G", nrow(pileup_metrics)),
-													   rep("T", nrow(pileup_metrics))),
-								  Allele_Frequency = c(pileup_metrics$AF_A,
-													   pileup_metrics$AF_C,
-													   pileup_metrics$AF_G,
-													   pileup_metrics$AF_T)) %>%
-								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome==CHR) %>%
-								  arrange(Position)
+			 dplyr::select(`chrom`	= X1,
+						   `pos`	= X2,
+						   `ref`	= X3,
+						   `total`	= X4,
+						   `a`		= X5,
+						   `c`		= X6,
+						   `g`		= X7,
+						   `t`		= X8) %>%
+			 dplyr::mutate(`total_n` = a+c+g+t,
+			 			   `uuid` = paste0(chrom, ":", pos)) %>%
+			 dplyr::filter(uuid %in% target_positions$uuid) %>%
+			 dplyr::mutate(af_a = 100*a/total_n,
+						   af_c = 100*c/total_n,
+						   af_g = 100*g/total_n,
+						   af_t = 100*t/total_n) %>%
+			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:6])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="C") {
+		   	 							index = c(1:4)[-3]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="T") {
+		   	 							index = c(1:4)[-4]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						}
+		   	 						return(y)
+		   	 					}))
+		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
+							   `pos` = rep(df$pos, 4),
+							   `ref` = rep(df$ref, 4),
+							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
+							   `include` = rep(df$include, 4)) %>%
+				 dplyr::filter(ref != alt,
+				 			   include,
+							   chrom %in% chr) %>%
+				 dplyr::arrange(pos) %>%
+				 dplyr::select(-include) %>%
+				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
-	standard_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		standard_bam = left_join(standard_bam, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
-	colnames(standard_bam)[5:ncol(standard_bam)] = sample_names
+	write_tsv(n_pl, path="waltz/noise_by_position_standard_with_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+	
+} else if (as.numeric(opt$type)==4) {
 
-	nuc_metrics = list()
+	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   			   type_convert() %>%
+		   			   rename(chrom = X1, pos = X2) %>%
+		   			   mutate(uuid = paste0(chrom, ":", pos))
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	x = list()
 	for (i in 1:length(sample_names)) {
-		pileup_metrics = read_tsv(file=paste0("metrics/standard/", sample_names[i], "-pileup-without-duplicates.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-						 type_convert() %>%
-						 dplyr::select(Chromosome = X1,
-									   Position = X2,
-									   Reference_Allele = X3,
-									   Total_Depth = X4,
-									   A = X5,
-									   C = X6,
-									   G = X7,
-									   T = X8) %>%
-						 mutate(AF_A = 100*A/Total_Depth,
-								AF_C = 100*C/Total_Depth,
-								AF_G = 100*G/Total_Depth,
-								AF_T = 100*T/Total_Depth)
-		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
-								  Position = rep(pileup_metrics$Position, 4),
-								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
-								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
-													   rep("C", nrow(pileup_metrics)),
-													   rep("G", nrow(pileup_metrics)),
-													   rep("T", nrow(pileup_metrics))),
-								  Allele_Frequency = c(pileup_metrics$AF_A,
-													   pileup_metrics$AF_C,
-													   pileup_metrics$AF_G,
-													   pileup_metrics$AF_T)) %>%
-								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome==CHR) %>%
-								  arrange(Position)
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+			 readr::type_convert() %>%
+			 dplyr::select(`chrom`	= X1,
+						   `pos`	= X2,
+						   `ref`	= X3,
+						   `total`	= X4,
+						   `a`		= X5,
+						   `c`		= X6,
+						   `g`		= X7,
+						   `t`		= X8) %>%
+			 dplyr::mutate(`total_n` = a+c+g+t,
+			 			   `uuid` = paste0(chrom, ":", pos)) %>%
+			 dplyr::filter(uuid %in% target_positions$uuid) %>%
+			 dplyr::mutate(af_a = 100*a/total_n,
+						   af_c = 100*c/total_n,
+						   af_g = 100*g/total_n,
+						   af_t = 100*t/total_n) %>%
+			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:6])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="C") {
+		   	 							index = c(1:4)[-3]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="T") {
+		   	 							index = c(1:4)[-4]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						}
+		   	 						return(y)
+		   	 					}))
+		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
+							   `pos` = rep(df$pos, 4),
+							   `ref` = rep(df$ref, 4),
+							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
+							   `include` = rep(df$include, 4)) %>%
+				 dplyr::filter(ref != alt,
+				 			   include,
+							   chrom %in% chr) %>%
+				 dplyr::arrange(pos) %>%
+				 dplyr::select(-include) %>%
+				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
-	standard_bam_dedup = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		standard_bam_dedup = left_join(standard_bam_dedup, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
-	colnames(standard_bam_dedup)[5:ncol(standard_bam_dedup)] = sample_names
+	write_tsv(n_pl, path="waltz/noise_by_position_standard_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
-	nuc_metrics = list()
+} else if (as.numeric(opt$type)==5) {
+	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   			   type_convert() %>%
+		   			   rename(chrom = X1, pos = X2) %>%
+		   			   mutate(uuid = paste0(chrom, ":", pos))
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	x = list()
 	for (i in 1:length(sample_names)) {
-		pileup_metrics = read_tsv(file=paste0("metrics/simplex/", sample_names[i], "-pileup.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-						 type_convert() %>%
-						 dplyr::select(Chromosome = X1,
-									   Position = X2,
-									   Reference_Allele = X3,
-									   Total_Depth = X4,
-									   A = X5,
-									   C = X6,
-									   G = X7,
-									   T = X8) %>%
-						 mutate(AF_A = 100*A/Total_Depth,
-								AF_C = 100*C/Total_Depth,
-								AF_G = 100*G/Total_Depth,
-								AF_T = 100*T/Total_Depth)
-		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
-								  Position = rep(pileup_metrics$Position, 4),
-								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
-								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
-													   rep("C", nrow(pileup_metrics)),
-													   rep("G", nrow(pileup_metrics)),
-													   rep("T", nrow(pileup_metrics))),
-								  Allele_Frequency = c(pileup_metrics$AF_A,
-													   pileup_metrics$AF_C,
-													   pileup_metrics$AF_G,
-													   pileup_metrics$AF_T)) %>%
-								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome==CHR) %>%
-								  arrange(Position)
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-simplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+			 readr::type_convert() %>%
+			 dplyr::select(`chrom`	= X1,
+						   `pos`	= X2,
+						   `ref`	= X3,
+						   `total`	= X4,
+						   `a`		= X5,
+						   `c`		= X6,
+						   `g`		= X7,
+						   `t`		= X8) %>%
+			 dplyr::mutate(`total_n` = a+c+g+t,
+			 			   `uuid` = paste0(chrom, ":", pos)) %>%
+			 dplyr::filter(uuid %in% target_positions$uuid) %>%
+			 dplyr::mutate(af_a = 100*a/total_n,
+						   af_c = 100*c/total_n,
+						   af_g = 100*g/total_n,
+						   af_t = 100*t/total_n) %>%
+			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:6])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="C") {
+		   	 							index = c(1:4)[-3]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="T") {
+		   	 							index = c(1:4)[-4]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						}
+		   	 						return(y)
+		   	 					}))
+		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
+							   `pos` = rep(df$pos, 4),
+							   `ref` = rep(df$ref, 4),
+							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
+							   `include` = rep(df$include, 4)) %>%
+				 dplyr::filter(ref != alt,
+				 			   include,
+							   chrom %in% chr) %>%
+				 dplyr::arrange(pos) %>%
+				 dplyr::select(-include) %>%
+				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
-	simplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		simplex_bam = left_join(simplex_bam, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
-	colnames(simplex_bam)[5:ncol(simplex_bam)] = sample_names
+	write_tsv(n_pl, path="waltz/noise_by_position_simplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
-	nuc_metrics = list()
+} else if (as.numeric(opt$type)==6) {
+
+	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   			   type_convert() %>%
+		   			   rename(chrom = X1, pos = X2) %>%
+		   			   mutate(uuid = paste0(chrom, ":", pos))
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
+	x = list()
 	for (i in 1:length(sample_names)) {
-		pileup_metrics = read_tsv(file=paste0("metrics/duplex/", sample_names[i], "-pileup.txt"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-						 type_convert() %>%
-						 dplyr::select(Chromosome = X1,
-									   Position = X2,
-									   Reference_Allele = X3,
-									   Total_Depth = X4,
-									   A = X5,
-									   C = X6,
-									   G = X7,
-									   T = X8) %>%
-						 mutate(AF_A = 100*A/Total_Depth,
-								AF_C = 100*C/Total_Depth,
-								AF_G = 100*G/Total_Depth,
-								AF_T = 100*T/Total_Depth)
-		nuc_metrics[[i]] = tibble(Chromosome = rep(pileup_metrics$Chromosome, 4),
-								  Position = rep(pileup_metrics$Position, 4),
-								  Reference_Allele = rep(pileup_metrics$Reference_Allele, 4),
-								  Alternate_Allele = c(rep("A", nrow(pileup_metrics)),
-													   rep("C", nrow(pileup_metrics)),
-													   rep("G", nrow(pileup_metrics)),
-													   rep("T", nrow(pileup_metrics))),
-								  Allele_Frequency = c(pileup_metrics$AF_A,
-													   pileup_metrics$AF_C,
-													   pileup_metrics$AF_G,
-													   pileup_metrics$AF_T)) %>%
-								  filter(Reference_Allele!=Alternate_Allele) %>%
-								  filter(Allele_Frequency<AF) %>%
-								  filter(Chromosome==CHR) %>%
-								  arrange(Position)
+		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-duplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+			 readr::type_convert() %>%
+			 dplyr::select(`chrom`	= X1,
+						   `pos`	= X2,
+						   `ref`	= X3,
+						   `total`	= X4,
+						   `a`		= X5,
+						   `c`		= X6,
+						   `g`		= X7,
+						   `t`		= X8) %>%
+			 dplyr::mutate(`total_n` = a+c+g+t,
+			 			   `uuid` = paste0(chrom, ":", pos)) %>%
+			 dplyr::filter(uuid %in% target_positions$uuid) %>%
+			 dplyr::mutate(af_a = 100*a/total_n,
+						   af_c = 100*c/total_n,
+						   af_g = 100*g/total_n,
+						   af_t = 100*t/total_n) %>%
+			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:6])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="C") {
+		   	 							index = c(1:4)[-3]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						} else if (ref=="T") {
+		   	 							index = c(1:4)[-4]
+		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
+		   	 								y = FALSE
+		   	 							} else {
+		   	 								y = TRUE
+		   	 							}
+		   	 						}
+		   	 						return(y)
+		   	 					}))
+		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
+							   `pos` = rep(df$pos, 4),
+							   `ref` = rep(df$ref, 4),
+							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
+							   `include` = rep(df$include, 4)) %>%
+				 dplyr::filter(ref != alt,
+				 			   include,
+							   chrom %in% chr) %>%
+				 dplyr::arrange(pos) %>%
+				 dplyr::select(-include) %>%
+				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
-	duplex_bam = nuc_metrics[[1]][,c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"),drop=FALSE]
+	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		duplex_bam = left_join(duplex_bam, nuc_metrics[[i]], by=c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
+		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
-	colnames(duplex_bam)[5:ncol(duplex_bam)] = sample_names
+	write_tsv(n_pl, path="waltz/noise_by_position_duplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+
+} else if (as.numeric(opt$type)==6) {
 
 	nuc_pileup = left_join(standard_bam,
 						   standard_bam_dedup,
