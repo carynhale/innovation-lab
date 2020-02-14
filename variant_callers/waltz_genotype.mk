@@ -8,7 +8,8 @@ waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-STANDARD-pileup.txt
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-COLLAPSED-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-SIMPLEX-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)-DUPLEX-pileup.txt.gz) \
-				 $(foreach sample,$(SAMPLES),waltz/noise_metrics_with_duplicates.txt)
+				 $(foreach sample,$(SAMPLES),waltz/noise_metrics_with_duplicates.txt) \
+				 $(foreach sample,$(SAMPLES),waltz/noise_metrics_without_duplicates.txt)
 
 WALTZ_MIN_MAPQ ?= 15
 TARGETS_FILE_NOMSI ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-A-good-positions-noMSI.txt
