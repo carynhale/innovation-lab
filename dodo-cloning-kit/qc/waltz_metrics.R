@@ -41,33 +41,32 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						REF = x[1]
-		   	 						x[1] = 0
-		   	 						x = as.numeric(x)
-		   	 						if (REF=="A") {
-		   	 							index = c(2:5)[-1]
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:5])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
-		   	 						} else if (REF=="G") {
-										index = c(2:5)[-2]
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
-		   	 							index = c(2:5)[-3]
+		   	 							index = c(1:4)[-3]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
-		   	 							index = c(2:5)[-4]
+		   	 							index = c(1:4)[-4]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
@@ -101,33 +100,32 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						REF = x[1]
-		   	 						x[1] = 0
-		   	 						x = as.numeric(x)
-		   	 						if (REF=="A") {
-		   	 							index = c(2:5)[-1]
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:5])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
-		   	 						} else if (REF=="G") {
-										index = c(2:5)[-2]
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
-		   	 							index = c(2:5)[-3]
+		   	 							index = c(1:4)[-3]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
-		   	 							index = c(2:5)[-4]
+		   	 							index = c(1:4)[-4]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
@@ -161,33 +159,32 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						REF = x[1]
-		   	 						x[1] = 0
-		   	 						x = as.numeric(x)
-		   	 						if (REF=="A") {
-		   	 							index = c(2:5)[-1]
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:5])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
-		   	 						} else if (REF=="G") {
-										index = c(2:5)[-2]
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
-		   	 							index = c(2:5)[-3]
+		   	 							index = c(1:4)[-3]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
-		   	 							index = c(2:5)[-4]
+		   	 							index = c(1:4)[-4]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
@@ -221,33 +218,32 @@ if (as.numeric(opt$type)==1) {
 		   	 dplyr::mutate(`total_n` = a+g+c+t,
 		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
 		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						REF = x[1]
-		   	 						x[1] = 0
-		   	 						x = as.numeric(x)
-		   	 						if (REF=="A") {
-		   	 							index = c(2:5)[-1]
+		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t), 1, function(x) {
+		   	 						ref = as.character(x[1])
+		   	 						alt = as.numeric(x[2:5])
+		   	 						if (ref=="A") {
+		   	 							index = c(1:4)[-1]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
-		   	 						} else if (REF=="G") {
-										index = c(2:5)[-2]
+		   	 						} else if (ref=="G") {
+										index = c(1:4)[-2]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="C") {
-		   	 							index = c(2:5)[-3]
+		   	 							index = c(1:4)[-3]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
 		   	 								y = sum(x[index])
 		   	 							}
 		   	 						} else if (REF=="T") {
-		   	 							index = c(2:5)[-4]
+		   	 							index = c(1:4)[-4]
 		   	 							if (any(x[index]>.02*x[6])) {
 		   	 								y = NA
 		   	 							} else {
@@ -266,5 +262,5 @@ if (as.numeric(opt$type)==1) {
 	x4 = do.call(rbind, x4) %>%
 		 mutate(sample_names = sample_names, bam_file = "duplex")
 	x = rbind(x1, x2, x3, x4)
-	write_tsv(x, path="waltz/noise_metrics.txt", na = "NA", append = FALSE, col_names = !append)
+	write_tsv(x, path="waltz/noise_metrics_with_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 }
