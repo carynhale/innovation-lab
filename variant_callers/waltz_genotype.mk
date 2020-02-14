@@ -11,6 +11,7 @@ waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-STANDARD-pileup.txt
 				 $(foreach sample,$(SAMPLES),waltz/noise_metrics.txt)
 
 WALTZ_MIN_MAPQ ?= 15
+TARGETS_FILE_NOMSI ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-A-good-positions-noMSI.txt
 
 define waltz-genotype
 waltz/$1-STANDARD-pileup.txt.gz : bam/$1-STANDARD.bam
@@ -70,13 +71,13 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
 		
-		
 waltz/noise_metrics.txt : $(wildcard waltz/$(SAMPLES)-STANDARD-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)-COLLAPSED-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)-SIMPLEX-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)-DUPLEX-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 1 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 1 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
-			 $(JAVA8) -version &> version/waltz_genotype.txt)
+			 $(JAVA8) -version &> version/waltz_genotype.txt; \
+			 R --version >> version/waltz_genotype.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: waltz_genotype
