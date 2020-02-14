@@ -8,8 +8,12 @@ waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)__aln_srt_IR_FX-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)__aln_srt_IR_FX-simplex-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)__aln_srt_IR_FX-duplex-pileup.txt.gz) \
-				 $(foreach sample,$(SAMPLES),waltz/noise_metrics_with_duplicates.txt) \
-				 $(foreach sample,$(SAMPLES),waltz/noise_metrics_without_duplicates.txt)
+				 waltz/noise_metrics_with_duplicates.txt \
+				 waltz/noise_metrics_without_duplicates.txt \
+				 waltz/noise_by_position_standard_with_duplicates.txt \
+				 waltz/noise_by_position_standard_without_duplicates.txt \
+				 waltz/noise_by_position_simplex_without_duplicates.txt \
+				 waltz/noise_by_position_duplex_without_duplicates.txt
 
 WALTZ_MIN_MAPQ ?= 15
 TARGETS_FILE_NOMSI ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-A-good-positions-noMSI.txt
