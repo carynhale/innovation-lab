@@ -19,7 +19,7 @@ arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
 cutoffAF = 0.02
-chr = 1
+chr = 1:21
 
 if (as.numeric(opt$type)==1) {
 
@@ -546,19 +546,18 @@ if (as.numeric(opt$type)==1) {
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
-				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF*100,
-							   chrom %in% chr) %>%
+				 dplyr::mutate(af = ifelse(af>cutoffAF*100, 0, af)) %>%
+				 dplyr::filter(chrom %in% chr,
+				 			   ref != alt) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
+		if (i!=1) {
+			x[[i]] = x[[i]] %>%
+					 dplyr::select(-chrom, -pos, -ref, -alt)
+		}
 	}
-	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
-	for (i in 1:length(sample_names)) {
-		cat(i, "\n")
-		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
-	}
-	n_pl[is.na(n_pl)] = 0
-	write_tsv(n_pl, path="waltz/noise_by_position_standard_with_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+	x = do.call(cbind, x)
+	write_tsv(x, path="waltz/noise_by_position_standard_with_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 	
 } else if (as.numeric(opt$type)==4) {
 
@@ -591,19 +590,18 @@ if (as.numeric(opt$type)==1) {
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
-				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF*100,
-							   chrom %in% chr) %>%
+				 dplyr::mutate(af = ifelse(af>cutoffAF*100, 0, af)) %>%
+				 dplyr::filter(chrom %in% chr,
+				 			   ref != alt) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
+		if (i!=1) {
+			x[[i]] = x[[i]] %>%
+					 dplyr::select(-chrom, -pos, -ref, -alt)
+		}
 	}
-	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
-	for (i in 1:length(sample_names)) {
-		cat(i, "\n")
-		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
-	}
-	n_pl[is.na(n_pl)] = 0
-	write_tsv(n_pl, path="waltz/noise_by_position_standard_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+	x = do.call(cbind, x)
+	write_tsv(x, path="waltz/noise_by_position_standard_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$type)==5) {
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
@@ -635,19 +633,18 @@ if (as.numeric(opt$type)==1) {
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
-				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF*100,
-							   chrom %in% chr) %>%
+				 dplyr::mutate(af = ifelse(af>cutoffAF*100, 0, af)) %>%
+				 dplyr::filter(chrom %in% chr,
+				 			   ref != alt) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
+		if (i!=1) {
+			x[[i]] = x[[i]] %>%
+					 dplyr::select(-chrom, -pos, -ref, -alt)
+		}
 	}
-	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
-	for (i in 1:length(sample_names)) {
-		cat(i, "\n")
-		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
-	}
-	n_pl[is.na(n_pl)] = 0
-	write_tsv(n_pl, path="waltz/noise_by_position_simplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+	x = do.call(cbind, x)
+	write_tsv(x, path="waltz/noise_by_position_simplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$type)==6) {
 
@@ -680,19 +677,18 @@ if (as.numeric(opt$type)==1) {
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
-				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF*100,
-							   chrom %in% chr) %>%
+				 dplyr::mutate(af = ifelse(af>cutoffAF*100, 0, af)) %>%
+				 dplyr::filter(chrom %in% chr,
+				 			   ref != alt) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
+		if (i!=1) {
+			x[[i]] = x[[i]] %>%
+					 dplyr::select(-chrom, -pos, -ref, -alt)
+		}
 	}
-	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
-	for (i in 1:length(sample_names)) {
-		cat(i, "\n")
-		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
-	}
-	n_pl[is.na(n_pl)] = 0
-	write_tsv(n_pl, path="waltz/noise_by_position_duplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
+	x = do.call(cbind, x)
+	write_tsv(x, path="waltz/noise_by_position_duplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$type)==6) {
 
