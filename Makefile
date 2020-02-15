@@ -31,6 +31,10 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 TARGETS += msk_access
 msk_access :
 	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
+	
+TARGETS += waltz_genotype
+waltz_genotype:
+	$(call RUN_MAKE,innovation-lab/workflows/waltz_genotype.mk)
 
 
 #==================================================
@@ -133,10 +137,6 @@ TARGETS += multisample_genotype
 multisample_genotype:
 	$(call RUN_MAKE,innovation-lab/variant_callers/multisample_genotype.mk)
 	
-TARGETS += waltz_genotype
-waltz_genotype:
-	$(call RUN_MAKE,innovation-lab/variant_callers/waltz_genotype.mk)
-
 
 #==================================================
 # Copy number aberration callers
