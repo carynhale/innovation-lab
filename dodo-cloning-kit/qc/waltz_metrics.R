@@ -51,28 +51,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -110,28 +110,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -169,28 +169,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -228,28 +228,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -298,28 +298,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -357,28 +357,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -416,28 +416,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -475,28 +475,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = NA
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -540,52 +540,16 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(af_a = 100*a/total_n,
 						   af_c = 100*c/total_n,
 						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n) %>%
-			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))
+						   af_t = 100*t/total_n)
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
-							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
-							   `include` = rep(df$include, 4)) %>%
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   include,
+				 			   af <= cutoffAF,
 							   chrom %in% chr) %>%
-				 dplyr::arrange(pos) %>%
-				 dplyr::select(-include) %>%
+				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
@@ -620,52 +584,16 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(af_a = 100*a/total_n,
 						   af_c = 100*c/total_n,
 						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n) %>%
-			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))
+						   af_t = 100*t/total_n)
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
-							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
-							   `include` = rep(df$include, 4)) %>%
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   include,
+				 			   af <= cutoffAF,
 							   chrom %in% chr) %>%
-				 dplyr::arrange(pos) %>%
-				 dplyr::select(-include) %>%
+				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
@@ -699,52 +627,16 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(af_a = 100*a/total_n,
 						   af_c = 100*c/total_n,
 						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n) %>%
-			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))
+						   af_t = 100*t/total_n)
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
-							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
-							   `include` = rep(df$include, 4)) %>%
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   include,
+				 			   af <= cutoffAF,
 							   chrom %in% chr) %>%
-				 dplyr::arrange(pos) %>%
-				 dplyr::select(-include) %>%
+				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
@@ -779,52 +671,16 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(af_a = 100*a/total_n,
 						   af_c = 100*c/total_n,
 						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n) %>%
-			 dplyr::mutate(`include` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = FALSE
-		   	 							} else {
-		   	 								y = TRUE
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))
+						   af_t = 100*t/total_n)
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
-							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t),
-							   `include` = rep(df$include, 4)) %>%
+							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   include,
+				 			   af <= cutoffAF,
 							   chrom %in% chr) %>%
-				 dplyr::arrange(pos) %>%
-				 dplyr::select(-include) %>%
+				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
 	}
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
