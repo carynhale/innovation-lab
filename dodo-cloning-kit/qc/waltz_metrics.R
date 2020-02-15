@@ -547,7 +547,7 @@ if (as.numeric(opt$type)==1) {
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF,
+				 			   af <= cutoffAF*100,
 							   chrom %in% chr) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
@@ -591,7 +591,7 @@ if (as.numeric(opt$type)==1) {
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF,
+				 			   af <= cutoffAF*100,
 							   chrom %in% chr) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
@@ -634,7 +634,7 @@ if (as.numeric(opt$type)==1) {
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF,
+				 			   af <= cutoffAF*100,
 							   chrom %in% chr) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
@@ -678,7 +678,7 @@ if (as.numeric(opt$type)==1) {
 							   `alt` = rep(c("A", "C", "G", "T"), each=nrow(df)),
 							   `af` = c(df$af_a, df$af_c, df$af_g,df$af_t)) %>%
 				 dplyr::filter(ref != alt,
-				 			   af <= cutoffAF,
+				 			   af <= cutoffAF*100,
 							   chrom %in% chr) %>%
 				 dplyr::arrange(chrom, pos, ref, alt) %>%
 				 dplyr::rename_at("af", funs(sample_names[i]))
