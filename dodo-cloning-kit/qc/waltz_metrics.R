@@ -19,7 +19,7 @@ arguments = parse_args(parser, positional_arguments = T)
 opt = arguments$options
 
 cutoffAF = 0.02
-chr = 21
+chr = 1
 
 if (as.numeric(opt$type)==1) {
 
@@ -557,6 +557,7 @@ if (as.numeric(opt$type)==1) {
 		cat(i, "\n")
 		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
+	n_pl[is.na(n_pl)] = 0
 	write_tsv(n_pl, path="waltz/noise_by_position_standard_with_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 	
 } else if (as.numeric(opt$type)==4) {
@@ -601,6 +602,7 @@ if (as.numeric(opt$type)==1) {
 		cat(i, "\n")
 		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
+	n_pl[is.na(n_pl)] = 0
 	write_tsv(n_pl, path="waltz/noise_by_position_standard_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$type)==5) {
@@ -644,6 +646,7 @@ if (as.numeric(opt$type)==1) {
 		cat(i, "\n")
 		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
+	n_pl[is.na(n_pl)] = 0
 	write_tsv(n_pl, path="waltz/noise_by_position_simplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$type)==6) {
@@ -688,54 +691,10 @@ if (as.numeric(opt$type)==1) {
 		cat(i, "\n")
 		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
+	n_pl[is.na(n_pl)] = 0
 	write_tsv(n_pl, path="waltz/noise_by_position_duplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
 } else if (as.numeric(opt$type)==6) {
 
-	nuc_pileup = left_join(standard_bam,
-						   standard_bam_dedup,
-						   by = c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele")) %>%
-				 left_join(simplex_bam,
-						   by = c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele")) %>%
-				 left_join(duplex_bam,
-						   by = c("Chromosome", "Position", "Reference_Allele", "Alternate_Allele"))
-	index = order(apply(nuc_pileup[,5:ncol(nuc_pileup),drop=FALSE], 1, mean, na.rm=TRUE), decreasing=FALSE)
-	nuc_pileup = nuc_pileup[index,,drop=FALSE] %>%
-				 arrange(Alternate_Allele) %>%
-				 arrange(Reference_Allele)
-			 
-			 
-	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
-	row_groups = paste0(nuc_pileup$Reference_Allele, " > ", nuc_pileup$Alternate_Allele, "         ")
 	
-	write_tsv(nuc_pileup, path="metrics/summary/snp_pileup_non_ref.tsv", na = "NA", append = FALSE, col_names = TRUE)
-
-	nuc_pileup = nuc_pileup %>%
-				 dplyr::select(-Chromosome, -Position, -Reference_Allele, -Alternate_Allele)
-
-	index = apply(nuc_pileup, 1, function(x) {sum(is.na(x))})==0
-	pdf(file="metrics/report/non_reference_calls.pdf", height=14, width=14)
-	superheat(X = as.matrix(nuc_pileup[index,,drop=FALSE]),
-			  smooth.heat = FALSE,
-			  scale = FALSE,
-			  legend = TRUE,
-			  grid.hline = FALSE,
-			  grid.vline = FALSE,
-			  membership.cols=col_groups,
-			  membership.rows=row_groups[index],
-			  row.dendrogram = FALSE,
-			  col.dendrogram = FALSE,
-			  force.grid.hline = FALSE,
-			  force.grid.vline = FALSE,
-			  bottom.label.text.angle = 0,
-			  bottom.label.text.size = 3.5,
-			  bottom.label.size = .15,
-			  left.label.size = .15,
-			  left.label.text.size = 3.5,
-			  print.plot = TRUE,
-			  heat.pal = viridis(n=10),
-			  heat.pal.values = c(seq(0,.4,l=9), 1))
-	dev.off()
-	
-
 }
