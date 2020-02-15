@@ -555,7 +555,7 @@ if (as.numeric(opt$type)==1) {
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
+		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
 	write_tsv(n_pl, path="waltz/noise_by_position_standard_with_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 	
@@ -599,7 +599,7 @@ if (as.numeric(opt$type)==1) {
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
+		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
 	write_tsv(n_pl, path="waltz/noise_by_position_standard_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
@@ -642,7 +642,7 @@ if (as.numeric(opt$type)==1) {
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
+		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
 	write_tsv(n_pl, path="waltz/noise_by_position_simplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
@@ -686,7 +686,7 @@ if (as.numeric(opt$type)==1) {
 	n_pl = x[[1]][,c("chrom", "pos", "ref", "alt"),drop=FALSE]
 	for (i in 1:length(sample_names)) {
 		cat(i, "\n")
-		n_pl = left_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
+		n_pl = full_join(n_pl, x[[i]], by=c("chrom", "pos", "ref", "alt"))
 	}
 	write_tsv(n_pl, path="waltz/noise_by_position_duplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
