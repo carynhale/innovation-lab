@@ -20,6 +20,7 @@ opt = arguments$options
 
 cutoffAF = 0.02
 chr = 1:21
+epsilon = 0.00001
 
 if (as.numeric(opt$type)==1) {
 
@@ -537,10 +538,10 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(`total_n` = a+c+g+t,
 			 			   `uuid` = paste0(chrom, ":", pos)) %>%
 			 dplyr::filter(uuid %in% target_positions$uuid) %>%
-			 dplyr::mutate(af_a = 100*a/total_n,
-						   af_c = 100*c/total_n,
-						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n)
+			 dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						   af_c = 100*c/(total_n+epsilon),
+						   af_g = 100*g/(total_n+epsilon),
+						   af_t = 100*t/(total_n+epsilon))
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
@@ -581,10 +582,10 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(`total_n` = a+c+g+t,
 			 			   `uuid` = paste0(chrom, ":", pos)) %>%
 			 dplyr::filter(uuid %in% target_positions$uuid) %>%
-			 dplyr::mutate(af_a = 100*a/total_n,
-						   af_c = 100*c/total_n,
-						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n)
+			 dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						   af_c = 100*c/(total_n+epsilon),
+						   af_g = 100*g/(total_n+epsilon),
+						   af_t = 100*t/(total_n+epsilon))
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
@@ -624,10 +625,10 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(`total_n` = a+c+g+t,
 			 			   `uuid` = paste0(chrom, ":", pos)) %>%
 			 dplyr::filter(uuid %in% target_positions$uuid) %>%
-			 dplyr::mutate(af_a = 100*a/total_n,
-						   af_c = 100*c/total_n,
-						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n)
+			 dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						   af_c = 100*c/(total_n+epsilon),
+						   af_g = 100*g/(total_n+epsilon),
+						   af_t = 100*t/(total_n+epsilon))
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
@@ -668,10 +669,10 @@ if (as.numeric(opt$type)==1) {
 			 dplyr::mutate(`total_n` = a+c+g+t,
 			 			   `uuid` = paste0(chrom, ":", pos)) %>%
 			 dplyr::filter(uuid %in% target_positions$uuid) %>%
-			 dplyr::mutate(af_a = 100*a/total_n,
-						   af_c = 100*c/total_n,
-						   af_g = 100*g/total_n,
-						   af_t = 100*t/total_n)
+			 dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						   af_c = 100*c/(total_n+epsilon),
+						   af_g = 100*g/(total_n+epsilon),
+						   af_t = 100*t/(total_n+epsilon))
 		x[[i]] = dplyr::tibble(`chrom` = rep(df$chrom, 4),
 							   `pos` = rep(df$pos, 4),
 							   `ref` = rep(df$ref, 4),
