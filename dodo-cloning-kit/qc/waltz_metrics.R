@@ -51,28 +51,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -110,28 +110,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -169,28 +169,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -228,28 +228,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -298,28 +298,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -357,28 +357,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -416,28 +416,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
@@ -475,28 +475,28 @@ if (as.numeric(opt$type)==1) {
 		   	 						if (ref=="A") {
 		   	 							index = c(1:4)[-1]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="G") {
 										index = c(1:4)[-2]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="C") {
 		   	 							index = c(1:4)[-3]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
 		   	 						} else if (ref=="T") {
 		   	 							index = c(1:4)[-4]
 		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5]]])
+		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
 		   	 							} else {
 		   	 								y = sum(alt[index])
 		   	 							}
