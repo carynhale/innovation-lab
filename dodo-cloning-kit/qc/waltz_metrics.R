@@ -696,6 +696,11 @@ if (as.numeric(opt$type)==1) {
 	suppressPackageStartupMessages(library("superheat"))
 	suppressPackageStartupMessages(library("viridis"))
 	
+	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   			   type_convert() %>%
+		   			   rename(chrom = X1, pos = X2) %>%
+		   			   mutate(uuid = paste0(chrom, ":", pos))
+	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x_1 = read_tsv(file="waltz/noise_by_position_standard_with_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		  type_convert()
 	x_2 = read_tsv(file="waltz/noise_by_position_standard_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
