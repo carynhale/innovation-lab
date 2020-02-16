@@ -18,6 +18,7 @@ waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
 
 WALTZ_MIN_MAPQ ?= 15
 TARGETS_FILE_NOMSI ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-A-good-positions-noMSI.txt
+SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
 
 define waltz-genotype
 waltz/$1-pileup.txt.gz : bam/$1.bam
@@ -102,8 +103,8 @@ waltz/noise_by_position_duplex_without_duplicates.txt : $(wildcard waltz/$(SAMPL
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 6 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
 
 waltz/noise_by_position.pdf : waltz/noise_by_position_standard_with_duplicates.txt waltz/noise_by_position_standard_without_duplicates.txt waltz/noise_by_position_simplex_without_duplicates.txt waltz/noise_by_position_duplex_without_duplicates.txt
-	$(call RUN, -c -n 1 -s 36G -m 48G,"set -o pipefail && \
-									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 7 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 36G -m 48G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									   					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 7 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
