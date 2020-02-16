@@ -25,9 +25,9 @@ epsilon = 0.00001
 if (as.numeric(opt$type)==1) {
 
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   			   type_convert() %>%
-		   			   rename(chrom = X1, pos = X2) %>%
-		   			   mutate(uuid = paste0(chrom, ":", pos))
+		   			   readr::type_convert() %>%
+		   			   dplyr::rename(chrom = X1, pos = X2) %>%
+		   			   dplyr::mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x1 = x2 = x3 = x4 = list()
 	for (i in 1:length(sample_names)) {
@@ -272,9 +272,9 @@ if (as.numeric(opt$type)==1) {
 } else if (as.numeric(opt$type)==2) {
 
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   			   type_convert() %>%
-		   			   rename(chrom = X1, pos = X2) %>%
-		   			   mutate(uuid = paste0(chrom, ":", pos))
+		   			   readr::type_convert() %>%
+		   			   dplyr::rename(chrom = X1, pos = X2) %>%
+		   			   dplyr::mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x1 = x2 = x3 = x4 = list()
 	for (i in 1:length(sample_names)) {
@@ -519,9 +519,9 @@ if (as.numeric(opt$type)==1) {
 } else if (as.numeric(opt$type)==3) {
 
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   			   type_convert() %>%
-		   			   rename(chrom = X1, pos = X2) %>%
-		   			   mutate(uuid = paste0(chrom, ":", pos))
+		   			   readr::type_convert() %>%
+		   			   dplyr::rename(chrom = X1, pos = X2) %>%
+		   			   dplyr::mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x = list()
 	for (i in 1:length(sample_names)) {
@@ -563,9 +563,9 @@ if (as.numeric(opt$type)==1) {
 } else if (as.numeric(opt$type)==4) {
 
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   			   type_convert() %>%
-		   			   rename(chrom = X1, pos = X2) %>%
-		   			   mutate(uuid = paste0(chrom, ":", pos))
+		   			   readr::type_convert() %>%
+		   			   dplyr::rename(chrom = X1, pos = X2) %>%
+		   			   dplyr::mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x = list()
 	for (i in 1:length(sample_names)) {
@@ -606,9 +606,9 @@ if (as.numeric(opt$type)==1) {
 
 } else if (as.numeric(opt$type)==5) {
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   			   type_convert() %>%
-		   			   rename(chrom = X1, pos = X2) %>%
-		   			   mutate(uuid = paste0(chrom, ":", pos))
+		   			   readr::type_convert() %>%
+		   			   dplyr::rename(chrom = X1, pos = X2) %>%
+		   			   dplyr::mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x = list()
 	for (i in 1:length(sample_names)) {
@@ -650,9 +650,9 @@ if (as.numeric(opt$type)==1) {
 } else if (as.numeric(opt$type)==6) {
 
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   			   type_convert() %>%
-		   			   rename(chrom = X1, pos = X2) %>%
-		   			   mutate(uuid = paste0(chrom, ":", pos))
+		   			   readr::type_convert() %>%
+		   			   dplyr::rename(chrom = X1, pos = X2) %>%
+		   			   dplyr::mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x = list()
 	for (i in 1:length(sample_names)) {
@@ -697,32 +697,32 @@ if (as.numeric(opt$type)==1) {
 	suppressPackageStartupMessages(library("viridis"))
 	
 	target_positions = read_tsv(file=as.character(opt$target_file), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   			   type_convert() %>%
-		   			   rename(chrom = X1, pos = X2) %>%
-		   			   mutate(uuid = paste0(chrom, ":", pos))
+		   			   readr::type_convert() %>%
+		   			   dplyr::rename(chrom = X1, pos = X2) %>%
+		   			   dplyr::mutate(uuid = paste0(chrom, ":", pos))
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
-	x_1 = read_tsv(file="waltz/noise_by_position_standard_with_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		  type_convert()
-	x_2 = read_tsv(file="waltz/noise_by_position_standard_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		  type_convert()
-	x_3 = read_tsv(file="waltz/noise_by_position_simplex_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		  type_convert()
-	x_4 = read_tsv(file="waltz/noise_by_position_duplex_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		  type_convert()
+	standard_w_dup = read_tsv(file="waltz/noise_by_position_standard_with_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+					 readr::type_convert()
+	standard_w0_dup = read_tsv(file="waltz/noise_by_position_standard_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		  			  readr::type_convert()
+	simplex_w0_dup = read_tsv(file="waltz/noise_by_position_simplex_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+					 readr::type_convert()
+	duplex_w0_dup = read_tsv(file="waltz/noise_by_position_duplex_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+					readr::type_convert()
 
-	z = full_join(x_1, x_2, by = c("chrom", "pos", "ref", "alt")) %>%
-		full_join(x_3, by = c("chrom", "pos", "ref", "alt")) %>%
-		full_join(x_4, by = c("chrom", "pos", "ref", "alt"))
-	index = order(apply(z[,5:ncol(z),drop=FALSE], 1, mean, na.rm=TRUE), decreasing=FALSE)
-	z = z[index,,drop=FALSE] %>%
-		arrange(ref, alt)
+	nc_pu = dplyr::full_join(standard_w_dup, standard_w0_dup, by = c("chrom", "pos", "ref", "alt")) %>%
+			dplyr::full_join(simplex_w0_dup, by = c("chrom", "pos", "ref", "alt")) %>%
+			dplyr::full_join(duplex_w0_dup, by = c("chrom", "pos", "ref", "alt"))
+	index = order(apply(nc_pu[,5:ncol(nc_pu),drop=FALSE], 1, mean, na.rm=TRUE), decreasing=FALSE)
+	nc_pu = nc_pu[index,,drop=FALSE] %>%
+			dplyr::arrange(ref, alt)
 	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
-	row_groups = paste0(z$ref, " > ", z$alt, "         ")
-	z = z %>%
+	row_groups = paste0(nc_pu$ref, " > ", nc_pu$alt, "         ")
+	nc_pu = nc_pu %>%
 		dplyr::select(-chrom, -pos, -ref, -alt)
-	index = apply(z, 1, function(x) {sum(is.na(x))})==0
+	index = apply(nc_pu, 1, function(x) {sum(is.na(x))})==0
 	pdf(file="waltz/noise_by_position.pdf", height=14, width=14)
-	superheat(X = as.matrix(z[index,,drop=FALSE]),
+	superheat(X = as.matrix(nc_pu[index,,drop=FALSE]),
 			  smooth.heat = FALSE,
 			  scale = FALSE,
 			  legend = TRUE,
