@@ -716,21 +716,21 @@ if (as.numeric(opt$type)==1) {
 	index = order(apply(nc_pu[,5:ncol(nc_pu),drop=FALSE], 1, mean, na.rm=TRUE), decreasing=FALSE)
 	nc_pu = nc_pu[index,,drop=FALSE] %>%
 			dplyr::arrange(ref, alt)
-	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
+	col_groups = factor(rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names)),
+						levels = c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), ordered = TRUE)
 	row_groups = paste0(nc_pu$ref, " > ", nc_pu$alt, "         ")
 	nc_pu = nc_pu %>%
 			dplyr::select(-chrom, -pos, -ref, -alt)
 	index = apply(nc_pu, 1, function(x) {sum(is.na(x), na.rm=TRUE)})==0 |
 			apply(nc_pu, 1, function(x) {sum(x==0, na.rm=TRUE)})>1
-	indey = ncol(nc_pu):1
 	pdf(file="waltz/noise_by_position.pdf", height=14, width=14)
-	superheat(X = as.matrix(nc_pu[index,indey,drop=FALSE]),
+	superheat(X = as.matrix(nc_pu[index,,drop=FALSE]),
 			  smooth.heat = FALSE,
 			  scale = FALSE,
 			  legend = TRUE,
 			  grid.hline = FALSE,
 			  grid.vline = FALSE,
-			  membership.cols=col_groups[indey],
+			  membership.cols=col_groups,
 			  membership.rows=row_groups[index],
 			  row.dendrogram = FALSE,
 			  col.dendrogram = FALSE,
