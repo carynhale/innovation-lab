@@ -13,7 +13,8 @@ waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
 				 waltz/noise_by_position_standard_with_duplicates.txt \
 				 waltz/noise_by_position_standard_without_duplicates.txt \
 				 waltz/noise_by_position_simplex_without_duplicates.txt \
-				 waltz/noise_by_position_duplex_without_duplicates.txt
+				 waltz/noise_by_position_duplex_without_duplicates.txt \
+				 waltz/noise_by_position.pdf
 
 WALTZ_MIN_MAPQ ?= 15
 TARGETS_FILE_NOMSI ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-A-good-positions-noMSI.txt
@@ -99,6 +100,10 @@ waltz/noise_by_position_simplex_without_duplicates.txt : $(wildcard waltz/$(SAMP
 waltz/noise_by_position_duplex_without_duplicates.txt : $(wildcard waltz/$(SAMPLES)-aln_srt_IR_FX-duplex-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 6 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
+
+waltz/noise_by_position.pdf : waltz/noise_by_position_standard_with_duplicates.txt waltz/noise_by_position_standard_without_duplicates.txt waltz/noise_by_position_simplex_without_duplicates.txt waltz/noise_by_position_duplex_without_duplicates.txt
+	$(call RUN, -c -n 1 -s 36G -m 48G,"set -o pipefail && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 7 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \

@@ -691,7 +691,52 @@ if (as.numeric(opt$type)==1) {
 	x = do.call(cbind, x)
 	write_tsv(x, path="waltz/noise_by_position_duplex_without_duplicates.txt", na = "NA", append = FALSE, col_names = TRUE)
 
-} else if (as.numeric(opt$type)==6) {
+} else if (as.numeric(opt$type)==7) {
 
+	suppressPackageStartupMessages(library("superheat"))
+	suppressPackageStartupMessages(library("viridis"))
 	
+	x_1 = read_tsv(file="waltz/noise_by_position_standard_with_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		  type_convert()
+	x_2 = read_tsv(file="waltz/noise_by_position_standard_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		  type_convert()
+	x_3 = read_tsv(file="waltz/noise_by_position_simplex_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		  type_convert()
+	x_4 = read_tsv(file="waltz/noise_by_position_duplex_without_duplicates.txt", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		  type_convert()
+
+	z = full_join(x_1, x_2, by = c("chrom", "pos", "ref", "alt")) %>%
+		full_join(x_3, by = c("chrom", "pos", "ref", "alt")) %>%
+		full_join(x_4, by = c("chrom", "pos", "ref", "alt"))
+	index = order(apply(z[,5:ncol(z),drop=FALSE], 1, mean, na.rm=TRUE), decreasing=FALSE)
+	z = z[index,,drop=FALSE] %>%
+		arrange(ref, alt)
+	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
+	row_groups = paste0(z$ref, " > ", z$alt, "         ")
+	z = z %>%
+		dplyr::select(-chrom, -pos, -ref, -alt)
+	index = apply(z, 1, function(x) {sum(is.na(x))})==0
+	pdf(file="waltz/noise_by_position.pdf", height=14, width=14)
+	superheat(X = as.matrix(z[index,,drop=FALSE]),
+			  smooth.heat = FALSE,
+			  scale = FALSE,
+			  legend = TRUE,
+			  grid.hline = FALSE,
+			  grid.vline = FALSE,
+			  membership.cols=col_groups,
+			  membership.rows=row_groups[index],
+			  row.dendrogram = FALSE,
+			  col.dendrogram = FALSE,
+			  force.grid.hline = FALSE,
+			  force.grid.vline = FALSE,
+			  bottom.label.text.angle = 0,
+			  bottom.label.text.size = 3.5,
+			  bottom.label.size = .15,
+			  left.label.size = .15,
+			  left.label.text.size = 3.5,
+			  print.plot = TRUE,
+			  heat.pal = viridis(n=10),
+			  heat.pal.values = c(seq(0,.4,l=9), 1))
+	dev.off()
+
 }
