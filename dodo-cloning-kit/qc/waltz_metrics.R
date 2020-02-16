@@ -719,16 +719,18 @@ if (as.numeric(opt$type)==1) {
 	col_groups = rep(c("STANDARD\nWITH DUPLICATES", "STANDARD\nDEDUPLICATED", "COLLAPSED\nSIMPLEX", "COLLAPSED\nDUPLEX"), each=length(sample_names))
 	row_groups = paste0(nc_pu$ref, " > ", nc_pu$alt, "         ")
 	nc_pu = nc_pu %>%
-		dplyr::select(-chrom, -pos, -ref, -alt)
-	index = apply(nc_pu, 1, function(x) {sum(is.na(x))})==0
+			dplyr::select(-chrom, -pos, -ref, -alt)
+	index = apply(nc_pu, 1, function(x) {sum(is.na(x), na.rm=TRUE)})==0 |
+			apply(nc_pu, 1, function(x) {sum(x==0, na.rm=TRUE)})>1
+	indey = ncol(nc_pu):1
 	pdf(file="waltz/noise_by_position.pdf", height=14, width=14)
-	superheat(X = as.matrix(nc_pu[index,,drop=FALSE]),
+	superheat(X = as.matrix(nc_pu[index,indey,drop=FALSE]),
 			  smooth.heat = FALSE,
 			  scale = FALSE,
 			  legend = TRUE,
 			  grid.hline = FALSE,
 			  grid.vline = FALSE,
-			  membership.cols=col_groups,
+			  membership.cols=col_groups[indey],
 			  membership.rows=row_groups[index],
 			  row.dendrogram = FALSE,
 			  col.dendrogram = FALSE,
@@ -740,7 +742,7 @@ if (as.numeric(opt$type)==1) {
 			  left.label.size = .15,
 			  left.label.text.size = 3.5,
 			  print.plot = TRUE,
-			  heat.pal = viridis(n=10),
+			  heat.pal = viridis(n=15),
 			  heat.pal.values = c(seq(0,.4,l=9), 1))
 	dev.off()
 
