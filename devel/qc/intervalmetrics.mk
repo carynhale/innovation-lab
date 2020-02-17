@@ -14,7 +14,7 @@ OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB
 
 
 
-# 			 metrics/standard/metrics_oxog.tsv \
+
 
 
 
@@ -34,9 +34,6 @@ OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB
 
 
 									   	
-metrics/standard/metrics_oxog.tsv : $(wildcard metrics/standard/$(SAMPLES).oxog_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 5 --sample_names '$(SAMPLES)'")
 
 metrics/summary/metrics_idx.tsv : metrics/standard/metrics_idx.tsv metrics/unfiltered/metrics_idx.tsv metrics/duplex/metrics_idx.tsv metrics/simplex/metrics_idx.tsv
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \

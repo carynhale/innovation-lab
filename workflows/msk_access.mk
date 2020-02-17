@@ -72,7 +72,8 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 metrics/standard/metrics_hs.tsv \
  			 metrics/unfiltered/metrics_hs.tsv \
  			 metrics/simplex/metrics_hs.tsv \
- 			 metrics/duplex/metrics_hs.tsv
+ 			 metrics/duplex/metrics_hs.tsv \
+ 			 metrics/standard/metrics_oxog.tsv
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -754,6 +755,11 @@ metrics/duplex/metrics_hs.tsv : $(wildcard metrics/duplex/$(SAMPLES).probe-A.hs_
 metrics/simplex/metrics_hs.tsv : $(wildcard metrics/simplex/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/simplex/$(SAMPLES).probe-B.hs_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 21 --sample_names '$(SAMPLES)'")
+									  
+metrics/standard/metrics_oxog.tsv : $(wildcard metrics/standard/$(SAMPLES).oxog_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 5 --sample_names '$(SAMPLES)'")
+									  
 
 									  									  
 ..DUMMY := $(shell mkdir -p version; \
