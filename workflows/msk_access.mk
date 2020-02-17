@@ -30,7 +30,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
-  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt)
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt)
 #  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
 #  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
 #  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
@@ -421,6 +421,10 @@ metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
 									   I=$$(<) \
 									   O=$$(@) \
 									   TMP_DIR=$(TMPDIR)")
+									   
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call picard-metrics-standard,$(sample))))
 
 # metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
@@ -478,10 +482,6 @@ metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
 # 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
 # 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
 # 									   TMP_DIR=$(TMPDIR)")
-
-endef
-$(foreach sample,$(SAMPLES),\
- 		$(eval $(call picard-metrics-standard,$(sample))))
  		
 metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
