@@ -30,7 +30,8 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt)
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt)
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -412,6 +413,14 @@ metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
+									   
+metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_INSERT_METRICS) \
+ 									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   HISTOGRAM_FILE=metrics/standard/$1.insert_metrics.pdf \
+									   MINIMUM_PCT=0.5")
 
 endef
 $(foreach sample,$(SAMPLES),\
