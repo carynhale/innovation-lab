@@ -198,7 +198,6 @@ marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1.standard-pileup
 									  sort -n -s -S 6G -k 6 -k 8 first-pass.txt > first-pass.mate-position-sorted.txt && \
 									  cd ../..")
 
-
 marianas/$1/second-pass-alt-alleles.txt : marianas/$1/first-pass.mate-position-sorted.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
@@ -425,6 +424,7 @@ metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
+
 
 # metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
