@@ -30,9 +30,9 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt)
+# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt)
 
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
@@ -529,13 +529,13 @@ endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
  		
-define picard-metrics-unfiltered
-metrics/unfiltered/$1.idx_stats.txt : bam/$1-unfiltered.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
- 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
- 									   I=$$(<) \
- 									   TMP_DIR=$(TMPDIR) \
- 									   > $$(@)")
+# define picard-metrics-unfiltered
+# metrics/unfiltered/$1.idx_stats.txt : bam/$1-unfiltered.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+#  									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+#  									   I=$$(<) \
+#  									   TMP_DIR=$(TMPDIR) \
+#  									   > $$(@)")
 # 									   
 # metrics/unfiltered/$1.aln_metrics.txt : bam/$1-unfiltered.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
@@ -574,17 +574,17 @@ metrics/unfiltered/$1.idx_stats.txt : bam/$1-unfiltered.bam
 # 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
 # 									   TMP_DIR=$(TMPDIR)")
 # 
-endef
-$(foreach sample,$(SAMPLES),\
- 		$(eval $(call picard-metrics-unfiltered,$(sample))))
- 		
-define picard-metrics-simplex
-metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
-									   I=$$(<) \
-									   TMP_DIR=$(TMPDIR) \
-									   > $$(@)")
+# endef
+# $(foreach sample,$(SAMPLES),\
+#  		$(eval $(call picard-metrics-unfiltered,$(sample))))
+#  		
+# define picard-metrics-simplex
+# metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+# 									   I=$$(<) \
+# 									   TMP_DIR=$(TMPDIR) \
+# 									   > $$(@)")
 # 									   
 # metrics/simplex/$1.aln_metrics.txt : bam/$1-simplex.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
@@ -623,17 +623,17 @@ metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
 # 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
 # 									   TMP_DIR=$(TMPDIR)")
 # 
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call picard-metrics-simplex,$(sample))))		
- 
-define picard-metrics-duplex
-metrics/duplex/$1.idx_stats.txt : bam/$1-duplex.bam
- 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
- 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
- 									   I=$$(<) \
- 									   TMP_DIR=$(TMPDIR) \
- 									   > $$(@)")
+# endef
+# $(foreach sample,$(SAMPLES),\
+# 		$(eval $(call picard-metrics-simplex,$(sample))))		
+#  
+# define picard-metrics-duplex
+# metrics/duplex/$1.idx_stats.txt : bam/$1-duplex.bam
+#  	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+#  									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+#  									   I=$$(<) \
+#  									   TMP_DIR=$(TMPDIR) \
+#  									   > $$(@)")
 # 									   
 # metrics/duplex/$1.aln_metrics.txt : bam/$1-duplex.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
@@ -672,9 +672,9 @@ metrics/duplex/$1.idx_stats.txt : bam/$1-duplex.bam
 # 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
 # 									   TMP_DIR=$(TMPDIR)")
 # 
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call picard-metrics-duplex,$(sample))))
+# endef
+# $(foreach sample,$(SAMPLES),\
+# 		$(eval $(call picard-metrics-duplex,$(sample))))
  		
 metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
