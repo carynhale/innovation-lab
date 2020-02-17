@@ -29,8 +29,8 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt)
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
+  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt)
 #  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
 #  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
 #  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
@@ -414,14 +414,14 @@ metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 									   TMP_DIR=$(TMPDIR) \
 									   > $$(@)")
 
-# metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
-#  	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 
+metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
+ 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   TMP_DIR=$(TMPDIR)")
+
 # metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 # 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
