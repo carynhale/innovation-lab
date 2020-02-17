@@ -23,6 +23,9 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 metrics/summary/umi_frequencies.tsv \
 			 metrics/summary/umi_composite.tsv \
 			 metrics/summary/umi_families.tsv \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt)
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
@@ -72,9 +75,6 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 # 			 metrics/summary/metrics_insert.tsv \
 # 			 metrics/summary/metrics_insert_distribution.tsv \
 # 			 metrics/summary/metrics_hs.tsv \
-			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
-			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
-			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt)
 # 			 metrics/summary/metrics_ts.tsv \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
