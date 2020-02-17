@@ -423,7 +423,7 @@ metrics/standard/$1.A.ontarget.txt : bam/$1-standard.bam
 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-A.bam && \
 								 $$(BAM_INDEX) \
 								 INPUT=metrics/standard/$1-ontarget-A.bam \
-								 OUTPUT=$$(@) && \
+								 > $$(@) && \
 								 rm -rf metrics/standard/$1-ontarget-A.bam && \
 								 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
 									 
@@ -433,7 +433,7 @@ metrics/standard/$1.B.ontarget.txt : bam/$1-standard.bam
 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-B.bam && \
 								 $$(BAM_INDEX) \
 								 INPUT=metrics/standard/$1-ontarget-B.bam \
-								 OUTPUT=$$(@) && \
+								 > $$(@) && \
 								 rm -rf metrics/standard/$1-ontarget-B.bam && \
 								 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
 	
@@ -443,7 +443,7 @@ metrics/standard/$1.AB.offtarget.txt : bam/$1-standard.bam
 								 $$(SAMTOOLS) index metrics/standard/$1-offtarget-AB.bam && \
 								 $$(BAM_INDEX) \
 								 INPUT=metrics/standard/$1-offtarget-AB.bam \
-								 OUTPUT=$$(@) && \
+								 > $$(@) && \
 								 rm -rf metrics/standard/$1-offtarget-AB.bam && \
 								 rm -rf metrics/standard/$1-offtarget-AB.bam.bai")
 
