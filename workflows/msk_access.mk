@@ -30,24 +30,20 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt)
-
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt)
 # 			 metrics/standard/metrics_idx.tsv \
 # 			 metrics/standard/metrics_aln.tsv \
 # 			 metrics/standard/metrics_insert.tsv \
 # 			 metrics/standard/metrics_insert_distribution.tsv \
 # 			 metrics/standard/metrics_oxog.tsv \
 # 			 metrics/standard/metrics_hs.tsv \
- 			 
+# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \ 			 
 # 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
@@ -57,7 +53,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 # 			 metrics/unfiltered/metrics_insert.tsv \
 # 			 metrics/unfiltered/metrics_insert_distribution.tsv \
 # 			 metrics/unfiltered/metrics_hs.tsv \
- 			 
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) 			 
 # 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
@@ -67,7 +63,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 # 			 metrics/duplex/metrics_insert.tsv \
 # 			 metrics/duplex/metrics_insert_distribution.tsv \
 # 			 metrics/duplex/metrics_hs.tsv \
- 			 
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \ 			 
 # 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
@@ -459,72 +455,72 @@ metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 									   I=$$(<) \
 									   TMP_DIR=$(TMPDIR) \
 									   > $$(@)")
-#
-# metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 
-# metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   H=metrics/standard/$1.insert_metrics.pdf \
-# 									   M=0.5 \
-# 									   TMP_DIR=$(TMPDIR)")
-# 												
-# metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectOxoGMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 
-# metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 												
-# metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 									   
-# metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 												
-# metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 
+
+metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
+ 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   TMP_DIR=$(TMPDIR)")
+
+metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
+									   I=$$(<) \
+									   O=$$(@) \
+									   H=metrics/standard/$1.insert_metrics.pdf \
+									   M=0.5 \
+									   TMP_DIR=$(TMPDIR)")
+												
+metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectOxoGMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   TMP_DIR=$(TMPDIR)")
+
+metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+												
+metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+									   
+metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+												
+metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									   R=$(REF_FASTA) \
+									   I=$$(<) \
+									   O=$$(@) \
+									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+									   TMP_DIR=$(TMPDIR)")
+
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
