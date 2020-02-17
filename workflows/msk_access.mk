@@ -37,6 +37,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt)
+
 # 			 metrics/standard/metrics_idx.tsv \
 # 			 metrics/standard/metrics_aln.tsv \
 # 			 metrics/standard/metrics_insert.tsv \
