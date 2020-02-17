@@ -408,17 +408,11 @@ metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 									   
 metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(BAM_INDEX) \
+									   $$(COLLECT_ALIGNMENT_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
-									   > $$(@)")
+									   OUTPUT=$$(@)")
 
-# metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
-#  	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   $$(COLLECT_ALIGNMENT_METRICS) \
-# 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-# 									   INPUT=$$(<) \
-# 									   OUTPUT=$$(@)")
-									   
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
