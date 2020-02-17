@@ -419,7 +419,7 @@ $(foreach sample,$(SAMPLES),\
 define coverage-metric
 metrics/standard/$1.A.ontarget.txt : bam/$1-standard.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-								 $$(SAMTOOOLS) view -L $$(UMI_QC_BED_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
+								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-A.bam && \
 								 $$(BAM_INDEX) \
 								 INPUT=metrics/standard/$1-ontarget-A.bam \
