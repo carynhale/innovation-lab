@@ -86,6 +86,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_B ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-B.sorted.bed
+OFF_TARGET_FILE_AB ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-AB.offtarget.bed
 POOL_A_TARGET_FILE ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_TARGET_FILE ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-B.sorted.list
 
