@@ -222,7 +222,8 @@ define genotype-and-collapse
 marianas/$1/$1.standard-pileup.txt : marianas/$1/$1.standard.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.standard.bam $$(REF_FASTA) $$(WALTZ_BED_FILE) && \
+									  cut -f 1,2,3 $$(WALTZ_BED_FILE) > .bed && \
+									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.standard.bam $$(REF_FASTA) .bed && \
 									  cd ../..")
 									  
 marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1.standard-pileup.txt
@@ -373,10 +374,12 @@ metrics/standard/$1-pileup.txt : bam/$1-standard.bam
 								 ln -sf ../../bam/$1-standard.bam $1.bam && \
 								 ln -sf ../../bam/$1-standard.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-standard.bai $1.bai && \
-								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 cut -f 1,2,3 $$(WALTZ_BED_FILE) > .bed && \
+								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
 								 unlink $1.bai && \
+								 rm -rf .bed && \
 								 cd ../..")
 									 
 metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
@@ -385,10 +388,12 @@ metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
 								 ln -sf ../../bam/$1-simplex.bam $1.bam && \
 								 ln -sf ../../bam/$1-simplex.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-simplex.bai $1.bai && \
-								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 cut -f 1,2,3 $$(WALTZ_BED_FILE) > .bed && \
+								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
 								 unlink $1.bai && \
+								 rm -rf .bed && \
 								 cd ../..")
 								 
 metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
@@ -397,10 +402,12 @@ metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
 								 ln -sf ../../bam/$1-duplex.bam $1.bam && \
 								 ln -sf ../../bam/$1-duplex.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-duplex.bai $1.bai && \
-								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 cut -f 1,2,3 $$(WALTZ_BED_FILE) > .bed && \
+								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
 								 unlink $1.bai && \
+								 rm -rf .bed && \
 								 cd ../..")
 								 
 endef
