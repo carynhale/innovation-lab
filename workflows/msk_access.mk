@@ -374,7 +374,7 @@ metrics/standard/$1-pileup.txt : bam/$1-standard.bam
 								 ln -sf ../../bam/$1-standard.bam $1.bam && \
 								 ln -sf ../../bam/$1-standard.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-standard.bai $1.bai && \
-								 cut -f 1,2,3 $$(WALTZ_BED_FILE) > .bed && \
+								 cut -f 1-3 $$(WALTZ_BED_FILE) > .bed && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
@@ -388,7 +388,7 @@ metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
 								 ln -sf ../../bam/$1-simplex.bam $1.bam && \
 								 ln -sf ../../bam/$1-simplex.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-simplex.bai $1.bai && \
-								 cut -f 1,2,3 $$(WALTZ_BED_FILE) > .bed && \
+								 cut -f 1-3 $$(WALTZ_BED_FILE) > .bed && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
@@ -402,7 +402,7 @@ metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
 								 ln -sf ../../bam/$1-duplex.bam $1.bam && \
 								 ln -sf ../../bam/$1-duplex.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-duplex.bai $1.bai && \
-								 cut -f 1,2,3 $$(WALTZ_BED_FILE) > .bed && \
+								 cut -f 1-3 $$(WALTZ_BED_FILE) > .bed && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
