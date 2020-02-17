@@ -30,6 +30,10 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt)
+
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
@@ -43,7 +47,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 # 			 metrics/standard/metrics_insert_distribution.tsv \
 # 			 metrics/standard/metrics_oxog.tsv \
 # 			 metrics/standard/metrics_hs.tsv \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
+ 			 
 # 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
@@ -53,7 +57,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 # 			 metrics/unfiltered/metrics_insert.tsv \
 # 			 metrics/unfiltered/metrics_insert_distribution.tsv \
 # 			 metrics/unfiltered/metrics_hs.tsv \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
+ 			 
 # 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
@@ -63,7 +67,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 # 			 metrics/duplex/metrics_insert.tsv \
 # 			 metrics/duplex/metrics_insert_distribution.tsv \
 # 			 metrics/duplex/metrics_hs.tsv \
- 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt)
+ 			 
 # 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
@@ -79,8 +83,6 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 # 			 metrics/summary/metrics_insert_distribution.tsv \
 # 			 metrics/summary/metrics_hs.tsv \
 # 			 metrics/summary/metrics_ts.tsv
-
-
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
