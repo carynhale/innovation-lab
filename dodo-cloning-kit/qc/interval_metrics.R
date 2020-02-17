@@ -124,11 +124,11 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
-		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics.txt"), comment = "#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
-		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
@@ -139,11 +139,11 @@ if (as.numeric(opt$metric_type)==1) {
 	
 	hs_metrics_a_nodedup = hs_metrics_b_nodedup = list()
 	for (i in 1:length(sample_names)) {
-		hs_metrics_a_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics-nodedup.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_a_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics-nodedup.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    		slice(2:n()) %>%
 		   				    		type_convert() %>%
 		   				    		mutate(SAMPLE = sample_names[i])
-		hs_metrics_b_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics-nodedup.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_b_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics-nodedup.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    		slice(2:n()) %>%
 		   				    		type_convert() %>%
 		   				    		mutate(SAMPLE = sample_names[i])
@@ -297,11 +297,11 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
-		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
-		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
@@ -431,11 +431,11 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
-		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
-		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
@@ -565,11 +565,11 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
-		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
-		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
+		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
