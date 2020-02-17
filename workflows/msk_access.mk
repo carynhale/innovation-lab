@@ -459,7 +459,7 @@ metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 									   I=$$(<) \
 									   TMP_DIR=$(TMPDIR) \
 									   > $$(@)")
- 									   
+#
 # metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 # 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
@@ -536,7 +536,7 @@ metrics/unfiltered/$1.idx_stats.txt : bam/$1-unfiltered.bam
  									   I=$$(<) \
  									   TMP_DIR=$(TMPDIR) \
  									   > $$(@)")
- 									   
+# 									   
 # metrics/unfiltered/$1.aln_metrics.txt : bam/$1-unfiltered.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 # 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
@@ -585,7 +585,7 @@ metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
 									   I=$$(<) \
 									   TMP_DIR=$(TMPDIR) \
 									   > $$(@)")
- 									   
+# 									   
 # metrics/simplex/$1.aln_metrics.txt : bam/$1-simplex.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 # 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
@@ -634,7 +634,7 @@ metrics/duplex/$1.idx_stats.txt : bam/$1-duplex.bam
  									   I=$$(<) \
  									   TMP_DIR=$(TMPDIR) \
  									   > $$(@)")
- 									   
+# 									   
 # metrics/duplex/$1.aln_metrics.txt : bam/$1-duplex.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 # 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
