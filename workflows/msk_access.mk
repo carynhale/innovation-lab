@@ -41,7 +41,17 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt)
+ 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt)
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -529,6 +539,108 @@ metrics/unfiltered/$1.probe-B.hs_metrics.txt : bam/$1-unfiltered.bam
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-unfiltered,$(sample))))
+
+define picard-metrics-simplex
+metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(BAM_INDEX) \
+									   INPUT=$$(<) \
+									   > $$(@)")
+									   
+metrics/simplex/$1.aln_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_ALIGNMENT_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@)")
+									   
+metrics/simplex/$1.insert_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_INSERT_METRICS) \
+ 									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   HISTOGRAM_FILE=metrics/simplex/$1.insert_metrics.pdf \
+									   MINIMUM_PCT=0.5")
+									   
+metrics/simplex/$1.oxog_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_OXOG_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@)")
+
+metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(CALC_HS_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
+									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
+ 												
+metrics/simplex/$1.probe-B.hs_metrics.txt : bam/$1-simplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(CALC_HS_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
+									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call picard-metrics-simplex,$(sample))))
+
+define picard-metrics-duplex
+metrics/duplex/$1.idx_stats.txt : bam/$1-duplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(BAM_INDEX) \
+									   INPUT=$$(<) \
+									   > $$(@)")
+									   
+metrics/duplex/$1.aln_metrics.txt : bam/$1-duplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_ALIGNMENT_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@)")
+									   
+metrics/duplex/$1.insert_metrics.txt : bam/$1-duplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_INSERT_METRICS) \
+ 									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   HISTOGRAM_FILE=metrics/duplex/$1.insert_metrics.pdf \
+									   MINIMUM_PCT=0.5")
+									   
+metrics/duplex/$1.oxog_metrics.txt : bam/$1-duplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_OXOG_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@)")
+
+metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1-duplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(CALC_HS_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
+									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
+ 												
+metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1-duplex.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(CALC_HS_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
+									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call picard-metrics-duplex,$(sample))))
 
 metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
