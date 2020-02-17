@@ -419,64 +419,6 @@ endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
 
-
-# metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   H=metrics/standard/$1.insert_metrics.pdf \
-# 									   M=0.5 \
-# 									   TMP_DIR=$(TMPDIR)")
-# 												
-# metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectOxoGMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 
-# metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 												
-# metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 									   
-# metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
-# 												
-# metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
-# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
-# 									   R=$(REF_FASTA) \
-# 									   I=$$(<) \
-# 									   O=$$(@) \
-# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
-# 									   TMP_DIR=$(TMPDIR)")
- 		
 metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 1 --sample_names '$(SAMPLES)'")
