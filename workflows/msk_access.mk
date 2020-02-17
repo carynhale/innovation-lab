@@ -430,14 +430,14 @@ metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
 metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
-									   REFERENCE_FILE=$$(REF_FASTA) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
 metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
-									   REFERENCE_FILE=$$(REF_FASTA) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
@@ -446,7 +446,7 @@ metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
 metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
-									   REFERENCE_FILE=$$(REF_FASTA) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
@@ -455,7 +455,7 @@ metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
 metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
-									   REFERENCE_FILE=$$(REF_FASTA) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
@@ -464,7 +464,7 @@ metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
 metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
-									   REFERENCE_FILE=$$(REF_FASTA) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
