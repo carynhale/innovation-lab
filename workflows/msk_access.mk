@@ -447,8 +447,8 @@ metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_FILE=$$(REF_FASTA) \
-									   I=$$(<) \
-									   O=$$(@) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
 									   
@@ -465,8 +465,8 @@ metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_FILE=$$(REF_FASTA) \
-									   I=$$(<) \
-									   O=$$(@) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
 
