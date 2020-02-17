@@ -74,11 +74,7 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 # 			 metrics/standard/metrics_insert_distribution.tsv \
 # 			 metrics/standard/metrics_oxog.tsv \
 # 			 metrics/standard/metrics_hs.tsv \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \ 			 
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
+
 # 			 metrics/unfiltered/metrics_idx.tsv \
 # 			 metrics/unfiltered/metrics_aln.tsv \
 # 			 metrics/unfiltered/metrics_insert.tsv \
