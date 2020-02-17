@@ -402,18 +402,16 @@ $(foreach sample,$(SAMPLES),\
 define picard-metrics-standard
 metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
-									   I=$$(<) \
-									   TMP_DIR=$(TMPDIR) \
+									   $$(BAM_INDEX) \
+									   INPUT=$$(<) \
 									   > $$(@)")
 
 metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
  	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
-									   R=$(REF_FASTA) \
-									   I=$$(<) \
-									   O=$$(@) \
-									   TMP_DIR=$(TMPDIR)")
+									   $$(COLLECT_ALIGNMENT_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@)")
 									   
 endef
 $(foreach sample,$(SAMPLES),\
