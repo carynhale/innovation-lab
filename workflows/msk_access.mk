@@ -22,7 +22,70 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
 			 metrics/summary/umi_frequencies.tsv \
 			 metrics/summary/umi_composite.tsv \
-			 metrics/summary/umi_families.tsv
+			 metrics/summary/umi_families.tsv \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
+# 			 metrics/standard/metrics_idx.tsv \
+# 			 metrics/standard/metrics_aln.tsv \
+# 			 metrics/standard/metrics_insert.tsv \
+# 			 metrics/standard/metrics_insert_distribution.tsv \
+# 			 metrics/standard/metrics_oxog.tsv \
+# 			 metrics/standard/metrics_hs.tsv \
+# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
+# 			 metrics/unfiltered/metrics_idx.tsv \
+# 			 metrics/unfiltered/metrics_aln.tsv \
+# 			 metrics/unfiltered/metrics_insert.tsv \
+# 			 metrics/unfiltered/metrics_insert_distribution.tsv \
+# 			 metrics/unfiltered/metrics_hs.tsv \
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt) \
+# 			 metrics/duplex/metrics_idx.tsv \
+# 			 metrics/duplex/metrics_aln.tsv \
+# 			 metrics/duplex/metrics_insert.tsv \
+# 			 metrics/duplex/metrics_insert_distribution.tsv \
+# 			 metrics/duplex/metrics_hs.tsv \
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
+# 			 metrics/simplex/metrics_idx.tsv \
+# 			 metrics/simplex/metrics_aln.tsv \
+# 			 metrics/simplex/metrics_insert.tsv \
+# 			 metrics/simplex/metrics_insert_distribution.tsv \
+# 			 metrics/simplex/metrics_hs.tsv \
+# 			 metrics/summary/metrics_idx.tsv \
+# 			 metrics/summary/metrics_aln.tsv \
+# 			 metrics/summary/metrics_insert.tsv \
+# 			 metrics/summary/metrics_insert_distribution.tsv \
+# 			 metrics/summary/metrics_hs.tsv \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt)
+# 			 metrics/summary/metrics_ts.tsv \
+# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
+# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt)
+
+
+WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
+UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
+UMI_QC_BED_FILE_B ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-B.sorted.bed
+POOL_A_TARGET_FILE ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
+POOL_B_TARGET_FILE ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-B.sorted.list
 
 MARIANAS_UMI_LENGTH ?= 3
 MARIANAS_MIN_MAPQ ?= 1
@@ -32,10 +95,6 @@ MARIANAS_WOBBLE ?= 1
 MARIANAS_MIN_CONSENSUS ?= 90
 
 WALTZ_MIN_MAPQ ?= 20
-WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.waltz.bed
-
-UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
-UMI_QC_BED_FILE_B ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-B.sorted.bed
 
 BWA_ALN_OPTS ?= -M
 BWAMEM_THREADS = 12
@@ -305,7 +364,307 @@ marianas/$1/family-sizes.txt : marianas/$1/second-pass-alt-alleles.txt
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call family-size-metric,$(sample))))
-		 
+
+define pileup-metric
+metrics/standard/$1-pileup.txt : bam/$1-standard.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 cd metrics/standard && \
+								 ln -sf ../../bam/$1-standard.bam $1.bam && \
+								 ln -sf ../../bam/$1-standard.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1-standard.bai $1.bai && \
+								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 unlink $1.bam && \
+								 unlink $1.bam.bai && \
+								 unlink $1.bai && \
+								 cd ../..")
+									 
+metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 cd metrics/simplex && \
+								 ln -sf ../../bam/$1-simplex.bam $1.bam && \
+								 ln -sf ../../bam/$1-simplex.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1-simplex.bai $1.bai && \
+								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 unlink $1.bam && \
+								 unlink $1.bam.bai && \
+								 unlink $1.bai && \
+								 cd ../..")
+								 
+metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 cd metrics/duplex && \
+								 ln -sf ../../bam/$1-duplex.bam $1.bam && \
+								 ln -sf ../../bam/$1-duplex.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1-duplex.bai $1.bai && \
+								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) $(WALTZ_BED_FILE) && \
+								 unlink $1.bam && \
+								 unlink $1.bam.bai && \
+								 unlink $1.bai && \
+								 cd ../..")
+								 
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call pileup-metric,$(sample))))
+				   
+define coverage-metric
+metrics/standard/$1.A.ontarget.txt : marianas/$1/$1.realn.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(SAMTOOOLS) view -L $$(UMI_QC_BED_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
+								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-A.bam && \
+								 $$(BAM_INDEX) \
+								 INPUT=metrics/standard/$1-ontarget-A.bam \
+								 OUTPUT=$$(@) && \
+								 rm -rf metrics/standard/$1-ontarget-A.bam && \
+								 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
+									 
+metrics/standard/$1.B.ontarget.txt : marianas/$1/$1.realn.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
+								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-B.bam && \
+								 $$(BAM_INDEX) \
+								 INPUT=metrics/standard/$1-ontarget-B.bam \
+								 OUTPUT=$$(@) && \
+								 rm -rf metrics/standard/$1-ontarget-B.bam && \
+								 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
+	
+metrics/standard/$1.AB.offtarget.txt : marianas/$1/$1.realn.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(SAMTOOLS) view -L $$(OFF_TARGET_FILE_AB) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
+								 $$(SAMTOOLS) index metrics/standard/$1-offtarget-AB.bam && \
+								 $$(BAM_INDEX) \
+								 INPUT=metrics/standard/$1-offtarget-AB.bam \
+								 OUTPUT=$$(@) && \
+								 rm -rf metrics/standard/$1-offtarget-AB.bam && \
+								 rm -rf metrics/standard/$1-offtarget-AB.bam.bai")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call coverage-metric,$(sample))))
+
+# define picard-metrics-standard
+# metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+# 									   I=$$(<) \
+# 									   TMP_DIR=$(TMPDIR) \
+# 									   > $$(@)")
+# 									   
+# metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   H=metrics/standard/$1.insert_metrics.pdf \
+# 									   M=0.5 \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectOxoGMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 									   
+# metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# endef
+# $(foreach sample,$(SAMPLES),\
+# 		$(eval $(call picard-metrics-standard,$(sample))))
+# 		
+# define picard-metrics-unfiltered
+# metrics/unfiltered/$1.idx_stats.txt : bam/$1-unfiltered.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+# 									   I=$$(<) \
+# 									   TMP_DIR=$(TMPDIR) \
+# 									   > $$(@)")
+# 									   
+# metrics/unfiltered/$1.aln_metrics.txt : bam/$1-unfiltered.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# metrics/unfiltered/$1.insert_metrics.txt : bam/$1-unfiltered.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   H=metrics/unfiltered/$1.insert_metrics.pdf \
+# 									   M=0.5 \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1-unfiltered.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/unfiltered/$1.probe-B.hs_metrics.txt : bam/$1-unfiltered.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# endef
+# $(foreach sample,$(SAMPLES),\
+# 		$(eval $(call picard-metrics-unfiltered,$(sample))))		
+# 
+# define picard-metrics-duplex
+# metrics/duplex/$1.idx_stats.txt : bam/$1-duplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+# 									   I=$$(<) \
+# 									   TMP_DIR=$(TMPDIR) \
+# 									   > $$(@)")
+# 									   
+# metrics/duplex/$1.aln_metrics.txt : bam/$1-duplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# metrics/duplex/$1.insert_metrics.txt : bam/$1-duplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   H=metrics/duplex/$1.insert_metrics.pdf \
+# 									   M=0.5 \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1-duplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1-duplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# endef
+# $(foreach sample,$(SAMPLES),\
+# 		$(eval $(call picard-metrics-duplex,$(sample))))
+# 		
+# define picard-metrics-simplex
+# metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) BamIndexStats \
+# 									   I=$$(<) \
+# 									   TMP_DIR=$(TMPDIR) \
+# 									   > $$(@)")
+# 									   
+# metrics/simplex/$1.aln_metrics.txt : bam/$1-simplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectAlignmentSummaryMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# metrics/simplex/$1.insert_metrics.txt : bam/$1-simplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CollectInsertSizeMetrics \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   H=metrics/simplex/$1.insert_metrics.pdf \
+# 									   M=0.5 \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1-simplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_A_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 												
+# metrics/simplex/$1.probe-B.hs_metrics.txt : bam/$1-simplex.bam
+# 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+# 									   java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx12G -jar $$(PICARD_JAR) CalculateHsMetrics \
+# 									   R=$(REF_FASTA) \
+# 									   I=$$(<) \
+# 									   O=$$(@) \
+# 									   BAIT_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TARGET_INTERVALS=$(POOL_B_TARGET_FILE) \
+# 									   TMP_DIR=$(TMPDIR)")
+# 
+# endef
+# $(foreach sample,$(SAMPLES),\
+# 		$(eval $(call picard-metrics-simplex,$(sample))))
+		
 metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 1 --sample_names '$(SAMPLES)'")
@@ -316,7 +675,7 @@ metrics/summary/umi_composite.tsv : $(wildcard marianas/$(SAMPLES)/composite-umi
 
 metrics/summary/umi_families.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 3 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 3 --sample_names '$(SAMPLES)'")							  
 
 # include modules/test/qc/intervalmetrics.mk
 # include modules/test/qc/plotmetrics.mk
