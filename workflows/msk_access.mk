@@ -73,7 +73,13 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 metrics/unfiltered/metrics_hs.tsv \
  			 metrics/simplex/metrics_hs.tsv \
  			 metrics/duplex/metrics_hs.tsv \
- 			 metrics/standard/metrics_oxog.tsv
+ 			 metrics/standard/metrics_oxog.tsv \
+ 			 metrics/summary/metrics_idx.tsv \
+ 			 metrics/summary/metrics_aln.tsv \
+ 			 metrics/summary/metrics_insert.tsv \
+ 			 metrics/summary/metrics_insert_distribution.tsv \
+ 			 metrics/summary/metrics_hs.tsv \
+ 			 metrics/summary/metrics_ts.tsv
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -760,8 +766,30 @@ metrics/standard/metrics_oxog.tsv : $(wildcard metrics/standard/$(SAMPLES).oxog_
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 5 --sample_names '$(SAMPLES)'")
 									  
+metrics/summary/metrics_idx.tsv : metrics/standard/metrics_idx.tsv metrics/unfiltered/metrics_idx.tsv metrics/duplex/metrics_idx.tsv metrics/simplex/metrics_idx.tsv
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/intervalmetrics.R --metric_type 22")
+		
+metrics/summary/metrics_aln.tsv : metrics/standard/metrics_aln.tsv metrics/unfiltered/metrics_aln.tsv metrics/duplex/metrics_aln.tsv metrics/simplex/metrics_aln.tsv
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/intervalmetrics.R --metric_type 23")
+	
+metrics/summary/metrics_insert.tsv : metrics/standard/metrics_insert.tsv metrics/unfiltered/metrics_insert.tsv metrics/duplex/metrics_insert.tsv metrics/simplex/metrics_insert.tsv
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/intervalmetrics.R --metric_type 24")
+	
+metrics/summary/metrics_insert_distribution.tsv : metrics/standard/metrics_insert_distribution.tsv metrics/unfiltered/metrics_insert_distribution.tsv metrics/duplex/metrics_insert_distribution.tsv metrics/simplex/metrics_insert_distribution.tsv
+	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/intervalmetrics.R --metric_type 25")
+	
+metrics/summary/metrics_hs.tsv : metrics/standard/metrics_hs.tsv metrics/unfiltered/metrics_hs.tsv metrics/duplex/metrics_hs.tsv metrics/simplex/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/intervalmetrics.R --metric_type 26")
 
-									  									  
+metrics/summary/metrics_ts.tsv : $(wildcard metrics/standard/$(SAMPLES).A.ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).B.ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).AB.offtarget.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/intervalmetrics.R --metric_type 27 --sample_names '$(SAMPLES)'")									  
+
 ..DUMMY := $(shell mkdir -p version; \
 			 $(BWA) &> version/tmp.txt; \
 			 head -3 version/tmp.txt | tail -2 > version/msk_access.txt; \
