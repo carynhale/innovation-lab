@@ -31,12 +31,6 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt)
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt)
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
