@@ -25,10 +25,11 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 metrics/summary/umi_families.tsv \
  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt)
-#			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
-#			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
-#			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt)
+
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
 # 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
@@ -374,7 +375,7 @@ metrics/standard/$1-pileup.txt : bam/$1-standard.bam
 								 ln -sf ../../bam/$1-standard.bam $1.bam && \
 								 ln -sf ../../bam/$1-standard.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-standard.bai $1.bai && \
-								 if [[ ! -f ".bed" ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
+								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
@@ -388,7 +389,7 @@ metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
 								 ln -sf ../../bam/$1-simplex.bam $1.bam && \
 								 ln -sf ../../bam/$1-simplex.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-simplex.bai $1.bai && \
-								 if [[ ! -f ".bed" ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
+								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
@@ -402,7 +403,7 @@ metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
 								 ln -sf ../../bam/$1-duplex.bam $1.bam && \
 								 ln -sf ../../bam/$1-duplex.bam.bai $1.bam.bai && \
 								 ln -sf ../../bam/$1-duplex.bai $1.bai && \
-								 if [[ ! -f ".bed" ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
+								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
@@ -414,41 +415,41 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call pileup-metric,$(sample))))
 				   
-# define coverage-metric
-# metrics/standard/$1.A.ontarget.txt : marianas/$1/$1.realn.bam
-# 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-# 								 $$(SAMTOOOLS) view -L $$(UMI_QC_BED_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
-# 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-A.bam && \
-# 								 $$(BAM_INDEX) \
-# 								 INPUT=metrics/standard/$1-ontarget-A.bam \
-# 								 OUTPUT=$$(@) && \
-# 								 rm -rf metrics/standard/$1-ontarget-A.bam && \
-# 								 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
-# 									 
-# metrics/standard/$1.B.ontarget.txt : marianas/$1/$1.realn.bam
-# 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-# 								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
-# 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-B.bam && \
-# 								 $$(BAM_INDEX) \
-# 								 INPUT=metrics/standard/$1-ontarget-B.bam \
-# 								 OUTPUT=$$(@) && \
-# 								 rm -rf metrics/standard/$1-ontarget-B.bam && \
-# 								 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
-# 	
-# metrics/standard/$1.AB.offtarget.txt : marianas/$1/$1.realn.bam
-# 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-# 								 $$(SAMTOOLS) view -L $$(OFF_TARGET_FILE_AB) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
-# 								 $$(SAMTOOLS) index metrics/standard/$1-offtarget-AB.bam && \
-# 								 $$(BAM_INDEX) \
-# 								 INPUT=metrics/standard/$1-offtarget-AB.bam \
-# 								 OUTPUT=$$(@) && \
-# 								 rm -rf metrics/standard/$1-offtarget-AB.bam && \
-# 								 rm -rf metrics/standard/$1-offtarget-AB.bam.bai")
-# 
-# endef
-# $(foreach sample,$(SAMPLES),\
-# 		$(eval $(call coverage-metric,$(sample))))
-# 
+define coverage-metric
+metrics/standard/$1.A.ontarget.txt : bam/$1-standard.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(SAMTOOOLS) view -L $$(UMI_QC_BED_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
+								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-A.bam && \
+								 $$(BAM_INDEX) \
+								 INPUT=metrics/standard/$1-ontarget-A.bam \
+								 OUTPUT=$$(@) && \
+								 rm -rf metrics/standard/$1-ontarget-A.bam && \
+								 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
+									 
+metrics/standard/$1.B.ontarget.txt : bam/$1-standard.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
+								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-B.bam && \
+								 $$(BAM_INDEX) \
+								 INPUT=metrics/standard/$1-ontarget-B.bam \
+								 OUTPUT=$$(@) && \
+								 rm -rf metrics/standard/$1-ontarget-B.bam && \
+								 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
+	
+metrics/standard/$1.AB.offtarget.txt : bam/$1-standard.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(SAMTOOLS) view -L $$(OFF_TARGET_FILE_AB) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
+								 $$(SAMTOOLS) index metrics/standard/$1-offtarget-AB.bam && \
+								 $$(BAM_INDEX) \
+								 INPUT=metrics/standard/$1-offtarget-AB.bam \
+								 OUTPUT=$$(@) && \
+								 rm -rf metrics/standard/$1-offtarget-AB.bam && \
+								 rm -rf metrics/standard/$1-offtarget-AB.bam.bai")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call coverage-metric,$(sample))))
+ 
 # define picard-metrics-standard
 # metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
 # 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \

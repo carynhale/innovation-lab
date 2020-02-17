@@ -28,7 +28,8 @@ waltz/$1-pileup.txt.gz : bam/$1.bam
 									 cd waltz && \
 									 ln -sf ../bam/$1.bam $1.bam && \
 									 ln -sf ../bam/$1.bai $1.bai && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1.bam $(DMP_FASTA) $(TARGETS_FILE) && \
+									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(DMP_FASTA) .bed && \
 									 gzip $1-pileup.txt && \
 									 gzip $1-pileup-without-duplicates.txt && \
 									 gzip $1-intervals.txt && \
@@ -41,7 +42,8 @@ waltz/$1__aln_srt_IR_FX-pileup.txt.gz : bam/$1__aln_srt_IR_FX.bam
 									 cd waltz && \
 									 ln -sf ../bam/$1__aln_srt_IR_FX.bam $1__aln_srt_IR_FX.bam && \
 									 ln -sf ../bam/$1__aln_srt_IR_FX.bai $1__aln_srt_IR_FX.bai && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1__aln_srt_IR_FX.bam $(DMP_FASTA) $(TARGETS_FILE) && \
+									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1__aln_srt_IR_FX.bam $$(DMP_FASTA) .bed && \
 									 gzip $1__aln_srt_IR_FX-pileup.txt && \
 									 gzip $1__aln_srt_IR_FX-pileup-without-duplicates.txt && \
 									 gzip $1__aln_srt_IR_FX-intervals.txt && \
@@ -54,7 +56,8 @@ waltz/$1__aln_srt_IR_FX-simplex-pileup.txt.gz : bam/$1__aln_srt_IR_FX-simplex.ba
 									 cd waltz && \
 									 ln -sf ../bam/$1__aln_srt_IR_FX-simplex.bam $1__aln_srt_IR_FX-simplex.bam && \
 									 ln -sf ../bam/$1__aln_srt_IR_FX-simplex.bai $1__aln_srt_IR_FX-simplex.bai && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1__aln_srt_IR_FX-simplex.bam $(DMP_FASTA) $(TARGETS_FILE) && \
+									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1__aln_srt_IR_FX-simplex.bam $$(DMP_FASTA) .bed && \
 									 gzip $1__aln_srt_IR_FX-simplex-pileup.txt && \
 									 gzip $1__aln_srt_IR_FX-simplex-pileup-without-duplicates.txt && \
 									 gzip $1__aln_srt_IR_FX-simplex-intervals.txt && \
@@ -67,7 +70,8 @@ waltz/$1__aln_srt_IR_FX-duplex-pileup.txt.gz : bam/$1__aln_srt_IR_FX-duplex.bam
 									 cd waltz && \
 									 ln -sf ../bam/$1__aln_srt_IR_FX-duplex.bam $1__aln_srt_IR_FX-duplex.bam && \
 									 ln -sf ../bam/$1__aln_srt_IR_FX-duplex.bai $1__aln_srt_IR_FX-duplex.bai && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $(WALTZ_MIN_MAPQ) $1__aln_srt_IR_FX-duplex.bam $(DMP_FASTA) $(TARGETS_FILE) && \
+									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1__aln_srt_IR_FX-duplex.bam $$(DMP_FASTA) .bed && \
 									 gzip $1__aln_srt_IR_FX-duplex-pileup.txt && \
 									 gzip $1__aln_srt_IR_FX-duplex-pileup-without-duplicates.txt && \
 									 gzip $1__aln_srt_IR_FX-duplex-intervals.txt && \
