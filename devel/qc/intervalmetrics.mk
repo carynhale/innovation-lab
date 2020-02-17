@@ -10,63 +10,6 @@ ONTARGET_FILE_A ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-A
 ONTARGET_FILE_B ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-B.sorted.bed
 OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.offtarget.bed
 
-interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
-				   metrics/standard/metrics_idx.tsv \
-				   metrics/standard/metrics_aln.tsv \
-				   metrics/standard/metrics_insert.tsv \
-				   metrics/standard/metrics_insert_distribution.tsv \
-				   metrics/standard/metrics_oxog.tsv \
-				   metrics/standard/metrics_hs.tsv \
-				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
-				   metrics/unfiltered/metrics_idx.tsv \
-				   metrics/unfiltered/metrics_aln.tsv \
-				   metrics/unfiltered/metrics_insert.tsv \
-				   metrics/unfiltered/metrics_insert_distribution.tsv \
-				   metrics/unfiltered/metrics_hs.tsv \
-				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt) \
-				   metrics/duplex/metrics_idx.tsv \
-				   metrics/duplex/metrics_aln.tsv \
-				   metrics/duplex/metrics_insert.tsv \
-				   metrics/duplex/metrics_insert_distribution.tsv \
-				   metrics/duplex/metrics_hs.tsv \
-				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
-				   metrics/simplex/metrics_idx.tsv \
-				   metrics/simplex/metrics_aln.tsv \
-				   metrics/simplex/metrics_insert.tsv \
-				   metrics/simplex/metrics_insert_distribution.tsv \
-				   metrics/simplex/metrics_hs.tsv \
-				   metrics/summary/metrics_idx.tsv \
-				   metrics/summary/metrics_aln.tsv \
-				   metrics/summary/metrics_insert.tsv \
-				   metrics/summary/metrics_insert_distribution.tsv \
-				   metrics/summary/metrics_hs.tsv \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
-				   metrics/summary/metrics_ts.tsv \
-				   $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt)
-
 
 # 			 metrics/standard/metrics_idx.tsv \
 # 			 metrics/standard/metrics_aln.tsv \
@@ -100,9 +43,7 @@ interval_metrics : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_st
 # 			 metrics/summary/metrics_ts.tsv
 
 
-metrics/standard/metrics_idx.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_stats.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 1 --sample_names '$(SAMPLES)'")
+
 		
 metrics/standard/metrics_aln.tsv : $(wildcard metrics/standard/$(SAMPLES).aln_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
