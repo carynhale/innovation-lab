@@ -60,7 +60,11 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 metrics/standard/metrics_aln.tsv \
  			 metrics/unfiltered/metrics_aln.tsv \
  			 metrics/simplex/metrics_aln.tsv \
- 			 metrics/duplex/metrics_aln.tsv
+ 			 metrics/duplex/metrics_aln.tsv \
+ 			 metrics/standard/metrics_insert.tsv \
+ 			 metrics/unfiltered/metrics_insert.tsv \
+ 			 metrics/simplex/metrics_insert.tsv \
+ 			 metrics/duplex/metrics_insert.tsv
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -694,6 +698,22 @@ metrics/duplex/metrics_aln.tsv : $(wildcard metrics/duplex/$(SAMPLES).aln_stats.
 metrics/simplex/metrics_aln.tsv : $(wildcard metrics/simplex/$(SAMPLES).aln_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 18 --sample_names '$(SAMPLES)'")
+									  
+metrics/standard/metrics_insert.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 3 --sample_names '$(SAMPLES)'")
+
+metrics/unfiltered/metrics_insert.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 9 --sample_names '$(SAMPLES)'")
+
+metrics/duplex/metrics_insert.tsv : $(wildcard metrics/duplex/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 14 --sample_names '$(SAMPLES)'")
+
+metrics/simplex/metrics_insert.tsv : $(wildcard metrics/simplex/$(SAMPLES).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 19 --sample_names '$(SAMPLES)'")
 
 									  									  
 ..DUMMY := $(shell mkdir -p version; \

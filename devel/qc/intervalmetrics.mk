@@ -12,20 +12,20 @@ OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB
 
 
 
-# 			 metrics/standard/metrics_insert.tsv \
+
 # 			 metrics/standard/metrics_insert_distribution.tsv \
 # 			 metrics/standard/metrics_oxog.tsv \
 # 			 metrics/standard/metrics_hs.tsv \
 
-# 			 metrics/unfiltered/metrics_insert.tsv \
+
 # 			 metrics/unfiltered/metrics_insert_distribution.tsv \
 # 			 metrics/unfiltered/metrics_hs.tsv \
 
-# 			 metrics/duplex/metrics_insert.tsv \
+
 # 			 metrics/duplex/metrics_insert_distribution.tsv \
 # 			 metrics/duplex/metrics_hs.tsv \
 
-# 			 metrics/simplex/metrics_insert.tsv \
+
 # 			 metrics/simplex/metrics_insert_distribution.tsv \
 # 			 metrics/simplex/metrics_hs.tsv \
 
@@ -39,9 +39,7 @@ OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB
 
 
 		
-metrics/standard/metrics_insert.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 3 --sample_names '$(SAMPLES)'")
+
 	
 metrics/standard/metrics_insert_distribution.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
@@ -56,9 +54,6 @@ metrics/standard/metrics_hs.tsv : $(wildcard metrics/standard/$(SAMPLES).probe-A
 									  $(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 6 --sample_names '$(SAMPLES)'")
 	
 	
-metrics/unfiltered/metrics_insert.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).insert_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 9 --sample_names '$(SAMPLES)'")
 	
 metrics/unfiltered/metrics_insert_distribution.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
@@ -71,9 +66,6 @@ metrics/unfiltered/metrics_hs.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).pro
 		
 
 	
-metrics/duplex/metrics_insert.tsv : $(wildcard metrics/duplex/$(SAMPLES).insert_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 14 --sample_names '$(SAMPLES)'")
 	
 metrics/duplex/metrics_insert_distribution.tsv : $(wildcard metrics/duplex/$(SAMPLES).insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
@@ -86,9 +78,6 @@ metrics/duplex/metrics_hs.tsv : $(wildcard metrics/duplex/$(SAMPLES).probe-A.hs_
 		
 
 	
-metrics/simplex/metrics_insert.tsv : $(wildcard metrics/simplex/$(SAMPLES).insert_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) modules/test/qc/intervalmetrics.R --metric_type 19 --sample_names '$(SAMPLES)'")
 	
 metrics/simplex/metrics_insert_distribution.tsv : $(wildcard metrics/simplex/$(SAMPLES).insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
