@@ -53,7 +53,10 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
  			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt) \
- 			 metrics/standard/metrics_idx.tsv
+ 			 metrics/standard/metrics_idx.tsv \
+ 			 metrics/unfiltered/metrics_idx.tsv \
+ 			 metrics/simplex/metrics_idx.tsv \
+ 			 metrics/duplex/metrics_idx.tsv
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -659,7 +662,19 @@ metrics/summary/umi_families.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.t
 metrics/standard/metrics_idx.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 1 --sample_names '$(SAMPLES)'")
+									  
+metrics/unfiltered/metrics_idx.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 7 --sample_names '$(SAMPLES)'")
 
+metrics/duplex/metrics_idx.tsv : $(wildcard metrics/duplex/$(SAMPLES).idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 12 --sample_names '$(SAMPLES)'")
+
+metrics/simplex/metrics_idx.tsv : $(wildcard metrics/simplex/$(SAMPLES).idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 17 --sample_names '$(SAMPLES)'")
+									  									  
 ..DUMMY := $(shell mkdir -p version; \
 			 $(BWA) &> version/tmp.txt; \
 			 head -3 version/tmp.txt | tail -2 > version/msk_access.txt; \
