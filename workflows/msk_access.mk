@@ -56,7 +56,11 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 metrics/standard/metrics_idx.tsv \
  			 metrics/unfiltered/metrics_idx.tsv \
  			 metrics/simplex/metrics_idx.tsv \
- 			 metrics/duplex/metrics_idx.tsv
+ 			 metrics/duplex/metrics_idx.tsv \
+ 			 metrics/standard/metrics_aln.tsv \
+ 			 metrics/unfiltered/metrics_aln.tsv \
+ 			 metrics/simplex/metrics_aln.tsv \
+ 			 metrics/duplex/metrics_aln.tsv
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -674,6 +678,23 @@ metrics/duplex/metrics_idx.tsv : $(wildcard metrics/duplex/$(SAMPLES).idx_stats.
 metrics/simplex/metrics_idx.tsv : $(wildcard metrics/simplex/$(SAMPLES).idx_stats.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 17 --sample_names '$(SAMPLES)'")
+									  
+metrics/standard/metrics_aln.tsv : $(wildcard metrics/standard/$(SAMPLES).aln_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 2 --sample_names '$(SAMPLES)'")
+									  
+metrics/unfiltered/metrics_aln.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).aln_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 8 --sample_names '$(SAMPLES)'")
+									  
+metrics/duplex/metrics_aln.tsv : $(wildcard metrics/duplex/$(SAMPLES).aln_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 13 --sample_names '$(SAMPLES)'")
+									  
+metrics/simplex/metrics_aln.tsv : $(wildcard metrics/simplex/$(SAMPLES).aln_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 18 --sample_names '$(SAMPLES)'")
+
 									  									  
 ..DUMMY := $(shell mkdir -p version; \
 			 $(BWA) &> version/tmp.txt; \
