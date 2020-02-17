@@ -15,18 +15,10 @@ OFFTARGET_FILE ?= $(HOME)/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB
 
 
 # 			 metrics/standard/metrics_oxog.tsv \
+
 # 			 metrics/standard/metrics_hs.tsv \
-
-
-
 # 			 metrics/unfiltered/metrics_hs.tsv \
-
-
-
 # 			 metrics/duplex/metrics_hs.tsv \
-
-
-
 # 			 metrics/simplex/metrics_hs.tsv \
 
 # 			 metrics/summary/metrics_idx.tsv \

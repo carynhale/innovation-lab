@@ -92,7 +92,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, skip = 3, col_types = cols(.default = col_character())) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
 		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
@@ -277,7 +277,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, skip = 3, col_types = cols(.default = col_character())) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
 		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
@@ -411,7 +411,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, skip = 3, col_types = cols(.default = col_character())) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
 		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
@@ -545,7 +545,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, skip = 3, col_types = cols(.default = col_character())) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
 		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
