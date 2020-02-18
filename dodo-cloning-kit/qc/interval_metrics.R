@@ -45,7 +45,7 @@ if (as.numeric(opt$metric_type)==1) {
 	for (i in 1:length(sample_names)) {
 		aln_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".aln_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				   type_convert() %>%
-		   				   slice(2:n()) %>%
+		   				   slice(3:n()) %>%
 		   				   mutate(TOTAL_READS = as.numeric(TOTAL_READS)) %>%
 		   				   mutate(PF_READS = as.numeric(PF_READS)) %>%
 		   				   mutate(PCT_PF_READS = 100*as.numeric(PCT_PF_READS)) %>%
@@ -78,8 +78,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, n_max = 2, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".insert_metrics.txt"), comment="#", trim_ws = TRUE, n_max = 1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				      type_convert() %>%
 		   				      mutate(SAMPLE = sample_names[i])
 		   				   
@@ -93,7 +92,6 @@ if (as.numeric(opt$metric_type)==1) {
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
 		insert_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
 	n = max(unlist(lapply(insert_metrics, function(x) {max(x$`insert_size`)})))
@@ -113,7 +111,6 @@ if (as.numeric(opt$metric_type)==1) {
 	oxog_metrics = list()
 	for (i in 1:length(sample_names)) {
 		oxog_metrics[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".oxog_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert()
 	}
 	oxog_metrics = do.call(rbind, oxog_metrics)
@@ -125,11 +122,9 @@ if (as.numeric(opt$metric_type)==1) {
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
 		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics.txt"), comment = "#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		   				   
@@ -140,11 +135,9 @@ if (as.numeric(opt$metric_type)==1) {
 	hs_metrics_a_nodedup = hs_metrics_b_nodedup = list()
 	for (i in 1:length(sample_names)) {
 		hs_metrics_a_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-A.hs_metrics-nodedup.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    		slice(2:n()) %>%
 		   				    		type_convert() %>%
 		   				    		mutate(SAMPLE = sample_names[i])
 		hs_metrics_b_nodedup[[i]] = read_tsv(file=paste0("metrics/standard/", sample_names[i], ".probe-B.hs_metrics-nodedup.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    		slice(2:n()) %>%
 		   				    		type_convert() %>%
 		   				    		mutate(SAMPLE = sample_names[i])
 		   				   
@@ -154,10 +147,8 @@ if (as.numeric(opt$metric_type)==1) {
 	colnames(hs_metrics_a_nodedup) = paste0(colnames(hs_metrics_a_nodedup), "_NO_DEDUP")
 	colnames(hs_metrics_b_nodedup) = paste0(colnames(hs_metrics_b_nodedup), "_NO_DEDUP")
 	
-	
 	hs_metrics_a = cbind(hs_metrics_a, hs_metrics_a_nodedup)
 	hs_metrics_b = cbind(hs_metrics_b, hs_metrics_b_nodedup)
-	
 	hs_metrics = rbind(hs_metrics_a, hs_metrics_b) %>%
 				 arrange(SAMPLE) %>%
 				 dplyr::select(GENOME_SIZE,
@@ -230,7 +221,7 @@ if (as.numeric(opt$metric_type)==1) {
 	for (i in 1:length(sample_names)) {
 		aln_metrics[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".aln_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				   type_convert() %>%
-		   				   slice(2:n()) %>%
+		   				   slice(3:n()) %>%
 		   				   mutate(TOTAL_READS = as.numeric(TOTAL_READS)) %>%
 		   				   mutate(PF_READS = as.numeric(PF_READS)) %>%
 		   				   mutate(PCT_PF_READS = 100*as.numeric(PCT_PF_READS)) %>%
@@ -263,8 +254,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, n_max = 2, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".insert_metrics.txt"), comment="#", trim_ws = TRUE, n_max = 1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				      type_convert() %>%
 		   				      mutate(SAMPLE = sample_names[i])
 		   				   
@@ -278,7 +268,6 @@ if (as.numeric(opt$metric_type)==1) {
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
 		insert_metrics[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
 	n = max(unlist(lapply(insert_metrics, function(x) {max(x$`insert_size`)})))
@@ -298,11 +287,9 @@ if (as.numeric(opt$metric_type)==1) {
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
 		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/unfiltered/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		   				   
@@ -364,7 +351,7 @@ if (as.numeric(opt$metric_type)==1) {
 	for (i in 1:length(sample_names)) {
 		aln_metrics[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".aln_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				   type_convert() %>%
-		   				   slice(2:n()) %>%
+		   				   slice(3:n()) %>%
 		   				   mutate(TOTAL_READS = as.numeric(TOTAL_READS)) %>%
 		   				   mutate(PF_READS = as.numeric(PF_READS)) %>%
 		   				   mutate(PCT_PF_READS = 100*as.numeric(PCT_PF_READS)) %>%
@@ -397,8 +384,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, n_max = 2, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".insert_metrics.txt"), comment="#", trim_ws = TRUE, n_max = 1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				      type_convert() %>%
 		   				      mutate(SAMPLE = sample_names[i])
 		   				   
@@ -412,7 +398,6 @@ if (as.numeric(opt$metric_type)==1) {
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
 		insert_metrics[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
 	n = max(unlist(lapply(insert_metrics, function(x) {max(x$`insert_size`)})))
@@ -432,11 +417,9 @@ if (as.numeric(opt$metric_type)==1) {
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
 		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/duplex/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		   				   
@@ -498,7 +481,7 @@ if (as.numeric(opt$metric_type)==1) {
 	for (i in 1:length(sample_names)) {
 		aln_metrics[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".aln_metrics.txt"), comment="#", col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				   type_convert() %>%
-		   				   slice(2:n()) %>%
+		   				   slice(3:n()) %>%
 		   				   mutate(TOTAL_READS = as.numeric(TOTAL_READS)) %>%
 		   				   mutate(PF_READS = as.numeric(PF_READS)) %>%
 		   				   mutate(PCT_PF_READS = 100*as.numeric(PCT_PF_READS)) %>%
@@ -531,8 +514,7 @@ if (as.numeric(opt$metric_type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
-		insert_metrics[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".insert_metrics.txt"), comment="#", col_names = TRUE, n_max = 2, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
+		insert_metrics[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".insert_metrics.txt"), comment="#", trim_ws = TRUE, n_max = 1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
 		   				      type_convert() %>%
 		   				      mutate(SAMPLE = sample_names[i])
 		   				   
@@ -546,7 +528,6 @@ if (as.numeric(opt$metric_type)==1) {
 	insert_metrics = list()
 	for (i in 1:length(sample_names)) {
 		insert_metrics[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".insert_metrics.txt"), col_names = TRUE, skip = 10, col_types = cols(.default = col_character())) %>%
-		   				      slice(2:n()) %>%
 		   				      type_convert()
 	}
 	n = max(unlist(lapply(insert_metrics, function(x) {max(x$`insert_size`)})))
@@ -566,11 +547,9 @@ if (as.numeric(opt$metric_type)==1) {
 	hs_metrics_a = hs_metrics_b = list()
 	for (i in 1:length(sample_names)) {
 		hs_metrics_a[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".probe-A.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		hs_metrics_b[[i]] = read_tsv(file=paste0("metrics/simplex/", sample_names[i], ".probe-B.hs_metrics.txt"), comment="#", trim_ws = TRUE, n_max=1, col_names = TRUE, col_types = cols(.default = col_character())) %>%
-		   				    slice(2:n()) %>%
 		   				    type_convert() %>%
 		   				    mutate(SAMPLE = sample_names[i])
 		   				   
