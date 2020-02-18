@@ -816,59 +816,59 @@ metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
 	
 metrics/report/umi_family_types_probe-A.pdf : metrics/summary/umi_family_types.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 2")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 2")
 
 metrics/report/umi_family_types_probe-B.pdf : metrics/summary/umi_family_types.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 3")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 3")
 
 metrics/report/umi_family_sizes_all.pdf : metrics/summary/umi_families.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 4")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 4")
 
 metrics/report/umi_family_sizes_duplex.pdf : metrics/summary/umi_families.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 5")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 5")
 
 metrics/report/umi_family_sizes_simplex.pdf : metrics/summary/umi_families.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 6")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 6")
 	
 metrics/report/mean_standard_target_coverage-dedup.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 7")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 7")
 
 metrics/report/mean_standard_target_coverage-nodedup.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 8")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 8")
 
 metrics/report/mean_unfiltered_target_coverage.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 9")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 9")
 
 metrics/report/mean_duplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 10")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 10")
 
 metrics/report/mean_simplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 11")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 11")
 	
 metrics/report/aligment_summary.pdf : metrics/summary/metrics_idx.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 12")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 12")
 	
 metrics/report/insert_size_summary.pdf : metrics/summary/metrics_insert.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 13")
+									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 13")
 	
 metrics/report/insert_size_distribution.pdf : metrics/summary/metrics_insert_distribution.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 14")
+									   					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 14")
 	
 metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_ts.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 19")
+									   					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 19")
 	
 metrics/report/non_reference_calls.pdf : $(wildcard metrics/standard/$(SAMPLES)-pileup.txt) $(wildcard metrics/simplex/$(SAMPLES)-pileup.txt) $(wildcard metrics/duplex/$(SAMPLES)-pileup.txt)
 	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"set -o pipefail && \
