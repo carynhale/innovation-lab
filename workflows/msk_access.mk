@@ -382,7 +382,7 @@ marianas/$1/family-sizes.txt : marianas/$1/second-pass-alt-alleles.txt
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call family-size-metric,$(sample))))
-
+		
 define pileup-metric
 metrics/standard/$1-pileup.txt : bam/$1-standard.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
@@ -686,6 +686,18 @@ metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1-duplex.bam
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-duplex,$(sample))))
+
+metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 1 --sample_names '$(SAMPLES)'")
+	
+metrics/summary/umi_composite.tsv : $(wildcard marianas/$(SAMPLES)/composite-umi-frequencies.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 2 --sample_names '$(SAMPLES)'")
+
+metrics/summary/umi_families.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 3 --sample_names '$(SAMPLES)'")
 
 metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
