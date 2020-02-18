@@ -31,6 +31,7 @@ DBSNP_SUBSET = $(HOME)/share/lib/bed_files/dbsnp_137.b37_subset.bed
 CLUSTER_VCF = $(RSCRIPT) $(SCRIPTS_DIR)/qc/cluster_access.R
 POOL_AB_INTERVAL ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-AB.sorted.list
 SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
+VARIANT_ANNOTATION_ENV = $(HOME)/share/usr/env/r-variantannotation-1.32.0
 
 define genotype-snps-standard
 metrics/standard/$1-snps.vcf : bam/$1.bam
@@ -60,7 +61,8 @@ metrics/summary/snps_filtered-standard.vcf : metrics/summary/snps_combined-stand
 	$(INIT) grep '^#' $< > $@ && grep -e '0/1' -e '1/1' $< >> $@
 	
 metrics/summary/snps_filtered-standard.tsv : metrics/summary/snps_filtered-standard.vcf
-	$(INIT) $(CLUSTER_VCF) --library 'STANDARD'
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
+														   		   $(CLUSTER_VCF) --library 'STANDARD'"
 	
 metrics/report/snps_clustering-standard.pdf : metrics/summary/snps_filtered-standard.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -98,7 +100,8 @@ metrics/summary/snps_filtered-unfiltered.vcf : metrics/summary/snps_combined-unf
 	$(INIT) grep '^#' $< > $@ && grep -e '0/1' -e '1/1' $< >> $@
 	
 metrics/summary/snps_filtered-unfiltered.tsv : metrics/summary/snps_filtered-unfiltered.vcf
-	$(INIT) $(CLUSTER_VCF) --library 'UNFILTERED'
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
+														   		   $(CLUSTER_VCF) --library 'UNFILTERED'"
 	
 metrics/report/snps_clustering-unfiltered.pdf : metrics/summary/snps_filtered-unfiltered.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -135,7 +138,8 @@ metrics/summary/snps_filtered-simplex.vcf : metrics/summary/snps_combined-simple
 	$(INIT) grep '^#' $< > $@ && grep -e '0/1' -e '1/1' $< >> $@
 	
 metrics/summary/snps_filtered-simplex.tsv : metrics/summary/snps_filtered-simplex.vcf
-	$(INIT) $(CLUSTER_VCF) --library 'SIMPLEX'
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
+														   		   $(CLUSTER_VCF) --library 'SIMPLEX'"
 	
 metrics/report/snps_clustering-simplex.pdf : metrics/summary/snps_filtered-simplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -172,7 +176,8 @@ metrics/summary/snps_filtered-duplex.vcf : metrics/summary/snps_combined-duplex.
 	$(INIT) grep '^#' $< > $@ && grep -e '0/1' -e '1/1' $< >> $@
 	
 metrics/summary/snps_filtered-duplex.tsv : metrics/summary/snps_filtered-duplex.vcf
-	$(INIT) $(CLUSTER_VCF) --library 'DUPLEX'
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
+														   		   $(CLUSTER_VCF) --library 'DUPLEX'"
 	
 metrics/report/snps_clustering-duplex.pdf : metrics/summary/snps_filtered-duplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -181,8 +186,6 @@ metrics/report/snps_clustering-duplex.pdf : metrics/summary/snps_filtered-duplex
 									   					   rm metrics/report/snps_clustering-duplex.pdf && \
 									   					   mv metrics/report/snps_clustering-duplex-2.pdf metrics/report/snps_clustering-duplex.pdf")
 	
-include innovation-lab/vcf_tools/vcftools.mk
-
 ..DUMMY := $(shell mkdir -p version; \
 			 echo "gatk3" > version/msk_access.txt; \
 			 $(GATK) --version >> version/msk_access.txt; \
