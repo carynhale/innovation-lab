@@ -62,7 +62,7 @@ metrics/summary/snps_filtered-standard.vcf : metrics/summary/snps_combined-stand
 	
 metrics/summary/snps_filtered-standard.tsv : metrics/summary/snps_filtered-standard.vcf
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
-														   		   $(CLUSTER_VCF) --library 'STANDARD'"
+														   		   $(CLUSTER_VCF) --library 'STANDARD'")
 	
 metrics/report/snps_clustering-standard.pdf : metrics/summary/snps_filtered-standard.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -101,7 +101,7 @@ metrics/summary/snps_filtered-unfiltered.vcf : metrics/summary/snps_combined-unf
 	
 metrics/summary/snps_filtered-unfiltered.tsv : metrics/summary/snps_filtered-unfiltered.vcf
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
-														   		   $(CLUSTER_VCF) --library 'UNFILTERED'"
+														   		   $(CLUSTER_VCF) --library 'UNFILTERED'")
 	
 metrics/report/snps_clustering-unfiltered.pdf : metrics/summary/snps_filtered-unfiltered.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -139,7 +139,7 @@ metrics/summary/snps_filtered-simplex.vcf : metrics/summary/snps_combined-simple
 	
 metrics/summary/snps_filtered-simplex.tsv : metrics/summary/snps_filtered-simplex.vcf
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
-														   		   $(CLUSTER_VCF) --library 'SIMPLEX'"
+														   		   $(CLUSTER_VCF) --library 'SIMPLEX'")
 	
 metrics/report/snps_clustering-simplex.pdf : metrics/summary/snps_filtered-simplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
@@ -177,7 +177,7 @@ metrics/summary/snps_filtered-duplex.vcf : metrics/summary/snps_combined-duplex.
 	
 metrics/summary/snps_filtered-duplex.tsv : metrics/summary/snps_filtered-duplex.vcf
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
-														   		   $(CLUSTER_VCF) --library 'DUPLEX'"
+														   		   $(CLUSTER_VCF) --library 'DUPLEX'")
 	
 metrics/report/snps_clustering-duplex.pdf : metrics/summary/snps_filtered-duplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
