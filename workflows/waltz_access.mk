@@ -2,9 +2,9 @@ include innovation-lab/Makefile.inc
 include innovation-lab/config/waltz.inc
 include innovation-lab/genome_inc/b37.inc
 
-LOGDIR ?= log/waltz_genotype.$(NOW)
+LOGDIR ?= log/waltz_access.$(NOW)
 
-waltz_genotype : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
+waltz_access : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)__aln_srt_IR_FX-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)__aln_srt_IR_FX-simplex-pileup.txt.gz) \
 				 $(foreach sample,$(SAMPLES),waltz/$(sample)__aln_srt_IR_FX-duplex-pileup.txt.gz) \
@@ -119,8 +119,8 @@ waltz/noise_by_position.png : waltz/noise_by_position.pdf
 
 
 ..DUMMY := $(shell mkdir -p version; \
-			 $(JAVA8) -version &> version/waltz_genotype.txt; \
-			 R --version >> version/waltz_genotype.txt)
+			 $(JAVA8) -version &> version/waltz_access.txt; \
+			 R --version >> version/waltz_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
-.PHONY: waltz_genotype
+.PHONY: waltz_access
