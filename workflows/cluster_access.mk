@@ -1,45 +1,50 @@
-include modules/Makefile.inc
-include modules/config/gatk.inc
+include innovation-lab/Makefile.inc
+include innovation-lab/config/marianas.inc
+include innovation-lab/config/waltz.inc
+include innovation-lab/config/gatk.inc
+include innovation-lab/genome_inc/b37.inc
 
-LOGDIR = log/cluster_samples.$(NOW)
-PHONE += metrics metrics/summary metrics/report
+LOGDIR ?= log/cluster_access.$(NOW)
 
-cluster_samples : $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-snps.vcf) \
-				  metrics/summary/snps_combined-standard.vcf \
-				  metrics/summary/snps_filtered-standard.vcf \
-				  metrics/summary/snps_filtered-standard.tsv \
-				  $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample)-snps.vcf) \
-				  metrics/summary/snps_combined-unfiltered.vcf \
-				  metrics/summary/snps_filtered-unfiltered.vcf \
-				  metrics/summary/snps_filtered-unfiltered.tsv \
-				  $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-snps.vcf) \
-				  metrics/summary/snps_combined-simplex.vcf \
-				  metrics/summary/snps_filtered-simplex.vcf \
-				  metrics/summary/snps_filtered-simplex.tsv \
-				  $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-snps.vcf) \
-				  metrics/summary/snps_combined-duplex.vcf \
-				  metrics/summary/snps_filtered-duplex.vcf \
-				  metrics/summary/snps_filtered-duplex.tsv \
-				  metrics/report/snps_clustering-standard.pdf \
-				  metrics/report/snps_clustering-unfiltered.pdf \
-				  metrics/report/snps_clustering-simplex.pdf \
-				  metrics/report/snps_clustering-duplex.pdf
+cluster_access : $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-snps.vcf) \
+				 metrics/summary/snps_combined-standard.vcf \
+				 metrics/summary/snps_filtered-standard.vcf \
+				 metrics/summary/snps_filtered-standard.tsv \
+				 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample)-snps.vcf) \
+				 metrics/summary/snps_combined-unfiltered.vcf \
+				 metrics/summary/snps_filtered-unfiltered.vcf \
+				 metrics/summary/snps_filtered-unfiltered.tsv \
+				 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-snps.vcf) \
+				 metrics/summary/snps_combined-simplex.vcf \
+				 metrics/summary/snps_filtered-simplex.vcf \
+				 metrics/summary/snps_filtered-simplex.tsv \
+				 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-snps.vcf) \
+				 metrics/summary/snps_combined-duplex.vcf \
+				 metrics/summary/snps_filtered-duplex.vcf \
+				 metrics/summary/snps_filtered-duplex.tsv \
+				 metrics/report/snps_clustering-standard.pdf \
+				 metrics/report/snps_clustering-unfiltered.pdf \
+				 metrics/report/snps_clustering-simplex.pdf \
+				 metrics/report/snps_clustering-duplex.pdf
 
-DBSNP_SUBSET = $(HOME)/share/reference/dbsnp_tseq_intersect.bed
-CLUSTER_VCF = $(RSCRIPT) modules/test/qc/clustersamples.R
-POOL_AB_INTERVAL ?= /home/${USER}/share/reference/target_panels/MSK-ACCESS-v1_0-probe-AB.sorted.list
+DBSNP_SUBSET = $(HOME)/share/lib/bed_files/dbsnp_137.b37_subset.bed
+CLUSTER_VCF = $(RSCRIPT) $(SCRIPTS_DIR)/qc/cluster_access.R
+POOL_AB_INTERVAL ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-AB.sorted.list
+SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
 
 define genotype-snps-standard
-metrics/standard/$1-snps.vcf : bam/$1-standard.bam
+metrics/standard/$1-snps.vcf : bam/$1.bam
 	$$(call RUN,-n 4 -s 2.5G -m 3G,"set -o pipefail && \
-									$(call GATK_MEM,8G) -T UnifiedGenotyper -nt 4 -R $(REF_FASTA) --dbsnp $(DBSNP) \
+									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
-									-L $(DBSNP_SUBSET) \
+									-R $$(REF_FASTA) \
+									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--min_base_quality_score 30 \
 									--standard_min_confidence_threshold_for_calling 20 \
-									-L $(POOL_AB_INTERVAL)")
+									-L $$(POOL_AB_INTERVAL) \
+									-L $$(DBSNP_SUBSET)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -59,23 +64,25 @@ metrics/summary/snps_filtered-standard.tsv : metrics/summary/snps_filtered-stand
 	
 metrics/report/snps_clustering-standard.pdf : metrics/summary/snps_filtered-standard.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 15 && \
+														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 15 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-standard-2.pdf metrics/report/snps_clustering-standard.pdf && \
 									   					   rm metrics/report/snps_clustering-standard.pdf && \
 									   					   mv metrics/report/snps_clustering-standard-2.pdf metrics/report/snps_clustering-standard.pdf")
 		
 define genotype-snps-unfiltered
-metrics/unfiltered/$1-snps.vcf : bam/$1-unfiltered.bam
+metrics/unfiltered/$1-snps.vcf : bam/$1__aln_srt_IR_FX.bam
 	$$(call RUN,-n 4 -s 2.5G -m 3G,"set -o pipefail && \
-									$(call GATK_MEM,8G) -T UnifiedGenotyper -nt 4 -R $(REF_FASTA) --dbsnp $(DBSNP) \
+									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
-									-L $(DBSNP_SUBSET) \
+									-R $$(REF_FASTA) \
+									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10 \
 									--standard_min_confidence_threshold_for_calling 20 \
-									-L $(POOL_AB_INTERVAL)")
+									-L $$(POOL_AB_INTERVAL) \
+									-L $$(DBSNP_SUBSET)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -83,8 +90,9 @@ $(foreach sample,$(SAMPLES),\
 		
 metrics/summary/snps_combined-unfiltered.vcf : $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample)-snps.vcf)
 	$(call RUN,-s 16G -m 20G,"set -o pipefail && \
-							  $(call GATK_MEM,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
-							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA)")
+							  $(call GATK_CMD,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
+							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA) \
+							  --disable_auto_index_creation_and_locking_when_reading_rods")
 							  
 metrics/summary/snps_filtered-unfiltered.vcf : metrics/summary/snps_combined-unfiltered.vcf
 	$(INIT) grep '^#' $< > $@ && grep -e '0/1' -e '1/1' $< >> $@
@@ -94,23 +102,25 @@ metrics/summary/snps_filtered-unfiltered.tsv : metrics/summary/snps_filtered-unf
 	
 metrics/report/snps_clustering-unfiltered.pdf : metrics/summary/snps_filtered-unfiltered.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 16 && \
+														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 16 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-unfiltered-2.pdf metrics/report/snps_clustering-unfiltered.pdf && \
 									   					   rm metrics/report/snps_clustering-unfiltered.pdf && \
 									   					   mv metrics/report/snps_clustering-unfiltered-2.pdf metrics/report/snps_clustering-unfiltered.pdf")
 		
 define genotype-snps-simplex
-metrics/simplex/$1-snps.vcf : bam/$1-simplex.bam
+metrics/simplex/$1-snps.vcf : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN,-n 4 -s 2.5G -m 3G,"set -o pipefail && \
-									$(call GATK_MEM,8G) -T UnifiedGenotyper -nt 4 -R $(REF_FASTA) --dbsnp $(DBSNP) \
+									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
-									-L $(DBSNP_SUBSET) \
+									-R $$(REF_FASTA) \
+									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10 \
 									--standard_min_confidence_threshold_for_calling 20 \
-									-L $(POOL_AB_INTERVAL)")
+									-L $$(POOL_AB_INTERVAL) \
+									-L $$(DBSNP_SUBSET)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -118,7 +128,7 @@ $(foreach sample,$(SAMPLES),\
 
 metrics/summary/snps_combined-simplex.vcf : $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-snps.vcf)
 	$(call RUN,-s 16G -m 20G,"set -o pipefail && \
-							  $(call GATK_MEM,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
+							  $(call GATK_CMD,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
 							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA)")
 							  
 metrics/summary/snps_filtered-simplex.vcf : metrics/summary/snps_combined-simplex.vcf
@@ -129,23 +139,25 @@ metrics/summary/snps_filtered-simplex.tsv : metrics/summary/snps_filtered-simple
 	
 metrics/report/snps_clustering-simplex.pdf : metrics/summary/snps_filtered-simplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 17 && \
+														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 17 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-simplex-2.pdf metrics/report/snps_clustering-simplex.pdf && \
 									   					   rm metrics/report/snps_clustering-simplex.pdf && \
 									   					   mv metrics/report/snps_clustering-simplex-2.pdf metrics/report/snps_clustering-simplex.pdf")
 	
 define genotype-snps-duplex
-metrics/duplex/$1-snps.vcf : bam/$1-duplex.bam
+metrics/duplex/$1-snps.vcf : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN,-n 4 -s 2.5G -m 3G,"set -o pipefail && \
-									$(call GATK_MEM,8G) -T UnifiedGenotyper -nt 4 -R $(REF_FASTA) --dbsnp $(DBSNP) \
+									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
-									-L $(DBSNP_SUBSET) \
+									-R $$(REF_FASTA) \
+									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
 									--min_base_quality_score 10 \
 									--standard_min_confidence_threshold_for_calling 20 \
-									-L $(POOL_AB_INTERVAL)")
+									-L $$(POOL_AB_INTERVAL) \
+									-L $$(DBSNP_SUBSET)")
 									
 endef
 $(foreach sample,$(SAMPLES),\
@@ -153,7 +165,7 @@ $(foreach sample,$(SAMPLES),\
 		
 metrics/summary/snps_combined-duplex.vcf : $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-snps.vcf)
 	$(call RUN,-s 16G -m 20G,"set -o pipefail && \
-							  $(call GATK_MEM,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
+							  $(call GATK_CMD,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
 							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA)")
 							  
 metrics/summary/snps_filtered-duplex.vcf : metrics/summary/snps_combined-duplex.vcf
@@ -164,14 +176,12 @@ metrics/summary/snps_filtered-duplex.tsv : metrics/summary/snps_filtered-duplex.
 	
 metrics/report/snps_clustering-duplex.pdf : metrics/summary/snps_filtered-duplex.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
-														   $(RSCRIPT) modules/test/qc/plotmetrics.R --type 18 && \
+														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 18 && \
 									   					   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/snps_clustering-duplex-2.pdf metrics/report/snps_clustering-duplex.pdf && \
 									   					   rm metrics/report/snps_clustering-duplex.pdf && \
 									   					   mv metrics/report/snps_clustering-duplex-2.pdf metrics/report/snps_clustering-duplex.pdf")
 	
-
-
-include modules/vcf_tools/vcftools.mk
+include innovation-lab/vcf_tools/vcftools.mk
 
 .DELETE_ON_ERROR:
 .SECONDARY: 
