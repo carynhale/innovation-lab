@@ -11,10 +11,10 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).standard.bam) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)-standard.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)-unfiltered.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)-simplex.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)-duplex.bam) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)__aln_srt_IR_FX.bam) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)__aln_srt_IR_FX-simplex.bam) \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)__aln_srt_IR_FX-duplex.bam) \
 			 $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
 			 metrics/summary/umi_frequencies.tsv \
 			 metrics/summary/umi_composite.tsv \
@@ -157,7 +157,7 @@ marianas/$1/$1_aln_srt.bam : marianas/$1/$1_aln.bam
 									  									   $$(SAMTOOLS) index $$(@) && \
 									  									   cp marianas/$1/$1_aln_srt.bam.bai marianas/$1/$1_aln_srt.bai")
 									  									   		   
-marianas/$1/$1_aln_srt_FX.bam : marianas/$1/$1_aln_srt.bam
+marianas/$1/$1_aln_srt_fx.bam : marianas/$1/$1_aln_srt.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   $$(FIX_MATE) \
 									   INPUT=$$(<) \
@@ -186,7 +186,7 @@ marianas/$1/$1_aln_srt_fx_ir.bam : marianas/$1/$1_aln_srt_fx.bam marianas/$1/$1_
 							   							   		   -o $$(@) \
 									   							   -known $$(KNOWN_INDELS)")
 									   							   
-marianas/$1/$1_aln_srt_fx_ir_dd.bam : marianas/$1/$1_aln_srt_fx_ir.bam
+marianas/$1/$1_aln_srt_fx_ir_dm.bam : marianas/$1/$1_aln_srt_fx_ir.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
 										$$(MARK_DUP) \
 										INPUT=$$(<) \
@@ -195,7 +195,7 @@ marianas/$1/$1_aln_srt_fx_ir_dd.bam : marianas/$1/$1_aln_srt_fx_ir.bam
 										REMOVE_DUPLICATES=false \
 										ASSUME_SORTED=true")
 												
-marianas/$1/$1_aln_srt_fx_ir_dd.grp : marianas/$1/$1_aln_srt_fx_ir_dd.bam
+marianas/$1/$1_aln_srt_fx_ir_dm_bqsr.grp : marianas/$1/$1_aln_srt_fx_ir_dm.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 																   $$(SAMTOOLS) index $$(<) && \
 									   							   $$(call GATK_CMD,16G) \
@@ -205,7 +205,7 @@ marianas/$1/$1_aln_srt_fx_ir_dd.grp : marianas/$1/$1_aln_srt_fx_ir_dd.bam
 									   							   -I $$(<) \
 									   							   -o $$(@)")
 
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr.bam : marianas/$1/$1_aln_srt_fx_ir_dd.bam marianas/$1/$1_aln_srt_fx_ir_dd.grp
+marianas/$1/$1_aln_srt_fx_ir_dm_bqsr.bam : marianas/$1/$1_aln_srt_fx_ir_dd.bam marianas/$1/$1_aln_srt_fx_ir_dm_bqsr.grp
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 									   							   $$(call GATK_CMD,16G) \
 									   							   -T PrintReads \
@@ -214,7 +214,7 @@ marianas/$1/$1_aln_srt_fx_ir_dd_bqsr.bam : marianas/$1/$1_aln_srt_fx_ir_dd.bam m
 									   							   -BQSR $$(<<) \
 									   							   -o $$(@)")
 
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr.bam
+marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bam : marianas/$1/$1_aln_srt_fx_ir_dm_bqsr.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
 										$$(ADD_RG) \
 										INPUT=$$(<) \
@@ -225,7 +225,7 @@ marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bq
 										RGPU=NA \
 										RGSM=$1 && \
 										$$(SAMTOOLS) index $$(@) && \
-										cp marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg.bam.bai marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg.bai")
+										cp marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bam.bai marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bai")
 
 
 endef
@@ -233,19 +233,19 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
 		
 define genotype-and-collapse
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg-pileup.txt : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg.bam
+marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt : marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  cut -f 1-3 $$(WALTZ_BED_FILE) > .bed && \
-									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt_fx_ir_dd_bqsr_rg.bam $$(REF_FASTA) .bed && \
+									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt_fx_ir_dm_bqsr_rg.bam $$(REF_FASTA) .bed && \
 									  cd ../..")
 									  
-marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg-pileup.txt
+marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqFirstPass \
-									  $1_aln_srt_fx_ir_dd_bqsr_rg.bam \
-									  $1_aln_srt_fx_ir_dd_bqsr_rg-pileup.txt \
+									  $1_aln_srt_fx_ir_dm_bqsr_rg.bam \
+									  $1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt \
 									  $$(MARIANAS_MIN_MAPQ) \
 									  $$(MARIANAS_MIN_BAQ) \
 									  $$(MARIANAS_MISMATCH) \
@@ -259,8 +259,8 @@ marianas/$1/second-pass-alt-alleles.txt : marianas/$1/first-pass.mate-position-s
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqSecondPass \
-									  $1_aln_srt_fx_ir_dd_bqsr_rg.bam \
-									  $1_aln_srt_fx_ir_dd_bqsr_rg-pileup.txt \
+									  $1_aln_srt_fx_ir_dm_bqsr_rg.bam \
+									  $1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt \
 									  $$(MARIANAS_MIN_MAPQ) \
 									  $$(MARIANAS_MIN_BAQ) \
 									  $$(MARIANAS_MISMATCH) \
@@ -275,18 +275,18 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call genotype-and-collapse,$(sample))))
 	
 define fastq-to-collapsed-bam
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln.bam : marianas/$1/second-pass-alt-alleles.txt
+marianas/$1/$1__aln.bam : marianas/$1/second-pass-alt-alleles.txt
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
 																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) marianas/$1/collapsed_R1_.fastq marianas/$1/collapsed_R2_.fastq | $$(SAMTOOLS) view -bhS - > $$(@)")
 																		           
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln.bam
+marianas/$1/$1__aln_srt.bam : marianas/$1/$1__aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 								  									   	   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 								  									   	   $$(SAMTOOLS) index $$(@) && \
-								  									   	   cp marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt.bam.bai marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt.bai")
+								  									   	   cp marianas/$1/$1__aln_srt.bam.bai marianas/$1/$1__aln_srt.bai")
 								  									   		   
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt.bam
+marianas/$1/$1__aln_srt_fx.bam : marianas/$1/$1__aln_srt.bam
 	$$(call RUN,-c -n 1 -s 12G -m 18G,"set -o pipefail && \
 									   $$(FIX_MATE) \
 									   INPUT=$$(<) \
@@ -295,7 +295,7 @@ marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx.bam : marianas/$1/$1_aln_srt
 									   COMPRESSION_LEVEL=0 \
 									   CREATE_INDEX=true")
 									  		   
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx.intervals : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx.bam
+marianas/$1/$1__aln_srt_fx.intervals : marianas/$1/$1__aln_srt_fx.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 									   							   $$(call GATK_CMD,1G,12G)	\
 									   							   -allowPotentiallyMisencodedQuals \
@@ -306,7 +306,7 @@ marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx.intervals : marianas/$1/$1_a
 									   							   -o $$(@) \
 									   							   -known $$(KNOWN_INDELS)")
 
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_ir.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx.bam marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx.intervals
+marianas/$1/$1__aln_srt_fx_ir.bam : marianas/$1/$1__aln_srt_fx.bam marianas/$1/$1__aln_srt_fx.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 									   							   $$(call GATK_CMD,1G,12G)	\
 									   							   -allowPotentiallyMisencodedQuals \
@@ -317,7 +317,7 @@ marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_ir.bam : marianas/$1/$1_aln_
 									   							   -o $$(@) \
 									   							   -known $$(KNOWN_INDELS)")
 									  		   
-marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_rg.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_ir.bam
+marianas/$1/$1__aln_srt_fx_rg.bam : marianas/$1/$1__aln_srt_fx_ir.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
 										$$(ADD_RG) \
 										INPUT=$$(<) \
@@ -328,43 +328,43 @@ marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_rg.bam : marianas/$1/$1_aln_
 										RGPU=NA \
 										RGSM=$1 && \
 										$$(SAMTOOLS) index $$(@) && \
-										cp marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_rg.bam.bai marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_rg.bai")
+										cp marianas/$1/$1__aln_srt_fx_rg.bam.bai marianas/$1/$1__aln_srt_fx_rg.bai")
 												
-marianas/$1/timestamp : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_rg.bam
+marianas/$1/timestamp : marianas/$1/$1__aln_srt_fx_rg.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.postprocessing.SeparateBams $1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_rg.bam && \
+									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.postprocessing.SeparateBams $1__aln_srt_fx_rg.bam && \
 									  echo 'Done!\n' > timestamp && \
 									  cd ../..")
 									  
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-collapsed-bam,$(sample))))
-		
-define copy-to-bam
-bam/$1_aln_srt_fx_ir_dd_bqsr_rg.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg.bam
-	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
-								 cp $$(<) $$(@) && \
-								 cp marianas/$1/$1.standard.bam.bai bam/$1-standard.bam.bai && \
-								 cp marianas/$1/$1.standard.bai bam/$1-standard.bai")
 
-bam/$1-unfiltered.bam : marianas/$1/$1_aln_srt_fx_ir_dd_bqsr_rg__aln_srt_fx_rg.bam
+define copy-to-bam
+bam/$1.bam : marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bam
+	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
+								  cp $$(<) $$(@) && \
+								  cp marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bam.bai bam/$1.bam.bai && \
+								  cp marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bai bam/$1.bai")
+
+bam/$1__aln_srt_IR_FX.bam : marianas/$1/$1__aln_srt_fx_rg.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
 								 cp $$(<) $$(@) && \
-								 cp marianas/$1/$1.collapsed.bam.bai bam/$1-unfiltered.bam.bai && \
-								 cp marianas/$1/$1.collapsed.bai bam/$1-unfiltered.bai")
+								 cp marianas/$1/$1__aln_srt_fx_rg.bam.bai bam/$1__aln_srt_IR_FX.bam.bai && \
+								 cp marianas/$1/$1__aln_srt_fx_rg.bai bam/$1___aln_srt_IR_FX.bai")
 												
-bam/$1-simplex.bam : marianas/$1/timestamp
+bam/$1__aln_srt_IR_FX-simplex.bam : marianas/$1/timestamp
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
-								 cp marianas/$1/$1.collapsed-simplex.bam $$(@) && \
-								 cp marianas/$1/$1.collapsed-simplex.bai bam/$1-simplex.bam.bai && \
-								 cp marianas/$1/$1.collapsed-simplex.bai bam/$1-simplex.bai")
+								 cp marianas/$1/$1__aln_srt_fx_rg-simplex.bam $$(@) && \
+								 cp marianas/$1/$1__aln_srt_fx_rg-simplex.bai bam/$1__aln_srt_IR_FX-simplex.bam.bai && \
+								 cp marianas/$1/$1__aln_srt_fx_rg-simplex.bai bam/$1__aln_srt_IR_FX-simplex.bai")
 												
-bam/$1-duplex.bam : marianas/$1/timestamp
+bam/$1__aln_srt_IR_FX-duplex.bam : marianas/$1/timestamp
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
-								 cp marianas/$1/$1.collapsed-duplex.bam $$(@) && \
-								 cp marianas/$1/$1.collapsed-duplex.bai bam/$1-duplex.bam.bai && \
-								 cp marianas/$1/$1.collapsed-duplex.bai bam/$1-duplex.bai")
+								 cp marianas/$1/$1__aln_srt_fx_rg-duplex.bam $$(@) && \
+								 cp marianas/$1/$1__aln_srt_fx_rg-duplex.bai bam/$1__aln_srt_IR_FX-duplex.bam.bai && \
+								 cp marianas/$1/$1__aln_srt_fx_rg-duplex.bai bam/$1__aln_srt_IR_FX-duplex.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -381,12 +381,12 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call family-size-metric,$(sample))))
 		
 define pileup-metric
-metrics/standard/$1-pileup.txt : bam/$1-standard.bam
+metrics/standard/$1-pileup.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cd metrics/standard && \
-								 ln -sf ../../bam/$1-standard.bam $1.bam && \
-								 ln -sf ../../bam/$1-standard.bam.bai $1.bam.bai && \
-								 ln -sf ../../bam/$1-standard.bai $1.bai && \
+								 ln -sf ../../bam/$1.bam $1.bam && \
+								 ln -sf ../../bam/$1.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1.bai $1.bai && \
 								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
@@ -395,12 +395,12 @@ metrics/standard/$1-pileup.txt : bam/$1-standard.bam
 								 rm -rf .bed && \
 								 cd ../..")
 									 
-metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
+metrics/simplex/$1-pileup.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cd metrics/simplex && \
-								 ln -sf ../../bam/$1-simplex.bam $1.bam && \
-								 ln -sf ../../bam/$1-simplex.bam.bai $1.bam.bai && \
-								 ln -sf ../../bam/$1-simplex.bai $1.bai && \
+								 ln -sf ../../bam/$1__aln_srt_IR_FX-simplex.bam $1.bam && \
+								 ln -sf ../../bam/$1__aln_srt_IR_FX-simplex.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1__aln_srt_IR_FX-simplex.bai $1.bai && \
 								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
@@ -409,12 +409,12 @@ metrics/simplex/$1-pileup.txt : bam/$1-simplex.bam
 								 rm -rf .bed && \
 								 cd ../..")
 								 
-metrics/duplex/$1-pileup.txt : bam/$1-duplex.bam
+metrics/duplex/$1-pileup.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cd metrics/duplex && \
-								 ln -sf ../../bam/$1-duplex.bam $1.bam && \
-								 ln -sf ../../bam/$1-duplex.bam.bai $1.bam.bai && \
-								 ln -sf ../../bam/$1-duplex.bai $1.bai && \
+								 ln -sf ../../bam/$1__aln_srt_IR_FX-duplex.bam $1.bam && \
+								 ln -sf ../../bam/$1__aln_srt_IR_FX-duplex.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1__aln_srt_IR_FX-duplex.bai $1.bai && \
 								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
@@ -428,7 +428,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call pileup-metric,$(sample))))
 				   
 define coverage-metric
-metrics/standard/$1.A.ontarget.txt : bam/$1-standard.bam
+metrics/standard/$1.A.ontarget.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-A.bam && \
@@ -438,7 +438,7 @@ metrics/standard/$1.A.ontarget.txt : bam/$1-standard.bam
 								 rm -rf metrics/standard/$1-ontarget-A.bam && \
 								 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
 									 
-metrics/standard/$1.B.ontarget.txt : bam/$1-standard.bam
+metrics/standard/$1.B.ontarget.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-B.bam && \
@@ -448,7 +448,7 @@ metrics/standard/$1.B.ontarget.txt : bam/$1-standard.bam
 								 rm -rf metrics/standard/$1-ontarget-B.bam && \
 								 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
 	
-metrics/standard/$1.AB.offtarget.txt : bam/$1-standard.bam
+metrics/standard/$1.AB.offtarget.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 $$(SAMTOOLS) view -L $$(OFF_TARGET_FILE_AB) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
 								 $$(SAMTOOLS) index metrics/standard/$1-offtarget-AB.bam && \
@@ -463,20 +463,20 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call coverage-metric,$(sample))))
  
 define picard-metrics-standard
-metrics/standard/$1.idx_stats.txt : bam/$1-standard.bam
+metrics/standard/$1.idx_stats.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/standard/$1.aln_metrics.txt : bam/$1-standard.bam
+metrics/standard/$1.aln_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
+metrics/standard/$1.insert_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -484,14 +484,14 @@ metrics/standard/$1.insert_metrics.txt : bam/$1-standard.bam
 									   HISTOGRAM_FILE=metrics/standard/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/standard/$1.oxog_metrics.txt : bam/$1-standard.bam
+metrics/standard/$1.oxog_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
+metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -500,7 +500,7 @@ metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1-standard.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
+metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -509,20 +509,20 @@ metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1-standard.bam
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
 									   
-metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
+metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=$$(<) \
+									   INPUT=marianas/$1/$1_aln_srt_fx_ir.bam \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
 												
-metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : marianas/$1/$1.realn.bam
+metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=$$(<) \
+									   INPUT=marianas/$1/$1_aln_srt_fx_ir.bam \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
@@ -532,20 +532,20 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
  		
 define picard-metrics-unfiltered
-metrics/unfiltered/$1.idx_stats.txt : bam/$1-unfiltered.bam
+metrics/unfiltered/$1.idx_stats.txt : bam/$1__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/unfiltered/$1.aln_metrics.txt : bam/$1-unfiltered.bam
+metrics/unfiltered/$1.aln_metrics.txt : bam/$1__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/unfiltered/$1.insert_metrics.txt : bam/$1-unfiltered.bam
+metrics/unfiltered/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -553,14 +553,14 @@ metrics/unfiltered/$1.insert_metrics.txt : bam/$1-unfiltered.bam
 									   HISTOGRAM_FILE=metrics/unfiltered/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/unfiltered/$1.oxog_metrics.txt : bam/$1-unfiltered.bam
+metrics/unfiltered/$1.oxog_metrics.txt : bam/$1__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1-unfiltered.bam
+metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -569,7 +569,7 @@ metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1-unfiltered.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/unfiltered/$1.probe-B.hs_metrics.txt : bam/$1-unfiltered.bam
+metrics/unfiltered/$1.probe-B.hs_metrics.txt : bam/$1__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -583,20 +583,20 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-unfiltered,$(sample))))
 
 define picard-metrics-simplex
-metrics/simplex/$1.idx_stats.txt : bam/$1-simplex.bam
+metrics/simplex/$1.idx_stats.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/simplex/$1.aln_metrics.txt : bam/$1-simplex.bam
+metrics/simplex/$1.aln_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/simplex/$1.insert_metrics.txt : bam/$1-simplex.bam
+metrics/simplex/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -604,14 +604,14 @@ metrics/simplex/$1.insert_metrics.txt : bam/$1-simplex.bam
 									   HISTOGRAM_FILE=metrics/simplex/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/simplex/$1.oxog_metrics.txt : bam/$1-simplex.bam
+metrics/simplex/$1.oxog_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1-simplex.bam
+metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -620,7 +620,7 @@ metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1-simplex.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/simplex/$1.probe-B.hs_metrics.txt : bam/$1-simplex.bam
+metrics/simplex/$1.probe-B.hs_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -634,20 +634,20 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-simplex,$(sample))))
 
 define picard-metrics-duplex
-metrics/duplex/$1.idx_stats.txt : bam/$1-duplex.bam
+metrics/duplex/$1.idx_stats.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/duplex/$1.aln_metrics.txt : bam/$1-duplex.bam
+metrics/duplex/$1.aln_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/duplex/$1.insert_metrics.txt : bam/$1-duplex.bam
+metrics/duplex/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -655,14 +655,14 @@ metrics/duplex/$1.insert_metrics.txt : bam/$1-duplex.bam
 									   HISTOGRAM_FILE=metrics/duplex/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/duplex/$1.oxog_metrics.txt : bam/$1-duplex.bam
+metrics/duplex/$1.oxog_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1-duplex.bam
+metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -671,7 +671,7 @@ metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1-duplex.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1-duplex.bam
+metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
