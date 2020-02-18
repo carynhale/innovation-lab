@@ -6,9 +6,7 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/msk_access.$(NOW)
 
-# MSK_ACCESS_WORKFLOW += plot_metrics
 # MSK_ACCESS_WORKFLOW += cluster_samples
-# include modules/test/qc/plotmetrics.mk
 # include modules/test/qc/clustersamples.mk
 
 msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
@@ -79,7 +77,24 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 metrics/summary/metrics_insert.tsv \
  			 metrics/summary/metrics_insert_distribution.tsv \
  			 metrics/summary/metrics_hs.tsv \
- 			 metrics/summary/metrics_ts.tsv
+ 			 metrics/summary/metrics_ts.tsv \
+			 metrics/report/umi_frequencies.pdf \
+			 metrics/report/umi_family_types_probe-A.pdf \
+			 metrics/report/umi_family_types_probe-B.pdf \
+			 metrics/report/umi_family_sizes_all.pdf \
+			 metrics/report/umi_family_sizes_duplex.pdf \
+			 metrics/report/umi_family_sizes_simplex.pdf \
+			 metrics/report/mean_standard_target_coverage-dedup.pdf \
+			 metrics/report/mean_standard_target_coverage-nodedup.pdf \
+			 metrics/report/mean_unfiltered_target_coverage.pdf \
+			 metrics/report/mean_duplex_target_coverage.pdf \
+			 metrics/report/mean_simplex_target_coverage.pdf \
+			 metrics/report/aligment_summary.pdf \
+			 metrics/report/insert_size_summary.pdf \
+			 metrics/report/insert_size_distribution.pdf \
+			 metrics/report/read_alignment_summary.pdf \
+			 metrics/report/non_reference_calls.pdf \
+			 metrics/report/combined_report.pdf
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -106,6 +121,8 @@ SAMTOOLS_MEM_THREAD = 2G
 
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
+
+SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
 
 define copy-fastq
 marianas/$1/$1_R1.fastq.gz : $3
@@ -788,7 +805,98 @@ metrics/summary/metrics_hs.tsv : metrics/standard/metrics_hs.tsv metrics/unfilte
 
 metrics/summary/metrics_ts.tsv : $(wildcard metrics/standard/$(SAMPLES).A.ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).B.ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).AB.offtarget.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 27 --sample_names '$(SAMPLES)'")									  
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 27 --sample_names '$(SAMPLES)'")
+
+metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+														  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 1 && \
+														  gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/umi_frequencies-2.pdf metrics/report/umi_frequencies.pdf && \
+														  rm metrics/report/umi_frequencies.pdf && \
+														  mv metrics/report/umi_frequencies-2.pdf metrics/report/umi_frequencies.pdf")
+	
+metrics/report/umi_family_types_probe-A.pdf : metrics/summary/umi_family_types.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 2")
+
+metrics/report/umi_family_types_probe-B.pdf : metrics/summary/umi_family_types.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 3")
+
+metrics/report/umi_family_sizes_all.pdf : metrics/summary/umi_families.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 4")
+
+metrics/report/umi_family_sizes_duplex.pdf : metrics/summary/umi_families.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 5")
+
+metrics/report/umi_family_sizes_simplex.pdf : metrics/summary/umi_families.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 6")
+	
+metrics/report/mean_standard_target_coverage-dedup.pdf : metrics/summary/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 7")
+
+metrics/report/mean_standard_target_coverage-nodedup.pdf : metrics/summary/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 8")
+
+metrics/report/mean_unfiltered_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 9")
+
+metrics/report/mean_duplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 10")
+
+metrics/report/mean_simplex_target_coverage.pdf : metrics/summary/metrics_hs.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 11")
+	
+metrics/report/aligment_summary.pdf : metrics/summary/metrics_idx.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 12")
+	
+metrics/report/insert_size_summary.pdf : metrics/summary/metrics_insert.tsv
+	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 13")
+	
+metrics/report/insert_size_distribution.pdf : metrics/summary/metrics_insert_distribution.tsv
+	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 14")
+	
+metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_ts.tsv
+	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 19")
+	
+metrics/report/non_reference_calls.pdf : $(wildcard metrics/standard/$(SAMPLES)-pileup.txt) $(wildcard metrics/simplex/$(SAMPLES)-pileup.txt) $(wildcard metrics/duplex/$(SAMPLES)-pileup.txt)
+	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 20 --sample_names '$(SAMPLES)' && \
+														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf && \
+														   rm metrics/report/non_reference_calls.pdf && \
+														   mv metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf")
+
+metrics/report/combined_report.pdf : metrics/report/umi_frequencies.pdf metrics/report/umi_family_types_probe-A.pdf metrics/report/umi_family_types_probe-B.pdf metrics/report/umi_family_sizes_all.pdf metrics/report/umi_family_sizes_duplex.pdf metrics/report/umi_family_sizes_simplex.pdf metrics/report/mean_standard_target_coverage-dedup.pdf metrics/report/mean_standard_target_coverage-nodedup.pdf metrics/report/mean_unfiltered_target_coverage.pdf metrics/report/mean_duplex_target_coverage.pdf metrics/report/mean_simplex_target_coverage.pdf metrics/report/aligment_summary.pdf metrics/report/insert_size_summary.pdf metrics/report/insert_size_distribution.pdf metrics/report/read_alignment_summary.pdf metrics/report/non_reference_calls.pdf 
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dAutoRotatePages=/None \
+									   -sOutputFile=metrics/report/combined_report.pdf \
+									   metrics/report/umi_frequencies.pdf \
+									   metrics/report/umi_family_types_probe-A.pdf \
+									   metrics/report/umi_family_types_probe-B.pdf \
+									   metrics/report/umi_family_sizes_all.pdf \
+									   metrics/report/umi_family_sizes_duplex.pdf \
+									   metrics/report/umi_family_sizes_simplex.pdf \
+									   metrics/report/mean_standard_target_coverage-dedup.pdf \
+									   metrics/report/mean_standard_target_coverage-nodedup.pdf \
+									   metrics/report/mean_unfiltered_target_coverage.pdf \
+									   metrics/report/mean_duplex_target_coverage.pdf \
+									   metrics/report/mean_simplex_target_coverage.pdf \
+									   metrics/report/aligment_summary.pdf \
+									   metrics/report/insert_size_summary.pdf \
+									   metrics/report/insert_size_distribution.pdf \
+									   metrics/report/read_alignment_summary.pdf \
+									   metrics/report/non_reference_calls.pdf") 
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(BWA) &> version/tmp.txt; \

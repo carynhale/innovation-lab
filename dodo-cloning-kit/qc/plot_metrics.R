@@ -6,6 +6,8 @@ suppressPackageStartupMessages(library("dplyr"))
 suppressPackageStartupMessages(library("magrittr"))
 suppressPackageStartupMessages(library("ggplot2"))
 suppressPackageStartupMessages(library("scales"))
+suppressPackageStartupMessages(library("superheat"))
+suppressPackageStartupMessages(library("viridis"))
 
 if (!interactive()) {
     options(warn = -1, error = quote({ traceback(); q('no', status = 1) }))
@@ -22,8 +24,6 @@ AF = 2
 CHR = "21"
 
 if (as.numeric(opt$type)==1) {
-
-	suppressPackageStartupMessages(library("superheat"))
 
 	data = read.csv(file="metrics/summary/umi_frequencies.tsv", sep="\t", header=TRUE, row.names=1, stringsAsFactors=FALSE)
 	data = data	 %>%
@@ -344,9 +344,6 @@ if (as.numeric(opt$type)==1) {
 	
 } else if (as.numeric(opt$type)==15) {
 
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
-
 	data = read.csv(file="metrics/summary/snps_filtered-standard.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
@@ -369,9 +366,6 @@ if (as.numeric(opt$type)==1) {
 	dev.off()
 	
 } else if (as.numeric(opt$type)==16) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
 
 	data = read.csv(file="metrics/summary/snps_filtered-unfiltered.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
 	data = data	 %>%
@@ -396,9 +390,6 @@ if (as.numeric(opt$type)==1) {
 	
 } else if (as.numeric(opt$type)==17) {
 
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
-
 	data = read.csv(file="metrics/summary/snps_filtered-simplex.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
 	data = data	 %>%
 		   rename_all(funs(gsub(pattern=".", replacement="-", x=make.names(names(data)), fixed=TRUE))) %>%
@@ -421,9 +412,6 @@ if (as.numeric(opt$type)==1) {
 	dev.off()
 	
 } else if (as.numeric(opt$type)==18) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
 
 	data = read.csv(file="metrics/summary/snps_filtered-duplex.tsv", sep="\t", header=TRUE, stringsAsFactors=FALSE)
 	data = data	 %>%
@@ -488,9 +476,6 @@ if (as.numeric(opt$type)==1) {
 	dev.off()
 
 } else if (as.numeric(opt$type)==20) {
-
-	suppressPackageStartupMessages(library("superheat"))
-	suppressPackageStartupMessages(library("viridis"))
 	
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	nuc_metrics = list()
