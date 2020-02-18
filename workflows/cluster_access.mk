@@ -183,6 +183,10 @@ metrics/report/snps_clustering-duplex.pdf : metrics/summary/snps_filtered-duplex
 	
 include innovation-lab/vcf_tools/vcftools.mk
 
+..DUMMY := $(shell mkdir -p version; \
+			 echo "gatk3" > version/msk_access.txt; \
+			 $(GATK) --version >> version/msk_access.txt; \
+			 R --version >> version.txt)
 .DELETE_ON_ERROR:
 .SECONDARY: 
-.PHONY: $(PHONY)
+.PHONY: cluster_access
