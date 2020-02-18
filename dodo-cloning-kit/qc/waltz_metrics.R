@@ -31,238 +31,170 @@ if (as.numeric(opt$type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x1 = x2 = x3 = x4 = list()
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x1[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		x1[[i]] = y
 	}
 	x1 = do.call(rbind, x1) %>%
 		 mutate(sample_names = sample_names, bam_file = "standard")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x2[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		   	 x2[[i]] = y
 	}
 	x2 = do.call(rbind, x2) %>%
 		 mutate(sample_names = sample_names, bam_file = "collapsed")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-simplex-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x3[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-simplex-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		   	 x3[[i]] = y
 	}
 	x3 = do.call(rbind, x3) %>%
 		 mutate(sample_names = sample_names, bam_file = "simplex")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-duplex-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x4[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-duplex-pileup.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		   	 x4[[i]] = y
 	}
 	x4 = do.call(rbind, x4) %>%
 		 mutate(sample_names = sample_names, bam_file = "duplex")
@@ -278,238 +210,170 @@ if (as.numeric(opt$type)==1) {
 	sample_names = unlist(strsplit(x=as.character(opt$sample_names), split=" ", fixed=TRUE))
 	x1 = x2 = x3 = x4 = list()
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x1[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		   	 x1[[i]] = y
 	}
 	x1 = do.call(rbind, x1) %>%
 		 mutate(sample_names = sample_names, bam_file = "standard")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x2[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		   	 x2[[i]] = y
 	}
 	x2 = do.call(rbind, x2) %>%
 		 mutate(sample_names = sample_names, bam_file = "collapsed")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-simplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x3[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-simplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		   	 x3[[i]] = y
 	}
 	x3 = do.call(rbind, x3) %>%
 		 mutate(sample_names = sample_names, bam_file = "simplex")
 	for (i in 1:length(sample_names)) {
-		df = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-duplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
-		   	 readr::type_convert() %>%
-		   	 dplyr::select(`chrom`	= X1,
-		   	 			   `pos`	= X2,
-		   	 			   `ref`	= X3,
-		   	 			   `total`	= X4,
-		   	 			   `a`		= X5,
-		   	 			   `g`		= X6,
-		   	 			   `c`		= X7,
-		   	 			   `t`		= X8,
-		   	 			   `ins`	= X9,
-		   	 			   `del`	= X10) %>%
-		   	 dplyr::mutate(`total_n` = a+g+c+t,
-		   	 			   `uuid` = paste0(chrom, ":", pos)) %>%
-		   	 dplyr::filter(uuid %in% target_positions$uuid) %>%
-		   	 dplyr::mutate(`counts` = apply(dplyr::tibble(.$ref, .$a, .$g, .$c, .$t, .$total_n), 1, function(x) {
-		   	 						ref = as.character(x[1])
-		   	 						alt = as.numeric(x[2:6])
-		   	 						if (ref=="A") {
-		   	 							index = c(1:4)[-1]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="G") {
-										index = c(1:4)[-2]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="C") {
-		   	 							index = c(1:4)[-3]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						} else if (ref=="T") {
-		   	 							index = c(1:4)[-4]
-		   	 							if (any(alt[index]>cutoffAF*alt[5])) {
-		   	 								y = sum(alt[index[-which(alt[index]>cutoffAF*alt[5])]])
-		   	 							} else {
-		   	 								y = sum(alt[index])
-		   	 							}
-		   	 						}
-		   	 						return(y)
-		   	 					}))	%>%
-		   	 dplyr::filter(!is.na(counts)) %>%
-		   	 dplyr::summarize(total_bases = sum(total_n),
-		   	 				  alt_counts = sum(counts),
-		   	 				  ref_counts = total_bases - alt_counts,
-		   	 				  contributing_sites = n())
-		   	 x4[[i]] = df
+		x = read_tsv(file=paste0("waltz/", sample_names[i], "__aln_srt_IR_FX-duplex-pileup-without-duplicates.txt.gz"), col_names = FALSE, col_types = cols(.default = col_character())) %>%
+		   	readr::type_convert() %>%
+		   	dplyr::select(`chrom`	= X1,
+		   				  `pos`	= X2,
+		   	 			  `ref`	= X3,
+		   	 			  `total`	= X4,
+		   	 			  `a`		= X5,
+		   	 			  `g`		= X6,
+		   	 			  `c`		= X7,
+		   	 			  `t`		= X8) %>%
+		   	dplyr::mutate(`total_n` = a+g+c+t,
+		   	 			  `n` = total - total_n,
+		   	 			  `uuid` = paste0(chrom, ":", pos)) %>%
+		   	dplyr::filter(uuid %in% target_positions$uuid) %>%
+		   	dplyr::mutate(af_a = 100*a/(total_n+epsilon),
+						  af_c = 100*c/(total_n+epsilon),
+						  af_g = 100*g/(total_n+epsilon),
+						  af_t = 100*t/(total_n+epsilon))
+		y = dplyr::tibble(`ref` = rep(x$ref, 4),
+						  `alt` = rep(c("A", "C", "G", "T"), each=nrow(x)),
+						  `freq` = c(x$af_a, x$af_c, x$af_g,x$af_t),
+						  `count` = c(x$a, x$c, x$g,x$t),
+						  `total_count` = rep(x$total_n, 4),
+						  `n_count` =  rep(x$n, 4),
+						  `uuid` = rep(x$uuid, 4)) %>%
+			dplyr::filter(alt != ref,
+						  freq < cutoffAF*100) %>%
+			dplyr::group_by(uuid) %>%
+			dplyr::summarize(total_count = mean(total_count),
+		   	 				 alt_count = sum(count),
+		   	 				 ref_count = total_count - alt_count,
+		   	 				 n_count = mean(n_count)) %>%
+		   	dplyr::summarize(total_counts = sum(total_count),
+		   	 				 alt_counts = sum(alt_count),
+		   	 				 ref_counts = sum(ref_count),
+		   	 				 n_counts = sum(n_count),
+		   	 				 contributing_sites = n())
+		   	 x4[[i]] = y
 	}
 	x4 = do.call(rbind, x4) %>%
 		 mutate(sample_names = sample_names, bam_file = "duplex")

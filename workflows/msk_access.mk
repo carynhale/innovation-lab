@@ -684,11 +684,11 @@ endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-duplex,$(sample))))
 
-metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/umi-frequencies.txt)
+metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 1 --sample_names '$(SAMPLES)'")
 	
-metrics/summary/umi_composite.tsv : $(wildcard marianas/$(SAMPLES)/composite-umi-frequencies.txt)
+metrics/summary/umi_composite.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 2 --sample_names '$(SAMPLES)'")
 
