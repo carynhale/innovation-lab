@@ -39,7 +39,6 @@ metrics/standard/$1-snps.vcf : bam/$1.bam
 									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
 									-R $$(REF_FASTA) \
-									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--min_base_quality_score 30 \
@@ -77,7 +76,6 @@ metrics/unfiltered/$1-snps.vcf : bam/$1__aln_srt_IR_FX.bam
 									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
 									-R $$(REF_FASTA) \
-									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
@@ -116,7 +114,6 @@ metrics/simplex/$1-snps.vcf : bam/$1__aln_srt_IR_FX-simplex.bam
 									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
 									-R $$(REF_FASTA) \
-									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
@@ -154,7 +151,6 @@ metrics/duplex/$1-snps.vcf : bam/$1__aln_srt_IR_FX-duplex.bam
 									$$(call GATK_CMD,8G) -T UnifiedGenotyper -nt 4 \
 									-I $$(<) \
 									-R $$(REF_FASTA) \
-									-D $$(DBSNP) \
 									-o $$(@) \
 									--output_mode EMIT_ALL_SITES \
 									--allow_potentially_misencoded_quality_scores \
