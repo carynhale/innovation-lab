@@ -814,11 +814,11 @@ metrics/report/umi_frequencies.pdf : metrics/summary/umi_frequencies.tsv
 														  rm metrics/report/umi_frequencies.pdf && \
 														  mv metrics/report/umi_frequencies-2.pdf metrics/report/umi_frequencies.pdf")
 	
-metrics/report/umi_family_types_probe-A.pdf : metrics/summary/umi_family_types.tsv
+metrics/report/umi_family_types_probe-A.pdf : metrics/summary/umi_families.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 2")
 
-metrics/report/umi_family_types_probe-B.pdf : metrics/summary/umi_family_types.tsv
+metrics/report/umi_family_types_probe-B.pdf : metrics/summary/umi_families.tsv
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 									  					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 3")
 
