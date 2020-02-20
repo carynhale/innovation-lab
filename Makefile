@@ -51,7 +51,7 @@ bwa_mem :
 	
 
 #==================================================
-# BAM file processing utilities
+# BAM file utilities
 #==================================================
 
 TARGETS += fix_bam
@@ -72,7 +72,7 @@ merge_bam :
 	
 	
 #==================================================
-# FASTQ file processing utilities
+# FASTQ file utilities
 #==================================================
 
 TARGETS += extract_fastq
@@ -118,7 +118,7 @@ platypus:
 	
 	
 #==================================================
-# Specialty variant callers
+# Special variant callers
 #==================================================
 	
 TARGETS += hla_polysolver
@@ -344,10 +344,6 @@ fetch_impact :
 # Reports
 #==================================================
 
-TARGETS += recurrent_mutations
-recurrent_mutations :
-	$(call RUN_MAKE,innovation-lab/recurrent_mutations/report.mk)
-	
 TARGETS += genome_summary
 genome_summary :
 	$(call RUN_MAKE,innovation-lab/summary/genomesummary.mk)
