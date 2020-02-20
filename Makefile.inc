@@ -152,7 +152,7 @@ ifeq ($(CLUSTER_ENGINE),SGE)
 export DRMAA_LIBRARY_PATH = /common/sge/lib/lx24-amd64/libdrmaa.so
 else
 ifeq ($(CLUSTER_ENGINE),LSF)
-export DRMAA_LIBRARY_PATH = /common/juno/OS7/10.1/linux3.10-glibc2.17-x86_64/lib/libdrmaa.so
+export DRMAA_LIBRARY_PATH = /admin/lsfjuno/lsf/10.1/linux3.10-glibc2.17-x86_64/lib/libdrmaa.so
 endif
 endif
 endif
