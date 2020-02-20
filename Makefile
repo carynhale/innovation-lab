@@ -13,7 +13,7 @@ NOW := $(shell date +"%F")
 MAKELOG = log/$(@).$(NOW).log
 
 USE_CLUSTER ?= true
-QMAKE = innovation-lab/exec_tools/runtime/qmake.pl -n $@.$(NOW) $(if $(SLACK_CHANNEL),-c $(SLACK_CHANNEL)) -r $(NUM_ATTEMPTS) -m -s -- make
+QMAKE = innovation-lab/dodo-cloning-kit/runtime/qmake.pl -n $@.$(NOW) $(if $(SLACK_CHANNEL),-c $(SLACK_CHANNEL)) -r $(NUM_ATTEMPTS) -m -s -- make
 NUM_JOBS ?= 100
 
 define RUN_QMAKE

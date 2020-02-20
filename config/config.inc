@@ -63,7 +63,7 @@ MARIANAS ?= $(HOME)/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
 WALTZ ?= $(HOME)/share/usr/marianas-1.8.1/Waltz-3.0.jar
 
 # paths
-SCRIPTS_DIR ?= innovation-lab/exec_tools
+SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
 TMPDIR ?= $(HOME)/share/tmp
 
 endif
