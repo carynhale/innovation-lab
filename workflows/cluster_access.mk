@@ -183,9 +183,9 @@ metrics/report/snps_clustering-duplex.pdf : metrics/summary/snps_filtered-duplex
 									   					   mv metrics/report/snps_clustering-duplex-2.pdf metrics/report/snps_clustering-duplex.pdf")
 	
 ..DUMMY := $(shell mkdir -p version; \
-			 echo "gatk3" > version/msk_access.txt; \
-			 $(GATK) --version >> version/msk_access.txt; \
-			 R --version >> version.txt)
+			 echo "gatk3" > version/cluster_access.txt; \
+			 $(GATK) --version >> version/cluster_access.txt; \
+			 R --version >> version/cluster_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY: 
 .PHONY: cluster_access
