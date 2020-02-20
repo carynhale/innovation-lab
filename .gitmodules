@@ -1,6 +1,3 @@
-[submodule "external/fathmm"]
-	path = external/fathmm
-	url = https://github.com/jrflab/fathmm.git
 [submodule "dodo-cloning-kit"]
 	path = dodo-cloning-kit
 	url = https://github.com/ndbrown6/dodo-cloning-kit.git
