@@ -12,12 +12,12 @@ waltz_access : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
                waltz/noise_metrics_without_duplicates.txt \
                waltz/noise_by_position_standard_with_duplicates.txt \
                waltz/noise_by_position_standard_without_duplicates.txt \
-               waltz/noise_by_position_simplex_without_duplicates.txt
+               waltz/noise_by_position_simplex_without_duplicates.txt \
+               waltz/noise_by_position_duplex_without_duplicates.txt
 
+			   
 
-
-			   #waltz/noise_by_position_duplex_without_duplicates.txt \
-			   #waltz/noise_by_position.pdf \
+               #waltz/noise_by_position.pdf \
 			   #waltz/noise_by_position.png
 
 WALTZ_MIN_MAPQ ?= 20
