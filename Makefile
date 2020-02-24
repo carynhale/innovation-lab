@@ -86,8 +86,17 @@ merge_fastq :
 TARGETS += merge_split_fastq
 merge_split_fastq :
 	$(call RUN_MAKE,innovation-lab/fastq_tools/merge_split_fastq.mk)
+    
+
+#==================================================
+# VCF file utilities
+#==================================================
+
+TARGETS += annotate_vcf_context
+annotate_vcf_context :
+	$(call RUN_MAKE,innovation-lab/fastq_tools/annotate_vcf_context.mk)
 	
-	
+
 #==================================================
 # Somatic variant callers
 #==================================================
