@@ -6,8 +6,10 @@ LOGDIR ?= log/annotate_vcf_context.$(NOW)
 annotate_vcf_context : 
 
 vcf/.vcf : vcf/.vcf
-	$(call RUN,-s 16G -m 20G,"set -o pipefail && \
-							  ")
+	$(call RUN,-s 12G -m 24G -v ,"set -o pipefail && \
+							     $(RSCRIPT) $(SCRIPTS_DIR)/vcf_tools/annotate_vcf_context.R \
+                              --file_in \
+                              --file_out ")
 							  
 	
 ..DUMMY := $(shell mkdir -p version; \
