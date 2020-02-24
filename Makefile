@@ -94,7 +94,7 @@ merge_split_fastq :
 
 TARGETS += annotate_vcf_context
 annotate_vcf_context :
-	$(call RUN_MAKE,innovation-lab/fastq_tools/annotate_vcf_context.mk)
+	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_vcf_context.mk)
 	
 
 #==================================================
