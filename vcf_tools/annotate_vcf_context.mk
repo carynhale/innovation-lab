@@ -8,7 +8,7 @@ annotate_vcf_context : vcf/external.txt
 ANNOTATION_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 
 vcf/external.txt : vcf/external.vcf
-	$(call RUN,-s 12G -m 24G -v $(ANNOTATION_ENV),"set -o pipefail && \
+	$(call RUN,-s 24G -m 48G -v $(ANNOTATION_ENV),"set -o pipefail && \
 							                       $(RSCRIPT) $(SCRIPTS_DIR)/vcf_tools/annotate_vcf_context.R \
                                                    --file_in vcf/external.vcf \
                                                    --file_out vcf/external.txt \
