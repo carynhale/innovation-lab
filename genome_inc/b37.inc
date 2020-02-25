@@ -12,8 +12,7 @@ HAPMAP ?= $(REF_DIR)/hapmap_3.3.b37.vcf
 HAPMAP_POP_FILE ?= $(REF_DIR)/hapmap_3.3_b37_pop_stratified_af.vcf.gz
 CHROMOSOMES := $(shell grep -v '@' $(TARGETS_FILE) | cut -f1 | sort | uniq)
 REF_MSI = $(REF_DIR)/human_g1k_v37_msi.list
-
+ENSEMBLE = $(HOME)/share/lib/resource_files/Ensemble_b37.RData
 
 endif
 B37_INC = true
-
