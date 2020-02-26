@@ -1,5 +1,5 @@
 include innovation-lab/Makefile.inc
-include innovation-lab/aligners/align.inc
+include innovation-lab/config/align.inc
 
 LOGDIR = log/star_align.$(NOW)
 
