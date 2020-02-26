@@ -26,7 +26,9 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 
 star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
                                    star/$(sample).Aligned.sortedByCoord.out.bam.bai \
-                                   bam/$(sample).bam)
+                                   bam/$(sample).bam \
+                                   bam/$(sample).bam.bai \
+                                   bam/$(sample).bai)
 
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam)
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai)
@@ -43,35 +45,26 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
                                    --readFilesCommand zcat")
                                    
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
-	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
-                                   $$(SAMTOOLS) index $$(<)")
+	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  $$(SAMTOOLS) index $$(<)")
 
 bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
-	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
-                                   cp $$(<) $$(@)")
+	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  cp $$(<) $$(@)")
+                                   
+bam/$1.bam.bai : star/$1.Aligned.sortedByCoord.out.bam.bai
+	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  cp $$(<) $$(@)")
+                                   
+bam/$1.bai : star/$1.Aligned.sortedByCoord.out.bam.bai
+	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  cp $$(<) $$(@)")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES), \
 	$(if $(fq.$(ss)), \
 	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
     
-#define copy-bam
-#bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
-#    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-#                                  cp $$(<) $$(@)")
-#
-#endef
-#$(foreach sample,$(SAMPLES), \
-#		$(eval $(call copy-bam,$(sample))))
-#
-#bam/$1.bam.bai : bam/$1.bam
-#    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-#                                  $$(SAMTOOLS) index $$(<)")
-#
-#bam/$1.bai : bam/$1.bam.bai
-#    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-#                                  cp $$(<) $$(@)")
-
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" > version/star_align.txt; \
 			 STAR --version >> version/star_align.txt; \
