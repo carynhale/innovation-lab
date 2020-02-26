@@ -41,10 +41,9 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
                                    --readFilesCommand zcat")
 
 endef
-$(foreach ss,$(SPLIT_SAMPLES),\
-	$(if $(fq.$(ss)),\
+$(foreach ss,$(SPLIT_SAMPLES), \
+	$(if $(fq.$(ss)), \
 	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
-    
     
 define copy-bam
 bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
@@ -52,7 +51,7 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
                                   cp $$(<) $$(@)")
 
 endef
-$(foreach sample,$(SAMPLES),\
+$(foreach sample,$(SAMPLES), \
 		$(eval $(call copy-bam,$(sample))))
 
 #bam/$1.bam.bai : bam/$1.bam
