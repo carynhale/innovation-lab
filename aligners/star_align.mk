@@ -30,10 +30,6 @@ star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam 
                                    bam/$(sample).bam.bai \
                                    bam/$(sample).bai)
 
-#$(foreach sample,$(SAMPLES),bam/$(sample).bam)
-#$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai)
-#$(foreach sample,$(SAMPLES),bam/$(sample).bai)
-
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3
 	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
