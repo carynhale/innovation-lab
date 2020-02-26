@@ -25,10 +25,9 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 			--quantMode GeneCounts
 
 star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
-       $(foreach sample,$(SAMPLES),bam/$(sample).bam)
-
-#       $(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
-#       $(foreach sample,$(SAMPLES),bam/$(sample).bai)
+       $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+       $(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
+       $(foreach sample,$(SAMPLES),bam/$(sample).bai)
 
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3
@@ -40,23 +39,28 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
                                    --readFilesIn $$^ \
                                    --readFilesCommand zcat")
 
-bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
-    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  cp $$(<) $$(@)")
-
-#bam/$1.bam.bai : bam/$1.bam
-#    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-#                                  $$(SAMTOOLS) index $$(<)")
-#
-#bam/$1.bai : bam/$1.bam.bai
-#    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-#                                  cp $$(<) $$(@)")
-
-
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),\
 	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+    
+    
+define copy-bam
+bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
+    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  cp $$(<) $$(@)")
+
+bam/$1.bam.bai : bam/$1.bam
+    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  $$(SAMTOOLS) index $$(<)")
+
+bam/$1.bai : bam/$1.bam.bai
+    $$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  cp $$(<) $$(@)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call copy-bam,$(sample))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
