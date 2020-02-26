@@ -61,7 +61,7 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" > version/star_align.txt; \
 			 STAR --version >> version/star_align.txt; \
-             $(SAMTOOLS) --version >> version/star_align.txt;)
+             $(SAMTOOLS) --version >> version/star_align.txt)
 .SECONDARY: 
 .DELETE_ON_ERROR:
 .PHONY: star
