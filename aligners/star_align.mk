@@ -24,7 +24,8 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --chimOutType WithinBAM \
 			--quantMode GeneCounts
 
-star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam)
+star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
+                                   star/$(sample).Aligned.sortedByCoord.out.bam.bai)
 
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam)
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai)
@@ -39,6 +40,10 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
                                    --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
                                    --readFilesIn $$^ \
                                    --readFilesCommand zcat")
+                                   
+star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
+                                   $$(SAMTOOLS) index $$(<)")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES), \
