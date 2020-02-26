@@ -24,51 +24,42 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --chimOutType WithinBAM \
 			--quantMode GeneCounts
 
-star : $(foreach sample,$(SAMPLES),star/$(sample).taskcomplete)
-
-#$(foreach sample,$(SAMPLES),bam/$(sample).bam) \
-#$(foreach sample,$(SAMPLES),star/$(sample).Chimeric.out.junction)
+star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
+       $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+       $(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
+       $(foreach sample,$(SAMPLES),bam/$(sample).bai)
 
 define align-split-fastq
-star/$1.taskcomplete : $3
-	$$(call RUN,-n 4 -s 6G -m 10G,"STAR $$(STAR_OPTS) \
+star/$1.Aligned.sortedByCoord.out.bam : $3
+	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
+                                   STAR $$(STAR_OPTS) \
                                    --outFileNamePrefix star/$1. \
                                    --runThreadN 4 \
                                    --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
                                    --readFilesIn $$^ \
-                                   --readFilesCommand zcat && \
-                                   touch $$@")
+                                   --readFilesCommand zcat")
+
+bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
+    $$(call RUN,-n 1, -s 2G -m 4G, "set -o pipefail && \
+                                    cp $$(<) $$(@)")
+                                    
+bam/$1.bam.bai : bam/$1.bam
+    $$(call RUN,-n 1, -s 2G -m 4G, "set -o pipefail && \
+                                    samtools index $$(<)")
+                                    
+bam/$1.bai : bam/$1.bam.bai
+    $$(call RUN,-n 1, -s 2G -m 4G, "set -o pipefail && \
+                                    cp $$(<) $$(@)")
+                                   
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),\
 	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
     
-#    star/$2.Aligned.sortedByCoord.out.bam : star/$2.taskcomplete
-#    star/$2.Chimeric.out.junction : star/$2.taskcomplete
-#
-#
-#    star/%.Aligned.sortedByCoord.out.bam star/%.Chimeric.out.junction : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
-#        $(call RUN,-n 4 -s 6G -m 10G -v $(STAR_ENV),"STAR $(STAR_OPTS) \
-#                                                     --outFileNamePrefix star/$*. --runThreadN 4 \
-#                                                     --outSAMattrRGline \"ID:$*\" \"LB:$*\" \"SM:$*\" \"PL:${SEQ_PLATFORM}\" \
-#                                                     --readFilesIn $^ --readFilesCommand zcat")
-#
-#    star/bam/%.star.sorted.bam : star/%.Aligned.sortedByCoord.out.bam
-#        $(INIT) mv $< $@
-#
-#    bam/%.bam : star/bam/%.star.$(BAM_SUFFIX)
-#        $(INIT) ln -f $(<) $(@) 
-#
-#    define merged-chimeric-junction
-#    star/$1.Chimeric.out.junction : $$(foreach split,$$(split.$1),star/$$(split).Chimeric.out.junction)
-#        $$(INIT) sort -V $$^ > $$@
-#    endef
-#    $(foreach sample,$(SAMPLES),\
-#        $(eval $(call merged-chimeric-junction,$(sample))))
-
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" > version/star_align.txt; \
-			 STAR --version >> version/star_align.txt)
+			 STAR --version >> version/star_align.txt; \
+             $(SAMTOOLS) --version >> version/star_align.txt;)
 .SECONDARY: 
 .DELETE_ON_ERROR:
 .PHONY: star
