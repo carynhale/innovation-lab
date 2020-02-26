@@ -40,16 +40,16 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
                                    --readFilesCommand zcat")
 
 bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
-    $$(call RUN,-n 1, -s 2G -m 4G, "set -o pipefail && \
-                                    cp $$(<) $$(@)")
+    $$(call RUN,-n 1 -s 2G -m 4G, "set -o pipefail && \
+                                   cp $$(<) $$(@)")
                                     
 bam/$1.bam.bai : bam/$1.bam
-    $$(call RUN,-n 1, -s 2G -m 4G, "set -o pipefail && \
-                                    samtools index $$(<)")
+    $$(call RUN,-n 1 -s 2G -m 4G, "set -o pipefail && \
+                                   samtools index $$(<)")
                                     
 bam/$1.bai : bam/$1.bam.bai
-    $$(call RUN,-n 1, -s 2G -m 4G, "set -o pipefail && \
-                                    cp $$(<) $$(@)")
+    $$(call RUN,-n 1 -s 2G -m 4G, "set -o pipefail && \
+                                   cp $$(<) $$(@)")
                                    
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
