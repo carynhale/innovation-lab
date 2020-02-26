@@ -50,7 +50,7 @@ bam/$1.bam.bai : bam/$1.bam
 bam/$1.bai : bam/$1.bam.bai
     $$(call RUN,-n 1 -s 2G -m 4G, "set -o pipefail && \
                                    cp $$(<) $$(@)")
-                                   
+
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),\
