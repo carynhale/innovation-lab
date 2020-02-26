@@ -24,8 +24,10 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --chimOutType WithinBAM \
 			--quantMode GeneCounts
 
-star : $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
-       $(foreach sample,$(SAMPLES),star/$(sample).Chimeric.out.junction)
+star : $(foreach sample,$(SAMPLES),star/$(sample).star_align_timestamp) \
+
+#$(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+#$(foreach sample,$(SAMPLES),star/$(sample).Chimeric.out.junction)
 
 define align-split-fastq
 star/$2.star_align_timestamp : $3
