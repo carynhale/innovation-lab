@@ -19,7 +19,6 @@ waltz_access : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
 
 WALTZ_MIN_MAPQ ?= 20
 TARGETS_FILE_NOMSI ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-A-good-positions-noMSI.txt
-SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
 
 define waltz-genotype
 waltz/$1-pileup.txt.gz : bam/$1.bam

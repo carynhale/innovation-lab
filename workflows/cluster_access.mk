@@ -30,8 +30,6 @@ cluster_access : $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-snps.vcf
 DBSNP_SUBSET = $(HOME)/share/lib/bed_files/dbsnp_137.b37_subset.bed
 CLUSTER_VCF = $(RSCRIPT) $(SCRIPTS_DIR)/qc/cluster_access.R
 POOL_AB_INTERVAL ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-AB.sorted.list
-SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
-VARIANT_ANNOTATION_ENV = $(HOME)/share/usr/env/r-variantannotation-1.32.0
 
 define genotype-snps-standard
 metrics/standard/$1-snps.vcf : bam/$1.bam

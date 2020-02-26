@@ -5,6 +5,10 @@ SEQ_PLATFORM ?= illumina
 
 # conda
 INNOVATION_LAB_ENV ?= $(HOME)/share/usr/env/innovation-lab-0.0.1
+SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
+VARIANT_ANNOTATION_ENV = $(HOME)/share/usr/env/r-variantannotation-1.32.0
+STAR_ENV = $(HOME)/share/usr/env/star/star-2.7.3
+ANNOTATION_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 
 # aliases
 PYTHON ?= python

@@ -119,8 +119,6 @@ SAMTOOLS_MEM_THREAD = 2G
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
-SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
-
 define copy-fastq
 marianas/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \

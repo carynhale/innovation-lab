@@ -1,7 +1,6 @@
 include modules/Makefile.inc
 
 LOGDIR ?= log/merge_split_fastq.$(NOW)
-.PHONY : fastq
 
 fastq: $(foreach sample,$(SAMPLES),fastq/$(sample).1.fastq.gz fastq/$(sample).2.fastq.gz)
 
@@ -24,4 +23,4 @@ $(foreach sample,$(SAMPLES),\
 
 .DELETE_ON_ERROR:
 .SECONDARY:
-.PHONY: $(PHONY)
+.PHONY : fastq
