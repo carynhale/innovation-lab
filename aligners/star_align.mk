@@ -24,8 +24,7 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --chimOutType WithinBAM \
 			--quantMode GeneCounts
 
-star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
-       $(foreach sample,$(SAMPLES),bam/$(sample).bam)
+star : $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
 #$(foreach sample,$(SAMPLES),bam/$(sample).bai)
