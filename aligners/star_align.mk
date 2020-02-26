@@ -31,13 +31,13 @@ star : $(foreach sample,$(SAMPLES),star/$(sample).taskcomplete)
 
 define align-split-fastq
 star/$1.taskcomplete : $3
-	$$(call RUN,-n 4 -s 6G -m 10G -v $(STAR_ENV),"STAR $$(STAR_OPTS) \
-                                                  --outFileNamePrefix star/$1. \
-                                                  --runThreadN 4 \
-                                                  --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
-                                                  --readFilesIn $$^ \
-                                                  --readFilesCommand zcat && \
-                                                  touch $$@")
+	$$(call RUN,-n 4 -s 6G -m 10G,"STAR $$(STAR_OPTS) \
+                                   --outFileNamePrefix star/$1. \
+                                   --runThreadN 4 \
+                                   --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
+                                   --readFilesIn $$^ \
+                                   --readFilesCommand zcat && \
+                                   touch $$@")
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),\
@@ -68,7 +68,7 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" > version/star_align.txt; \
-			 $(HOME)/share/usr/env/star-2.7.3/bin/STAR --version >> version/star_align.txt)
+			 STAR --version >> version/star_align.txt)
 .SECONDARY: 
 .DELETE_ON_ERROR:
 .PHONY: star

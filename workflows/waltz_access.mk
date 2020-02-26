@@ -107,7 +107,7 @@ waltz/noise_by_position_duplex_without_duplicates.txt : $(wildcard waltz/$(SAMPL
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 6 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
 
 waltz/noise_by_position.pdf : waltz/noise_by_position_standard_with_duplicates.txt waltz/noise_by_position_standard_without_duplicates.txt waltz/noise_by_position_simplex_without_duplicates.txt waltz/noise_by_position_duplex_without_duplicates.txt
-	$(call RUN, -c -n 1 -s 52G -m 128G -v $(SUPERHEAT_ENV),"set -o pipefail && \
+	$(call RUN, -c -n 1 -s 128G -m 256G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 									   					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/waltz_metrics.R --type 7 --target_file $(TARGETS_FILE_NOMSI) --sample_names '$(SAMPLES)'")
 
 waltz/noise_by_position.png : waltz/noise_by_position.pdf
