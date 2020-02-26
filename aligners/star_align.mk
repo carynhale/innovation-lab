@@ -25,7 +25,8 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 			--quantMode GeneCounts
 
 star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
-                                   star/$(sample).Aligned.sortedByCoord.out.bam.bai)
+                                   star/$(sample).Aligned.sortedByCoord.out.bam.bai \
+                                   bam/$(sample).bam)
 
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam)
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai)
@@ -44,6 +45,10 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
                                    $$(SAMTOOLS) index $$(<)")
+
+bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
+                                   cp $$(<) $$(@)")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES), \
