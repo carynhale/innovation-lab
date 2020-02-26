@@ -45,7 +45,7 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
                                     
 bam/$1.bam.bai : bam/$1.bam
     $$(call RUN,-n 1 -s 2G -m 4G, "set -o pipefail && \
-                                   samtools index $$(<)")
+                                   $(SAMTOOLS) index $$(<)")
                                     
 bam/$1.bai : bam/$1.bam.bai
     $$(call RUN,-n 1 -s 2G -m 4G, "set -o pipefail && \
