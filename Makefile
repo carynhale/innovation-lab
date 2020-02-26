@@ -48,7 +48,10 @@ cluster_access:
 TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
-	
+
+TARGETS += star_align
+star_align :
+	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
 
 #==================================================
 # BAM file utilities
