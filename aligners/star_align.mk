@@ -24,42 +24,44 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --chimOutType WithinBAM \
 			--quantMode GeneCounts
 
-star : $(foreach sample,$(SAMPLES),star/$(sample).star_align_timestamp) \
+star : $(foreach sample,$(SAMPLES),star/$(sample).taskcomplete)
 
 #$(foreach sample,$(SAMPLES),bam/$(sample).bam) \
 #$(foreach sample,$(SAMPLES),star/$(sample).Chimeric.out.junction)
 
 define align-split-fastq
-star/$2.star_align_timestamp : $3
+star/$2.taskcomplete : $3
 	$$(call RUN,-n 4 -s 6G -m 10G -v $(STAR_ENV),"STAR $$(STAR_OPTS) \
                                                   --outFileNamePrefix star/$2. --runThreadN 4 \
                                                   --outSAMattrRGline \"ID:$2\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
                                                   --readFilesIn $$^ --readFilesCommand zcat && touch $$@")
-star/$2.Aligned.sortedByCoord.out.bam : star/$2.star_align_timestamp
-star/$2.Chimeric.out.junction : star/$2.star_align_timestamp
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),\
 	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
-
-star/%.Aligned.sortedByCoord.out.bam star/%.Chimeric.out.junction : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
-	$(call RUN,-n 4 -s 6G -m 10G -v $(STAR_ENV),"STAR $(STAR_OPTS) \
-                                                 --outFileNamePrefix star/$*. --runThreadN 4 \
-                                                 --outSAMattrRGline \"ID:$*\" \"LB:$*\" \"SM:$*\" \"PL:${SEQ_PLATFORM}\" \
-                                                 --readFilesIn $^ --readFilesCommand zcat")
-
-star/bam/%.star.sorted.bam : star/%.Aligned.sortedByCoord.out.bam
-	$(INIT) mv $< $@
-
-bam/%.bam : star/bam/%.star.$(BAM_SUFFIX)
-	$(INIT) ln -f $(<) $(@) 
-
-define merged-chimeric-junction
-star/$1.Chimeric.out.junction : $$(foreach split,$$(split.$1),star/$$(split).Chimeric.out.junction)
-	$$(INIT) sort -V $$^ > $$@
-endef
-$(foreach sample,$(SAMPLES),\
-	$(eval $(call merged-chimeric-junction,$(sample))))
+    
+#    star/$2.Aligned.sortedByCoord.out.bam : star/$2.taskcomplete
+#    star/$2.Chimeric.out.junction : star/$2.taskcomplete
+#
+#
+#    star/%.Aligned.sortedByCoord.out.bam star/%.Chimeric.out.junction : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
+#        $(call RUN,-n 4 -s 6G -m 10G -v $(STAR_ENV),"STAR $(STAR_OPTS) \
+#                                                     --outFileNamePrefix star/$*. --runThreadN 4 \
+#                                                     --outSAMattrRGline \"ID:$*\" \"LB:$*\" \"SM:$*\" \"PL:${SEQ_PLATFORM}\" \
+#                                                     --readFilesIn $^ --readFilesCommand zcat")
+#
+#    star/bam/%.star.sorted.bam : star/%.Aligned.sortedByCoord.out.bam
+#        $(INIT) mv $< $@
+#
+#    bam/%.bam : star/bam/%.star.$(BAM_SUFFIX)
+#        $(INIT) ln -f $(<) $(@) 
+#
+#    define merged-chimeric-junction
+#    star/$1.Chimeric.out.junction : $$(foreach split,$$(split.$1),star/$$(split).Chimeric.out.junction)
+#        $$(INIT) sort -V $$^ > $$@
+#    endef
+#    $(foreach sample,$(SAMPLES),\
+#        $(eval $(call merged-chimeric-junction,$(sample))))
 
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" >> version/star_align.txt; \
