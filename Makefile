@@ -310,18 +310,10 @@ cluster_samples :
 # RNA sequencing
 #==================================================
 
-TARGETS += cufflinks
-cufflinks : 
-	$(call RUN_MAKE,innovation-lab/rnaseq/cufflinks.mk)
-
 TARGETS += sum_reads
 sum_reads :
-	$(call RUN_MAKE,innovation-lab/rnaseq/sumrnaseqreads.mk)
+	$(call RUN_MAKE,innovation-lab/rna_seq/sum_reads.mk)
 
-TARGETS += exon_counts
-exon_counts :
-	$(call RUN_MAKE,innovation-lab/rnaseq/dexseq.mk)
-	
 
 #==================================================
 # Clonality
