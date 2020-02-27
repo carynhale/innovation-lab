@@ -3,7 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR = log/sum_reads.$(NOW)
 
 SUM_READS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads.R
-SUM_EXONS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreadsbyexon.R
+SUM_EXONS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads_byexon.R
 
 sum_reads : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt) \
             $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt) \
