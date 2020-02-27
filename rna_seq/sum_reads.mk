@@ -24,11 +24,11 @@ sumreads/%.sumreads_byexon.txt : bam/%.bam bam/%.bam.bai
                                                       --in_file $(<) \
                                                       --out_file $(@)")
 
-sumreads/rpkm_by_gene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt)
+sumreads/rpkm_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt)
 	cut -f 2 $< > $@; \
 	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 7 $$x | sed "s/exonRPKM/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
-sumreads/rpkm_by_exon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt)
+sumreads/rpkm_byexon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt)
 	cut -f 1-2 $< > $@; \
 	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 6 $$x | sed "s/exonRPKM/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
