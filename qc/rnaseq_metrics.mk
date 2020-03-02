@@ -4,17 +4,14 @@ LOGDIR ?= log/rnaseq_metrics.$(NOW)
 
 REF_FLAT ?= $(HOME)/share/lib/resource_files/refFlat_hg19.txt
 
-rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).txt)
+rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).taskcomplete)
 
 define rnaseq-metrics
-metrics/$1.txt : bam/$1.bam
+metrics/$1.taskcomplete : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-                                 $$(COLLECT_RNASEQ_METRICS) \
-                                 INPUT=$$(<) \
-                                 OUTPUT=$$(@) \
-                                 REF_FLAT=$$(REF_FLAT) \
-                                 CHART_OUTPUT=metrics/$1.pdf \
-                                 STRAND_SPECIFICITY=NONE")
+                                 for i in $(REF_FLAT); do \
+                                 echo $i; \
+                                 done;")
 									 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -26,3 +23,11 @@ $(foreach sample,$(SAMPLES),\
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY:
+
+
+#$$(COLLECT_RNASEQ_METRICS) \
+#                                 INPUT=$$(<) \
+#                                 OUTPUT=$$(@) \
+#                                 REF_FLAT=$$(REF_FLAT) \
+#                                 CHART_OUTPUT=metrics/$1.pdf \
+#                                 STRAND_SPECIFICITY=NONE"
