@@ -13,7 +13,8 @@ metrics/$1.txt : bam/$1.bam
                                  INPUT=$$(<) \
                                  OUTPUT=$$(@) \
                                  REF_FLAT=$$(REF_FLAT) \
-                                 CHART_OUTPUT=metrics/$1.pdf")
+                                 CHART_OUTPUT=metrics/$1.pdf \
+                                 STRAND_SPECIFICITY=NONE")
 									 
 endef
 $(foreach sample,$(SAMPLES),\
