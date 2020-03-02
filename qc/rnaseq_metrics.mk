@@ -9,11 +9,11 @@ rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).txt)
 define rnaseq-metrics
 metrics/$1.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-                                $$(COLLECT_RNASEQ_METRICS) \
-                                INPUT=$$(<) \
-                                OUTPUT=$$(@) \
-                                REF_FLAT=$$(REF_FLAT) \
-                                CHART_OUTPUT=metrics/$1.pdf")
+                                 $$(COLLECT_RNASEQ_METRICS) \
+                                 INPUT=$$(<) \
+                                 OUTPUT=$$(@) \
+                                 REF_FLAT=$$(REF_FLAT) \
+                                 CHART_OUTPUT=metrics/$1.pdf")
 									 
 endef
 $(foreach sample,$(SAMPLES),\
