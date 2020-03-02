@@ -9,7 +9,7 @@ rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).taskcomplete)
 define rnaseq-metrics
 metrics/$1.taskcomplete : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-                                 $(foreach txt,$(REF_FLAT),call $$(COLLECT_RNASEQ_METRICS))"
+                                 $(foreach txt,$(REF_FLAT),$$(COLLECT_RNASEQ_METRICS))"
 									 
 endef
 $(foreach sample,$(SAMPLES),\
