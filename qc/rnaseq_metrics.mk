@@ -1,6 +1,6 @@
 include innovation-lab/Makefile.inc
 
-LOGDIR = log/rnaseq_metrics.$(NOW)
+LOGDIR ?= log/rnaseq_metrics.$(NOW)
 
 REF_FLAT ?= $(HOME)/share/lib/resource_files/refFlat_hg19.txt
 
