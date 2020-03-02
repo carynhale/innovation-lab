@@ -6,7 +6,8 @@ REF_FLAT ?= $(HOME)/share/lib/resource_files/refFlat_ensembl.v75.txt
 RIBOSOMAL_INTERVALS ?= $(HOME)/share/lib/resource_files/Homo_sapiens.GRCh37.75.rRNA.interval_list
 STRAND_SPECIFICITY ?= NONE
 
-rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).txt)
+rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).txt) \
+                 metrics/collect_rnaseq_metrics.txt
 
 define rnaseq-metrics
 metrics/$1.txt : bam/$1.bam
@@ -22,10 +23,15 @@ metrics/$1.txt : bam/$1.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call rnaseq-metrics,$(sample))))
+        
+collect_rnaseq_metrics.txt : $(wildcard metrics/$(SAMPLES).txt)
+	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
+                                     $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 echo "picard" >> version/rnaseq_metrics.txt; \
-			 $(PICARD) CollectRnaSeqMetrics --version &>> version/rnaseq_metrics.txt)
+			 $(PICARD) CollectRnaSeqMetrics --version &>> version/rnaseq_metrics.txt; \
+             R --version >> version/rnaseq_metrics.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY:
