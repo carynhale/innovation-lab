@@ -4,7 +4,7 @@ LOGDIR = log/sum_reads.$(NOW)
 
 SUM_READS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads.R
 SUM_EXONS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads_byexon.R
-TARGET_FILE = NA
+TARGETS_FILE ?= NA
 
 sum_reads : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt) \
             $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt) \
@@ -24,7 +24,7 @@ sumreads/%.sumreads_byexon.txt : bam/%.bam bam/%.bam.bai
                                                       --genome $(REF) \
                                                       --in_file $(<) \
                                                       --out_file $(@) \
-                                                      --target_file $(TARGET_FILE)")
+                                                      --target_file $(TARGETS_FILE)")
 
 sumreads/rpkm_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt)
 	cut -f 2 $< > $@; \
