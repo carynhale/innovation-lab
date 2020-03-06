@@ -22,7 +22,8 @@ sumreads/%.sumreads_byexon.txt : bam/%.bam bam/%.bam.bai
 	$(call RUN,-n 1 -s 24G -m 48G -v $(SUMREADS_ENV),"$(RSCRIPT) $(SUM_EXONS_RSCRIPT) \
                                                       --genome $(REF) \
                                                       --in_file $(<) \
-                                                      --out_file $(@)")
+                                                      --out_file $(@) \
+                                                      --target_file devel/data/ESR1.tsv")
 
 sumreads/rpkm_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt)
 	cut -f 2 $< > $@; \
