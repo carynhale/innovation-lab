@@ -9,6 +9,7 @@ SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
 VARIANT_ANNOTATION_ENV = $(HOME)/share/usr/env/r-variantannotation-1.32.0
 ANNOTATION_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 SUMREADS_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
+GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants/
 
 # aliases
 PYTHON ?= python
@@ -24,7 +25,7 @@ TABIX ?= tabix
 PICARD ?= picard
 GATK ?= gatk3
 BAM2FASTX ?= bam2fastx
-GETBASECOUNTS ?= $(HOME)/share/usr/bin/GetBaseCounts
+GENOTYPE_VARIANTS ?= genotype_variants
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
