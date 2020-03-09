@@ -36,6 +36,10 @@ TARGETS += waltz_access
 waltz_access:
 	$(call RUN_MAKE,innovation-lab/workflows/waltz_access.mk)
 	
+TARGETS += genotype_access
+genotype_access:
+	$(call RUN_MAKE,innovation-lab/workflows/genotype_access.mk)
+	
 TARGETS += cluster_access
 cluster_access:
 	$(call RUN_MAKE,innovation-lab/workflows/cluster_access.mk)
