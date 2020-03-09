@@ -19,7 +19,7 @@ genotype_variants/$1.taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_
 									  							  mkdir -p genotype_variants && \
 																  cd genotype_variants && \
 																  $$(GENOTYPE_VARIANTS) small_variants all \
-																  -i XXX \
+																  -i maf/genotype_variants.maf \
 																  -r $$(REF_FASTA) \
 																  -p $1 \
 																  -b ../bam/$1_cl_aln_srt_MD_IR_FX_BR.bam \
