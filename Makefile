@@ -77,6 +77,9 @@ TARGETS += merge_bam
 merge_bam :
 	$(call RUN_MAKE,innovation-lab/bam_tools/merge_bam.mk)
 	
+TARGETS += link_bam
+link_bam :
+	$(call RUN_MAKE,innovation-lab/bam_tools/link_bam.mk)
 	
 #==================================================
 # FASTQ file utilities
