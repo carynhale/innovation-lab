@@ -31,7 +31,7 @@ $(foreach sample,$(SAMPLES),\
 		
 metrics/summary/snps_combined.vcf : $(foreach sample,$(SAMPLES),metrics/snps/$(sample).vcf)
 	$(call RUN,-s 16G -m 20G,"set -o pipefail && \
-							  $(call GATK_MEM,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
+							  $(call GATK_CMD,14G) -T CombineVariants $(foreach vcf,$^,--variant $(vcf) ) \
 							  -o $@ --genotypemergeoption UNSORTED -R $(REF_FASTA) \
 							  --disable_auto_index_creation_and_locking_when_reading_rods")
 							  
