@@ -1,5 +1,5 @@
-include modules/Makefile.inc
-include modules/config/gatk.inc
+include innovation-lab/Makefile.inc
+include innovation-lab/config/gatk.inc
 
 LOGDIR = log/cluster_samples.$(NOW)
 
