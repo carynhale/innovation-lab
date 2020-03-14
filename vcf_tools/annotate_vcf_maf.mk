@@ -14,7 +14,7 @@ vcf/target_vcf.maf : vcf/target_vcf.vcf
 													   --tumor-id NA \
 													   --normal-id NA \
 													   --vep-path $(VCF2MAF_ENV)/bin \
-													   --vep-data $(HOME)/share/lib/resource_files/VEP/GRCh37/
+													   --vep-data $(HOME)/share/lib/resource_files/VEP/GRCh37/ \
 													   --vep-forks 12 \
 													   --ref-fasta $(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz \
 													   --filter-vcf $(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz \
