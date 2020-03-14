@@ -57,6 +57,7 @@ TARGETS += star_align
 star_align :
 	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
 
+
 #==================================================
 # BAM file utilities
 #==================================================
@@ -80,7 +81,8 @@ merge_bam :
 TARGETS += link_bam
 link_bam :
 	$(call RUN_MAKE,innovation-lab/bam_tools/link_bam.mk)
-	
+
+
 #==================================================
 # FASTQ file utilities
 #==================================================
@@ -96,7 +98,7 @@ merge_fastq :
 TARGETS += merge_split_fastq
 merge_split_fastq :
 	$(call RUN_MAKE,innovation-lab/fastq_tools/merge_split_fastq.mk)
-    
+
 
 #==================================================
 # VCF file utilities
@@ -106,6 +108,10 @@ TARGETS += annotate_vcf_context
 annotate_vcf_context :
 	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_vcf_context.mk)
 	
+TARGETS += annotate_vcf_maf
+annotate_vcf_maf :
+	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_vcf_maf.mk)
+
 
 #==================================================
 # Somatic variant callers
@@ -333,6 +339,7 @@ absolute :
 TARGETS += pyclone
 pyclone :
 	$(call RUN_MAKE,innovation-lab/clonality/pyclone.mk)
+
 
 #==================================================
 # Miscellaneous

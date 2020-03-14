@@ -10,6 +10,7 @@ VARIANT_ANNOTATION_ENV = $(HOME)/share/usr/env/r-variantannotation-1.32.0
 ANNOTATION_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 SUMREADS_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants/
+VCF2MAF_ENV ?= $(HOME)/share/usr/env/vcf2maf-1.6.17/
 
 # aliases
 PYTHON ?= python
@@ -26,6 +27,7 @@ PICARD ?= picard
 GATK ?= gatk3
 BAM2FASTX ?= bam2fastx
 GENOTYPE_VARIANTS ?= genotype_variants
+VCF2MAF ?= vcf2maf.pl
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)

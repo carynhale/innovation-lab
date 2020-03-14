@@ -10,8 +10,7 @@ vcf/target_vcf.txt : vcf/target_vcf.vcf
 							                       $(RSCRIPT) $(SCRIPTS_DIR)/vcf_tools/annotate_vcf_context.R \
                                                    --file_in $(<) \
                                                    --file_out $(@) \
-                                                   --genome_build 'hg19' \
-                                                   --ensembl_gene $(ENSEMBLE)")
+                                                   --ensembl_gene $(ENSEMBL)")
 							  
 	
 ..DUMMY := $(shell mkdir -p version; \
