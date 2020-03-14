@@ -20,7 +20,8 @@ vcf/target_vcf.maf : vcf/target_vcf.vcf
 													   --filter-vcf $(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz \
 													   --species homo_sapiens \
 													   --ncbi-build GRCh37 \
-													   --maf-center MSKCC")
+													   --maf-center MSKCC && \
+													   rm $(TMPDIR)/target_vcf.vep.vcf")
 							  
 	
 ..DUMMY := $(shell mkdir -p version; \
