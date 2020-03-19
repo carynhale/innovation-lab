@@ -9,8 +9,8 @@ SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
 VARIANT_ANNOTATION_ENV = $(HOME)/share/usr/env/r-variantannotation-1.32.0
 ANNOTATION_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 SUMREADS_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
-GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants/
-VCF2MAF_ENV ?= $(HOME)/share/usr/env/vcf2maf-1.6.17/
+GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants
+VCF2MAF_ENV ?= $(HOME)/share/usr/env/vcf2maf-1.6.17
 
 # aliases
 PYTHON ?= python
