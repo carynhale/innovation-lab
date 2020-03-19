@@ -9,9 +9,9 @@ define annotate-vcf-context
 vcf/%.txt : vcf/%.vcf
 	$$(call RUN,-c -s 4G -m 8G -v $(ANNOTATION_ENV),"set -o pipefail && \
 							                         $$(RSCRIPT) $$(SCRIPTS_DIR)/vcf_tools/annotate_vcf_context.R \
-                                                   	 --file_in $(<) \
-                                                   	 --file_out $(@) \
-                                                   	 --ensembl_gene $(ENSEMBL)")
+                                                   	 --file_in $$(<) \
+                                                   	 --file_out $$(@) \
+                                                   	 --ensembl_gene $$(ENSEMBL)")
 endef
  $(foreach sample,$(SAMPLES),\
 		$(eval $(call annotate-vcf-context,$(sample))))
