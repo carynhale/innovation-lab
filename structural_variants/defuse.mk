@@ -48,7 +48,7 @@ defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq)
 #		 defuse/summary.tsv
 
 define defuse-single-sample
-defuse/%.1.fastq : ${fq.%1.0}
+defuse/%.1.fastq : fq.%1.0[0]
 	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
 								cp $$(<) $$(@).gz && \
 								gzip -d $$(@).gz")
