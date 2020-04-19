@@ -54,7 +54,7 @@ defuse/$1.2.fastq : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) > $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call merged-fastq2,$(sample),$(split.$(sample)))))
+		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 								
 #defuse/%.results.filtered.tsv : defuse/%.1.fastq defuse/%.2.fastq
