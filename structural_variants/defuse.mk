@@ -41,11 +41,11 @@ SV_ALL = ${HSA}/Annotation/Variation/
 SV_NE = ${HSA}/Annotation/Variation/
 PERL = /usr/bin/perl
 
-defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
-		 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq) \
-		 $(foreach sample,$(SAMPLES),defuse/$(sample).results.filtered.tsv) \
-		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete) \
-		 defuse/summary.tsv
+defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq)
+#		 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq) \
+#		 $(foreach sample,$(SAMPLES),defuse/$(sample).results.filtered.tsv) \
+#		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete) \
+#		 defuse/summary.tsv
 
 define defuse-single-sample
 defuse/%.1.fastq : ${fq.%1.0[0]}
