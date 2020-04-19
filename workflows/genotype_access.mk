@@ -12,7 +12,6 @@ FRAGMENT_COUNT ?= 1
 MAPPING_QUALITY ?= 20
 THREADS ?= 10
 VERBOSITY ?= INFO
-TARGET_MAF_FILE ?= $(TARGETS_FILE)
 
 define genotype-access
 genotype_variants/$1.taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
@@ -20,12 +19,12 @@ genotype_variants/$1.taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_
 									  							  mkdir -p genotype_variants && \
 																  cd genotype_variants && \
 																  $$(GENOTYPE_VARIANTS) small_variants all \
-																  -i $$(TARGET_MAF_FILE) \
+																  -i ../maf/$1.maf \
 																  -r $$(REF_FASTA) \
 																  -p $1 \
-																  -b ../bam/$1_cl_aln_srt_MD_IR_FX_BR.bam \
-																  -d ../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam \
-																  -s ../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam \
+																  -b ../bam/ \
+																  -d ../bam/ \
+																  -s ../bam/ \
 																  -g $$(GBCMS_PATH) \
 																  -fd $$(FILTER_DUPLICATES) \
 																  -fc $$(FRAGMENT_COUNT) \
