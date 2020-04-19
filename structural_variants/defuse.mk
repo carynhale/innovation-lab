@@ -50,8 +50,8 @@ defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq)
 define defuse-single-sample
 defuse/%.1.fastq : ${fq.%1.0[0]}
 	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
-								cp fastq/$$(*).1.fastq.gz defuse/$$(*).1.fastq.gz && \
-								gzip -d defuse/$$(*).1.fastq.gz")
+								cp $$(<) $$(@) && \
+								gzip -d $$(@)")
 								
 #defuse/%.2.fastq : fastq/%.2.fastq.gz
 #	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
