@@ -41,23 +41,22 @@ SV_ALL = ${HSA}/Annotation/Variation/
 SV_NE = ${HSA}/Annotation/Variation/
 PERL = /usr/bin/perl
 
-defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq)
-#		 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq) \
+defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
+		 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq)
 #		 $(foreach sample,$(SAMPLES),defuse/$(sample).results.filtered.tsv) \
 #		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete) \
 #		 defuse/summary.tsv
 
-define defuse-single-sample
-defuse/%.1.fastq : fq.%1.0[0]
-	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
-								cp $$(<) $$(@).gz && \
-								gzip -d $$(@).gz")
+define merged-fastq
+defuse/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) > $$(@)")
+defuse/$1.2.fastq : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) > $$(@)")
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call merged-fastq2,$(sample),$(split.$(sample)))))
+
 								
-#defuse/%.2.fastq : fastq/%.2.fastq.gz
-#	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
-#								cp fastq/$$(*).2.fastq.gz defuse/$$(*).2.fastq.gz && \
-#								gzip -d defuse/$$(*).2.fastq.gz")
-#
 #defuse/%.results.filtered.tsv : defuse/%.1.fastq defuse/%.2.fastq
 #	$$(call RUN,-c -n 10 -s 3G -m 4G -w 540,"$$(PERL) $$(DEFUSE_SCRIPTS)/defuse_run.pl \
 #											 -c $$(CONFIG) -d $$(DEFUSE75) -o defuse/$$(*) \
