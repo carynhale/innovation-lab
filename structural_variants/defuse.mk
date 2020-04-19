@@ -1,7 +1,7 @@
 include modules/Makefile.inc
 
 LOGDIR ?= log/defuse.$(NOW)
-PHONY += defuse
+
 
 DEFUSE_SCRIPTS = /opt/common/CentOS_7/defuse/defuse-0.8.0/scripts
 CONFIG = modules/config/defuse.conf
@@ -48,35 +48,39 @@ defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
 		 defuse/summary.tsv
 
 define defuse-single-sample
-defuse/%.1.fastq : fastq/%.1.fastq.gz
+defuse/%.1.fastq : ${fq.%1.0[0]}
 	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
 								cp fastq/$$(*).1.fastq.gz defuse/$$(*).1.fastq.gz && \
 								gzip -d defuse/$$(*).1.fastq.gz")
 								
-defuse/%.2.fastq : fastq/%.2.fastq.gz
-	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
-								cp fastq/$$(*).2.fastq.gz defuse/$$(*).2.fastq.gz && \
-								gzip -d defuse/$$(*).2.fastq.gz")
+#defuse/%.2.fastq : fastq/%.2.fastq.gz
+#	$$(call RUN,-c -s 2G -m 4G,"mkdir -p defuse && \
+#								cp fastq/$$(*).2.fastq.gz defuse/$$(*).2.fastq.gz && \
+#								gzip -d defuse/$$(*).2.fastq.gz")
+#
+#defuse/%.results.filtered.tsv : defuse/%.1.fastq defuse/%.2.fastq
+#	$$(call RUN,-c -n 10 -s 3G -m 4G -w 540,"$$(PERL) $$(DEFUSE_SCRIPTS)/defuse_run.pl \
+#											 -c $$(CONFIG) -d $$(DEFUSE75) -o defuse/$$(*) \
+#											 --res defuse/$$(*).results.tsv \
+#											 -resfil defuse/$$(*).results.filtered.tsv \
+#											 -1 defuse/$$(*).1.fastq \
+#											 -2 defuse/$$(*).2.fastq -p 10 -s direct")
+#	
+#defuse/%.taskcomplete : defuse/%.results.filtered.tsv
+#	$$(call RUN,-c -s 1G -m 2G,"echo $$(*) > defuse/$$(*).taskcomplete")
 
-defuse/%.results.filtered.tsv : defuse/%.1.fastq defuse/%.2.fastq
-	$$(call RUN,-c -n 10 -s 3G -m 4G -w 540,"$$(PERL) $$(DEFUSE_SCRIPTS)/defuse_run.pl \
-											 -c $$(CONFIG) -d $$(DEFUSE75) -o defuse/$$(*) \
-											 --res defuse/$$(*).results.tsv \
-											 -resfil defuse/$$(*).results.filtered.tsv \
-											 -1 defuse/$$(*).1.fastq \
-											 -2 defuse/$$(*).2.fastq -p 10 -s direct")
-	
-defuse/%.taskcomplete : defuse/%.results.filtered.tsv
-	$$(call RUN,-c -s 1G -m 2G,"echo $$(*) > defuse/$$(*).taskcomplete")
 endef
 
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call defuse-single-sample,$(sample))))
 		
-defuse/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),defuse/$(sample).taskcomplete))
-	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
-				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/defuse.R --samples '$(TUMOR_SAMPLES)'")		
+# defuse/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),defuse/$(sample).taskcomplete))
+#	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
+#				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/defuse.R --samples '$(TUMOR_SAMPLES)'")		
 		
-.DELETE_ON_ERROR:
+..DUMMY := $(shell mkdir -p version; \
+			 $(PERL) --version > version/defuse.txt)
 .SECONDARY:
-.PHONY: $(PHONY)
+.DELETE_ON_ERROR:
+.PHONY: defuse
+
