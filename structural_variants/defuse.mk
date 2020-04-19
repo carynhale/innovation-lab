@@ -67,11 +67,11 @@ $(foreach sample,$(SAMPLES),\
 #	
 #defuse/%.taskcomplete : defuse/%.results.filtered.tsv
 #	$$(call RUN,-c -s 1G -m 2G,"echo $$(*) > defuse/$$(*).taskcomplete")
-
-endef
-
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call defuse-single-sample,$(sample))))
+#
+#endef
+#
+#$(foreach sample,$(SAMPLES),\
+#		$(eval $(call defuse-single-sample,$(sample))))
 		
 # defuse/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),defuse/$(sample).taskcomplete))
 #	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
