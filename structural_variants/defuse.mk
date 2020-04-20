@@ -8,7 +8,7 @@ defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
 		 
 DEFUSE_CONFIG = innovation-lab/config/defuse.inc
-DEFUSE_E75 = 
+DEFUSE_E75 = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/Grch37.p13/Sequence/defuse_e75/
 
 define merged-fastq
 defuse/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
@@ -28,6 +28,7 @@ defuse/%.results.filtered.tsv : defuse/%.1.fastq defuse/%.2.fastq
 											 	  -d $$(DEFUSE_E75) \
 											 	  -o defuse/$$(*) \
 											 	  -r defuse/$$(*).results.tsv \
+											 	  -a defuse/$$(*).results.classify.tsv \
 											 	  -b defuse/$$(*).results.filtered.tsv \
 											 	  -1 defuse/$$(*).1.fastq \
 											 	  -2 defuse/$$(*).2.fastq \
