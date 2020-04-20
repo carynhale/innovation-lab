@@ -11,6 +11,7 @@ ANNOTATION_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 SUMREADS_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants
 VCF2MAF_ENV ?= $(HOME)/share/usr/env/vcf2maf-1.6.17
+DEFUSE_ENV ?= $(HOME)/share/usr/env/defuse-0.8.2
 
 # aliases
 PYTHON ?= python
@@ -28,6 +29,7 @@ GATK ?= gatk3
 BAM2FASTX ?= bam2fastx
 GENOTYPE_VARIANTS ?= genotype_variants
 VCF2MAF ?= vcf2maf.pl
+DEFUSE ?= defuse_run.pl
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
