@@ -193,24 +193,8 @@ cnvaccess :
 	
 
 #==================================================
-# Structural variant callers
+# DNA structural variant callers
 #==================================================
-
-TARGETS += rnaseq_fusion
-rnaseq_fusion:
-	$(call RUN_MAKE,innovation-lab/test/workflows/rnaseq_fusion.mk)
-
-TARGETS += star_fusion
-star_fusion:
-	$(call RUN_MAKE,innovation-lab/structural_variants/star_fusion.mk)
-
-TARGETS += tophat_fusion
-tophat_fusion : 
-	$(call RUN_MAKE,innovation-lab/structural_variants/tophat_fusion.mk)
-
-TARGETS += manta_rnaseq
-manta_rnaseq :
-	$(call RUN_MAKE,innovation-lab/structural_variants/manta_rnaseq.mk)
 
 TARGETS += manta
 manta :
@@ -228,23 +212,6 @@ TARGETS += integrate
 integrate :
 	$(call RUN_MAKE,innovation-lab/structural_variants/integrate.mk)
 	
-TARGETS += integrate_rnaseq
-integrate_rnaseq :
-	$(call RUN_MAKE,innovation-lab/structural_variants/integrate_rnaseq.mk)
-
-TARGETS += defuse
-defuse :
-	$(call RUN_MAKE,innovation-lab/structural_variants/defuse.mk)
-
-NUM_CHIMSCAN_JOBS ?= 5
-TARGETS += chimscan
-chimscan :
-	$(call RUN_MAKE_J,innovation-lab/structural_variants/chimerascan.mk,$(NUM_CHIMSCAN_JOBS))
-
-TARGETS += oncofuse
-oncofuse :
-	$(call RUN_MAKE,innovation-lab/structural_variants/oncofuse.mk)
-
 TARGETS += lumpy
 lumpy :
 	$(call RUN_MAKE,innovation-lab/structural_variants/lumpy.mk)
@@ -257,6 +224,35 @@ TARGETS += nfuse_wgss_wtss
 nfuse_wgss_wtss :
 	$(call RUN_MAKE,innovation-lab/structural_variants/nfuseWGSSWTSS.mk)
 
+TARGETS += crest
+crest :
+	$(call RUN_MAKE,innovation-lab/structural_variants/crest.mk)
+
+TARGETS += delly
+delly :
+	$(call RUN_MAKE,innovation-lab/structural_variants/delly.mk)
+	
+
+#==================================================
+# RNA structural variant/fusion callers
+#==================================================
+
+TARGETS += defuse
+defuse :
+	$(call RUN_MAKE,innovation-lab/structural_variants/defuse.mk)
+	
+TARGETS += fusion_catcher
+fusion_catcher :
+	$(call RUN_MAKE,innovation-lab/structural_variants/fusioncatcher.mk)
+	
+TARGETS += star_fusion
+star_fusion:
+	$(call RUN_MAKE,innovation-lab/structural_variants/starfusion.mk)
+
+TARGETS += rnaseq_fusion
+rnaseq_fusion:
+	$(call RUN_MAKE,innovation-lab/test/workflows/rnaseq_fusion.mk)
+
 TARGETS += soap_fuse
 soap_fuse :
 	$(call RUN_MAKE,innovation-lab/structural_variants/soap_fuse.mk)
@@ -265,17 +261,26 @@ TARGETS += map_splice
 map_splice :
 	$(call RUN_MAKE,innovation-lab/structural_variants/map_splice.mk)
 
-TARGETS += fusion_catcher
-fusion_catcher :
-	$(call RUN_MAKE,innovation-lab/structural_variants/fusion_catcher.mk)
+TARGETS += oncofuse
+oncofuse :
+	$(call RUN_MAKE,innovation-lab/structural_variants/oncofuse.mk)
+	
+NUM_CHIMSCAN_JOBS ?= 5
+TARGETS += chimscan
+chimscan :
+	$(call RUN_MAKE_J,innovation-lab/structural_variants/chimerascan.mk,$(NUM_CHIMSCAN_JOBS))
 
-TARGETS += crest
-crest :
-	$(call RUN_MAKE,innovation-lab/structural_variants/crest.mk)
+TARGETS += integrate_rnaseq
+integrate_rnaseq :
+	$(call RUN_MAKE,innovation-lab/structural_variants/integrate_rnaseq.mk)
+	
+TARGETS += tophat_fusion
+tophat_fusion : 
+	$(call RUN_MAKE,innovation-lab/structural_variants/tophat_fusion.mk)
 
-TARGETS += delly
-delly :
-	$(call RUN_MAKE,innovation-lab/structural_variants/delly.mk)
+TARGETS += manta_rnaseq
+manta_rnaseq :
+	$(call RUN_MAKE,innovation-lab/structural_variants/manta_rnaseq.mk)
 
 
 #==================================================
