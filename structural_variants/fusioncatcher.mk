@@ -8,7 +8,7 @@ fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).2.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete)
 
-define merged-fastq
+define fusion-catcher
 fusioncatcher/$1/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 									 mkdir -p fusioncatcher/$1 && \
@@ -17,11 +17,6 @@ fusioncatcher/$1/$1.2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 									 mkdir -p fusioncatcher/$1 && \
 									 cp $$(^) > $$(@)")
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
-
-define fusion-catcher
 fusioncatcher/$1/out/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catcher/$1/$1.2.fastq.gz
 	$$(call RUN,-c -n 8 -s 2G -m 3G,"set -o pipefail && \
 									 mkdir -p fusioncatcher/$1/out && \
@@ -34,7 +29,7 @@ fusioncatcher/$1/out/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catch
 
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call fusion-catcher,$(sample))))
+		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 		
 #fusion_catcher/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),fusion_catcher/$(sample)/out/taskcomplete))
 #	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
