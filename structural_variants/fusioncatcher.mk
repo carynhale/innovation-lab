@@ -1,0 +1,47 @@
+include modules/Makefile.inc
+
+LOGDIR ?= log/fusion_catcher.$(NOW)
+
+FUSION_CATCHER_DATA = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
+
+fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
+		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).2.fastq.gz) \
+		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete)
+
+define merged-fastq
+fusioncatcher/$1/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+									 mkdir -p fusioncatcher/$1 && \
+									 cp $$(^) > $$(@)")
+fusioncatcher/$1/$1.2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+									 mkdir -p fusioncatcher/$1 && \
+									 cp $$(^) > $$(@)")
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
+
+define fusion-catcher
+fusioncatcher/$1/out/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catcher/$1/$1.2.fastq.gz
+	$$(call RUN,-c -n 8 -s 2G -m 3G,"set -o pipefail && \
+									 mkdir -p fusioncatcher/$1/out && \
+									 fusioncatcher.py && \
+									 -i fusioncatcher/$1 && \
+									 -o fusioncatcher/$1/out && \
+									 -d $$(FUSION_CATCHER_DATA) && \
+									 -p 8 && \
+									 echo $1 > fusion_catcher/$1/out/taskcomplete")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call fusion-catcher,$(sample))))
+		
+#fusion_catcher/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),fusion_catcher/$(sample)/out/taskcomplete))
+#	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
+#				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/fusioncatcher.R --samples '$(TUMOR_SAMPLES)'")
+
+..DUMMY := $(shell mkdir -p version; \
+			 $(PYTHON) --version > version/fusioncatcher.txt)
+.SECONDARY:
+.DELETE_ON_ERROR:
+.PHONY: fusion_catcher
