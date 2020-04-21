@@ -23,14 +23,14 @@ $(foreach sample,$(SAMPLES),\
 
 define fusion-catcher
 fusioncatcher/$1/out/taskcomplete : fusioncatcher/$1/$1.1.fastq.gz fusioncatcher/$1/$1.2.fastq.gz
-	$$(call RUN,-c -n 8 -s 2G -m 3G,"set -o pipefail && \
-									 mkdir -p fusioncatcher/$1/out && \
-									 fusioncatcher.py && \
-									 -i fusioncatcher/$1 && \
-									 -o fusioncatcher/$1/out && \
-									 -d $$(CACHE) && \
-									 -p 8 && \
-									 echo $1 > fusion_catcher/$1/out/taskcomplete")
+	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(FUSIONCATCHER_ENV),"set -o pipefail && \
+															 mkdir -p fusioncatcher/$1/out && \
+															 fusioncatcher.py && \
+															 -i fusioncatcher/$1 && \
+															 -o fusioncatcher/$1/out && \
+															 -d $$(CACHE) && \
+															 -p 8 && \
+															 echo $1 > fusion_catcher/$1/out/taskcomplete")
 
 endef
 $(foreach sample,$(SAMPLES),\

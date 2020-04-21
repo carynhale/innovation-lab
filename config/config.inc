@@ -12,6 +12,7 @@ SUMREADS_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants
 VCF2MAF_ENV ?= $(HOME)/share/usr/env/vcf2maf-1.6.17
 DEFUSE_ENV ?= $(HOME)/share/usr/env/defuse-0.8.2
+FUSIONCATCHER_ENV ?= $(HOME)/share/usr/env/fusioncatcher-1.2.0
 
 # aliases
 PYTHON ?= python
