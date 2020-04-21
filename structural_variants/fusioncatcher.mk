@@ -41,7 +41,7 @@ $(foreach sample,$(SAMPLES),\
 #				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/fusioncatcher.R --samples '$(TUMOR_SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
-			 $(PYTHON) --version > version/fusioncatcher.txt)
+			 $(PYTHON) --version &> version/fusioncatcher.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: fusion_catcher
