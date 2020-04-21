@@ -2,7 +2,7 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/fusion_catcher.$(NOW)
 
-FUSION_CATCHER_DATA = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
+CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).2.fastq.gz) \
@@ -28,7 +28,7 @@ fusioncatcher/$1/out/taskcomplete : fusion_catcher/$1/$1.1.fastq.gz fusion_catch
 									 fusioncatcher.py && \
 									 -i fusioncatcher/$1 && \
 									 -o fusioncatcher/$1/out && \
-									 -d $$(FUSION_CATCHER_DATA) && \
+									 -d $$(CACHE) && \
 									 -p 8 && \
 									 echo $1 > fusion_catcher/$1/out/taskcomplete")
 
