@@ -24,12 +24,12 @@ defuse/%.results.filtered.tsv : defuse/%.1.fastq defuse/%.2.fastq
 	$$(call RUN,-c -n 10 -s 2G -m 3G -w 72:00:00 -v $(DEFUSE_ENV),"set -o pipefail && \
 																   mkdir -p defuse && \
 																   $$(DEFUSE) \
-																   -c $$(DEFUSE_CONFIG) \
-																   -d $$(DEFUSE_E75) \
-																   -o defuse/$$(*) \
-																   -r defuse/$$(*).results.tsv \
-																   -a defuse/$$(*).results.classify.tsv \
-																   -b defuse/$$(*).results.filtered.tsv \
+																   --config $$(DEFUSE_CONFIG) \
+																   --dataset $$(DEFUSE_E75) \
+																   --output defuse/$$(*) \
+																   --res defuse/$$(*).results.tsv \
+																   --rescla defuse/$$(*).results.classify.tsv \
+																   --resfil defuse/$$(*).results.filtered.tsv \
 																   -1 defuse/$$(*).1.fastq \
 																   -2 defuse/$$(*).2.fastq \
 																   -s direct \
