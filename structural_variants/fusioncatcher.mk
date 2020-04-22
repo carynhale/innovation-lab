@@ -3,6 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/fusion_catcher.$(NOW)
 
 CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
+INIT = for i in $$(SAMPLES); do cat fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).2.fastq.gz) \
@@ -38,11 +39,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
-	set -o pipefail && \
-	touch fusioncatcher/summary.txt && \
-	for i in $$(SAMPLES); do \
-		cat fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; \
-	done
+	$$(INIT)
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(PYTHON) --version &> version/fusioncatcher.txt)
