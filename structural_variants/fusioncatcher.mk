@@ -37,7 +37,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
-fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
+fusioncatcher/summary.txt : #$(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
 	for i in $$(SAMPLES); do cat fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done
 
 ..DUMMY := $(shell mkdir -p version; \
