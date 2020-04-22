@@ -38,7 +38,10 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
-	for i in $(SAMPLES); do cat fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done
+	for i in $(SAMPLES); do \
+		sed \"s/$/\t$$i/\" > fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.tmp; \
+		cat fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.tmp >> fusioncatcher/summary.txt; \
+	done
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(PYTHON) --version &> version/fusioncatcher.txt)
