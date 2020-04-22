@@ -30,7 +30,7 @@ fusioncatcher/$1/out/taskcomplete : fusioncatcher/$1/$1.1.fastq.gz fusioncatcher
 																		 -o fusioncatcher/$1/out \
 																		 -d $$(CACHE) \
 																		 -p 8 && \
-																		 echo $1 > fusion_catcher/$1/out/taskcomplete")
+																		 echo $1 > fusioncatcher/$1/out/taskcomplete")
 
 endef
 $(foreach sample,$(SAMPLES),\
