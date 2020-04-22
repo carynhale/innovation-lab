@@ -39,7 +39,7 @@ $(foreach sample,$(SAMPLES),\
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
 	for i in $(SAMPLES); do \
-		sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed -i "s/$$/\t$$i/" - >> fusioncatcher/summary.txt; \
+		sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed "s/$$/\t$$i/" >> fusioncatcher/summary.txt; \
 	done
 
 ..DUMMY := $(shell mkdir -p version; \
