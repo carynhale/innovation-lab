@@ -3,7 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/fusion_catcher.$(NOW)
 
 CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
-INIT = 'for i in $(SAMPLES); do cat fusioncatcher/$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done'
+INIT = $('for i in $(SAMPLES); do cat fusioncatcher/$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done')
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).2.fastq.gz) \
