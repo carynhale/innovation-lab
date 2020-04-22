@@ -30,7 +30,7 @@ GATK ?= gatk3
 BAM2FASTX ?= bam2fastx
 GENOTYPE_VARIANTS ?= genotype_variants
 VCF2MAF ?= vcf2maf.pl
-DEFUSE ?= $(PERL) /opt/common/CentOS_7/defuse/defuse-0.6.2/scripts/defuse.pl
+DEFUSE ?= $(PERL) /opt/common/CentOS_6/defuse/defuse-0.6.2/scripts/defuse.pl
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
