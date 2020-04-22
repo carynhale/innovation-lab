@@ -38,11 +38,13 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
+	j=1; \
 	for i in $(SAMPLES); do \
 		if [[ $$i -eq 1 ]]; then \
 			head -1 fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt > fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.tmp; \
 			sed -i "s/$$/\t$Sample_Name/" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.tmp; \
 			sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed -i "s/$$/\t$$i/" - >> fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.tmp; \
+			j=0; \
 		else \
 			sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed -i "s/$$/\t$$i/" - > fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.tmp; \
 		fi \
