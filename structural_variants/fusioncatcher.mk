@@ -38,6 +38,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
+	echo "Gene_1_symbol(5end_fusion_partner)\tGene_2_symbol(3end_fusion_partner)\tFusion_description\tCounts_of_common_mapping_reads\tSpanning_pairs\tSpanning_unique_reads\tLongest_anchor_found\tFusion_finding_method\tFusion_point_for_gene_1(5end_fusion_partner)\tFusion_point_for_gene_2(3end_fusion_partner)\tGene_1_id(5end_fusion_partner)\tGene_2_id(3end_fusion_partner)\tExon_1_id(5end_fusion_partner)\tExon_2_id(3end_fusion_partner)\tFusion_sequence\tPredicted_effect\tSample_Name" > fusioncatcher/summary.txt; \
 	for i in $(SAMPLES); do \
 		sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed "s/$$/\t$$i/" >> fusioncatcher/summary.txt; \
 	done
