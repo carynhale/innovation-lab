@@ -1,6 +1,8 @@
 ensembl_version                             = 75
 ensembl_genome_version                      = GRCh37
 ucsc_genome_version                         = hg19
+source_directory                            = /home/brownd7/share/usr/env/defuse-0.8.2/opt/defuse
+dataset_directory                           = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/Grch37.p13/Sequence/defuse_e75
 gene_models                                 = $(dataset_directory)/Homo_sapiens.$(ensembl_genome_version).$(ensembl_version).gtf
 genome_fasta                                = $(dataset_directory)/Homo_sapiens.$(ensembl_genome_version).$(ensembl_version).dna.chromosomes.fa
 repeats_filename                            = $(dataset_directory)/repeats.txt
@@ -58,7 +60,7 @@ span_count_threshold                        = 5
 percent_identity_threshold                  = 0.90
 split_min_anchor                            = 4
 splice_bias                                 = 10
-positive_controls                           =
+positive_controls                           = $(data_directory)/controls.txt
 probability_threshold                       = 0.50
 multi_exon_transcripts_stats                = no
 covariance_sampling_density                 = 0.01
