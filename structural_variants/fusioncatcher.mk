@@ -38,7 +38,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
-	echo "Gene_1_symbol(5end_fusion_partner)\tGene_2_symbol(3end_fusion_partner)\tFusion_description\tCounts_of_common_mapping_reads\tSpanning_pairs\tSpanning_unique_reads\tLongest_anchor_found\tFusion_finding_method\tFusion_point_for_gene_1(5end_fusion_partner)\tFusion_point_for_gene_2(3end_fusion_partner)\tGene_1_id(5end_fusion_partner)\tGene_2_id(3end_fusion_partner)\tExon_1_id(5end_fusion_partner)\tExon_2_id(3end_fusion_partner)\tFusion_sequence\tPredicted_effect\tSample_Name" > fusioncatcher/summary.txt; \
+	echo "Gene_1_symbol(5end_fusion_partner)	Gene_2_symbol(3end_fusion_partner)	Fusion_description	Counts_of_common_mapping_reads	Spanning_pairs	Spanning_unique_reads	Longest_anchor_found	Fusion_finding_method	Fusion_point_for_gene_1(5end_fusion_partner)	Fusion_point_for_gene_2(3end_fusion_partner)	Gene_1_id(5end_fusion_partner)	Gene_2_id(3end_fusion_partner)	Exon_1_id(5end_fusion_partner)	Exon_2_id(3end_fusion_partner)	Fusion_sequence	Predicted_effect	Sample_Name" > fusioncatcher/summary.txt; \
 	for i in $(SAMPLES); do \
 		sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed "s/$$/\t$$i/" >> fusioncatcher/summary.txt; \
 	done
