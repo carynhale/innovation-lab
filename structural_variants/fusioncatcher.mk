@@ -39,7 +39,7 @@ $(foreach sample,$(SAMPLES),\
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
 	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
-				     			    for i in ${$(SAMPLES)}; do cat fusioncatcher/$(i)/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done")
+				     			    for i in $(SAMPLES); do cat fusioncatcher/\"$i\"/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(PYTHON) --version &> version/fusioncatcher.txt)
