@@ -36,9 +36,9 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
-#fusion_catcher/summary.tsv : $(wildcard $(foreach sample,$(TUMOR_SAMPLES),fusion_catcher/$(sample)/out/taskcomplete))
-#	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
-#				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/fusioncatcher.R --samples '$(TUMOR_SAMPLES)'")
+fusioncatcher/summary.tsv : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
+	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
+				     			    for i in $(SAMPLES); do cat fusioncatcher/$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(PYTHON) --version &> version/fusioncatcher.txt)
