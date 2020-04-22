@@ -39,7 +39,7 @@ $(foreach sample,$(SAMPLES),\
 		
 fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
 	set -o pipefail && \
-	for i in $(SAMPLES); do \
+	for i in $$(SAMPLES); do \
 		cat fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; \
 	done
 
