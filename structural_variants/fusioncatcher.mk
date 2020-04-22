@@ -6,7 +6,8 @@ CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/cu
 
 fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).2.fastq.gz) \
-		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete)
+		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete) \
+		 		 fusioncatcher/summary.txt
 
 define merged-fastq
 fusioncatcher/$1/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
@@ -36,7 +37,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusion-catcher,$(sample))))
 		
-fusioncatcher/summary.tsv : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
+fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete))
 	$(call RUN,-c -n 1 -s 6G -m 8G,"set -o pipefail && \
 				     			    for i in $(SAMPLES); do cat fusioncatcher/$i/out/final-list_candidate-fusion-genes.hg19.txt >> fusioncatcher/summary.txt; done")
 
