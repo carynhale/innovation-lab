@@ -1,8 +1,8 @@
-ensembl_version                             = 69
+ensembl_version                             = 75
 ensembl_genome_version                      = GRCh37
 ucsc_genome_version                         = hg19
 source_directory                            = /opt/common/CentOS_6/defuse/defuse-0.6.2
-dataset_directory                           = /opt/common/CentOS_6/defuse/defuse-0.6.2/reference_dataset/homo_sapiens
+dataset_directory                           = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/Grch37.p13/Sequence/defuse_e75
 gene_models                                 = $(dataset_directory)/Homo_sapiens.$(ensembl_genome_version).$(ensembl_version).gtf
 genome_fasta                                = $(dataset_directory)/Homo_sapiens.$(ensembl_genome_version).$(ensembl_version).dna.chromosomes.fa
 repeats_filename                            = $(dataset_directory)/repeats.txt
