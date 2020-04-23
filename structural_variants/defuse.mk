@@ -5,7 +5,7 @@ LOGDIR ?= log/defuse.$(NOW)
 defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample)/results.candidate.tsv) \
-		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
+		 $(foreach sample,$(SAMPLES),defuse/$(sample)/taskcomplete)
 		 
 DEFUSE_CONFIG = innovation-lab/config/defuse.inc
 DEFUSE_E75 = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/Grch37.p13/Sequence/defuse_e75
