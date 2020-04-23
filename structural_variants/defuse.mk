@@ -4,6 +4,7 @@ LOGDIR ?= log/defuse.$(NOW)
 
 defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq) \
+		 $(foreach sample,$(SAMPLES),defuse/$(sample)/results.candidate.tsv) \
 		 $(foreach sample,$(SAMPLES),defuse/$(sample).taskcomplete)
 		 
 DEFUSE_CONFIG = innovation-lab/config/defuse.inc
