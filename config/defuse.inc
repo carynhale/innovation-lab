@@ -44,6 +44,7 @@ tools_directory                             = $(source_directory)/tools
 data_directory                              = $(source_directory)/data
 bowtie_threads                              = 1
 bowtie_quals                                = --phred33-quals
+bowtie_params                               = --chunkmbs 200
 max_insert_size                             = 500
 chromosomes                                 = 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,X,Y,MT
 mt_chromosome                               = MT
