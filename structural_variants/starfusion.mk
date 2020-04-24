@@ -2,7 +2,7 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/star_fusion.$(NOW)
 
-CTAT_LIB ?= $(HOME)/share/lib/ref_files/CTAT_GRCh37/GRCh37_gencode_v19_CTAT_lib_Apr032020/
+CTAT_LIB ?= $(HOME)/share/lib/ref_files/CTAT_GRCh37/GRCh37_gencode_v19_CTAT_lib_Apr032020/ctat_genome_lib_build_dir/
 
 star_fusion : $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).1.fastq) \
 			  $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).2.fastq) \
