@@ -24,7 +24,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 define star-fusion
-starfusion/%/taskcomplete : starfusion/%/%.1.fastq.gz starfusion/%/%.2.fastq.gz
+starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq.gz starfusion/$1/$1.2.fastq.gz
 	$(call RUN,-c -n 10 -s 2G -m 3G -v $(STAR_FUSION_ENV),"$(STAR_FUSION) \
 														  --left_fq starfusion/$1/$1.1.fastq \
 														  --right_fq starfusion/$1/$1.2.fastq \
