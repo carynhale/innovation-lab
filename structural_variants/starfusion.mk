@@ -6,7 +6,7 @@ CTAT_LIB ?= $(HOME)/share/lib/ref_files/CTAT_GRCh37
 
 star_fusion : $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).1.fastq) \
 			  $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).2.fastq) \
-			  $(foreach sample,$(SAMPLES),starfusion)
+			  $(foreach sample,$(SAMPLES),starfusion/$(sample)/taskcomplete)
 
 define merged-fastq
 starfusion/$1/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
@@ -24,14 +24,14 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 define star-fusion
-starfusion/%.star_fusion_timestamp : fastq/%.1.fastq.gz fastq/%.2.fastq.gz
+starfusion/%/taskcomplete : starfusion/%/%.1.fastq.gz starfusion/%/%.2.fastq.gz
 	$(call RUN,-c -n 10 -s 2G -m 3G -v $(STAR_FUSION_ENV),"$(STAR_FUSION) \
 														  --left_fq starfusion/$1/$1.1.fastq \
 														  --right_fq starfusion/$1/$1.2.fastq \
 														  --CPU 10 \
 														  --output_dir starfusion/$1 \
 														  --genome_lib_dir $$(CTAT_LIB) && \
-														  touch echo $1 > starfusion/$1/out/taskcomplete")
+														  touch echo $1 > starfusion/$1/taskcomplete")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call star-fusion,$(sample))))
