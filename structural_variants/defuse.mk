@@ -48,7 +48,7 @@ $(foreach sample,$(SAMPLES),\
 #				     			    $(RSCRIPT) $(SCRIPTS_DIR)/structural_variants/defuse.R --samples '$(TUMOR_SAMPLES)'")		
 		
 ..DUMMY := $(shell mkdir -p version; \
-			 $(PERL) --version > version/defuse.txt)
+			 ~/share/usr/env/defuse-0.8.0/bin/defuse_run.pl --help > version/defuse.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: defuse

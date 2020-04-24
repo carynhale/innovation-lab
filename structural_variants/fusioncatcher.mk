@@ -44,7 +44,7 @@ fusioncatcher/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),fusioncatcher
 	done
 
 ..DUMMY := $(shell mkdir -p version; \
-			 $(PYTHON) --version &> version/fusioncatcher.txt)
+			 ~/share/usr/env/fusioncatcher-1.2.0/bin/fusioncatcher.py --version &> version/fusioncatcher.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: fusion_catcher

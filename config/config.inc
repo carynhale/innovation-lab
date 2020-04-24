@@ -13,6 +13,7 @@ GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants
 VCF2MAF_ENV ?= $(HOME)/share/usr/env/vcf2maf-1.6.17
 DEFUSE_ENV ?= $(HOME)/share/usr/env/defuse-0.8.0
 FUSIONCATCHER_ENV ?= $(HOME)/share/usr/env/fusioncatcher-1.2.0
+STARFUSION_ENV ?= $(HOME)/share/usr/env/starfusion-1.6.0
 
 # aliases
 PYTHON ?= python
@@ -31,6 +32,7 @@ BAM2FASTX ?= bam2fastx
 GENOTYPE_VARIANTS ?= genotype_variants
 VCF2MAF ?= vcf2maf.pl
 DEFUSE ?= defuse_run.pl
+STAR_FUSION ?= STAR-Fusion
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
