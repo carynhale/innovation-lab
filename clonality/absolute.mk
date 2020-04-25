@@ -8,11 +8,11 @@ define run-absolute
 absolute/$1/$1.vcf : summary/mutation_summary.txt
 	$$(call RUN,-c -s 8G -m 12G -v $(ABSOLUTE_ENV),"set -o pipefail && \
 												   	mkdir -p absolute && \
-												   	mkdir -p absolute/$$(*) && \
+												   	mkdir -p absolute/$1 && \
 												   	$(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
 												   	--option 1 \
-												   	--file_name $$(@) \
-												   	--sample_set $$(*)")
+												   	--file_name $$(D) \
+												   	--sample_set $1")
 												  
 endef
 $(foreach set,$(SAMPLE_SETS),\
