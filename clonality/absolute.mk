@@ -5,7 +5,7 @@ LOGDIR ?= log/absolute.$(NOW)
 absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).vcf) \
 		   $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).taskcomplete)
 		   
-CMD = IFS='_' read -ra SAMPLE_SET <<< $1; for i in $SAMPLE_SET; do echo $i; done
+CMD = IFS='_' read -ra SAMPLE_SET <<< $1; for i in $(SAMPLE_SET); do echo $i; done
 
 define run-absolute
 absolute/$1/$1.vcf : summary/mutation_summary.txt
