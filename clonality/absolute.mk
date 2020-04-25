@@ -24,7 +24,7 @@ $(foreach set,$(SAMPLE_SETS),\
 define run-sufam
 absolute/$1/$1.taskcomplete : absolute/$1/$1.vcf
 	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV),"set -o pipefail && \
-												   $$(CMD) && \
+												   $(CMD) && \
 												   touch absolute/$1/$1.taskcomplete")
 												  
 endef
