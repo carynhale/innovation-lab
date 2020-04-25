@@ -200,18 +200,6 @@ TARGETS += manta
 manta :
 	$(call RUN_MAKE,innovation-lab/structural_variants/manta.mk)
 
-TARGETS += manta_tn
-manta_tn :
-	$(call RUN_MAKE,innovation-lab/structural_variants/manta_tn.mk)
-
-TARGETS += brass
-brass :
-	$(call RUN_MAKE,innovation-lab/structural_variants/brass.mk)
-
-TARGETS += integrate
-integrate :
-	$(call RUN_MAKE,innovation-lab/structural_variants/integrate.mk)
-	
 TARGETS += lumpy
 lumpy :
 	$(call RUN_MAKE,innovation-lab/structural_variants/lumpy.mk)
@@ -219,14 +207,6 @@ lumpy :
 TARGETS += hydra
 hydra :
 	$(call RUN_MAKE,innovation-lab/structural_variants/hydra.mk)
-
-TARGETS += nfuse_wgss_wtss
-nfuse_wgss_wtss :
-	$(call RUN_MAKE,innovation-lab/structural_variants/nfuseWGSSWTSS.mk)
-
-TARGETS += crest
-crest :
-	$(call RUN_MAKE,innovation-lab/structural_variants/crest.mk)
 
 TARGETS += delly
 delly :
@@ -249,38 +229,25 @@ TARGETS += star_fusion
 star_fusion:
 	$(call RUN_MAKE,innovation-lab/structural_variants/starfusion.mk)
 
-TARGETS += rnaseq_fusion
-rnaseq_fusion:
-	$(call RUN_MAKE,innovation-lab/test/workflows/rnaseq_fusion.mk)
-
 TARGETS += soap_fuse
 soap_fuse :
-	$(call RUN_MAKE,innovation-lab/structural_variants/soap_fuse.mk)
+	$(call RUN_MAKE,innovation-lab/structural_variants/soapfuse.mk)
 
 TARGETS += map_splice
 map_splice :
-	$(call RUN_MAKE,innovation-lab/structural_variants/map_splice.mk)
+	$(call RUN_MAKE,innovation-lab/structural_variants/mapsplice.mk)
 
-TARGETS += oncofuse
-oncofuse :
+TARGETS += onco_fuse
+onco_fuse :
 	$(call RUN_MAKE,innovation-lab/structural_variants/oncofuse.mk)
-	
-NUM_CHIMSCAN_JOBS ?= 5
-TARGETS += chimscan
-chimscan :
-	$(call RUN_MAKE_J,innovation-lab/structural_variants/chimerascan.mk,$(NUM_CHIMSCAN_JOBS))
 
-TARGETS += integrate_rnaseq
-integrate_rnaseq :
-	$(call RUN_MAKE,innovation-lab/structural_variants/integrate_rnaseq.mk)
-	
+TARGETS += integrate
+integrate :
+	$(call RUN_MAKE,innovation-lab/structural_variants/integrate.mk)
+
 TARGETS += tophat_fusion
-tophat_fusion : 
-	$(call RUN_MAKE,innovation-lab/structural_variants/tophat_fusion.mk)
-
-TARGETS += manta_rnaseq
-manta_rnaseq :
-	$(call RUN_MAKE,innovation-lab/structural_variants/manta_rnaseq.mk)
+tophat_fusion :
+	$(call RUN_MAKE,innovation-lab/structural_variants/tophat.mk)
 
 
 #==================================================
