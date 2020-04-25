@@ -29,7 +29,7 @@ starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq starfusion/$1/$1.2.fastq
 																	   $$(STAR_FUSION) \
 																	   --left_fq starfusion/$1/$1.1.fastq \
 																	   --right_fq starfusion/$1/$1.2.fastq \
-																	   --CPU 10 \
+																	   --CPU 20 \
 																	   --output_dir starfusion/$1 \
 																	   --genome_lib_dir $$(CTAT_LIB) && \
 																	   touch echo $1 > starfusion/$1/taskcomplete")
