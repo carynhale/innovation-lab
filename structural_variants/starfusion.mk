@@ -25,14 +25,14 @@ $(foreach sample,$(SAMPLES),\
 
 define star-fusion
 starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq starfusion/$1/$1.2.fastq
-	$$(call RUN,-c -n 10 -s 2G -m 3G -v $(STARFUSION_ENV),"set -o pipefail && \
-														   $(STAR_FUSION) \
-														   --left_fq starfusion/$1/$1.1.fastq \
-														   --right_fq starfusion/$1/$1.2.fastq \
-														   --CPU 10 \
-														   --output_dir starfusion/$1 \
-														   --genome_lib_dir $$(CTAT_LIB) && \
-														   touch echo $1 > starfusion/$1/taskcomplete")
+	$$(call RUN,-c -n 20 -s 1G -m 2G -v $(STARFUSION_ENV) -w 36:00:00,"set -o pipefail && \
+																	   $$(STAR_FUSION) \
+																	   --left_fq starfusion/$1/$1.1.fastq \
+																	   --right_fq starfusion/$1/$1.2.fastq \
+																	   --CPU 10 \
+																	   --output_dir starfusion/$1 \
+																	   --genome_lib_dir $$(CTAT_LIB) && \
+																	   touch echo $1 > starfusion/$1/taskcomplete")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call star-fusion,$(sample))))
