@@ -6,7 +6,8 @@ CTAT_LIB ?= $(HOME)/share/lib/ref_files/CTAT_GRCh37/GRCh37_gencode_v19_CTAT_lib_
 
 star_fusion : $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).1.fastq) \
 			  $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).2.fastq) \
-			  $(foreach sample,$(SAMPLES),starfusion/$(sample)/taskcomplete)
+			  $(foreach sample,$(SAMPLES),starfusion/$(sample)/taskcomplete) \
+			  starfusion/summary.txt
 
 define merged-fastq
 starfusion/$1/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
@@ -36,6 +37,13 @@ starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq starfusion/$1/$1.2.fastq
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call star-fusion,$(sample))))
+		
+starfusion/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),starfusion/$(sample)/taskcomplete))
+	echo "FusionName	JunctionReadCount	SpanningFragCount	SpliceType	LeftGene	LeftBreakpoint	RightGene	RightBreakpoint	LargeAnchorSupport	FFPM	LeftBreakDinuc	LeftBreakEntropy	RightBreakDinuc	RightBreakEntropy	annots	SampleName" > starfusion/summary.txt; \
+	for i in $(SAMPLES); do \
+		sed -e "1d" starfusion/$$i/star-fusion.fusion_predictions.abridged.tsv | sed "s/$$/\t$$i/" >> starfusion/summary.txt; \
+	done
+	
 
 ..DUMMY := $(shell mkdir -p version; \
 			 ~/share/usr/env/starfusion-1.6.0/bin/STAR-Fusion --help &> version/starfusion.txt)
