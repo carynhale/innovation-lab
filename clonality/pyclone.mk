@@ -1,15 +1,14 @@
-include modules/Makefile.inc
+include innovation-lab/Makefile.inc
 
-LOGDIR ?= log/mspyclone.$(NOW)
-PHONY += pyclone sufam
-
-MIN_DEPTH ?= 50
+LOGDIR ?= log/pyclone.$(NOW)
 
 pyclone : $(foreach set,$(SAMPLE_SETS),sufam/$(set).tsv) \
 		  $(foreach set,$(SAMPLE_SETS),pyclone/$(set)/config.yaml) \
 		  $(foreach set,$(SAMPLE_SETS),pyclone/$(set)/trace/alpha.tsv.bz2) \
 		  $(foreach set,$(SAMPLE_SETS),pyclone/$(set)/report/pyclone.tsv) \
 		  $(foreach set,$(SAMPLE_SETS),pyclone/$(set)/report/pyclone.pdf)
+		  
+MIN_DEPTH ?= 50
 		  
 define multi-sample-pyclone
 sufam/%.txt : summary/tsv/mutation_summary.tsv
@@ -40,6 +39,8 @@ $(foreach set,$(SAMPLE_SETS),\
 		$(eval $(call multi-sample-pyclone,$(set))))
 		
 
-.DELETE_ON_ERROR:
+..DUMMY := $(shell mkdir -p version; \
+			 ~/share/usr/env/pyclone-0.13.1/bin/PyClone --version &> version/pyclone.txt)
 .SECONDARY:
-.PHONY: $(PHONY)
+.DELETE_ON_ERROR:
+.PHONY: pyclone

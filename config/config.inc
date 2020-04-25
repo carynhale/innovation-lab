@@ -14,6 +14,7 @@ VCF2MAF_ENV ?= $(HOME)/share/usr/env/vcf2maf-1.6.17
 DEFUSE_ENV ?= $(HOME)/share/usr/env/defuse-0.8.0
 FUSIONCATCHER_ENV ?= $(HOME)/share/usr/env/fusioncatcher-1.2.0
 STARFUSION_ENV ?= $(HOME)/share/usr/env/starfusion-1.6.0
+ABSOLUTE_ENV ?= $(HOME)/share/usr/env/cntu-0.0.1
 
 # aliases
 PYTHON ?= python
