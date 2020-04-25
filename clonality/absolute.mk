@@ -11,7 +11,7 @@ absolute/$1/$1.vcf : summary/mutation_summary.txt
 												   	mkdir -p absolute/$1 && \
 												   	$(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
 												   	--option 1 \
-												   	--file_name $$(D) \
+												   	--file_name $$(<) \
 												   	--sample_set $1")
 												  
 endef
