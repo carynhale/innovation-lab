@@ -2,7 +2,8 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/absolute.$(NOW)
 
-absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).vcf)
+absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).vcf) \
+		   $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).taskcomplete)
 
 define run-absolute
 absolute/$1/$1.vcf : summary/mutation_summary.txt
