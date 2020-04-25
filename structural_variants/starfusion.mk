@@ -32,13 +32,13 @@ starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq starfusion/$1/$1.2.fastq
 																	   --CPU 20 \
 																	   --output_dir starfusion/$1 \
 																	   --genome_lib_dir $$(CTAT_LIB) && \
-																	   touch echo $1 > starfusion/$1/taskcomplete")
+																	   echo $1 > starfusion/$1/taskcomplete")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call star-fusion,$(sample))))
 
 ..DUMMY := $(shell mkdir -p version; \
-			 ~/share/usr/env/starfusion-1.6.0/bin/STAR-Fusion --help > version/starfusion.txt)
+			 ~/share/usr/env/starfusion-1.6.0/bin/STAR-Fusion --help &> version/starfusion.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: star_fusion
