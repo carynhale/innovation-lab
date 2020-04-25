@@ -5,7 +5,7 @@ LOGDIR ?= log/absolute.$(NOW)
 absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).vcf) \
 		   $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).taskcomplete)
 		   
-CMD = "IFS='_' read -ra SAMPLE_SET <<< $1; for i in $SAMPLE_SET; do echo $i; done"
+CMD = IFS='_' read -ra SAMPLE_SET <<< $1; for i in $SAMPLE_SET; do echo $i; done
 
 define run-absolute
 absolute/$1/$1.vcf : summary/mutation_summary.txt
@@ -23,7 +23,7 @@ $(foreach set,$(SAMPLE_SETS),\
 		
 define run-sufam
 absolute/$1/$1.taskcomplete : absolute/$1/$1.vcf
-	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV),"set -o pipefail && \
+	$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV),"set -o pipefail && \
 												   $(CMD) && \
 												   touch absolute/$1/$1.taskcomplete")
 												  
