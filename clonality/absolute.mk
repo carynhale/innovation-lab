@@ -2,15 +2,14 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/absolute.$(NOW)
 
-absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).vcf) \
-		   $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).timestamp)
+absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf) \
+		   $(foreach sample,$(SAMPLES),absolute/$(sample).txt)
 		   
 
 define run-absolute
-absolute/$1/$1.vcf : summary/mutation_summary.txt
+absolute/$1.vcf : summary/mutation_summary.txt
 	$$(call RUN,-c -s 8G -m 12G -v $(ABSOLUTE_ENV),"set -o pipefail && \
 												   	mkdir -p absolute && \
-												   	mkdir -p absolute/$1 && \
 												   	$(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
 												   	--option 1 \
 												   	--file_name $$(<) \
@@ -21,14 +20,17 @@ $(foreach set,$(SAMPLE_SETS),\
 		$(eval $(call run-absolute,$(set))))
 		
 define run-sufam
-absolute/$1/$1.timestamp : absolute/$1/$1.vcf
-	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV),"set -o pipefail && \
-												   $(SCRIPTS_DIR)/clonality/absolute.sh $1 && \
-												   touch absolute/$1/$1.timestamp")
+absolute/$1.txt : $(wildcard $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf)) bam/$1.bam
+	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV) -w 12:00:00,"set -o pipefail && \
+															   $(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
+															   --option 2 \
+															   --sample_name $1 \
+															   --sample_set '$(SAMPLE_SETS)'\
+															   --ref_fasta $(REF_FASTA)")
 												  
 endef
-$(foreach set,$(SAMPLE_SETS),\
-		$(eval $(call run-sufam,$(set))))
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call run-sufam,$(sample))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
