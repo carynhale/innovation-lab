@@ -25,7 +25,7 @@ absolute/$1.txt : $(wildcard $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf)) 
 															   $(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
 															   --option 2 \
 															   --sample_name $1 \
-															   --sample_set '$(SAMPLE_SETS)'\
+															   --sample_set $(SAMPLE_SETS) \
 															   --ref_fasta $(REF_FASTA)")
 												  
 endef
