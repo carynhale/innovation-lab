@@ -23,7 +23,7 @@ $(foreach set,$(SAMPLE_SETS),\
 define run-sufam
 absolute/$1/$1.timestamp : absolute/$1/$1.vcf
 	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV),"set -o pipefail && \
-												   innovation-lab/clonality/absolute.sh $1
+												   $(SCRIPTS_DIR)/clonality/absolute.sh $1 && \
 												   touch absolute/$1/$1.timestamp")
 												  
 endef
