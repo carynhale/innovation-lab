@@ -2,7 +2,7 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/absolute.$(NOW)
 
-absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf)
+abs : $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf)
 #		   $(foreach sample,$(SAMPLES),absolute/$(sample).txt)
 		   
 
@@ -36,4 +36,4 @@ $(foreach set,$(SAMPLE_SETS),\
 			 ~/share/usr/env/cntu-0.0.1/bin/R --version > version/absolute.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
-.PHONY: absolute
+.PHONY: abs
