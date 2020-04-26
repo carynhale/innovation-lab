@@ -3,9 +3,8 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/absolute.$(NOW)
 
 absolute : $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).vcf) \
-		   $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).taskcomplete)
+		   $(foreach set,$(SAMPLE_SETS),absolute/$(set)/$(set).timestamp)
 		   
-CMD = `IFS='_' read -ra SAMPLE_SET <<< $1; $$(foreach sample,$(SAMPLE_SET),echo $(sample);)`
 
 define run-absolute
 absolute/$1/$1.vcf : summary/mutation_summary.txt
@@ -22,10 +21,11 @@ $(foreach set,$(SAMPLE_SETS),\
 		$(eval $(call run-absolute,$(set))))
 		
 define run-sufam
-absolute/$1/$1.taskcomplete : absolute/$1/$1.vcf
+absolute/$1/$1.timestamp : absolute/$1/$1.vcf
 	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV),"set -o pipefail && \
-												   $(CMD) && \
-												   touch absolute/$1/$1.taskcomplete")
+												   IFS='_' read -ra SAMPLE_SET <<< $1 && \
+												   $$(foreach sample,$$(SAMPLE_SET),echo $$(sample)) && \
+												   touch absolute/$1/$1.timestamp")
 												  
 endef
 $(foreach set,$(SAMPLE_SETS),\
