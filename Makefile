@@ -33,15 +33,15 @@ msk_access :
 	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
 	
 TARGETS += waltz_access
-waltz_access:
+waltz_access :
 	$(call RUN_MAKE,innovation-lab/workflows/waltz_access.mk)
 	
 TARGETS += genotype_access
-genotype_access:
+genotype_access :
 	$(call RUN_MAKE,innovation-lab/workflows/genotype_access.mk)
 	
 TARGETS += cluster_access
-cluster_access:
+cluster_access :
 	$(call RUN_MAKE,innovation-lab/workflows/cluster_access.mk)
 
 
@@ -138,7 +138,7 @@ lancet :
 	$(call RUN_MAKE,innovation-lab/variant_callers/lancet.mk)
 	
 TARGETS += platypus
-platypus:
+platypus :
 	$(call RUN_MAKE,innovation-lab/variant_callers/platypus.mk)
 	
 	
@@ -159,11 +159,11 @@ haplotype_caller :
 	$(call RUN_MAKE,innovation-lab/variant_callers/haplotype_caller.mk)
 	
 TARGETS += genotype_hotspot
-genotype_hotspot: 
+genotype_hotspot : 
 	$(call RUN_MAKE,innovation-lab/variant_callers/genotype_hotspots.mk)
 	
 TARGETS += multisample_genotype
-multisample_genotype:
+multisample_genotype :
 	$(call RUN_MAKE,innovation-lab/variant_callers/multisample_genotype.mk)
 	
 
@@ -226,7 +226,7 @@ fusion_catcher :
 	$(call RUN_MAKE,innovation-lab/structural_variants/fusioncatcher.mk)
 	
 TARGETS += star_fusion
-star_fusion:
+star_fusion :
 	$(call RUN_MAKE,innovation-lab/structural_variants/starfusion.mk)
 
 TARGETS += soap_fuse
@@ -318,7 +318,7 @@ pyclone :
 #==================================================
 
 TARGETS += viral_detection
-viral_detection:
+viral_detection :
 	$(call RUN_MAKE,innovation-lab/test/workflows/viral_detection.mk)
 	
 TARGETS += krona_classify
@@ -347,15 +347,15 @@ cravat_summary :
 	$(call RUN_MAKE,innovation-lab/summary/cravat_summary.mk)
 	
 TARGETS += copynumber_summary
-copynumber_summary:
+copynumber_summary :
 	$(call RUN_MAKE,innovation-lab/test/workflows/copynumber_summary.mk)
 	
 TARGETS += somatic_indels
-somatic_indels:
+somatic_indels :
 	$(call RUN_MAKE,innovation-lab/test/workflows/somatic_indels.mk)
 	
 TARGETS += somatic_variants
-somatic_variants:
+somatic_variants :
 	$(call RUN_MAKE,innovation-lab/test/workflows/somatic_variants.mk)
 	
 
@@ -389,7 +389,7 @@ cravat_annotate :
 #==================================================
 
 TARGETS += hotspot_summary
-hotspot_summary:
+hotspot_summary :
 	$(MAKE) -f innovation-lab/variant_callers/genotypehotspots.mk -j $(NUM_JOBS)
 	$(call RUN_MAKE,innovation-lab/summary/hotspotsummary.mk)
 	
