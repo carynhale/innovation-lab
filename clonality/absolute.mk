@@ -20,7 +20,7 @@ $(foreach set,$(SAMPLE_SETS),\
 		
 define run-sufam
 absolute/$1.txt : $(wildcard $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf)) bam/$1.bam
-	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV) -w 12:00:00,"set -o pipefail && \
+	$$(call RUN,-c -s 6G -m 8G -w 12:00:00 -v $(ABSOLUTE_ENV),"set -o pipefail && \
 															   $(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
 															   --option 2 \
 															   --sample_name $1 \
