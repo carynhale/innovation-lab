@@ -24,7 +24,7 @@ define run-sufam
 absolute/$1/$1.timestamp : absolute/$1/$1.vcf
 	$$(call RUN,-c -s 6G -m 8G -v $(ABSOLUTE_ENV),"set -o pipefail && \
 												   IFS='_' read -ra SAMPLE_SET <<< $1 && \
-												   echo $$$$SAMPLE_SET && \
+												   for i in $$$$SAMPLE_SET; do echo $i; done && \
 												   touch absolute/$1/$1.timestamp")
 												  
 endef
