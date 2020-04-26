@@ -23,9 +23,9 @@ absolute/$1.txt : $(wildcard $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf)) 
 	$$(call RUN,-c -s 6G -m 8G -w 12:00:00 -v $(ABSOLUTE_ENV),"set -o pipefail && \
 															   $(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
 															   --option 2 \
-															   --sample_name $1 \
-															   --sample_set $(SAMPLE_SETS) \
-															   --ref_fasta $(REF_FASTA)")
+															   --sample_name '$1' \
+															   --sample_set '$(SAMPLE_SETS)' \
+															   --ref_fasta '$(REF_FASTA)'")
 												  
 endef
 $(foreach sample,$(SAMPLES),\
