@@ -1,7 +1,12 @@
-include modules/Makefile.inc
+include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/facets.$(NOW)
-PHONY += facets facets/vcf facets/pileup facets/cncf facets/plots facets/plots/log2 facets/plots/cncf facets/plots/bychr facets/summary
+
+facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt) \
+		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
+		 facets/summary/bygene.txt \
+		 facets/summary/bygene.pdf \
+		 facets/summary/summary.tsv
 
 RUN_FACETS = $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R
 MERGE_TN = python $(SCRIPTS_DIR)/copy_number/facets_merge_tn.py
@@ -42,11 +47,6 @@ FACETS_GENE_CN_OPTS = $(if $(GENES_FILE),--genesFile $(GENES_FILE)) \
 FACETS_PLOT_GENE_CN_OPTS = --sampleColumnPostFix '_LRR_threshold'
 
 
-facets : $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).txt) \
-		 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
-		 facets/summary/bygene.txt \
-		 facets/summary/bygene.pdf \
-		 facets/summary/summary.tsv
 
 facets/vcf/dbsnp_het_gatk.snps.vcf : $(FACETS_DBSNP) $(foreach sample,$(SAMPLES),gatk/vcf/$(sample).variants.snps.het.pass.vcf)
 	$(call RUN,-c -s 4G -m 6G,"set -o pipefail && \
