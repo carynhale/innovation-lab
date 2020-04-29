@@ -19,7 +19,7 @@ $(foreach set,$(SAMPLE_SETS),\
 		$(eval $(call run-absolute,$(set))))
 		
 define run-sufam
-absolute/$1.txt : $(wildcard $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf)) bam/$1.bam
+absolute/$1.txt : $(foreach set,$(SAMPLE_SETS),absolute/$(set).vcf) bam/$1.bam
 	$$(call RUN,-c -s 6G -m 8G -w 12:00:00 -v $(ABSOLUTE_ENV),"set -o pipefail && \
 															   $(RSCRIPT) $(SCRIPTS_DIR)/clonality/absolute.R \
 															   --option 2 \
