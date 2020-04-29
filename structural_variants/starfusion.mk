@@ -38,7 +38,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call star-fusion,$(sample))))
 		
-starfusion/summary.txt : $(wildcard $(foreach sample,$(SAMPLES),starfusion/$(sample)/taskcomplete))
+starfusion/summary.txt : $(foreach sample,$(SAMPLES),starfusion/$(sample)/taskcomplete)
 	echo "FusionName	JunctionReadCount	SpanningFragCount	SpliceType	LeftGene	LeftBreakpoint	RightGene	RightBreakpoint	LargeAnchorSupport	FFPM	LeftBreakDinuc	LeftBreakEntropy	RightBreakDinuc	RightBreakEntropy	annots	SampleName" > starfusion/summary.txt; \
 	for i in $(SAMPLES); do \
 		sed -e "1d" starfusion/$$i/star-fusion.fusion_predictions.abridged.tsv | sed "s/$$/\t$$i/" >> starfusion/summary.txt; \
