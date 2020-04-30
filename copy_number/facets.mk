@@ -3,7 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/facets.$(NOW)
 
 facets : facets/targets/targets.vcf \
-		 $(foreach pair,$(SAMPLE_PAIRS),facets/pielup/$(pair).txt.gz)
+		 $(foreach pair,$(SAMPLE_PAIRS),facets/pileup/$(pair).txt.gz)
 
 facets/targets/targets.vcf : $(TARGETS_FILE)
 	$(INIT) $(BEDTOOLS) intersect -header -u -a $(DBSNP) -b $< > $@
