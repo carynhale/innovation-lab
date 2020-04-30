@@ -39,8 +39,8 @@ facets/cncf/$1_$2.RData : facets/pileup/$1_$2.txt.gz
 													$(call FACETS_OPTS,$*)")
 													
 facets/plots/log2/$1_$2.pdf : facets/cncf/$1_$2.RData
-	$(call RUN,-c -s 8G -m 16G -v $(ABSOLUTE_ENV),"set -o pipefail && \
-												   $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R \
+	$$(call RUN,-c -s 8G -m 16G -v $(ABSOLUTE_ENV),"set -o pipefail && \
+												    $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R \
 													--option 2 \
 													--sample_name $1_$2")
 
