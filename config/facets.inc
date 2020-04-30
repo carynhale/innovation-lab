@@ -5,7 +5,8 @@ FACETS_NDEPTH_MAX ?= 1000
 FACETS_PRE_CVAL ?= 50
 FACETS_CVAL1 ?= 150
 FACETS_CVAL2 ?= 50
-FACETS_OPTS = --het_threshold $(FACETS_HET_THRESHOLD) \
+FACETS_OPTS = --seed 0 \
+			  --het_threshold $(FACETS_HET_THRESHOLD) \
 			  --min_nhet $(FACETS_MIN_NHET) \
 			  --snp_nbhd $(FACETS_SNP_NBHD) \
 			  --ndepth_max $(FACETS_NDEPTH_MAX) \
