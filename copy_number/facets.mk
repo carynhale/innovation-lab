@@ -19,7 +19,8 @@ facets/pileup/$1_$2.txt.gz : bam/$1.bam bam/$2.bam facets/targets/targets.vcf
 													--gzip \
 													--max-depth=15000 \
 													$$(<<<) \
-													$$@ $$(<<) \
+													$$@ \
+													$$(<<) \
 													$$(<)")
 endef
 $(foreach pair,$(SAMPLE_PAIRS),$(eval $(call snp-pileup-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)))))
