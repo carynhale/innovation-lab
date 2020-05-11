@@ -162,7 +162,9 @@ marianas/$1/$1_cl_aln_srt_MD.bam : marianas/$1/$1_cl_aln_srt.bam
 										OUTPUT=$$(@) \
 										METRICS_FILE=marianas/$1/$1_cl_aln_srt.txt \
 										REMOVE_DUPLICATES=false \
-										ASSUME_SORTED=true")
+										ASSUME_SORTED=true && \
+										$$(SAMTOOLS) index $$(@) && \
+									  	cp marianas/$1/$1_cl_aln_srt_MD.bam.bai marianas/$1/$1_cl_aln_srt_MD.bai")
 										
 marianas/$1/$1_cl_aln_srt_MD.intervals : marianas/$1/$1_cl_aln_srt_MD.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
