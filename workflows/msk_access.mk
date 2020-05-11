@@ -203,7 +203,7 @@ marianas/$1/$1_cl_aln_srt_MD_IR_FX.grp : marianas/$1/$1_cl_aln_srt_MD_IR_FX.bam
 									   							   -I $$(<) \
 									   							   -o $$(@)")
 
-marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX.bam marianas/$1/$1_aln_srt_MD_IR_FX.grp
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX.bam marianas/$1/$1_cl_aln_srt_MD_IR_FX.grp
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 									   							   $$(call GATK_CMD,16G) \
 									   							   -T PrintReads \
