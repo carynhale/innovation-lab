@@ -1,0 +1,8 @@
+ifndef FGBIO_INC
+FGBIO_MEM_XMS = 2G
+FGBIO_MEM_XMX = 8G
+FGBIO_CMD = $(call FGBIO_OPT,$(FGBIO_MEM_XMS),$(FGBIO_MEM_XMX))
+FGBIO_OPT = $(JAVA8) -server -Xms$(1) -Xmx$(2)
+
+endif
+FGBIO_INC = true
