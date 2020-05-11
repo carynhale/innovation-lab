@@ -6,8 +6,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/msk_access.$(NOW)
 
-msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz)
-#		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
+msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz)
 #		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample).standard.bam) \
 #		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
 #		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
