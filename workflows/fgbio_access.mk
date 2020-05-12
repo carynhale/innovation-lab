@@ -73,7 +73,7 @@ fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 																		   UNMAPPED=$$(<<) \
 																		   ALIGNED=/dev/stdin \
 																		   OUTPUT=$$(@) \
-																		   REFERENCE_FILE=$$(REF_FASTA) \
+																		   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 																		   SORT_ORDER=coordinate \
 																		   MAX_GAPS=-1 \
 																		   ORIENTATIONS=FR")
