@@ -32,10 +32,6 @@ TARGETS += msk_access
 msk_access :
 	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
 	
-TARGETS += fgbio_access
-fgbio_access :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
-	
 TARGETS += waltz_access
 waltz_access :
 	$(call RUN_MAKE,innovation-lab/workflows/waltz_access.mk)
@@ -425,9 +421,9 @@ TARGETS += cnvkit_qc
 cnvkit_qc :
 	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitqc.mk)
 	
-
 TARGETS += fgbio_access
 fgbio_access :
-	$(call RUN_MAKE,innovation-lab/test/workflows/fgbio_access.mk)
-	
+	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
+
+
 .PHONY : $(TARGETS)
