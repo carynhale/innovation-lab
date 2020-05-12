@@ -6,7 +6,8 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/fgbio_access.$(NOW)
 
 fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz)
 
 define copy-fastq
 fgbio/$1/$1_R1.fastq.gz : $3
@@ -38,8 +39,32 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-2-bam,$(sample))))
 	
+define mark-adapters
+fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $$(MARK_ADAPTERS) \
+									  INPUT=$$(<) \
+									  OUTPUT=/dev/stdout \
+									  METRICS=${METRICS_FILE} \
+									  VALIDATION_STRINGENCY=SILENT | \
+									  $$(SAM_TO_FASTQ) \
+									  INPUT=/dev/stdin \
+									  FASTQ=$$(@) \
+									  INTERLEAVE=true \
+									  CLIPPING_ATTRIBUTE=XT \
+									  CLIPPING_ACTION=X \
+									  CLIPPING_MIN_LENGTH=25")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call mark-adapters,$(sample))))
+
+	
 ..DUMMY := $(shell mkdir -p version; \
-			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt)
+			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
+			 echo "picard" >> version/fgbio_access.txt; \
+			 $(PICARD) MarkIlluminaAdapters --version &>> version/fgbio_access.txt; \
+			 $(PICARD) SamToFastq --version &>> version/fgbio_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: fgbio_access
