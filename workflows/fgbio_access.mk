@@ -45,7 +45,7 @@ fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq.bam
 									  $$(MARK_ADAPTERS) \
 									  INPUT=$$(<) \
 									  OUTPUT=/dev/stdout \
-									  METRICS=${METRICS_FILE} \
+									  METRICS=fgbio/$1/$1_adapter-metrics.txt \
 									  VALIDATION_STRINGENCY=SILENT | \
 									  $$(SAM_TO_FASTQ) \
 									  INPUT=/dev/stdin \
