@@ -239,7 +239,7 @@ define genotype-and-collapse
 marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG-pileup.txt : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  cut -f 1-3 $$(WALTZ_BED_FILE) > .bed && \
+									  cp $$(WALTZ_BED_FILE) > .bed && \
 									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX_BR_RG.bam $$(REF_FASTA) .bed && \
 									  cd ../..")
 									  
