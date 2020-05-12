@@ -39,7 +39,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-2-bam,$(sample))))
 	
 ..DUMMY := $(shell mkdir -p version; \
-			 $(JAVA8) -jar fgbio-1.1.0/fgbio-1.1.0.jar --help &> version/fgbio_access.txt)
+			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: fgbio_access
