@@ -76,6 +76,9 @@ MARIANAS ?= $(HOME)/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
 # waltz command line
 WALTZ ?= $(HOME)/share/usr/marianas-1.8.1/Waltz-3.0.jar
 
+# fgbio command line
+FGBIO ?= $(HOME)/share/usr/fgbio-1.1.0/fgbio-1.1.0.jar
+
 # paths
 SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
 TMPDIR ?= $(HOME)/share/tmp
