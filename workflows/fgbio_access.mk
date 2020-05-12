@@ -7,6 +7,7 @@ LOGDIR ?= log/fgbio_access.$(NOW)
 
 fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz)
 
 define copy-fastq
@@ -40,7 +41,14 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-2-bam,$(sample))))
 	
 define mark-adapters
-fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq.bam
+fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $$(SORT_SAM) \
+									  INPUT=$$(<) \
+									  OUTPUT=$$(@) \
+									  SORT_ORDER=queryname")
+
+fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $$(MARK_ADAPTERS) \
 									  INPUT=$$(<) \
