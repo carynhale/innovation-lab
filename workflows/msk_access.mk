@@ -8,8 +8,8 @@ LOGDIR ?= log/msk_access.$(NOW)
 
 msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR_RG.bam)
-#		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR_RG.bam) \
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt)
 #		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
 #			 $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
 #			 $(foreach sample,$(SAMPLES),bam/$(sample)__aln_srt_IR_FX.bam) \
@@ -236,19 +236,19 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
 		
 define genotype-and-collapse
-marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt : marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg.bam
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG-pileup.txt : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  cut -f 1-3 $$(WALTZ_BED_FILE) > .bed && \
-									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt_fx_ir_dm_bqsr_rg.bam $$(REF_FASTA) .bed && \
+									  $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX_BR_RG.bam $$(REF_FASTA) .bed && \
 									  cd ../..")
 									  
-marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt
+marianas/$1/first-pass.mate-position-sorted.txt : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG-pileup.txt
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqFirstPass \
-									  $1_aln_srt_fx_ir_dm_bqsr_rg.bam \
-									  $1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt \
+									  $1_cl_aln_srt_MD_IR_FX_BR_RG.bam \
+									  $1_cl_aln_srt_MD_IR_FX_BR_RG-pileup.txt \
 									  $$(MARIANAS_MIN_MAPQ) \
 									  $$(MARIANAS_MIN_BAQ) \
 									  $$(MARIANAS_MISMATCH) \
@@ -262,8 +262,8 @@ marianas/$1/second-pass-alt-alleles.txt : marianas/$1/first-pass.mate-position-s
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
 									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.DuplexUMIBamToCollapsedFastqSecondPass \
-									  $1_aln_srt_fx_ir_dm_bqsr_rg.bam \
-									  $1_aln_srt_fx_ir_dm_bqsr_rg-pileup.txt \
+									  $1_cl_aln_srt_MD_IR_FX_BR_RG.bam \
+									  $1_cl_aln_srt_MD_IR_FX_BR_RG-pileup.txt \
 									  $$(MARIANAS_MIN_MAPQ) \
 									  $$(MARIANAS_MIN_BAQ) \
 									  $$(MARIANAS_MISMATCH) \
