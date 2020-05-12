@@ -9,7 +9,7 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_cl_aln.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -66,10 +66,17 @@ fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 									  CLIPPING_ACTION=X \
 									  CLIPPING_MIN_LENGTH=25")
 
-fgbio/$1/$1_fq_cl_aln.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq.bam
+fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 																		   $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
-																		   $$(SAMTOOLS) view -bhS - > $$(@)")
+																		   $$(MERGE_ALIGNMENTS) \
+																		   UNMAPPED=$$(<<) \
+																		   ALIGNED=/dev/stdin \
+																		   OUTPUT=$$(@) \
+																		   REFERENCE_FILE=$$(REF_FASTA) \
+																		   SORT_ORDER=coordinate \
+																		   MAX_GAPS=-1 \
+																		   ORIENTATIONS=FR")
 
 endef
 $(foreach sample,$(SAMPLES),\
