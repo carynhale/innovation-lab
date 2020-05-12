@@ -8,8 +8,8 @@ LOGDIR ?= log/fgbio_access.$(NOW)
 fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_cl_aln.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz)
+#			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_cl_aln.bam)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
