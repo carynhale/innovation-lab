@@ -70,6 +70,7 @@ $(foreach sample,$(SAMPLES),\
 ..DUMMY := $(shell mkdir -p version; \
 			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
 			 echo "picard" >> version/fgbio_access.txt; \
+			 $(PICARD) SortSam --version &>> version/fgbio_access.txt; \
 			 $(PICARD) MarkIlluminaAdapters --version &>> version/fgbio_access.txt; \
 			 $(PICARD) SamToFastq --version &>> version/fgbio_access.txt)
 .DELETE_ON_ERROR:
