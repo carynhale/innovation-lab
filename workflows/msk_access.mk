@@ -9,8 +9,8 @@ LOGDIR ?= log/msk_access.$(NOW)
 msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR_RG.bam) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt)
-#		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp)
 #			 $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
 #			 $(foreach sample,$(SAMPLES),bam/$(sample)__aln_srt_IR_FX.bam) \
 #			 $(foreach sample,$(SAMPLES),bam/$(sample)__aln_srt_IR_FX-simplex.bam) \
@@ -278,27 +278,18 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call genotype-and-collapse,$(sample))))
 	
 define fastq-to-collapsed-bam
-marianas/$1/$1__aln.bam : marianas/$1/second-pass-alt-alleles.txt
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln.bam : marianas/$1/second-pass-alt-alleles.txt
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
 																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) marianas/$1/collapsed_R1_.fastq marianas/$1/collapsed_R2_.fastq | $$(SAMTOOLS) view -bhS - > $$(@)")
 																		           
-marianas/$1/$1__aln_srt.bam : marianas/$1/$1__aln.bam
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 								  									   	   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 								  									   	   $$(SAMTOOLS) index $$(@) && \
-								  									   	   cp marianas/$1/$1__aln_srt.bam.bai marianas/$1/$1__aln_srt.bai")
+								  									   	   cp marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam.bai marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bai")
 								  									   		   
-marianas/$1/$1__aln_srt_fx.bam : marianas/$1/$1__aln_srt.bam
-	$$(call RUN,-c -n 1 -s 12G -m 18G,"set -o pipefail && \
-									   $$(FIX_MATE) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   SORT_ORDER=coordinate \
-									   COMPRESSION_LEVEL=0 \
-									   CREATE_INDEX=true")
-									  		   
-marianas/$1/$1__aln_srt_fx.intervals : marianas/$1/$1__aln_srt_fx.bam
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.intervals : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 									   							   $$(call GATK_CMD,1G,12G)	\
 									   							   -allowPotentiallyMisencodedQuals \
@@ -309,7 +300,7 @@ marianas/$1/$1__aln_srt_fx.intervals : marianas/$1/$1__aln_srt_fx.bam
 									   							   -o $$(@) \
 									   							   -known $$(KNOWN_INDELS)")
 
-marianas/$1/$1__aln_srt_fx_ir.bam : marianas/$1/$1__aln_srt_fx.bam marianas/$1/$1__aln_srt_fx.intervals
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 									   							   $$(call GATK_CMD,1G,12G)	\
 									   							   -allowPotentiallyMisencodedQuals \
@@ -320,7 +311,16 @@ marianas/$1/$1__aln_srt_fx_ir.bam : marianas/$1/$1__aln_srt_fx.bam marianas/$1/$
 									   							   -o $$(@) \
 									   							   -known $$(KNOWN_INDELS)")
 									  		   
-marianas/$1/$1__aln_srt_fx_rg.bam : marianas/$1/$1__aln_srt_fx_ir.bam
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR.bam
+	$$(call RUN,-c -n 1 -s 12G -m 18G,"set -o pipefail && \
+									   $$(FIX_MATE) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   SORT_ORDER=coordinate \
+									   COMPRESSION_LEVEL=0 \
+									   CREATE_INDEX=true")
+
+marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
 										$$(ADD_RG) \
 										INPUT=$$(<) \
@@ -331,12 +331,12 @@ marianas/$1/$1__aln_srt_fx_rg.bam : marianas/$1/$1__aln_srt_fx_ir.bam
 										RGPU=NA \
 										RGSM=$1 && \
 										$$(SAMTOOLS) index $$(@) && \
-										cp marianas/$1/$1__aln_srt_fx_rg.bam.bai marianas/$1/$1__aln_srt_fx_rg.bai")
+										cp marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG.bam.bai marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG.bai")
 												
-marianas/$1/timestamp : marianas/$1/$1__aln_srt_fx_rg.bam
+marianas/$1/timestamp : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  cd marianas/$1 && \
-									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.postprocessing.SeparateBams $1__aln_srt_fx_rg.bam && \
+									  $$(call MARIANAS_CMD,2G,8G) org.mskcc.marianas.umi.duplex.postprocessing.SeparateBams $1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG.bam && \
 									  echo 'Done!\n' > timestamp && \
 									  cd ../..")
 									  
@@ -348,26 +348,26 @@ define copy-to-bam
 bam/$1_cl_aln_srt_MD_IR_FX_BR.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG.bam
 	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
 								  cp $$(<) $$(@) && \
-								  cp marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR.bam.bai && \
-								  cp marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG.bai bam/$1_cl_aln_srt_MD_IR_FX_BR.bai")
+								  $$(SAMTOOLS) index $$(@) && \
+								  cp bam/$1_cl_aln_srt_MD_IR_FX_BR_RG.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR_RG.bai")
 
-bam/$1__aln_srt_IR_FX.bam : marianas/$1/$1__aln_srt_fx_rg.bam
+bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
 								 cp $$(<) $$(@) && \
-								 cp marianas/$1/$1__aln_srt_fx_rg.bam.bai bam/$1__aln_srt_IR_FX.bam.bai && \
-								 cp marianas/$1/$1__aln_srt_fx_rg.bai bam/$1___aln_srt_IR_FX.bai")
+								 $$(SAMTOOLS) index $$(@) && \
+								 cp bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bai")
 												
-bam/$1__aln_srt_IR_FX-simplex.bam : marianas/$1/timestamp
+bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam : marianas/$1/timestamp
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
-								 cp marianas/$1/$1__aln_srt_fx_rg-simplex.bam $$(@) && \
-								 cp marianas/$1/$1__aln_srt_fx_rg-simplex.bai bam/$1__aln_srt_IR_FX-simplex.bam.bai && \
-								 cp marianas/$1/$1__aln_srt_fx_rg-simplex.bai bam/$1__aln_srt_IR_FX-simplex.bai")
+								 cp marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG-simplex.bam $$(@) && \
+								 $$(SAMTOOLS) index $$(@) && \
+								 cp bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bai")
 												
-bam/$1__aln_srt_IR_FX-duplex.bam : marianas/$1/timestamp
+bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam : marianas/$1/timestamp
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
-								 cp marianas/$1/$1__aln_srt_fx_rg-duplex.bam $$(@) && \
-								 cp marianas/$1/$1__aln_srt_fx_rg-duplex.bai bam/$1__aln_srt_IR_FX-duplex.bam.bai && \
-								 cp marianas/$1/$1__aln_srt_fx_rg-duplex.bai bam/$1__aln_srt_IR_FX-duplex.bai")
+								 cp marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG-duplex.bam $$(@) && \
+								 $$(SAMTOOLS) index $$(@) && \
+								 cp bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
