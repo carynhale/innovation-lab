@@ -10,7 +10,7 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR_RG.bam) \
 		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp)
+		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
 			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
 			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam) \
 			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam) \
