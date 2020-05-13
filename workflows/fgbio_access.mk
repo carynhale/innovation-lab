@@ -117,11 +117,20 @@ fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_
 							   							   		   -targetIntervals $$(<<) \
 							   							   		   -o $$(@) \
 									   							   -known $$(KNOWN_INDELS)")
+									   							   
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
+	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   $$(FIX_MATE) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   SORT_ORDER=coordinate \
+									   COMPRESSION_LEVEL=0 \
+									   CREATE_INDEX=true")
 
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call merge-bams,$(sample))))
-
+	
 	
 ..DUMMY := $(shell mkdir -p version; \
 			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
