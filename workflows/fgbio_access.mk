@@ -13,7 +13,9 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.intervals) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.bam)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -132,6 +134,28 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call merge-bams,$(sample))))
 	
+define create-consensus
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $$(call FGBIO_CMD,2G,8G) \
+									  GroupReadsByUmi \
+									  --strategy=paired \
+									  --input=$$(<) \
+									  --output=$$(@) \
+									  --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp.txt")
+									  
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp.bam
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+																   $$(call FGBIO_CMD,2G,16G) \
+																   CallDuplexConsensusReads \
+																   --min-reads 1 1 0 \
+																   --input $$(<) \
+																   --output $$(@) \
+																   --threads $$(GATK_THREADS)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call create-consensus,$(sample))))
 	
 ..DUMMY := $(shell mkdir -p version; \
 			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
