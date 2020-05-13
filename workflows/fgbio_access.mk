@@ -10,10 +10,18 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.intervals) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
+
+SAMTOOLS_THREADS = 8
+SAMTOOLS_MEM_THREAD = 2G
+
+GATK_THREADS = 8
+GATK_MEM_THREAD = 2G
 
 define copy-fastq
 fgbio/$1/$1_R1.fastq.gz : $3
@@ -89,6 +97,26 @@ fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 										ASSUME_SORTED=true && \
 										$$(SAMTOOLS) index $$(@) && \
 									  	cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai")
+									  	
+fgbio/$1/$1_cl_aln_srt_MD.intervals : fgbio/$1/$1_cl_aln_srt_MD.bam
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+									   							   $$(call GATK_CMD,16G) \
+									   							   -T RealignerTargetCreator \
+									   							   -I $$(^) \
+									   							   -nt $$(GATK_THREADS) \
+									   							   -R $$(REF_FASTA) \
+									   							   -o $$(@) \
+									   							   -known $$(KNOWN_INDELS)")
+
+fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_aln_srt_MD.intervals
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+									   							   $$(call GATK_CMD,16G) \
+							   							   		   -T IndelRealigner \
+							   							   		   -I $$(<) \
+							   							   		   -R $$(REF_FASTA) \
+							   							   		   -targetIntervals $$(<<) \
+							   							   		   -o $$(@) \
+									   							   -known $$(KNOWN_INDELS)")
 
 endef
 $(foreach sample,$(SAMPLES),\
