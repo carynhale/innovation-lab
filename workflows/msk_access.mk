@@ -14,67 +14,67 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
 			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam) \
 			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam)
-#			 $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
-#			 metrics/summary/umi_frequencies.tsv \
-#			 metrics/summary/umi_composite.tsv \
-#			 metrics/summary/umi_families.tsv \
-#			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
-#			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt) \
-#			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
-#			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
-#			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
-#  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
-# 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt) \
-# 			 metrics/standard/metrics_idx.tsv \
-# 			 metrics/unfiltered/metrics_idx.tsv \
-# 			 metrics/simplex/metrics_idx.tsv \
-# 			 metrics/duplex/metrics_idx.tsv \
-# 			 metrics/standard/metrics_aln.tsv \
-# 			 metrics/unfiltered/metrics_aln.tsv \
-# 			 metrics/simplex/metrics_aln.tsv \
-# 			 metrics/duplex/metrics_aln.tsv \
-# 			 metrics/standard/metrics_insert.tsv \
-# 			 metrics/unfiltered/metrics_insert.tsv \
-# 			 metrics/simplex/metrics_insert.tsv \
-# 			 metrics/duplex/metrics_insert.tsv \
-# 			 metrics/standard/metrics_insert_distribution.tsv \
-# 			 metrics/unfiltered/metrics_insert_distribution.tsv \
-# 			 metrics/simplex/metrics_insert_distribution.tsv \
-# 			 metrics/duplex/metrics_insert_distribution.tsv \
-# 			 metrics/standard/metrics_hs.tsv \
-# 			 metrics/unfiltered/metrics_hs.tsv \
-# 			 metrics/simplex/metrics_hs.tsv \
-# 			 metrics/duplex/metrics_hs.tsv \
-# 			 metrics/standard/metrics_oxog.tsv \
-# 			 metrics/summary/metrics_idx.tsv \
-# 			 metrics/summary/metrics_aln.tsv \
-# 			 metrics/summary/metrics_insert.tsv \
-# 			 metrics/summary/metrics_insert_distribution.tsv \
-# 			 metrics/summary/metrics_hs.tsv \
-# 			 metrics/summary/metrics_ts.tsv \
+			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam) \
+			 $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
+			 metrics/summary/umi_frequencies.tsv \
+			 metrics/summary/umi_composite.tsv \
+			 metrics/summary/umi_families.tsv \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
+			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
+  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
+  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
+  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
+  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
+  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
+ 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt) \
+ 			 metrics/standard/metrics_idx.tsv \
+ 			 metrics/unfiltered/metrics_idx.tsv \
+ 			 metrics/simplex/metrics_idx.tsv \
+ 			 metrics/duplex/metrics_idx.tsv \
+ 			 metrics/standard/metrics_aln.tsv \
+ 			 metrics/unfiltered/metrics_aln.tsv \
+ 			 metrics/simplex/metrics_aln.tsv \
+ 			 metrics/duplex/metrics_aln.tsv \
+ 			 metrics/standard/metrics_insert.tsv \
+ 			 metrics/unfiltered/metrics_insert.tsv \
+ 			 metrics/simplex/metrics_insert.tsv \
+ 			 metrics/duplex/metrics_insert.tsv \
+ 			 metrics/standard/metrics_insert_distribution.tsv \
+ 			 metrics/unfiltered/metrics_insert_distribution.tsv \
+ 			 metrics/simplex/metrics_insert_distribution.tsv \
+ 			 metrics/duplex/metrics_insert_distribution.tsv \
+ 			 metrics/standard/metrics_hs.tsv \
+ 			 metrics/unfiltered/metrics_hs.tsv \
+ 			 metrics/simplex/metrics_hs.tsv \
+ 			 metrics/duplex/metrics_hs.tsv \
+ 			 metrics/standard/metrics_oxog.tsv \
+ 			 metrics/summary/metrics_idx.tsv \
+ 			 metrics/summary/metrics_aln.tsv \
+ 			 metrics/summary/metrics_insert.tsv \
+ 			 metrics/summary/metrics_insert_distribution.tsv \
+ 			 metrics/summary/metrics_hs.tsv \
+ 			 metrics/summary/metrics_ts.tsv
 #			 metrics/report/umi_frequencies.pdf \
 #			 metrics/report/umi_family_types_probe-A.pdf \
 #			 metrics/report/umi_family_types_probe-B.pdf \
@@ -431,7 +431,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call pileup-metric,$(sample))))
 				   
 define coverage-metric
-metrics/standard/$1.A.ontarget.txt : bam/$1.bam
+metrics/standard/$1.A.ontarget.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_A) $$(<) -b > metrics/standard/$1-ontarget-A.bam && \
 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-A.bam && \
@@ -441,7 +441,7 @@ metrics/standard/$1.A.ontarget.txt : bam/$1.bam
 								 rm -rf metrics/standard/$1-ontarget-A.bam && \
 								 rm -rf metrics/standard/$1-ontarget-A.bam.bai")
 									 
-metrics/standard/$1.B.ontarget.txt : bam/$1.bam
+metrics/standard/$1.B.ontarget.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 $$(SAMTOOLS) view -L $$(UMI_QC_BED_FILE_B) $$(<) -b > metrics/standard/$1-ontarget-B.bam && \
 								 $$(SAMTOOLS) index metrics/standard/$1-ontarget-B.bam && \
@@ -451,7 +451,7 @@ metrics/standard/$1.B.ontarget.txt : bam/$1.bam
 								 rm -rf metrics/standard/$1-ontarget-B.bam && \
 								 rm -rf metrics/standard/$1-ontarget-B.bam.bai")
 	
-metrics/standard/$1.AB.offtarget.txt : bam/$1.bam
+metrics/standard/$1.AB.offtarget.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 $$(SAMTOOLS) view -L $$(OFF_TARGET_FILE_AB) $$(<) -b > metrics/standard/$1-offtarget-AB.bam && \
 								 $$(SAMTOOLS) index metrics/standard/$1-offtarget-AB.bam && \
@@ -466,20 +466,20 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call coverage-metric,$(sample))))
  
 define picard-metrics-standard
-metrics/standard/$1.idx_stats.txt : bam/$1.bam
+metrics/standard/$1.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/standard/$1.aln_metrics.txt : bam/$1.bam
+metrics/standard/$1.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/standard/$1.insert_metrics.txt : bam/$1.bam
+metrics/standard/$1.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -487,14 +487,14 @@ metrics/standard/$1.insert_metrics.txt : bam/$1.bam
 									   HISTOGRAM_FILE=metrics/standard/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/standard/$1.oxog_metrics.txt : bam/$1.bam
+metrics/standard/$1.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1.bam
+metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -503,7 +503,7 @@ metrics/standard/$1.probe-A.hs_metrics.txt : bam/$1.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1.bam
+metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -512,7 +512,7 @@ metrics/standard/$1.probe-B.hs_metrics.txt : bam/$1.bam
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
 									   
-metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : bam/$1.bam
+metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -521,7 +521,7 @@ metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : bam/$1.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
 												
-metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : bam/$1.bam
+metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -535,20 +535,20 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
  		
 define picard-metrics-unfiltered
-metrics/unfiltered/$1.idx_stats.txt : bam/$1__aln_srt_IR_FX.bam
+metrics/unfiltered/$1.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/unfiltered/$1.aln_metrics.txt : bam/$1__aln_srt_IR_FX.bam
+metrics/unfiltered/$1.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/unfiltered/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX.bam
+metrics/unfiltered/$1.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -556,14 +556,14 @@ metrics/unfiltered/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX.bam
 									   HISTOGRAM_FILE=metrics/unfiltered/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/unfiltered/$1.oxog_metrics.txt : bam/$1__aln_srt_IR_FX.bam
+metrics/unfiltered/$1.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX.bam
+metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -572,7 +572,7 @@ metrics/unfiltered/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/unfiltered/$1.probe-B.hs_metrics.txt : bam/$1__aln_srt_IR_FX.bam
+metrics/unfiltered/$1.probe-B.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -586,20 +586,20 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-unfiltered,$(sample))))
 
 define picard-metrics-simplex
-metrics/simplex/$1.idx_stats.txt : bam/$1__aln_srt_IR_FX-simplex.bam
+metrics/simplex/$1.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/simplex/$1.aln_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
+metrics/simplex/$1.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/simplex/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
+metrics/simplex/$1.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -607,14 +607,14 @@ metrics/simplex/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 									   HISTOGRAM_FILE=metrics/simplex/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/simplex/$1.oxog_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
+metrics/simplex/$1.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
+metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -623,7 +623,7 @@ metrics/simplex/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/simplex/$1.probe-B.hs_metrics.txt : bam/$1__aln_srt_IR_FX-simplex.bam
+metrics/simplex/$1.probe-B.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -637,20 +637,20 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-simplex,$(sample))))
 
 define picard-metrics-duplex
-metrics/duplex/$1.idx_stats.txt : bam/$1__aln_srt_IR_FX-duplex.bam
+metrics/duplex/$1.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(BAM_INDEX) \
 									   INPUT=$$(<) \
 									   > $$(@)")
 									   
-metrics/duplex/$1.aln_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
+metrics/duplex/$1.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_ALIGNMENT_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 									   
-metrics/duplex/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
+metrics/duplex/$1.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
@@ -658,14 +658,14 @@ metrics/duplex/$1.insert_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 									   HISTOGRAM_FILE=metrics/duplex/$1.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
-metrics/duplex/$1.oxog_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
+metrics/duplex/$1.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(COLLECT_OXOG_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
+metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -674,7 +674,7 @@ metrics/duplex/$1.probe-A.hs_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
  												
-metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1__aln_srt_IR_FX-duplex.bam
+metrics/duplex/$1.probe-B.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
