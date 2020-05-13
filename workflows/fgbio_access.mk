@@ -84,7 +84,7 @@ fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 										$$(MARK_DUP) \
 										INPUT=$$(<) \
 										OUTPUT=$$(@) \
-										METRICS_FILE=fgbio/$1_cl_aln_srt.txt \
+										METRICS_FILE=fgbio/$1/$1_cl_aln_srt.txt \
 										REMOVE_DUPLICATES=false \
 										ASSUME_SORTED=true && \
 										$$(SAMTOOLS) index $$(@) && \
