@@ -88,7 +88,7 @@ fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 										REMOVE_DUPLICATES=false \
 										ASSUME_SORTED=true && \
 										$$(SAMTOOLS) index $$(@) && \
-									  	cp fgbio/$1_cl_aln_srt_MD.bam.bai fgbio/$1_cl_aln_srt_MD.bai")
+									  	cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
