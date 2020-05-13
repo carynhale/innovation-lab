@@ -384,13 +384,13 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call family-size-metric,$(sample))))
 		
 define pileup-metric
-metrics/standard/$1-pileup.txt : bam/$1.bam
+metrics/standard/$1-pileup.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cd metrics/standard && \
-								 ln -sf ../../bam/$1.bam $1.bam && \
-								 ln -sf ../../bam/$1.bam.bai $1.bam.bai && \
-								 ln -sf ../../bam/$1.bai $1.bai && \
-								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR.bam $1.bam && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR.bai $1.bai && \
+								 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
@@ -398,13 +398,13 @@ metrics/standard/$1-pileup.txt : bam/$1.bam
 								 rm -rf .bed && \
 								 cd ../..")
 									 
-metrics/simplex/$1-pileup.txt : bam/$1__aln_srt_IR_FX-simplex.bam
+metrics/simplex/$1-pileup.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cd metrics/simplex && \
-								 ln -sf ../../bam/$1__aln_srt_IR_FX-simplex.bam $1.bam && \
-								 ln -sf ../../bam/$1__aln_srt_IR_FX-simplex.bam.bai $1.bam.bai && \
-								 ln -sf ../../bam/$1__aln_srt_IR_FX-simplex.bai $1.bai && \
-								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam $1.bam && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bai $1.bai && \
+								 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
@@ -412,13 +412,13 @@ metrics/simplex/$1-pileup.txt : bam/$1__aln_srt_IR_FX-simplex.bam
 								 rm -rf .bed && \
 								 cd ../..")
 								 
-metrics/duplex/$1-pileup.txt : bam/$1__aln_srt_IR_FX-duplex.bam
+metrics/duplex/$1-pileup.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
 								 cd metrics/duplex && \
-								 ln -sf ../../bam/$1__aln_srt_IR_FX-duplex.bam $1.bam && \
-								 ln -sf ../../bam/$1__aln_srt_IR_FX-duplex.bam.bai $1.bam.bai && \
-								 ln -sf ../../bam/$1__aln_srt_IR_FX-duplex.bai $1.bai && \
-								 if [[ ! -f '.bed' ]]; then cut -f 4 $$(WALTZ_BED_FILE) | paste -d '\t' $$(WALTZ_BED_FILE) - > .bed; fi && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam $1.bam && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam.bai $1.bam.bai && \
+								 ln -sf ../../bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bai $1.bai && \
+								 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
 								 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
 								 unlink $1.bam && \
 								 unlink $1.bam.bai && \
