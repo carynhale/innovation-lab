@@ -9,7 +9,8 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.bam)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -77,6 +78,17 @@ fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 																		   SORT_ORDER=coordinate \
 																		   MAX_GAPS=-1 \
 																		   ORIENTATIONS=FR")
+
+fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
+	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
+										$$(MARK_DUP) \
+										INPUT=$$(<) \
+										OUTPUT=$$(@) \
+										METRICS_FILE=fgbio/$1_cl_aln_srt.txt \
+										REMOVE_DUPLICATES=false \
+										ASSUME_SORTED=true && \
+										$$(SAMTOOLS) index $$(@) && \
+									  	cp fgbio/$1_cl_aln_srt_MD.bam.bai fgbio/$1_cl_aln_srt_MD.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
