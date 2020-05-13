@@ -349,7 +349,7 @@ bam/$1_cl_aln_srt_MD_IR_FX_BR.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR_RG.bam
 	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
 								  cp $$(<) $$(@) && \
 								  $$(SAMTOOLS) index $$(@) && \
-								  cp bam/$1_cl_aln_srt_MD_IR_FX_BR_RG.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR_RG.bai")
+								  cp bam/$1_cl_aln_srt_MD_IR_FX_BR.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR.bai")
 
 bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX_RG.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
