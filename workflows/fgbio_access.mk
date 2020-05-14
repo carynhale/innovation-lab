@@ -15,7 +15,8 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -152,6 +153,14 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__g
 																   --input $$(<) \
 																   --output $$(@) \
 																   --threads $$(GATK_THREADS)")
+
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $$(call FGBIO_CMD,2G,16G) \
+									  CollectDuplexSeqMetrics \
+									  --input $$(<) \
+									  --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC \
+									  --duplex-umi-counts true")
 
 endef
 $(foreach sample,$(SAMPLES),\
