@@ -210,7 +210,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt
 									   							   -nt $$(GATK_THREADS) \
 									   							   -R $$(REF_FASTA) \
 									   							   -o $$(@) \
-									   							   -known $$(KNOWN_INDELS)")
+									   							   -known $$(KNOWN_INDELS) \
+									   							   --allow_potentially_misencoded_quality_scores")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
@@ -220,7 +221,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD
 							   							   		   -R $$(REF_FASTA) \
 							   							   		   -targetIntervals $$(<<) \
 							   							   		   -o $$(@) \
-									   							   -known $$(KNOWN_INDELS)")
+									   							   -known $$(KNOWN_INDELS) \
+									   							   --allow_potentially_misencoded_quality_scores")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
