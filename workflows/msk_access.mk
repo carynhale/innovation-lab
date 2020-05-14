@@ -75,8 +75,8 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
  			 metrics/summary/metrics_insert_distribution.tsv \
  			 metrics/summary/metrics_hs.tsv \
  			 metrics/summary/metrics_ts.tsv \
-			 metrics/report/umi_frequencies.pdf
-#			 metrics/report/umi_family_types_probe-A.pdf \
+			 metrics/report/umi_frequencies.pdf \
+			 metrics/report/umi_family_types_probe-A.pdf
 #			 metrics/report/umi_family_types_probe-B.pdf \
 #			 metrics/report/umi_family_sizes_all.pdf \
 #			 metrics/report/umi_family_sizes_duplex.pdf \
