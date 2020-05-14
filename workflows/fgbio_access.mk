@@ -16,8 +16,10 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt)
-
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MG.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MG_RG.bam)
+			   
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
 
@@ -165,6 +167,42 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_a
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call create-consensus,$(sample))))
+	
+define bam-2-bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.bam
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
+																		   $$(SAM_TO_FASTQ) \
+																		   INPUT=$$(<) \
+																		   FASTQ=/dev/stdout \
+																		   INTERLEAVE=true | \
+																		   $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) /dev/stdin | \
+																		   $$(MERGE_ALIGNMENTS) \
+																		   UNMAPPED=$$(<<) \
+																		   ALIGNED=/dev/stdin \
+																		   OUTPUT=/dev/stdout \
+																		   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+																		   MAX_GAPS=-1 \
+																		   ORIENTATIONS=FR")
+
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MG_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MG.bam
+	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
+										$$(ADD_RG) \
+										INPUT=$$(<) \
+										OUTPUT=$$(@) \
+										RGID=$1 \
+										RGLB=$1 \
+										RGPL=illumina \
+										RGPU=NA \
+										RGSM=$1 \
+										SORT_ORDER=coordinate \
+										COMPRESSION_LEVEL=0 \
+										VALIDATION_STRINGENCY=LENIENT && \
+										$$(SAMTOOLS) index $$(@) && \
+										cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MG_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MG_RG.bai")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call bam-2-bam,$(sample))))
 	
 ..DUMMY := $(shell mkdir -p version; \
 			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
