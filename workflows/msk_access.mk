@@ -516,7 +516,7 @@ metrics/standard/$1.probe-A.hs_metrics-nodedup.txt : bam/$1_cl_aln_srt_MD_IR_FX_
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=marianas/$1/$1_aln_srt_fx_ir.bam \
+									   INPUT=marianas/$1/$1_cl_aln_srt.bam \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
@@ -525,7 +525,7 @@ metrics/standard/$1.probe-B.hs_metrics-nodedup.txt : bam/$1_cl_aln_srt_MD_IR_FX_
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 									   $$(CALC_HS_METRICS) \
 									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=marianas/$1/$1_aln_srt_fx_ir.bam \
+									   INPUT=marianas/$1/$1_cl_aln_srt.bam \
 									   OUTPUT=$$(@) \
 									   BAIT_INTERVALS=$$(POOL_B_TARGET_FILE) \
 									   TARGET_INTERVALS=$$(POOL_B_TARGET_FILE)")
