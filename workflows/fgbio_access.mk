@@ -198,7 +198,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR
 										RGPU=NA \
 										RGSM=$1 \
 										SORT_ORDER=coordinate \
-										COMPRESSION_LEVEL=0 \
+										COMPRESSION_LEVEL=0 && \
 										$$(SAMTOOLS) index $$(@) && \
 										cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bai")
 
