@@ -177,7 +177,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX
 																		   INTERLEAVE=true | \
 																		   $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) /dev/stdin | \
 																		   $$(MERGE_ALIGNMENTS) \
-																		   UNMAPPED=$$(<<) \
+																		   UNMAPPED=$$(<) \
 																		   ALIGNED=/dev/stdin \
 																		   OUTPUT=/dev/stdout \
 																		   REFERENCE_SEQUENCE=$$(REF_FASTA) \
