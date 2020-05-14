@@ -81,8 +81,8 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 metrics/report/umi_family_sizes_all.pdf \
 			 metrics/report/umi_family_sizes_duplex.pdf \
 			 metrics/report/umi_family_sizes_simplex.pdf \
-			 metrics/report/mean_standard_target_coverage-dedup.pdf
-#			 metrics/report/mean_standard_target_coverage-nodedup.pdf \
+			 metrics/report/mean_standard_target_coverage-dedup.pdf \
+			 metrics/report/mean_standard_target_coverage-nodedup.pdf
 #			 metrics/report/mean_unfiltered_target_coverage.pdf \
 #			 metrics/report/mean_duplex_target_coverage.pdf \
 #			 metrics/report/mean_simplex_target_coverage.pdf \
