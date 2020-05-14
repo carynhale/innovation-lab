@@ -18,8 +18,11 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam)
-			   
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam)
+
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
 
@@ -196,10 +199,38 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR
 										RGSM=$1 \
 										SORT_ORDER=coordinate \
 										COMPRESSION_LEVEL=0 \
-										VALIDATION_STRINGENCY=LENIENT && \
 										$$(SAMTOOLS) index $$(@) && \
 										cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bai")
 
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+									   							   $$(call GATK_CMD,16G) \
+									   							   -T RealignerTargetCreator \
+									   							   -I $$(^) \
+									   							   -nt $$(GATK_THREADS) \
+									   							   -R $$(REF_FASTA) \
+									   							   -o $$(@) \
+									   							   -known $$(KNOWN_INDELS)")
+
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+									   							   $$(call GATK_CMD,16G) \
+							   							   		   -T IndelRealigner \
+							   							   		   -I $$(<) \
+							   							   		   -R $$(REF_FASTA) \
+							   							   		   -targetIntervals $$(<<) \
+							   							   		   -o $$(@) \
+									   							   -known $$(KNOWN_INDELS)")
+									   							   
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam
+	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   $$(FIX_MATE) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   SORT_ORDER=coordinate \
+									   COMPRESSION_LEVEL=0 \
+									   CREATE_INDEX=true")
+									   
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call bam-2-bam,$(sample))))
