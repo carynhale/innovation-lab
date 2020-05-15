@@ -21,7 +21,9 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-simplex.bam) \
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-duplex.bam)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -171,7 +173,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call create-consensus,$(sample))))
 	
-define bam-2-bam
+define align-consensus
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.bam
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 																		   $$(SAM_TO_FASTQ) \
@@ -235,7 +237,35 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt
 									   
 endef
 $(foreach sample,$(SAMPLES),\
-	$(eval $(call bam-2-bam,$(sample))))
+	$(eval $(call align-consensus,$(sample))))
+	
+define filter-consensus
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-simplex.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $$(call FGBIO_CMD,2G,16G) \
+									  FilterConsensusReads \
+									  --input $$(<) \
+									  --output $$(@) \
+									  --ref $$(REF_FASTA) \
+									  --min-reads=3 3 0 \
+									  --min-base-quality==30 \
+									  --reverse-per-base-tags=true")
+
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-duplex.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $$(call FGBIO_CMD,2G,16G) \
+									  FilterConsensusReads \
+									  --input $$(<) \
+									  --output $$(@) \
+									  --ref $$(REF_FASTA) \
+									  --min-reads=2 1 1 \
+									  --min-base-quality==30 \
+									  --reverse-per-base-tags=true")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call filter-consensus,$(sample))))
+
 	
 ..DUMMY := $(shell mkdir -p version; \
 			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
