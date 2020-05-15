@@ -225,7 +225,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD
 									   							   --allow_potentially_misencoded_quality_scores")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam
-	$$(call RUN,-c -n 1 -s 16G -m 18G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 18G -m 24G,"set -o pipefail && \
 									   $$(FIX_MATE) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@) \
