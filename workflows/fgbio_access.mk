@@ -248,7 +248,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-simplex.bam : fgbio/$1/$1_cl
 									  --output $$(@) \
 									  --ref $$(REF_FASTA) \
 									  --min-reads=3 3 0 \
-									  --min-base-quality==30 \
+									  --min-base-quality=30 \
 									  --reverse-per-base-tags=true")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-duplex.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
@@ -259,7 +259,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-duplex.bam : fgbio/$1/$1_cl_
 									  --output $$(@) \
 									  --ref $$(REF_FASTA) \
 									  --min-reads=2 1 1 \
-									  --min-base-quality==30 \
+									  --min-base-quality=30 \
 									  --reverse-per-base-tags=true")
 
 endef
