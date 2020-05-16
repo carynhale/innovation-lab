@@ -89,9 +89,9 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 metrics/report/aligment_summary.pdf \
 			 metrics/report/insert_size_summary.pdf \
 			 metrics/report/insert_size_distribution.pdf \
-			 metrics/report/read_alignment_summary.pdf
-#			 metrics/report/non_reference_calls.pdf \
-#			 metrics/report/combined_report.pdf
+			 metrics/report/read_alignment_summary.pdf \
+			 metrics/report/non_reference_calls.pdf \
+			 metrics/report/combined_report.pdf
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
@@ -870,7 +870,7 @@ metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_ts.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 									   					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 19")
 	
-metrics/report/non_reference_calls.pdf : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt)) $(wildcard $(foreach sample$(SAMPLES),metrics/duplex/$(sample)-pileup.txt))
+metrics/report/non_reference_calls.pdf : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt))
 	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 20 --sample_names '$(SAMPLES)' && \
 														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf && \
