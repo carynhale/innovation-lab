@@ -89,9 +89,9 @@ msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.g
 			 metrics/report/aligment_summary.pdf \
 			 metrics/report/insert_size_summary.pdf \
 			 metrics/report/insert_size_distribution.pdf \
-			 metrics/report/read_alignment_summary.pdf \
-			 metrics/report/non_reference_calls.pdf \
-			 metrics/report/combined_report.pdf
+			 metrics/report/read_alignment_summary.pdf
+#			 metrics/report/non_reference_calls.pdf \
+#			 metrics/report/combined_report.pdf
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
