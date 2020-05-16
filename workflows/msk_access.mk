@@ -687,99 +687,99 @@ endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-duplex,$(sample))))
 
-metrics/summary/umi_frequencies.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
+metrics/summary/umi_frequencies.tsv : $(wildcard $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 1 --sample_names '$(SAMPLES)'")
 	
-metrics/summary/umi_composite.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
+metrics/summary/umi_composite.tsv : $(wildcard $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 2 --sample_names '$(SAMPLES)'")
 
-metrics/summary/umi_families.tsv : $(wildcard marianas/$(SAMPLES)/family-sizes.txt)
+metrics/summary/umi_families.tsv : $(wildcard $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/umi_metrics.R --type 3 --sample_names '$(SAMPLES)'")
 
-metrics/standard/metrics_idx.tsv : $(wildcard metrics/standard/$(SAMPLES).idx_stats.txt)
+metrics/standard/metrics_idx.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 1 --sample_names '$(SAMPLES)'")
 									  
-metrics/unfiltered/metrics_idx.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).idx_stats.txt)
+metrics/unfiltered/metrics_idx.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 7 --sample_names '$(SAMPLES)'")
 
-metrics/duplex/metrics_idx.tsv : $(wildcard metrics/duplex/$(SAMPLES).idx_stats.txt)
+metrics/duplex/metrics_idx.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 12 --sample_names '$(SAMPLES)'")
 
-metrics/simplex/metrics_idx.tsv : $(wildcard metrics/simplex/$(SAMPLES).idx_stats.txt)
+metrics/simplex/metrics_idx.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 17 --sample_names '$(SAMPLES)'")
 									  
-metrics/standard/metrics_aln.tsv : $(wildcard metrics/standard/$(SAMPLES).aln_stats.txt)
+metrics/standard/metrics_aln.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 2 --sample_names '$(SAMPLES)'")
 									  
-metrics/unfiltered/metrics_aln.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).aln_stats.txt)
+metrics/unfiltered/metrics_aln.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 8 --sample_names '$(SAMPLES)'")
 									  
-metrics/duplex/metrics_aln.tsv : $(wildcard metrics/duplex/$(SAMPLES).aln_stats.txt)
+metrics/duplex/metrics_aln.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 13 --sample_names '$(SAMPLES)'")
 									  
-metrics/simplex/metrics_aln.tsv : $(wildcard metrics/simplex/$(SAMPLES).aln_stats.txt)
+metrics/simplex/metrics_aln.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_stats.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 18 --sample_names '$(SAMPLES)'")
 									  
-metrics/standard/metrics_insert.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
+metrics/standard/metrics_insert.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 3 --sample_names '$(SAMPLES)'")
 
-metrics/unfiltered/metrics_insert.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).insert_metrics.txt)
+metrics/unfiltered/metrics_insert.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 9 --sample_names '$(SAMPLES)'")
 
-metrics/duplex/metrics_insert.tsv : $(wildcard metrics/duplex/$(SAMPLES).insert_metrics.txt)
+metrics/duplex/metrics_insert.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 14 --sample_names '$(SAMPLES)'")
 
-metrics/simplex/metrics_insert.tsv : $(wildcard metrics/simplex/$(SAMPLES).insert_metrics.txt)
+metrics/simplex/metrics_insert.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 19 --sample_names '$(SAMPLES)'")
 
-metrics/standard/metrics_insert_distribution.tsv : $(wildcard metrics/standard/$(SAMPLES).insert_metrics.txt)
+metrics/standard/metrics_insert_distribution.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 4 --sample_names '$(SAMPLES)'")
 									   
-metrics/unfiltered/metrics_insert_distribution.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).insert_metrics.txt)
+metrics/unfiltered/metrics_insert_distribution.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 10 --sample_names '$(SAMPLES)'")
 
-metrics/duplex/metrics_insert_distribution.tsv : $(wildcard metrics/duplex/$(SAMPLES).insert_metrics.txt)
+metrics/duplex/metrics_insert_distribution.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 15 --sample_names '$(SAMPLES)'")
 
-metrics/simplex/metrics_insert_distribution.tsv : $(wildcard metrics/simplex/$(SAMPLES).insert_metrics.txt)
+metrics/simplex/metrics_insert_distribution.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt))
 	$(call RUN, -c -n 1 -s 16G -m 24G,"set -o pipefail && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 20 --sample_names '$(SAMPLES)'")
 									   
-metrics/standard/metrics_hs.tsv : $(wildcard metrics/standard/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/standard/$(SAMPLES).probe-B.hs_metrics.txt) $(wildcard metrics/standard/$(SAMPLES).probe-A.hs_metrics-nodedup.txt) $(wildcard metrics/standard/$(SAMPLES).probe-B.hs_metrics-nodedup.txt)
+metrics/standard/metrics_hs.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 6 --sample_names '$(SAMPLES)'")
 	
-metrics/unfiltered/metrics_hs.tsv : $(wildcard metrics/unfiltered/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/unfiltered/$(SAMPLES).probe-B.hs_metrics.txt)
+metrics/unfiltered/metrics_hs.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 11 --sample_names '$(SAMPLES)'")
 	
-metrics/duplex/metrics_hs.tsv : $(wildcard metrics/duplex/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/duplex/$(SAMPLES).probe-B.hs_metrics.txt)
+metrics/duplex/metrics_hs.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 16 --sample_names '$(SAMPLES)'")
 	
-metrics/simplex/metrics_hs.tsv : $(wildcard metrics/simplex/$(SAMPLES).probe-A.hs_metrics.txt) $(wildcard metrics/simplex/$(SAMPLES).probe-B.hs_metrics.txt)
+metrics/simplex/metrics_hs.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 21 --sample_names '$(SAMPLES)'")
 									  
-metrics/standard/metrics_oxog.tsv : $(wildcard metrics/standard/$(SAMPLES).oxog_metrics.txt)
+metrics/standard/metrics_oxog.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt))
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 5 --sample_names '$(SAMPLES)'")
 									  
@@ -803,7 +803,7 @@ metrics/summary/metrics_hs.tsv : metrics/standard/metrics_hs.tsv metrics/unfilte
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 26")
 
-metrics/summary/metrics_ts.tsv : $(wildcard metrics/standard/$(SAMPLES).A.ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).B.ontarget.txt) $(wildcard metrics/standard/$(SAMPLES).AB.offtarget.txt)
+metrics/summary/metrics_ts.tsv : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt))
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 27 --sample_names '$(SAMPLES)'")
 
@@ -870,7 +870,7 @@ metrics/report/read_alignment_summary.pdf : metrics/summary/metrics_ts.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 									   					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 19")
 	
-metrics/report/non_reference_calls.pdf : $(wildcard metrics/standard/$(SAMPLES)-pileup.txt) $(wildcard metrics/simplex/$(SAMPLES)-pileup.txt) $(wildcard metrics/duplex/$(SAMPLES)-pileup.txt)
+metrics/report/non_reference_calls.pdf : $(wildcard $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt)) $(wildcard $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt)) $(wildcard $(foreach sample$(SAMPLES),metrics/duplex/$(sample)-pileup.txt))
 	$(call RUN, -c -n 1 -s 48G -m 72G -v $(SUPERHEAT_ENV),"set -o pipefail && \
 														   $(RSCRIPT) $(SCRIPTS_DIR)/qc/plot_metrics.R --type 20 --sample_names '$(SAMPLES)' && \
 														   gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -dFirstPage=2 -dLastPage=2 -sOutputFile=metrics/report/non_reference_calls-2.pdf metrics/report/non_reference_calls.pdf && \
