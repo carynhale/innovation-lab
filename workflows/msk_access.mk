@@ -715,19 +715,19 @@ metrics/simplex/metrics_idx.tsv : $(foreach sample,$(SAMPLES),metrics/simplex/$(
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 17 --sample_names '$(SAMPLES)'")
 									  
-metrics/standard/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_stats.txt)
+metrics/standard/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 2 --sample_names '$(SAMPLES)'")
 									  
-metrics/unfiltered/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_stats.txt)
+metrics/unfiltered/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 8 --sample_names '$(SAMPLES)'")
 									  
-metrics/duplex/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_stats.txt)
+metrics/duplex/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 13 --sample_names '$(SAMPLES)'")
 									  
-metrics/simplex/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_stats.txt)
+metrics/simplex/metrics_aln.tsv : $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/interval_metrics.R --metric_type 18 --sample_names '$(SAMPLES)'")
 									  
