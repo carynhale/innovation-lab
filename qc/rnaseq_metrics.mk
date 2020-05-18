@@ -24,7 +24,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call rnaseq-metrics,$(sample))))
         
-metrics/collect_rnaseq_metrics.txt : $(wildcard metrics/$(SAMPLES).txt)
+metrics/collect_rnaseq_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
                                      $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --sample_names '$(SAMPLES)'")
 
@@ -34,4 +34,4 @@ metrics/collect_rnaseq_metrics.txt : $(wildcard metrics/$(SAMPLES).txt)
              R --version >> version/rnaseq_metrics.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
-.PHONY:
+.PHONY: rnaseq_metrics
