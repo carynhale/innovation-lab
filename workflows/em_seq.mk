@@ -4,8 +4,11 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/em_seq.$(NOW)
 
 em_seq : $(foreach sample,$(SAMPLES),bwa/$(sample)/$(sample)_R1.fastq.gz) \
+		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bwa/$(sample)/$(sample)_aln.bam) \
+		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln.bam) \
 		 $(foreach sample,$(SAMPLES),bwa/$(sample)/$(sample)_aln_srt.bam) \
+		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
@@ -26,6 +29,14 @@ bwa/$1/$1_R1.fastq.gz : $3
 								     --directory_name bwa \
 								     --fastq_files '$$^'")
 
+bwamem/$1/$1_R1.fastq.gz : $3
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+									 mkdir -p bwa/$1 && \
+								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
+								     --sample_name $1 \
+								     --directory_name bwamem \
+								     --fastq_files '$$^'")
+
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
@@ -42,6 +53,17 @@ bwa/$1/$1_aln_srt.bam : bwa/$1/$1_aln.bam
 									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 									  									   $$(SAMTOOLS) index $$(@) && \
 									  									   cp bwa/$1/$1_aln_srt.bam.bai bwa/$1/$1_aln_srt.bai")
+									  									   
+bwamem/$1/$1_aln.bam : bwamem/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
+																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
+																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) bwamem/$1/$1_R1.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
+									  									   
+bwamem/$1/$1_aln_srt.bam : bwamem/$1/$1_aln.bam
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
+									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
+									  									   $$(SAMTOOLS) index $$(@) && \
+									  									   cp bwamem/$1/$1_aln_srt.bam.bai bwamem/$1/$1_aln_srt.bai")
 																		   
 endef
 $(foreach sample,$(SAMPLES),\
