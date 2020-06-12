@@ -1,8 +1,11 @@
 include innovation-lab/Makefile.inc
+include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/em_seq.$(NOW)
 
 em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz)
+
+REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 		 
 define copy-fastq
 emseq/$1/$1_R1.fastq.gz : $3
@@ -21,7 +24,7 @@ define fastq-to-bam
 emseq/$1/$1.bam : emseq/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
-																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) marianas/$1/$1_R1_umi-clipped.fastq.gz marianas/$1/$1_R2_umi-clipped.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
+																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) emseq/$1/$1_R1.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
 																		   
 endef
 $(foreach sample,$(SAMPLES),\
