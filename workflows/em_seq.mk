@@ -8,9 +8,9 @@ define copy-fastq
 emseq/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 									 mkdir -p emseq/$1 && \
-								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq2.R \
+								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 								     --sample_name $1 \
-								     --directory_name marianas \
+								     --directory_name emseq \
 								     --fastq_files '$$^'")
 
 endef
