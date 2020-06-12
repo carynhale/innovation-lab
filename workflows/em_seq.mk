@@ -3,6 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/em_seq.$(NOW)
 
 em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz) \
+		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample).fastq)
 
 define copy-fastq
 emseq/$1/$1_R1.fastq.gz : $3
@@ -16,6 +17,16 @@ emseq/$1/$1_R1.fastq.gz : $3
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+	
+define extract-fastq
+emseq/$1/$1.fastq : emseq/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 zcat $$(<) > $$(@)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call extract-fastq,$(sample))))
+
  
 ..DUMMY := $(shell mkdir -p version; \
 			 R --version >> version.txt)
