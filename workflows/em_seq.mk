@@ -3,7 +3,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/em_seq.$(NOW)
 
-em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz)
+em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz) \
+		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample).bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 		 
