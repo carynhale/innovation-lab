@@ -46,7 +46,7 @@ bwa/$1/$1_aln.bam : bwa/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 																		   $$(BWA) aln $$(REF_FASTA) bwa/$1/$1_R1.fastq.gz > bwa/$1/$1.sai && \
 																		   $$(BWA) samse $$(REF_FASTA) bwa/$1/$1.sai bwa/$1/$1_R1.fastq.gz \
-																		   -r \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" | $$(SAMTOOLS) view -bhS - > $$(@)")
+																		   -r \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" -s | $$(SAMTOOLS) view -bhS - > $$(@)")
 
 bwa/$1/$1_aln_srt.bam : bwa/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
@@ -56,7 +56,7 @@ bwa/$1/$1_aln_srt.bam : bwa/$1/$1_aln.bam
 									  									   
 bwamem/$1/$1_aln.bam : bwamem/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
+																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) -s \
 																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) bwamem/$1/$1_R1.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
 									  									   
 bwamem/$1/$1_aln_srt.bam : bwamem/$1/$1_aln.bam
