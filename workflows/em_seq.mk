@@ -21,12 +21,12 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 	
 define extract-fastq
 emseq/$1/$1.fastq : emseq/$1/$1_R1.fastq.gz
-	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
 									 zcat $$(<) > $$(@)")
 									 
 emseq/$1/$1.txt : emseq/$1/$1.fastq
-	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
-									 perl -ne 'print if \$. % 2 == 0'  < $$(<)  > $$(@)")
+	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
+									 $(SCRIPTS_DIR)/fastq_tools/extract_fastq.sh $$(<) $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
