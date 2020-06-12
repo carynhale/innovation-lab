@@ -20,7 +20,7 @@ SAMTOOLS_MEM_THREAD = 2G
 define copy-fastq
 bwa/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-									 mkdir -p emseq/$1 && \
+									 mkdir -p bwa/$1 && \
 								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 								     --sample_name $1 \
 								     --directory_name bwa \
