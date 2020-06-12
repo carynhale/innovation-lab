@@ -5,7 +5,8 @@ LOGDIR ?= log/em_seq.$(NOW)
 
 em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_aln.bam) \
-		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_aln_srt.bam)
+		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_aln_srt.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 
@@ -44,6 +45,17 @@ emseq/$1/$1_aln_srt.bam : emseq/$1/$1_aln.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
+		
+define copy-to-bam
+bam/$1.bam : emseq/$1/$1_aln_srt.bam
+	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
+								  cp $$(<) $$(@) && \
+								  $$(SAMTOOLS) index $$(@) && \
+								  cp bam/$1.bam.bai bam/$1.bai")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call copy-to-bam,$(sample))))
 		
 ..DUMMY := $(shell mkdir -p version; \
 			 $(BWA) &> version/tmp.txt; \
