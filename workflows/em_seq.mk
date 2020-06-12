@@ -26,7 +26,7 @@ emseq/$1/$1.fastq : emseq/$1/$1_R1.fastq.gz
 									 
 emseq/$1/$1.txt : emseq/$1/$1.fastq
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
-									 perl -ne 'print if $. \% 2 == 0'  < $$(<)  > $$(@)")
+									 perl -ne 'print if \$. % 2 == 0'  < $$(<)  > $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
