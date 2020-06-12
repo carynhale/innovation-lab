@@ -3,7 +3,8 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/em_seq.$(NOW)
 
 em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz) \
-		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample).fastq)
+		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample).fastq) \
+		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample).txt)
 
 define copy-fastq
 emseq/$1/$1_R1.fastq.gz : $3
@@ -22,12 +23,15 @@ define extract-fastq
 emseq/$1/$1.fastq : emseq/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 zcat $$(<) > $$(@)")
+									 
+emseq/$1/$1.txt : emseq/$1/$1.fastq
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 perl -ne 'print if $. % 2 == 0'  < $$(<)  > $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call extract-fastq,$(sample))))
-
- 
+		
 ..DUMMY := $(shell mkdir -p version; \
 			 R --version >> version.txt)
 .DELETE_ON_ERROR:
