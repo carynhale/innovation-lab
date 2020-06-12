@@ -3,9 +3,9 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/em_seq.$(NOW)
 
-em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz) \
-		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_aln.bam) \
-		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_aln_srt.bam) \
+em_seq : $(foreach sample,$(SAMPLES),bwa/$(sample)/$(sample)_R1.fastq.gz) \
+		 $(foreach sample,$(SAMPLES),bwa/$(sample)/$(sample)_aln.bam) \
+		 $(foreach sample,$(SAMPLES),bwa/$(sample)/$(sample)_aln_srt.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
@@ -18,12 +18,12 @@ SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
 		 
 define copy-fastq
-emseq/$1/$1_R1.fastq.gz : $3
+bwa/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 									 mkdir -p emseq/$1 && \
 								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 								     --sample_name $1 \
-								     --directory_name emseq \
+								     --directory_name bwa \
 								     --fastq_files '$$^'")
 
 endef
@@ -31,24 +31,24 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 	
 define fastq-to-bam
-emseq/$1/$1_aln.bam : emseq/$1/$1_R1.fastq.gz
+bwa/$1/$1_aln.bam : bwa/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-																		   $$(BWA) aln $$(REF_FASTA) emseq/$1/$1_R1.fastq.gz > emseq/$1/$1.sai && \
-																		   $$(BWA) samse $$(REF_FASTA) emseq/$1/$1.sai emseq/$1/$1_R1.fastq.gz \
+																		   $$(BWA) aln $$(REF_FASTA) bwa/$1/$1_R1.fastq.gz > bwa/$1/$1.sai && \
+																		   $$(BWA) samse $$(REF_FASTA) bwa/$1/$1.sai bwa/$1/$1_R1.fastq.gz \
 																		   -r \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" | $$(SAMTOOLS) view -bhS - > $$(@)")
 
-emseq/$1/$1_aln_srt.bam : emseq/$1/$1_aln.bam
+bwa/$1/$1_aln_srt.bam : bwa/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 									  									   $$(SAMTOOLS) index $$(@) && \
-									  									   cp emseq/$1/$1_aln_srt.bam.bai emseq/$1/$1_aln_srt.bai")
+									  									   cp bwa/$1/$1_aln_srt.bam.bai bwa/$1/$1_aln_srt.bai")
 																		   
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
 		
 define copy-to-bam
-bam/$1.bam : emseq/$1/$1_aln_srt.bam
+bam/$1.bam : bwa/$1/$1_aln_srt.bam
 	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
 								  cp $$(<) $$(@) && \
 								  $$(SAMTOOLS) index $$(@) && \
