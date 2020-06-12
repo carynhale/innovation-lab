@@ -7,6 +7,10 @@ em_seq : $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),emseq/$(sample)/$(sample).bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
+
+BWA_ALN_OPTS ?= -M
+BWAMEM_THREADS = 12
+BWAMEM_MEM_PER_THREAD = 2G
 		 
 define copy-fastq
 emseq/$1/$1_R1.fastq.gz : $3
