@@ -388,6 +388,10 @@ cravat_annotate :
 # Alpha testing
 #==================================================
 
+TARGETS += em_seq
+em_seq :
+	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
+
 TARGETS += hotspot_summary
 hotspot_summary :
 	$(MAKE) -f innovation-lab/variant_callers/genotypehotspots.mk -j $(NUM_JOBS)
