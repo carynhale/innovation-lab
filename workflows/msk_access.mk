@@ -907,7 +907,7 @@ metrics/report/combined_report.pdf : metrics/report/umi_frequencies.pdf metrics/
 			 $(GATK) --version >> version/msk_access.txt; \
 			 echo "picard" >> version/msk_access.txt; \
 			 $(PICARD) MarkDuplicates --version &>> version/msk_access.txt; \
-			 R --version >> version.txt)
+			 R --version >> version/msk_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: msk_access

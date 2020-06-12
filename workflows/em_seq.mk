@@ -17,17 +17,22 @@ endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 	
-define extract-fastq
-emseq/$1/$1.fastq : emseq/$1/$1_R1.fastq.gz
-	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
-									 zcat $$(<) > $$(@)")
-									 
+define fastq-to-bam
+emseq/$1/$1.bam : emseq/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
+																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
+																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) marianas/$1/$1_R1_umi-clipped.fastq.gz marianas/$1/$1_R2_umi-clipped.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
+																		   
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call extract-fastq,$(sample))))
+		$(eval $(call fastq-to-bam,$(sample))))
 		
 ..DUMMY := $(shell mkdir -p version; \
-			 R --version >> version.txt)
+			 $(BWA) &> version/tmp.txt; \
+			 head -3 version/tmp.txt | tail -2 > version/em_seq.txt; \
+			 rm version/tmp.txt; \
+			 $(SAMTOOLS) --version >> version/em_seq.txt; \
+			 R --version >> version/em_seq.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: em_seq
