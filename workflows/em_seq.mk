@@ -7,7 +7,8 @@ em_seq : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln.bam) \
 		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt.bam) \
 		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt_fx.bam) \
-		 $(foreach sample,$(SAMPLES),bam/$(sample).bam)
+		 $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 
@@ -17,6 +18,8 @@ BWAMEM_MEM_PER_THREAD = 2G
 
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
+
+WALTZ_MIN_MAPQ ?= 20
 		 
 define copy-fastq
 bwamem/$1/$1_R1.fastq.gz : $3
@@ -66,6 +69,26 @@ bam/$1.bam : bwamem/$1/$1_aln_srt_fx.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call copy-to-bam,$(sample))))
+		
+define waltz-genotype
+waltz/$1-pileup.txt.gz : bam/$1.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 mkdir -p waltz && \
+									 cd waltz && \
+									 ln -sf ../bam/$1.bam $1.bam && \
+									 ln -sf ../bam/$1.bai $1.bai && \
+									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
+									 gzip $1-pileup.txt && \
+									 gzip $1-pileup-without-duplicates.txt && \
+									 gzip $1-intervals.txt && \
+									 gzip $1-intervals-without-duplicates.txt && \
+									 cd ..")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call waltz-genotype,$(sample))))
+
 		
 ..DUMMY := $(shell mkdir -p version; \
 			 $(BWA) &> version/tmp.txt; \
