@@ -43,7 +43,7 @@ bwamem/$1/$1_aln_srt.bam : bwamem/$1/$1_aln.bam
 									  									   $$(SAMTOOLS) index $$(@) && \
 									  									   cp bwamem/$1/$1_aln_srt.bam.bai bwamem/$1/$1_aln_srt.bai")
 																		   
-bwamem/$1/$1_cl_aln_srt_fx.bam : bwamem/$1/$1_cl_aln_srt.bam
+bwamem/$1/$1_aln_srt_fx.bam : bwamem/$1/$1_aln_srt.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   $$(FIX_MATE) \
 									   INPUT=$$(<) \
