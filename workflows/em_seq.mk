@@ -1,5 +1,6 @@
 include innovation-lab/Makefile.inc
 include innovation-lab/genome_inc/b37.inc
+include innovation-lab/config/waltz.inc
 
 LOGDIR ?= log/em_seq.$(NOW)
 
@@ -95,7 +96,8 @@ $(foreach sample,$(SAMPLES),\
 			 head -3 version/tmp.txt | tail -2 > version/em_seq.txt; \
 			 rm version/tmp.txt; \
 			 $(SAMTOOLS) --version >> version/em_seq.txt; \
-			 R --version >> version/em_seq.txt)
+			 R --version >> version/em_seq.txt; \
+			 $(JAVA8) -version &> version/em_seq.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: em_seq
