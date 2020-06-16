@@ -7,13 +7,11 @@ LOGDIR ?= log/em_seq.$(NOW)
 em_seq : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln.bam) \
 		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt.bam) \
-		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt_fx.bam) \
-		 $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
-		 $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz)
+		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt_fx.bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 
-BWA_ALN_OPTS ?= -M
+BWA_ALN_OPTS ?= -M -L 100,100
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
 
@@ -59,17 +57,6 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
 		
-define copy-to-bam
-bam/$1.bam : bwamem/$1/$1_aln_srt_fx.bam
-	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
-								  cp $$(<) $$(@) && \
-								  $$(SAMTOOLS) index $$(@) && \
-								  cp bam/$1.bam.bai bam/$1.bai")
-
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call copy-to-bam,$(sample))))
-		
 define waltz-genotype
 waltz/$1-pileup.txt.gz : bam/$1.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
@@ -88,7 +75,6 @@ waltz/$1-pileup.txt.gz : bam/$1.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
-
 		
 ..DUMMY := $(shell mkdir -p version; \
 			 $(BWA) &> version/tmp.txt; \
