@@ -7,7 +7,11 @@ LOGDIR ?= log/em_seq.$(NOW)
 em_seq : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln.bam) \
 		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt.bam) \
-		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt_fx.bam)
+		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt_fx.bam) \
+		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_R1.fastq.gz) \
+		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_aln.bam) \
+		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_aln_srt.bam) \
+		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_aln_srt_fx.bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 
@@ -27,6 +31,12 @@ bwamem/$1/$1_R1.fastq.gz : $3
 								     --sample_name $1 \
 								     --directory_name bwamem \
 								     --fastq_files '$$^'")
+bwaaln/$1/$1_R1.fastq.gz : $3
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
+								     --sample_name $1 \
+								     --directory_name bwaaln \
+								     --fastq_files '$$^'")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
@@ -45,6 +55,27 @@ bwamem/$1/$1_aln_srt.bam : bwamem/$1/$1_aln.bam
 									  									   cp bwamem/$1/$1_aln_srt.bam.bai bwamem/$1/$1_aln_srt.bai")
 																		   
 bwamem/$1/$1_aln_srt_fx.bam : bwamem/$1/$1_aln_srt.bam
+	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   $$(FIX_MATE) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   SORT_ORDER=coordinate \
+									   COMPRESSION_LEVEL=0 \
+									   CREATE_INDEX=true")
+
+bwaaln/$1/$1_aln.bam : bwaaln/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
+																		   $$(BWA) aln -t $$(BWAMEM_THREADS) $$(REF_FASTA) bwaaln/$1/$1_R1.fastq.gz > bwaaln/$1/$1_R1.sai && \
+																		   $$(BWA) aln -t $$(BWAMEM_THREADS) $$(REF_FASTA) bwaaln/$1/$1_R2.fastq.gz > bwaaln/$1/$1_R2.sai && \
+																		   $$(BWA) sampe -s -A -r \"@RG\tID:$1\tLB:$1\tPL:illumina\tSM:$1\" $$(REF_FASTA) bwaaln/$1/$1_R1.sai bwaaln/$1_R2.sai bwaaln/$1/$1_R1.fastq.gz bwaaln/$1/$1_R2.fastq.gz | samtools view -bhS - > bwaaln/$1/$1_aln.bam")
+
+bwaaln/$1/$1_aln_srt.bam : bwaaln/$1/$1_aln.bam
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
+									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
+									  									   $$(SAMTOOLS) index $$(@) && \
+									  									   cp bwaaln/$1/$1_aln_srt.bam.bai bwaaln/$1/$1_aln_srt.bai")
+																		   
+bwaaln/$1/$1_aln_srt_fx.bam : bwaaln/$1/$1_aln_srt.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   $$(FIX_MATE) \
 									   INPUT=$$(<) \
