@@ -73,6 +73,9 @@ bismark/$1/$1_aln_srt__F2R1R2.bam : bismark/$1/$1_aln_srt.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call filter-bam,$(sample))))
+		
+define picard-metrics
+bismark/$1/$1_aln_srt_rrbs_summary_metrics : bismark/$1/$1_aln_srt.bam
 
 		
 ..DUMMY := $(shell mkdir -p version; \
