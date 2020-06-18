@@ -83,6 +83,20 @@ bismark/$1/$1_aln_srt.rrbs_summary_metrics : bismark/$1/$1_aln_srt.bam
 								  I=$$(<) \
 								  M=bismark/$1/$1_aln_srt")
 
+bismark/$1/$1_aln_srt__F1R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F1R1R2.bam
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
+								  $$(COLLECT_RRBS_METRICS) \
+								  R=$$(REF_FASTA) \
+								  I=$$(<) \
+								  M=bismark/$1/$1_aln_srt__F1R1R2")
+								  
+bismark/$1/$1_aln_srt__F2R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F2R1R2.bam
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
+								  $$(COLLECT_RRBS_METRICS) \
+								  R=$$(REF_FASTA) \
+								  I=$$(<) \
+								  M=bismark/$1/$1_aln_srt__F2R1R2")
+								  
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
