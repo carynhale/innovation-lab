@@ -121,7 +121,7 @@ bismark/$1/$1_aln_srt__F2R1R2.txt : bismark/$1/$1_aln_srt__F2R1R2.bam
 								  $$(COLLECT_ALIGNMENT_METRICS) \
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
-								  M=$$(@)")
+								  O=$$(@)")
 								  
 endef
 $(foreach sample,$(SAMPLES),\
