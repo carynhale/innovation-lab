@@ -4,38 +4,22 @@ include innovation-lab/config/waltz.inc
 
 LOGDIR ?= log/em_seq.$(NOW)
 
-em_seq : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
-		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln.bam) \
-		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt.bam) \
-		 $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_aln_srt_fx.bam) \
-		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_R1.fastq.gz) \
-		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_aln.bam) \
-		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_aln_srt.bam) \
-		 $(foreach sample,$(SAMPLES),bwaaln/$(sample)/$(sample)_aln_srt_fx.bam)
+em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
-
-BWA_ALN_OPTS ?= -M -L 100,100
-BWAMEM_THREADS = 12
-BWAMEM_MEM_PER_THREAD = 2G
+GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
 
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
 
-WALTZ_MIN_MAPQ ?= 20
-		 
 define copy-fastq
-bwamem/$1/$1_R1.fastq.gz : $3
+bismark/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 								     --sample_name $1 \
-								     --directory_name bwamem \
-								     --fastq_files '$$^'")
-bwaaln/$1/$1_R1.fastq.gz : $3
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
-								     --sample_name $1 \
-								     --directory_name bwaaln \
+								     --directory_name bismark \
 								     --fastq_files '$$^'")
 
 endef
@@ -43,74 +27,28 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 	
 define fastq-to-bam
-bwamem/$1/$1_aln.bam : bwamem/$1/$1_R1.fastq.gz
-	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-																		   $$(BWA) mem -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) \
-																		   -R \"@RG\tID:$1\tLB:$1\tPL:$$(SEQ_PLATFORM)\tSM:$1\" $$(REF_FASTA) bwamem/$1/$1_R1.fastq.gz bwamem/$1/$1_R2.fastq.gz | $$(SAMTOOLS) view -bhS - > $$(@)")
+bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -s 8G -m 16G -v $(BISMARK_ENV),"set -o pipefail && \
+												   bismark --fastq \
+												   --genome_folder $$(GENOME_FOLDER) \
+												   -1 bismark/$1/$1_R1.fastq.gz \
+												   -2 bismark/$1/$1_R2.fastq.gz \
+												   --output_dir bismark/$1/ && \
+												   mv bismark/$1/$1_R1_bt2_pe.bam bismark/$1/$1_R1_aln.bam && \
+												   mv bismark/$1/$1_R1_bt2_PE_report.txt bismark/$1/$1_R1_aln.txt")
 									  									   
-bwamem/$1/$1_aln_srt.bam : bwamem/$1/$1_aln.bam
+bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 									  									   $$(SAMTOOLS) index $$(@) && \
 									  									   cp bwamem/$1/$1_aln_srt.bam.bai bwamem/$1/$1_aln_srt.bai")
 																		   
-bwamem/$1/$1_aln_srt_fx.bam : bwamem/$1/$1_aln_srt.bam
-	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
-									   $$(FIX_MATE) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   SORT_ORDER=coordinate \
-									   COMPRESSION_LEVEL=0 \
-									   CREATE_INDEX=true")
-
-bwaaln/$1/$1_aln.bam : bwaaln/$1/$1_R1.fastq.gz
-	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-																		   $$(BWA) aln -t $$(BWAMEM_THREADS) $$(REF_FASTA) bwaaln/$1/$1_R1.fastq.gz > bwaaln/$1/$1_R1.sai && \
-																		   $$(BWA) aln -t $$(BWAMEM_THREADS) $$(REF_FASTA) bwaaln/$1/$1_R2.fastq.gz > bwaaln/$1/$1_R2.sai && \
-																		   $$(BWA) sampe -s -A -r \"@RG\tID:$1\tLB:$1\tPL:illumina\tSM:$1\" $$(REF_FASTA) bwaaln/$1/$1_R1.sai bwaaln/$1/$1_R2.sai bwaaln/$1/$1_R1.fastq.gz bwaaln/$1/$1_R2.fastq.gz | samtools view -bhS - > bwaaln/$1/$1_aln.bam")
-
-bwaaln/$1/$1_aln_srt.bam : bwaaln/$1/$1_aln.bam
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
-									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
-									  									   $$(SAMTOOLS) index $$(@) && \
-									  									   cp bwaaln/$1/$1_aln_srt.bam.bai bwaaln/$1/$1_aln_srt.bai")
-																		   
-bwaaln/$1/$1_aln_srt_fx.bam : bwaaln/$1/$1_aln_srt.bam
-	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
-									   $$(FIX_MATE) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   SORT_ORDER=coordinate \
-									   COMPRESSION_LEVEL=0 \
-									   CREATE_INDEX=true")
-									   
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
 		
-define waltz-genotype
-waltz/$1-pileup.txt.gz : bam/$1.bam
-	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
-									 mkdir -p waltz && \
-									 cd waltz && \
-									 ln -sf ../bam/$1.bam $1.bam && \
-									 ln -sf ../bam/$1.bai $1.bai && \
-									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1.bam $$(REF_FASTA) .bed && \
-									 gzip $1-pileup.txt && \
-									 gzip $1-pileup-without-duplicates.txt && \
-									 gzip $1-intervals.txt && \
-									 gzip $1-intervals-without-duplicates.txt && \
-									 cd ..")
-
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call waltz-genotype,$(sample))))
-		
 ..DUMMY := $(shell mkdir -p version; \
-			 $(BWA) &> version/tmp.txt; \
-			 head -3 version/tmp.txt | tail -2 > version/em_seq.txt; \
-			 rm version/tmp.txt; \
+			 bismark --version > hello.txt; \
 			 $(SAMTOOLS) --version >> version/em_seq.txt; \
 			 R --version >> version/em_seq.txt; \
 			 $(JAVA8) -version &> version/em_seq.txt)
