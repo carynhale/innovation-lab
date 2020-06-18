@@ -43,7 +43,7 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 									  									   $$(SAMTOOLS) index $$(@) && \
-									  									   cp bwamem/$1/$1_aln_srt.bam.bai bwamem/$1/$1_aln_srt.bai")
+									  									   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 																		   
 endef
 $(foreach sample,$(SAMPLES),\
