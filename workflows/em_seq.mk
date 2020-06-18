@@ -35,8 +35,8 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
 												   -1 $1_R1.fastq.gz \
 												   -2 $1_R2.fastq.gz \
 												   --output_dir . && \
-												   mv $1_R1_bismark_bt2_pe.bam $1_R1_aln.bam && \
-												   mv $1_R1_bismark_bt2_PE_report.txt $1_R1_aln.txt && \
+												   mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
+												   mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
 												   cd ../..")
 									  									   
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
