@@ -8,7 +8,8 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.bam) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.bam)
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.bam) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.rrbs_summary_metrics)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -75,9 +76,17 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call filter-bam,$(sample))))
 		
 define picard-metrics
-bismark/$1/$1_aln_srt_rrbs_summary_metrics : bismark/$1/$1_aln_srt.bam
+bismark/$1/$1_aln_srt.rrbs_summary_metrics : bismark/$1/$1_aln_srt.bam
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
+								  $$(COLLECT_RRBS_METRICS) \
+								  R=$$(REF_FASTA) \
+								  I=$$(<) \
+								  M=bismark/$1/$1_aln_srt")
 
-		
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call picard-metrics,$(sample))))
+
 ..DUMMY := $(shell mkdir -p version; \
 			 $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
 			 $(SAMTOOLS) --version >> version/em_seq.txt; \
