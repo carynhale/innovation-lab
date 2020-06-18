@@ -11,7 +11,10 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.rrbs_summary_metrics) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.rrbs_summary_metrics) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.rrbs_summary_metrics)
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.rrbs_summary_metrics) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.txt) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.txt) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.txt)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -84,6 +87,13 @@ bismark/$1/$1_aln_srt.rrbs_summary_metrics : bismark/$1/$1_aln_srt.bam
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
 								  M=bismark/$1/$1_aln_srt")
+								  
+bismark/$1/$1_aln_srt.txt : bismark/$1/$1_aln_srt.bam
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
+								  $$(COLLECT_ALIGNMENT_METRICS) \
+								  R=$$(REF_FASTA) \
+								  I=$$(<) \
+								  O=$$(@)")
 
 bismark/$1/$1_aln_srt__F1R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F1R1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
@@ -91,6 +101,13 @@ bismark/$1/$1_aln_srt__F1R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F1R1
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
 								  M=bismark/$1/$1_aln_srt__F1R1R2")
+
+bismark/$1/$1_aln_srt__F1R1R2.txt : bismark/$1/$1_aln_srt__F1R1R2.bam
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
+								  $$(COLLECT_ALIGNMENT_METRICS) \
+								  R=$$(REF_FASTA) \
+								  I=$$(<) \
+								  O=$$(@)")
 								  
 bismark/$1/$1_aln_srt__F2R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F2R1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
@@ -98,6 +115,13 @@ bismark/$1/$1_aln_srt__F2R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F2R1
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
 								  M=bismark/$1/$1_aln_srt__F2R1R2")
+
+bismark/$1/$1_aln_srt__F2R1R2.txt : bismark/$1/$1_aln_srt__F2R1R2.bam
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
+								  $$(COLLECT_ALIGNMENT_METRICS) \
+								  R=$$(REF_FASTA) \
+								  I=$$(<) \
+								  M=$$(@)")
 								  
 endef
 $(foreach sample,$(SAMPLES),\
