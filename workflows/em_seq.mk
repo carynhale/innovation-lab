@@ -54,7 +54,7 @@ $(foreach sample,$(SAMPLES),\
 define filter-bam
 bismark/$1/$1_aln_srt__F1R1R2.bam : bismark/$1/$1_aln_srt.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
-																		   $$(SAMTOOLS) view -b -f 144 $$(<) > bismak/$1/$1_aln_srt__F1R1.bam && \
+																		   $$(SAMTOOLS) view -b -f 144 $$(<) > bismark/$1/$1_aln_srt__F1R1.bam && \
 																		   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F1R1.bam && \
 																		   $$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > bismark/$1/$1_aln_srt__F1R2.bam && \
 																		   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F1R2.bam && \
