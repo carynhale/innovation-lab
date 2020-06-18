@@ -48,7 +48,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
 		
 ..DUMMY := $(shell mkdir -p version; \
-			 bismark --version > hello.txt; \
+			 $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
 			 $(SAMTOOLS) --version >> version/em_seq.txt; \
 			 R --version >> version/em_seq.txt; \
 			 $(JAVA8) -version &> version/em_seq.txt)
