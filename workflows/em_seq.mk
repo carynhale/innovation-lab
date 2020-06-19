@@ -18,7 +18,8 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) \
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) \
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz) \
-		 summary/rrbs_metrics.txt
+		 summary/rrbs_metrics.txt \
+		 summary/alignment_metrics.txt
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -185,6 +186,10 @@ summary/rrbs_metrics.txt : $(wildcard waltz/$(SAMPLES)-pileup.txt.gz) $(wildcard
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
+summary/alignment_metrics.txt : $(wildcard waltz/$(SAMPLES)-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   mkdir -p summary && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
