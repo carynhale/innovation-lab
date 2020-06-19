@@ -22,6 +22,8 @@ GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
 
+WALTZ_MIN_MAPQ = 10
+
 define copy-fastq
 bismark/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
@@ -126,6 +128,26 @@ bismark/$1/$1_aln_srt__F2R1R2.txt : bismark/$1/$1_aln_srt__F2R1R2.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
+		
+define waltz-genotype
+waltz/$1_aln_srt-pileup.txt.gz : bismark/$1/$1_aln_srt.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 mkdir -p waltz && \
+									 cd waltz && \
+									 ln -sf ../bismark/$1/$1_aln_srt.bam $1_aln_srt.bam && \
+									 ln -sf ../bismark/$1/$1_aln_srt.bai $1_aln_srt.bai && \
+									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt.bam $$(REF_FASTA) .bed && \
+									 gzip $1_aln_srt-pileup.txt && \
+									 gzip $1_aln_srt-pileup-without-duplicates.txt && \
+									 gzip $1_aln_srt-intervals.txt && \
+									 gzip $1_aln_srt-intervals-without-duplicates.txt && \
+									 cd ..")
+									 
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call waltz-genotype,$(sample))))
+
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
