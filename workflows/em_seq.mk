@@ -16,7 +16,8 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.txt) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.txt) \
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) \
-		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz)
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz)
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -158,6 +159,20 @@ waltz/$1_aln_srt__F1R1R2-pileup.txt.gz : bismark/$1/$1_aln_srt__F1R1R2.bam
 									 gzip $1_aln_srt__F1R1R2-pileup-without-duplicates.txt && \
 									 gzip $1_aln_srt__F1R1R2-intervals.txt && \
 									 gzip $1_aln_srt__F1R1R2-intervals-without-duplicates.txt && \
+									 cd ..")
+
+waltz/$1_aln_srt__F2R1R2-pileup.txt.gz : bismark/$1/$1_aln_srt__F2R1R2.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+									 mkdir -p waltz && \
+									 cd waltz && \
+									 ln -sf ../bismark/$1/$1_aln_srt__F2R1R2.bam $1_aln_srt__F2R1R2.bam && \
+									 ln -sf ../bismark/$1/$1_aln_srt__F2R1R2.bam.bai $1_aln_srt__F2R1R2.bai && \
+									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt__F2R1R2.bam $$(REF_FASTA) .bed && \
+									 gzip $1_aln_srt__F2R1R2-pileup.txt && \
+									 gzip $1_aln_srt__F2R1R2-pileup-without-duplicates.txt && \
+									 gzip $1_aln_srt__F2R1R2-intervals.txt && \
+									 gzip $1_aln_srt__F2R1R2-intervals-without-duplicates.txt && \
 									 cd ..")
 
 endef
