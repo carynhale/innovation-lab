@@ -183,7 +183,7 @@ $(foreach sample,$(SAMPLES),\
 summary/rrbs_metrics.txt : $(wildcard waltz/$(SAMPLES)-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
-									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --type 1 --sample_names '$(SAMPLES)'")
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
