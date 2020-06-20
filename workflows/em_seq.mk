@@ -9,6 +9,9 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt__F1R1R2.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt__F2R1R2.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.rrbs_summary_metrics) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.rrbs_summary_metrics) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.rrbs_summary_metrics) \
@@ -86,6 +89,29 @@ bismark/$1/$1_aln_srt__F2R1R2.bam : bismark/$1/$1_aln_srt.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call filter-bam,$(sample))))
+		
+define copy-bam
+bam/$1_aln_srt.bam : bismark/$1/$1_aln_srt.bam
+	$$(call RUN,-c -s 1G -m 2G,"set -o pipefail && \
+								cp $$(<) $$(@) && \
+								$$(SAMTOOLS) index $$(@) && \
+								cp bam/$1_aln_srt.bam.bai bam/$1_aln_srt.bai")
+
+bam/$1_aln_srt__F1R1R2.bam : bismark/$1/$1_aln_srt__F1R1R2.bam
+	$$(call RUN,-c -s 1G -m 2G,"set -o pipefail && \
+								cp $$(<) $$(@) && \
+								$$(SAMTOOLS) index $$(@) && \
+								cp bam/$1_aln_srt__F1R1R2.bam.bai bam/$1_aln_srt__F1R1R2.bai")
+
+bam/$1_aln_srt__F2R1R2.bam : bismark/$1/$1_aln_srt__F2R1R2.bam
+	$$(call RUN,-c -s 1G -m 2G,"set -o pipefail && \
+								cp $$(<) $$(@) && \
+								$$(SAMTOOLS) index $$(@) && \
+								cp bam/$1_aln_srt__F2R1R2.bam.bai bam/$1_aln_srt__F2R1R2.bai")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call copy-bam,$(sample))))
 		
 define picard-metrics
 bismark/$1/$1_aln_srt.rrbs_summary_metrics : bismark/$1/$1_aln_srt.bam
