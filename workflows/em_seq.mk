@@ -22,7 +22,8 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) \
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz) \
 		 summary/rrbs_metrics.txt \
-		 summary/alignment_metrics.txt
+		 summary/alignment_metrics.txt \
+		 summary/noise_by_position.txt
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -207,15 +208,20 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
 		
-summary/rrbs_metrics.txt : $(wildcard waltz/$(SAMPLES)-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
+summary/rrbs_metrics.txt : $(wildcard waltz/$(SAMPLES)_aln_srt-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
-summary/alignment_metrics.txt : $(wildcard waltz/$(SAMPLES)-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
+summary/alignment_metrics.txt : $(wildcard waltz/$(SAMPLES)_aln_srt-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
+									   
+summary/noise_by_position.txt : $(wildcard waltz/$(SAMPLES)_aln_srt-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   mkdir -p summary && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 3 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
