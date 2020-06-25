@@ -230,7 +230,7 @@ summary/noise_by_position__F1R1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(samp
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
 
-summary/noise_by_position__F2R1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup__F2R1R2.txt.gz)
+summary/noise_by_position__F2R1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 5 --sample_names '$(SAMPLES)'")
