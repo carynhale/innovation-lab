@@ -210,27 +210,27 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
 		
-summary/rrbs_metrics.txt : $(wildcard waltz/$(SAMPLES)_aln_srt-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
+summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
-summary/alignment_metrics.txt : $(wildcard waltz/$(SAMPLES)_aln_srt-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz) $(wildcard waltz/$(SAMPLES)_aln_srt__F2R1R2-pileup.txt.gz)
+summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 									   
-summary/noise_by_position.txt : $(wildcard waltz/$(SAMPLES)_aln_srt-pileup.txt.gz)
+summary/noise_by_position.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 3 --sample_names '$(SAMPLES)'")
 
-summary/noise_by_position__F1R1R2.txt : $(wildcard waltz/$(SAMPLES)_aln_srt__F1R1R2-pileup.txt.gz)
+summary/noise_by_position__F1R1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
 
-summary/noise_by_position__F2R1R2.txt : $(wildcard waltz/$(SAMPLES)_aln_srt-pileup__F2R1R2.txt.gz)
+summary/noise_by_position__F2R1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup__F2R1R2.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 5 --sample_names '$(SAMPLES)'")
