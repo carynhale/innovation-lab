@@ -171,7 +171,7 @@ waltz/$1_aln_srt-pileup.txt.gz : bismark/$1/$1_aln_srt.bam
 									 ln -sf ../bismark/$1/$1_aln_srt.bam $1_aln_srt.bam && \
 									 ln -sf ../bismark/$1/$1_aln_srt.bai $1_aln_srt.bai && \
 									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
-									 $$(call WALTZ_CMD,4G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt.bam $$(REF_FASTA) .bed && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt.bam $$(REF_FASTA) .bed && \
 									 gzip $1_aln_srt-pileup.txt && \
 									 gzip $1_aln_srt-pileup-without-duplicates.txt && \
 									 gzip $1_aln_srt-intervals.txt && \
