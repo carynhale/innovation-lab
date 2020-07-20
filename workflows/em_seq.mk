@@ -74,7 +74,7 @@ bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
 									   OUTPUT=$$(@) \
 									   SORT_ORDER=coordinate \
 									   COMPRESSION_LEVEL=0 \
-									   CREATE_INDEX=true")                                                              
+									   CREATE_INDEX=true")
 																		   
 endef
 $(foreach sample,$(SAMPLES),\
