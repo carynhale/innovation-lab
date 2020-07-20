@@ -66,9 +66,15 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 									  									   $$(SAMTOOLS) index $$(@) && \
 									  									   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
-                                                                           
+
 bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
-    $$(call RUN,-c -n 1 -s 12G -m 16G,"")
+    $$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   $$(FIX_MATE) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   SORT_ORDER=coordinate \
+									   COMPRESSION_LEVEL=0 \
+									   CREATE_INDEX=true")
 																		   
 endef
 $(foreach sample,$(SAMPLES),\
