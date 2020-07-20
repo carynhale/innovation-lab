@@ -77,6 +77,8 @@ bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
 									   CREATE_INDEX=true")
 
 endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call fastq-to-bam,$(sample))))
 
 define filter-bam
 bismark/$1/$1_aln_srt_fx__F1R2.bam : bismark/$1/$1_aln_srt_fx.bam
