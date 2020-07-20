@@ -19,14 +19,14 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.txt) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.txt) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.txt) \
-#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) \
-#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) \
-#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz) \
-#		 summary/rrbs_metrics.txt \
-#		 summary/alignment_metrics.txt \
-#		 summary/noise_by_position.txt \
-#		 summary/noise_by_position__F1R1R2.txt \
-#		 summary/noise_by_position__F2R1R2.txt
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz) \
+		 summary/rrbs_metrics.txt \
+		 summary/alignment_metrics.txt \
+		 summary/noise_by_position.txt \
+		 summary/noise_by_position__F1R2.txt \
+		 summary/noise_by_position__F2R1.txt
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -174,73 +174,73 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
 		
 define waltz-genotype
-waltz/$1_aln_srt-pileup.txt.gz : bismark/$1/$1_aln_srt.bam
+waltz/$1_aln_srt_fx-pileup.txt.gz : bismark/$1/$1_aln_srt_fx.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 mkdir -p waltz && \
 									 cd waltz && \
-									 ln -sf ../bismark/$1/$1_aln_srt.bam $1_aln_srt.bam && \
-									 ln -sf ../bismark/$1/$1_aln_srt.bai $1_aln_srt.bai && \
+									 ln -sf ../bismark/$1/$1_aln_srt_fx.bam $1_aln_srt_fx.bam && \
+									 ln -sf ../bismark/$1/$1_aln_srt_fx.bai $1_aln_srt_fx.bai && \
 									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt.bam $$(REF_FASTA) .bed && \
-									 gzip $1_aln_srt-pileup.txt && \
-									 gzip $1_aln_srt-pileup-without-duplicates.txt && \
-									 gzip $1_aln_srt-intervals.txt && \
-									 gzip $1_aln_srt-intervals-without-duplicates.txt && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt_fx.bam $$(REF_FASTA) .bed && \
+									 gzip $1_aln_srt_fx-pileup.txt && \
+									 gzip $1_aln_srt_fx-pileup-without-duplicates.txt && \
+									 gzip $1_aln_srt_fx-intervals.txt && \
+									 gzip $1_aln_srt_fx-intervals-without-duplicates.txt && \
 									 cd ..")
 
-waltz/$1_aln_srt__F1R1R2-pileup.txt.gz : bismark/$1/$1_aln_srt__F1R1R2.bam
+waltz/$1_aln_srt_fx__F1R2-pileup.txt.gz : bismark/$1/$1_aln_srt_fx__F1R2.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 mkdir -p waltz && \
 									 cd waltz && \
-									 ln -sf ../bismark/$1/$1_aln_srt__F1R1R2.bam $1_aln_srt__F1R1R2.bam && \
-									 ln -sf ../bismark/$1/$1_aln_srt__F1R1R2.bam.bai $1_aln_srt__F1R1R2.bai && \
+									 ln -sf ../bismark/$1/$1_aln_srt_fx__F1R2.bam $1_aln_srt_fx__F1R2.bam && \
+									 ln -sf ../bismark/$1/$1_aln_srt_fx__F1R2.bam.bai $1_aln_srt_fx__F1R2.bai && \
 									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt__F1R1R2.bam $$(REF_FASTA) .bed && \
-									 gzip $1_aln_srt__F1R1R2-pileup.txt && \
-									 gzip $1_aln_srt__F1R1R2-pileup-without-duplicates.txt && \
-									 gzip $1_aln_srt__F1R1R2-intervals.txt && \
-									 gzip $1_aln_srt__F1R1R2-intervals-without-duplicates.txt && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt_fx__F1R2.bam $$(REF_FASTA) .bed && \
+									 gzip $1_aln_srt_fx__F1R2-pileup.txt && \
+									 gzip $1_aln_srt_fx__F1R2-pileup-without-duplicates.txt && \
+									 gzip $1_aln_srt_fx__F1R2-intervals.txt && \
+									 gzip $1_aln_srt_fx__F1R2-intervals-without-duplicates.txt && \
 									 cd ..")
 
-waltz/$1_aln_srt__F2R1R2-pileup.txt.gz : bismark/$1/$1_aln_srt__F2R1R2.bam
+waltz/$1_aln_srt_fx__F2R1-pileup.txt.gz : bismark/$1/$1_aln_srt_fx__F2R1.bam
 	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
 									 mkdir -p waltz && \
 									 cd waltz && \
-									 ln -sf ../bismark/$1/$1_aln_srt__F2R1R2.bam $1_aln_srt__F2R1R2.bam && \
-									 ln -sf ../bismark/$1/$1_aln_srt__F2R1R2.bam.bai $1_aln_srt__F2R1R2.bai && \
+									 ln -sf ../bismark/$1/$1_aln_srt_fx__F2R1.bam $1_aln_srt_fx__F2R1.bam && \
+									 ln -sf ../bismark/$1/$1_aln_srt_fx__F2R1.bam.bai $1_aln_srt_fx__F2R1.bai && \
 									 if [[ ! -f '.bed' ]]; then cut -f 4 $$(TARGETS_FILE) | paste -d '\t' $$(TARGETS_FILE) - > .bed; fi && \
-									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt__F2R1R2.bam $$(REF_FASTA) .bed && \
-									 gzip $1_aln_srt__F2R1R2-pileup.txt && \
-									 gzip $1_aln_srt__F2R1R2-pileup-without-duplicates.txt && \
-									 gzip $1_aln_srt__F2R1R2-intervals.txt && \
-									 gzip $1_aln_srt__F2R1R2-intervals-without-duplicates.txt && \
+									 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_aln_srt_fx__F2R1.bam $$(REF_FASTA) .bed && \
+									 gzip $1_aln_srt_fx__F2R1-pileup.txt && \
+									 gzip $1_aln_srt_fx__F2R1-pileup-without-duplicates.txt && \
+									 gzip $1_aln_srt_fx__F2R1-intervals.txt && \
+									 gzip $1_aln_srt_fx__F2R1-intervals-without-duplicates.txt && \
 									 cd ..")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
 		
-summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz)
+summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
-summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz)
+summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 									   
-summary/noise_by_position.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz)
+summary/noise_by_position.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 3 --sample_names '$(SAMPLES)'")
 
-summary/noise_by_position__F1R1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz)
+summary/noise_by_position__F1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
 
-summary/noise_by_position__F2R1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz)
+summary/noise_by_position__F2R1.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 5 --sample_names '$(SAMPLES)'")
