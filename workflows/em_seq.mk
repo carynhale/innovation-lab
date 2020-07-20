@@ -12,21 +12,21 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F1R2.bam) \
-		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F2R1.bam) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.rrbs_summary_metrics) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.rrbs_summary_metrics) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.rrbs_summary_metrics) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.txt) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.txt) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.txt) \
-		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) \
-		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) \
-		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz) \
-		 summary/rrbs_metrics.txt \
-		 summary/alignment_metrics.txt \
-		 summary/noise_by_position.txt \
-		 summary/noise_by_position__F1R1R2.txt \
-		 summary/noise_by_position__F2R1R2.txt
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F2R1.bam)
+#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.rrbs_summary_metrics) \
+#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.rrbs_summary_metrics) \
+#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.rrbs_summary_metrics) \
+#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.txt) \
+#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.txt) \
+#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.txt) \
+#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) \
+#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) \
+#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz) \
+#		 summary/rrbs_metrics.txt \
+#		 summary/alignment_metrics.txt \
+#		 summary/noise_by_position.txt \
+#		 summary/noise_by_position__F1R1R2.txt \
+#		 summary/noise_by_position__F2R1R2.txt
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
