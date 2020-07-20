@@ -12,13 +12,13 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F1R2.bam) \
-		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F2R1.bam)
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.rrbs_summary_metrics) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.rrbs_summary_metrics) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.rrbs_summary_metrics) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.txt) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F1R1R2.txt) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt__F2R1R2.txt) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F2R1.bam) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.rrbs_summary_metrics) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.rrbs_summary_metrics) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.rrbs_summary_metrics) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.txt) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.txt) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.txt) \
 #		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt-pileup.txt.gz) \
 #		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F1R1R2-pileup.txt.gz) \
 #		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt__F2R1R2-pileup.txt.gz) \
@@ -127,42 +127,42 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call copy-bam,$(sample))))
 		
 define picard-metrics
-bismark/$1/$1_aln_srt.rrbs_summary_metrics : bismark/$1/$1_aln_srt.bam
+bismark/$1/$1_aln_srt_fx.rrbs_summary_metrics : bismark/$1/$1_aln_srt_fx.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 								  $$(COLLECT_RRBS_METRICS) \
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
-								  M=bismark/$1/$1_aln_srt")
+								  M=bismark/$1/$1_aln_srt_fx")
 								  
-bismark/$1/$1_aln_srt.txt : bismark/$1/$1_aln_srt.bam
+bismark/$1/$1_aln_srt_fx.txt : bismark/$1/$1_aln_srt_fx.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 								  $$(COLLECT_ALIGNMENT_METRICS) \
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
 								  O=$$(@)")
 
-bismark/$1/$1_aln_srt__F1R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F1R1R2.bam
+bismark/$1/$1_aln_srt_fx__F1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt_fx__F1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 								  $$(COLLECT_RRBS_METRICS) \
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
-								  M=bismark/$1/$1_aln_srt__F1R1R2")
+								  M=bismark/$1/$1_aln_srt_fx__F1R2")
 
-bismark/$1/$1_aln_srt__F1R1R2.txt : bismark/$1/$1_aln_srt__F1R1R2.bam
+bismark/$1/$1_aln_srt_fx__F1R2.txt : bismark/$1/$1_aln_srt_fx__F1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 								  $$(COLLECT_ALIGNMENT_METRICS) \
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
 								  O=$$(@)")
 								  
-bismark/$1/$1_aln_srt__F2R1R2.rrbs_summary_metrics : bismark/$1/$1_aln_srt__F2R1R2.bam
+bismark/$1/$1_aln_srt_fx__F2R1.rrbs_summary_metrics : bismark/$1/$1_aln_srt_fx__F2R1.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 								  $$(COLLECT_RRBS_METRICS) \
 								  R=$$(REF_FASTA) \
 								  I=$$(<) \
-								  M=bismark/$1/$1_aln_srt__F2R1R2")
+								  M=bismark/$1/$1_aln_srt_fx__F2R1")
 
-bismark/$1/$1_aln_srt__F2R1R2.txt : bismark/$1/$1_aln_srt__F2R1R2.bam
+bismark/$1/$1_aln_srt_fx__F2R1.txt : bismark/$1/$1_aln_srt_fx__F2R1.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 								  $$(COLLECT_ALIGNMENT_METRICS) \
 								  R=$$(REF_FASTA) \
