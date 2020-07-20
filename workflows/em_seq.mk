@@ -47,7 +47,7 @@ bismark/$1/$1_R1.fastq.gz : $3
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
-	
+
 define fastq-to-bam
 bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -s 8G -m 16G -v $(BISMARK_ENV),"set -o pipefail && \
@@ -77,8 +77,6 @@ bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
 									   CREATE_INDEX=true")
 
 endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call fastq-to-bam,$(sample))))
 
 define filter-bam
 bismark/$1/$1_aln_srt_fx__F1R2.bam : bismark/$1/$1_aln_srt_fx.bam
