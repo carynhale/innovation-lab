@@ -73,7 +73,7 @@ bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
 									   SORT_ORDER=coordinate \
 									   COMPRESSION_LEVEL=0 \
 									   CREATE_INDEX=true")
-																		   
+
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
