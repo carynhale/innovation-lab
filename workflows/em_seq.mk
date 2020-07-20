@@ -7,9 +7,9 @@ LOGDIR ?= log/em_seq.$(NOW)
 em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
-         $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.bam)
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.bam) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.bam) \
+         $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.bam) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.bam) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.bam)
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx.bam) \
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F1R2.bam) \
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F2R1.bam) \
@@ -79,7 +79,7 @@ bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-bam,$(sample))))
-		
+
 define filter-bam
 bismark/$1/$1_aln_srt_fx__F1R2.bam : bismark/$1/$1_aln_srt_fx.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
