@@ -6,7 +6,7 @@ LOGDIR ?= log/em_seq.$(NOW)
 
 em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
          $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.bam) \
@@ -61,20 +61,11 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
 												   mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
 												   cd ../..")
 
-bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
+bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									  									   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 									  									   $$(SAMTOOLS) index $$(@) && \
 									  									   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
-
-bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
-    $$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
-									   $$(FIX_MATE) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   SORT_ORDER=coordinate \
-									   COMPRESSION_LEVEL=0 \
-									   CREATE_INDEX=true")
 
 endef
 $(foreach sample,$(SAMPLES),\
