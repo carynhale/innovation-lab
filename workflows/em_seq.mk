@@ -69,7 +69,7 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 
 bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
     $$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
-									   INPUT=$$(<) \
+									   $$(FIX_MATE) \
 									   OUTPUT=$$(@) \
 									   SORT_ORDER=coordinate \
 									   COMPRESSION_LEVEL=0 \
