@@ -9,29 +9,31 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
          $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.bam) \
 		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.bam) \
-		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.bam)
-#		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx.bam) \
-#		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F1R2.bam) \
-#		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F2R1.bam) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.rrbs_summary_metrics) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.rrbs_summary_metrics) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.rrbs_summary_metrics) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.txt) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.txt) \
-#		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.txt) \
-#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz) \
-#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz) \
-#		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz) \
-#		 summary/rrbs_metrics.txt \
-#		 summary/alignment_metrics.txt \
-#		 summary/noise_by_position.txt \
-#		 summary/noise_by_position__F1R2.txt \
-#		 summary/noise_by_position__F2R1.txt
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F1R2.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_fx__F2R1.bam) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.rrbs_summary_metrics) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.rrbs_summary_metrics) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.rrbs_summary_metrics) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx.txt) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F1R2.txt) \
+		 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_fx__F2R1.txt) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz) \
+		 summary/rrbs_metrics.txt \
+		 summary/alignment_metrics.txt \
+		 summary/noise_by_position.txt \
+		 summary/noise_by_position__F1R2.txt \
+		 summary/noise_by_position__F2R1.txt
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
+
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
+
 WALTZ_MIN_MAPQ = 10
 
 define copy-fastq
