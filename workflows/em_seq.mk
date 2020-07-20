@@ -68,13 +68,7 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 									  									   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
                                                                            
 bismark/$1/$1_aln_srt_fx.bam : bismark/$1/$1_aln_srt.bam
-    $$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
-									   $$(FIX_MATE) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   SORT_ORDER=coordinate \
-									   COMPRESSION_LEVEL=0 \
-									   CREATE_INDEX=true")
+    $$(call RUN,-c -n 1 -s 12G -m 16G,"")
 																		   
 endef
 $(foreach sample,$(SAMPLES),\
