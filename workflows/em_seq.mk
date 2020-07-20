@@ -30,10 +30,8 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
-
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
-
 WALTZ_MIN_MAPQ = 10
 
 define copy-fastq
