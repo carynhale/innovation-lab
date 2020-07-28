@@ -26,7 +26,10 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 		 summary/alignment_metrics.txt \
 		 summary/noise_by_position.txt \
 		 summary/noise_by_position__F1R2.txt \
-		 summary/noise_by_position__F2R1.txt
+		 summary/noise_by_position__F2R1.txt \
+		 summary/pileup_by_position.txt \
+		 summary/pileup_by_position__F1R2.txt \
+		 summary/pileup_by_position__F2R1.txt
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -244,6 +247,21 @@ summary/noise_by_position__F2R1.txt : $(foreach sample,$(SAMPLES),waltz/$(sample
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 									   mkdir -p summary && \
 									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 5 --sample_names '$(SAMPLES)'")
+									   
+summary/pileup_by_position.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   mkdir -p summary && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 6 --sample_names '$(SAMPLES)'")
+
+summary/pileup_by_position__F1R2.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   mkdir -p summary && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 7 --sample_names '$(SAMPLES)'")
+
+summary/pileup_by_position__F2R1.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   mkdir -p summary && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 8 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
