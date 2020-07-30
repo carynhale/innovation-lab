@@ -4,15 +4,13 @@ LOGDIR = log/sum_reads.$(NOW)
 
 SUM_READS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads.R
 SUM_EXONS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads_byexon.R
-TARGETS_FILE ?= NA
 
 sum_reads : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt) \
 			sumreads/rpkm_bygene.txt \
-			sumreads/counts_bygene.txt
-#            sumreads/rpkm_byexon.txt \
-#            sumreads/counts_byexon.txt
-#            $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt) \
-
+			sumreads/counts_bygene.txt \
+            $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt) \
+			sumreads/rpkm_byexon.txt \
+            sumreads/counts_byexon.txt
 
 sumreads/%.sumreads_bygene.txt : bam/%.bam bam/%.bam.bai
 	$(call RUN,-n 1 -s 24G -m 48G -v $(SUMREADS_ENV),"$(RSCRIPT) $(SUM_READS_RSCRIPT) \
