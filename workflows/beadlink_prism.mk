@@ -25,8 +25,8 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 				 $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
-				 $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt) \
-				 $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metrics.txt)
+				 $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt)
+#				 $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metrics.txt)
 				 
 
 BWAMEM_THREADS = 12
