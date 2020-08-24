@@ -4,94 +4,94 @@ include innovation-lab/config/waltz.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
 
-LOGDIR ?= log/msk_access.$(NOW)
+LOGDIR ?= log/beadlink_prism.$(NOW)
 
-msk_access : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR_RG.bam) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
-		   	 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam) \
-			 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam) \
-			 $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
-			 metrics/summary/umi_frequencies.tsv \
-			 metrics/summary/umi_composite.tsv \
-			 metrics/summary/umi_families.tsv \
-			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
-			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt) \
-			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
-			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
-			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
-  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
-  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
-  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
-  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
-  			 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
- 			 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt) \
- 			 metrics/standard/metrics_idx.tsv \
- 			 metrics/unfiltered/metrics_idx.tsv \
- 			 metrics/simplex/metrics_idx.tsv \
- 			 metrics/duplex/metrics_idx.tsv \
- 			 metrics/standard/metrics_aln.tsv \
- 			 metrics/unfiltered/metrics_aln.tsv \
- 			 metrics/simplex/metrics_aln.tsv \
- 			 metrics/duplex/metrics_aln.tsv \
- 			 metrics/standard/metrics_insert.tsv \
- 			 metrics/unfiltered/metrics_insert.tsv \
- 			 metrics/simplex/metrics_insert.tsv \
- 			 metrics/duplex/metrics_insert.tsv \
- 			 metrics/standard/metrics_insert_distribution.tsv \
- 			 metrics/unfiltered/metrics_insert_distribution.tsv \
- 			 metrics/simplex/metrics_insert_distribution.tsv \
- 			 metrics/duplex/metrics_insert_distribution.tsv \
- 			 metrics/standard/metrics_hs.tsv \
- 			 metrics/unfiltered/metrics_hs.tsv \
- 			 metrics/simplex/metrics_hs.tsv \
- 			 metrics/duplex/metrics_hs.tsv \
- 			 metrics/standard/metrics_oxog.tsv \
- 			 metrics/summary/metrics_idx.tsv \
- 			 metrics/summary/metrics_aln.tsv \
- 			 metrics/summary/metrics_insert.tsv \
- 			 metrics/summary/metrics_insert_distribution.tsv \
- 			 metrics/summary/metrics_hs.tsv \
- 			 metrics/summary/metrics_ts.tsv \
-			 metrics/report/umi_frequencies.pdf \
-			 metrics/report/umi_family_types_probe-A.pdf \
-			 metrics/report/umi_family_types_probe-B.pdf \
-			 metrics/report/umi_family_sizes_all.pdf \
-			 metrics/report/umi_family_sizes_duplex.pdf \
-			 metrics/report/umi_family_sizes_simplex.pdf \
-			 metrics/report/mean_standard_target_coverage-dedup.pdf \
-			 metrics/report/mean_standard_target_coverage-nodedup.pdf \
-			 metrics/report/mean_unfiltered_target_coverage.pdf \
-			 metrics/report/mean_duplex_target_coverage.pdf \
-			 metrics/report/mean_simplex_target_coverage.pdf \
-			 metrics/report/aligment_summary.pdf \
-			 metrics/report/insert_size_summary.pdf \
-			 metrics/report/insert_size_distribution.pdf \
-			 metrics/report/read_alignment_summary.pdf \
-			 metrics/report/non_reference_calls.pdf \
-			 metrics/report/combined_report.pdf
+beadlink_prism : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz)
+#				 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
+#				 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR_RG.bam) \
+#				 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
+#				 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
+#				 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
+#				 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam) \
+#				 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam) \
+#				 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam) \
+#				 $(foreach sample,$(SAMPLES),marianas/$(sample)/family-sizes.txt) \
+#				 metrics/summary/umi_frequencies.tsv \
+#				 metrics/summary/umi_composite.tsv \
+#				 metrics/summary/umi_families.tsv \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample)-pileup.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample)-pileup.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample)-pileup.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).A.ontarget.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).B.ontarget.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).AB.offtarget.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).idx_stats.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).aln_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).insert_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).oxog_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-A.hs_metrics-nodedup.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/standard/$(sample).probe-B.hs_metrics-nodedup.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).idx_stats.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).aln_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).insert_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-A.hs_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/unfiltered/$(sample).probe-B.hs_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).idx_stats.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).aln_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).insert_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-A.hs_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/simplex/$(sample).probe-B.hs_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).idx_stats.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).aln_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).insert_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-A.hs_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/duplex/$(sample).probe-B.hs_metrics.txt) \
+#				 metrics/standard/metrics_idx.tsv \
+#				 metrics/unfiltered/metrics_idx.tsv \
+#				 metrics/simplex/metrics_idx.tsv \
+#				 metrics/duplex/metrics_idx.tsv \
+#				 metrics/standard/metrics_aln.tsv \
+#				 metrics/unfiltered/metrics_aln.tsv \
+#				 metrics/simplex/metrics_aln.tsv \
+#				 metrics/duplex/metrics_aln.tsv \
+#				 metrics/standard/metrics_insert.tsv \
+#				 metrics/unfiltered/metrics_insert.tsv \
+#				 metrics/simplex/metrics_insert.tsv \
+#				 metrics/duplex/metrics_insert.tsv \
+#				 metrics/standard/metrics_insert_distribution.tsv \
+#				 metrics/unfiltered/metrics_insert_distribution.tsv \
+#				 metrics/simplex/metrics_insert_distribution.tsv \
+#				 metrics/duplex/metrics_insert_distribution.tsv \
+#				 metrics/standard/metrics_hs.tsv \
+#				 metrics/unfiltered/metrics_hs.tsv \
+#				 metrics/simplex/metrics_hs.tsv \
+#				 metrics/duplex/metrics_hs.tsv \
+#				 metrics/standard/metrics_oxog.tsv \
+#				 metrics/summary/metrics_idx.tsv \
+#				 metrics/summary/metrics_aln.tsv \
+#				 metrics/summary/metrics_insert.tsv \
+#				 metrics/summary/metrics_insert_distribution.tsv \
+#				 metrics/summary/metrics_hs.tsv \
+#				 metrics/summary/metrics_ts.tsv \
+#				 metrics/report/umi_frequencies.pdf \
+#				 metrics/report/umi_family_types_probe-A.pdf \
+#				 metrics/report/umi_family_types_probe-B.pdf \
+#				 metrics/report/umi_family_sizes_all.pdf \
+#				 metrics/report/umi_family_sizes_duplex.pdf \
+#				 metrics/report/umi_family_sizes_simplex.pdf \
+#				 metrics/report/mean_standard_target_coverage-dedup.pdf \
+#				 metrics/report/mean_standard_target_coverage-nodedup.pdf \
+#				 metrics/report/mean_unfiltered_target_coverage.pdf \
+#				 metrics/report/mean_duplex_target_coverage.pdf \
+#				 metrics/report/mean_simplex_target_coverage.pdf \
+#				 metrics/report/aligment_summary.pdf \
+#				 metrics/report/insert_size_summary.pdf \
+#				 metrics/report/insert_size_distribution.pdf \
+#				 metrics/report/read_alignment_summary.pdf \
+#				 metrics/report/non_reference_calls.pdf \
+#				 metrics/report/combined_report.pdf
 
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 UMI_QC_BED_FILE_A ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
