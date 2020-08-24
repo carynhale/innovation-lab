@@ -6,7 +6,7 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/beadlink_prism.$(NOW)
 
 beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz)
-#				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
+				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam)
 #				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 #				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
 #				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
@@ -53,7 +53,7 @@ fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz
 									  $$(call FGBIO_CMD,2G,8G) \
 									  FastqToBam \
 									  --input fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz \
-									  --read-structures 3M2S+T 3M2S+T \
+									  --read-structures 8M+T 8M+T \
 									  --output $$(@) \
 									  --sample $1 \
 									  --library $1 \
