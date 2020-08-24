@@ -391,6 +391,14 @@ cravat_annotate :
 TARGETS += em_seq
 em_seq :
 	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
+	
+TARGETS += fgbio_access
+fgbio_access :
+	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
+	
+TARGETS += beadlink_prism
+beadlink_prism :
+	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
 
 TARGETS += hotspot_summary
 hotspot_summary :
@@ -424,10 +432,6 @@ cnvkit_pca :
 TARGETS += cnvkit_qc
 cnvkit_qc :
 	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitqc.mk)
-	
-TARGETS += fgbio_access
-fgbio_access :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
 
 
 .PHONY : $(TARGETS)
