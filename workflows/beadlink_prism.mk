@@ -5,7 +5,7 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/beadlink_prism.$(NOW)
 
-beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz)
+beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam)
 #				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 #				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
