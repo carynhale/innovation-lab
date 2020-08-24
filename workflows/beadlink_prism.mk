@@ -6,8 +6,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/beadlink_prism.$(NOW)
 
-beadlink_prism : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz)
-#				 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz) \
+beadlink_prism : $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1.fastq.gz) \
+				 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_R1_umi-clipped.fastq.gz)
 #				 $(foreach sample,$(SAMPLES),marianas/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR_RG.bam) \
 #				 $(foreach sample,$(SAMPLES),marianas/$(sample)/second-pass-alt-alleles.txt) \
 #				 $(foreach sample,$(SAMPLES),marianas/$(sample)/timestamp) \
@@ -100,7 +100,7 @@ OFF_TARGET_FILE_AB ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-AB.offta
 POOL_A_TARGET_FILE ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
 POOL_B_TARGET_FILE ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-B.sorted.list
 
-MARIANAS_UMI_LENGTH ?= 3
+MARIANAS_UMI_LENGTH ?= 8
 MARIANAS_MIN_MAPQ ?= 1
 MARIANAS_MIN_BAQ ?= 20
 MARIANAS_MISMATCH ?= 0
