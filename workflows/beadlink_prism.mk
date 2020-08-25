@@ -22,10 +22,12 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
-				 $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
-				 $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
-				 $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
-				 $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt)
+				 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
+				 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam)
+#				 $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
+#				 $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt)
 				 
 
 BWAMEM_THREADS = 12
@@ -242,6 +244,25 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call align-consensus,$(sample))))
 	
+	
+define copy-to-bam
+bam/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
+	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
+								 cp $$(<) $$(@) && \
+								 $$(SAMTOOLS) index $$(@) && \
+								 cp bam/$1_cl_aln_srt_MD_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX.bai")
+								 
+bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
+								  cp $$(<) $$(@) && \
+								  $$(SAMTOOLS) index $$(@) && \
+								  cp bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bai")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call copy-to-bam,$(sample))))
+	
+
 define picard-metrics
 metrics/$1.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
