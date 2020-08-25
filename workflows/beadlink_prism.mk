@@ -26,7 +26,6 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 				 $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt)
-#				 $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metrics.txt)
 				 
 
 BWAMEM_THREADS = 12
@@ -272,15 +271,6 @@ metrics/$1.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_F
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@)")
 
-metrics/$1.hs_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(CALC_HS_METRICS) \
-									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   BAIT_INTERVALS=$$(POOL_A_TARGET_FILE) \
-									   TARGET_INTERVALS=$$(POOL_A_TARGET_FILE)")
- 												
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics,$(sample))))
@@ -293,4 +283,4 @@ $(foreach sample,$(SAMPLES),\
 			 $(PICARD) SamToFastq --version &>> version/fgbio_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
-.PHONY: fgbio_access
+.PHONY: beadlink_prism
