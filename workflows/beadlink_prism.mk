@@ -353,11 +353,11 @@ summary/oxog_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 4 --sample_names '$(SAMPLES)'")
 	
 ..DUMMY := $(shell mkdir -p version; \
-			 $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
-			 echo "picard" >> version/fgbio_access.txt; \
-			 $(PICARD) SortSam --version &>> version/fgbio_access.txt; \
-			 $(PICARD) MarkIlluminaAdapters --version &>> version/fgbio_access.txt; \
-			 $(PICARD) SamToFastq --version &>> version/fgbio_access.txt)
+			 $(JAVA8) -jar $(FGBIO) --help &> version/beadlink_prism.txt; \
+			 echo "picard" >> version/beadlink_prism.txt; \
+			 $(PICARD) SortSam --version &>> version/beadlink_prism.txt; \
+			 $(PICARD) MarkIlluminaAdapters --version &>> version/beadlink_prism.txt; \
+			 $(PICARD) SamToFastq --version &>> version/beadlink_prism.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: beadlink_prism
