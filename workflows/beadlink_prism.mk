@@ -123,23 +123,23 @@ fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 									  	
 fgbio/$1/$1_cl_aln_srt_MD.intervals : fgbio/$1/$1_cl_aln_srt_MD.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
-									   							   $$(call GATK_CMD,16G) \
-									   							   -T RealignerTargetCreator \
-									   							   -I $$(^) \
-									   							   -nt $$(GATK_THREADS) \
-									   							   -R $$(REF_FASTA) \
-									   							   -o $$(@) \
-									   							   -known $$(KNOWN_INDELS)")
+									   							   		   $$(call GATK_CMD,16G) \
+									   							   		   -T RealignerTargetCreator \
+									   							   		   -I $$(^) \
+									   							   		   -nt $$(GATK_THREADS) \
+									   							   		   -R $$(REF_FASTA) \
+									   							   		   -o $$(@) \
+									   							   		   -known $$(KNOWN_INDELS)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_aln_srt_MD.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
-									   							   $$(call GATK_CMD,16G) \
-							   							   		   -T IndelRealigner \
-							   							   		   -I $$(<) \
-							   							   		   -R $$(REF_FASTA) \
-							   							   		   -targetIntervals $$(<<) \
-							   							   		   -o $$(@) \
-									   							   -known $$(KNOWN_INDELS)")
+									   							   		   $$(call GATK_CMD,16G) \
+							   							   		   		   -T IndelRealigner \
+																		   -I $$(<) \
+																		   -R $$(REF_FASTA) \
+																		   -targetIntervals $$(<<) \
+																		   -o $$(@) \
+																		   -known $$(KNOWN_INDELS)")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
@@ -260,10 +260,10 @@ bam/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
 								 cp bam/$1_cl_aln_srt_MD_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX.bai")
 								 
 bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -s 2G -m 4G ,"set -o pipefail && \
-								  cp $$(<) $$(@) && \
-								  $$(SAMTOOLS) index $$(@) && \
-								  cp bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bai")
+	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
+								 cp $$(<) $$(@) && \
+								 $$(SAMTOOLS) index $$(@) && \
+								 cp bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
