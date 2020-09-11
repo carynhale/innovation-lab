@@ -217,26 +217,26 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR
 										cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bai")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
-																		   $$(call GATK_CMD,16G) \
-																		   -T RealignerTargetCreator \
-																		   -I $$(^) \
-																		   -nt $$(GATK_THREADS) \
-																		   -R $$(REF_FASTA) \
-																		   -o $$(@) \
-																		   -known $$(KNOWN_INDELS) \
-																		   --allow_potentially_misencoded_quality_scores")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+																   $$(call GATK_CMD,16G) \
+																   -T RealignerTargetCreator \
+																   -I $$(^) \
+																   -nt $$(GATK_THREADS) \
+																   -R $$(REF_FASTA) \
+																   -o $$(@) \
+																   -known $$(KNOWN_INDELS) \
+																   --allow_potentially_misencoded_quality_scores")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
-																		   $$(call GATK_CMD,16G) \
-																		   -T IndelRealigner \
-																		   -I $$(<) \
-																		   -R $$(REF_FASTA) \
-																		   -targetIntervals $$(<<) \
-																		   -o $$(@) \
-																		   -known $$(KNOWN_INDELS) \
-																		   --allow_potentially_misencoded_quality_scores")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+																   $$(call GATK_CMD,16G) \
+																   -T IndelRealigner \
+																   -I $$(<) \
+																   -R $$(REF_FASTA) \
+																   -targetIntervals $$(<<) \
+																   -o $$(@) \
+																   -known $$(KNOWN_INDELS) \
+																   --allow_potentially_misencoded_quality_scores")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam
 	$$(call RUN,-c -n 1 -s 18G -m 24G,"set -o pipefail && \
