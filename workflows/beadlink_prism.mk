@@ -132,7 +132,7 @@ fgbio/$1/$1_cl_aln_srt_MD.intervals : fgbio/$1/$1_cl_aln_srt_MD.bam
 									   							   -known $$(KNOWN_INDELS)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_aln_srt_MD.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 1440,"set -o pipefail && \
 									   							   $$(call GATK_CMD,16G) \
 							   							   		   -T IndelRealigner \
 							   							   		   -I $$(<) \
