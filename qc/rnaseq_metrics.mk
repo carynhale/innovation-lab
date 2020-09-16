@@ -21,7 +21,14 @@ metrics/$1_rnaseq_metrics.txt : bam/$1.bam
                                  RIBOSOMAL_INTERVALS=$$(RIBOSOMAL_INTERVALS) \
                                  CHART_OUTPUT=metrics/$1.pdf \
                                  STRAND_SPECIFICITY=$$(STRAND_SPECIFICITY)")
-									 
+
+metrics/$1_alignment_metrics.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									   $$(COLLECT_ALIGNMENT_METRICS) \
+									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@)")
+
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call rnaseq-metrics,$(sample))))
