@@ -151,7 +151,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
 									   SORT_ORDER=coordinate \
 									   COMPRESSION_LEVEL=0 \
 									   CREATE_INDEX=true")
-
+									   
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call merge-bams,$(sample))))
