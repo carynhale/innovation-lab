@@ -33,11 +33,11 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
 				 summary/umi_counts.txt \
-				 summary/umi_duplex_counts.txt
-#				 summary/idx_metrics.txt \
-#				 summary/aln_metrics.txt \
-#				 summary/insert_metrics.txt \
-#				 summary/oxog_metrics.txt
+				 summary/umi_duplex_counts.txt \
+				 summary/idx_metrics.txt \
+				 summary/aln_metrics.txt \
+				 summary/insert_metrics.txt \
+				 summary/oxog_metrics.txt
 				 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
