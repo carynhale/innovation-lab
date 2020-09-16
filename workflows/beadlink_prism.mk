@@ -14,6 +14,7 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.intervals) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
+				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__cu.bam) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp.bam) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.bam) \
 				 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt) \
@@ -47,6 +48,8 @@ SAMTOOLS_MEM_THREAD = 2G
 
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
+
+UMI_LIST = $(HOME)/share/lib/resource_files/NEB_Prism_UMIs.txt
 
 define copy-fastq
 fgbio/$1/$1_R1.fastq.gz : $3
@@ -157,6 +160,18 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call merge-bams,$(sample))))
 	
 define create-consensus
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX__cu.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+									  $$(call FGBIO_CMD,2G,8G) \
+									  CorrectUmis \
+									  --input=$$(<) \
+									  --output=$$(@) \
+									  --rejects=fgbio/$1/$1_cl_aln_srt_MD_IR_FX__REJECTED_.bam \
+									  --metrics=fgbio/$1/$1_cl_aln_srt_MD_IR_FX__cu.txt \
+									  --max-mismatches=5 \
+									  --min-distance=1 \
+									  --umi-files=$$(UMI_LIST)")
+
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 									  $$(call FGBIO_CMD,2G,8G) \
