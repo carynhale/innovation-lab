@@ -27,7 +27,8 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 			--quantMode GeneCounts
 
 umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz) \
-			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz)
+			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz) \
+			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R2_cl.fastq.gz)
 #			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
 #                                   		star/$(sample).Aligned.sortedByCoord.out.bam.bai \
 #                                   		bam/$(sample).bam \
@@ -50,6 +51,13 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 	
 define clip-fastq
 umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
+														 umi_tools extract \
+														 --bc-pattern=$$(UMI_PATTERN) \
+														 -I $$(<) | \
+														 gzip > $$(@)")
+
+umi_tools/$1/$1_R2_cl.fastq.gz : umi_tools/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
 														 umi_tools extract \
 														 --bc-pattern=$$(UMI_PATTERN) \
