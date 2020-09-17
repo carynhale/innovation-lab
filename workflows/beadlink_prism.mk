@@ -370,7 +370,7 @@ metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.txt : fgbio/$
 									   $$(COLLECT_INSERT_METRICS) \
  									   INPUT=$$(<) \
 									   OUTPUT=$$(@) \
-									   HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.insert_metrics.pdf \
+									   HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.pdf \
 									   MINIMUM_PCT=0.5")
 									   
 metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
