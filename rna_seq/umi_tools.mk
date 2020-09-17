@@ -67,7 +67,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call clip-fastq,$(sample))))
 
 define align-fastq
-star/$1.Aligned.sortedByCoord.out.bam : umi_tools/$1/$1_R1.fastq.gz umi_tools/$1/$1_R2.fastq.gz
+star/$1.Aligned.sortedByCoord.out.bam : umi_tools/$1/$1_R1_cl.fastq.gz umi_tools/$1/$1_R2_cl.fastq.gz
 	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
                                    STAR $$(STAR_OPTS) \
                                    --outFileNamePrefix star/$1. \
