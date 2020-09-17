@@ -33,7 +33,7 @@ umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.g
 
 
 define copy-fastq
-fgbio/$1/$1_R1.fastq.gz : $3
+umi_tools/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 									 mkdir -p umi_tools/$1 && \
 								     $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
