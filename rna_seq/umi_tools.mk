@@ -10,6 +10,8 @@ BAM_NO_FILTER = true
 BAM_DUP_TYPE = none
 SEQ_PLATFROM = illumina
 
+UMI_PATTERN = NNNX
+
 STAR_OPTS = --genomeDir $(STAR_REF) \
             --outSAMtype BAM SortedByCoordinate \
 			--twopassMode Basic \
@@ -24,7 +26,8 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --chimOutType WithinBAM \
 			--quantMode GeneCounts
 
-umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz)
+umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz) \
+			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz)
 #			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
 #                                   		star/$(sample).Aligned.sortedByCoord.out.bam.bai \
 #                                   		bam/$(sample).bam \
@@ -44,6 +47,18 @@ umi_tools/$1/$1_R1.fastq.gz : $3
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+	
+define clip-fastq
+umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
+														 umi_tools extract \
+														 --bc-pattern=$$(UMI_PATTERN) \
+														 -I $$(<) | \
+														 gzip > $$(@)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call clip-fastq,$(sample))))
 
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3

@@ -16,6 +16,7 @@ FUSIONCATCHER_ENV ?= $(HOME)/share/usr/env/fusioncatcher-1.2.0
 STARFUSION_ENV ?= $(HOME)/share/usr/env/starfusion-1.6.0
 ABSOLUTE_ENV ?= $(HOME)/share/usr/env/cntu-0.0.1
 BISMARK_ENV ?= $(HOME)/share/usr/env/bismark-0.22.1
+UMITOOLS_ENV ?= $(HOME)/share/usr/env/umi-tools-1.0.1
 
 # aliases
 PYTHON ?= python
