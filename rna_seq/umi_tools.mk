@@ -28,13 +28,9 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 
 umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz) \
 			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz) \
-			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R2_cl.fastq.gz)
-#			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
-#                                   		star/$(sample).Aligned.sortedByCoord.out.bam.bai \
-#                                   		bam/$(sample).bam \
-#                                   		bam/$(sample).bam.bai \
-#                                   		bam/$(sample).bai)
-
+			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R2_cl.fastq.gz) \
+			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
+			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai)
 
 define copy-fastq
 umi_tools/$1/$1_R1.fastq.gz : $3
@@ -70,39 +66,27 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call clip-fastq,$(sample))))
 
-define align-split-fastq
-star/$1.Aligned.sortedByCoord.out.bam : $3
+define align-fastq
+star/$1.Aligned.sortedByCoord.out.bam : umi_tools/$1/$1_R1.fastq.gz umi_tools/$1/$1_R2.fastq.gz
 	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
                                    STAR $$(STAR_OPTS) \
                                    --outFileNamePrefix star/$1. \
                                    --runThreadN 4 \
                                    --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
-                                   --readFilesIn $$^ \
+                                   --readFilesIn $$(<) $$(<<) \
                                    --readFilesCommand zcat")
                                    
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
                                   $$(SAMTOOLS) index $$(<)")
 
-bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
-	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  cp $$(<) $$(@)")
-                                   
-bam/$1.bam.bai : star/$1.Aligned.sortedByCoord.out.bam.bai
-	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  cp $$(<) $$(@)")
-                                   
-bam/$1.bai : star/$1.Aligned.sortedByCoord.out.bam.bai
-	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  cp $$(<) $$(@)")
-
 endef
-$(foreach ss,$(SPLIT_SAMPLES), \
-	$(if $(fq.$(ss)), \
-	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call align-fastq,$(sample))))
     
 ..DUMMY := $(shell mkdir -p version; \
-             echo "STAR" > version/umi_tools.txt; \
+			 $(UMITOOLS_ENV)/bin/umi_tools --version > version/umi_tools.txt; \
+             echo "STAR" >> version/umi_tools.txt; \
 			 STAR --version >> version/umi_tools.txt; \
              $(SAMTOOLS) --version >> version/umi_tools.txt)
 .SECONDARY: 
