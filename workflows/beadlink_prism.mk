@@ -88,25 +88,25 @@ $(foreach sample,$(SAMPLES),\
 	
 define merge-bams
 fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
 									  $$(SORT_SAM) \
 									  INPUT=$$(<) \
 									  OUTPUT=$$(@) \
 									  SORT_ORDER=queryname")
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-									  $$(MARK_ADAPTERS) \
-									  INPUT=$$(<) \
-									  OUTPUT=/dev/stdout \
-									  METRICS=fgbio/$1/$1_adapter-metrics.txt | \
-									  $$(SAM_TO_FASTQ) \
-									  INPUT=/dev/stdin \
-									  FASTQ=$$(@) \
-									  INTERLEAVE=true \
-									  CLIPPING_ATTRIBUTE=XT \
-									  CLIPPING_ACTION=X \
-									  CLIPPING_MIN_LENGTH=25")
+	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									   $$(MARK_ADAPTERS) \
+									   INPUT=$$(<) \
+									   OUTPUT=/dev/stdout \
+									   METRICS=fgbio/$1/$1_adapter-metrics.txt | \
+									   $$(SAM_TO_FASTQ) \
+									   INPUT=/dev/stdin \
+									   FASTQ=$$(@) \
+									   INTERLEAVE=true \
+									   CLIPPING_ATTRIBUTE=XT \
+									   CLIPPING_ACTION=X \
+									   CLIPPING_MIN_LENGTH=25")
 
 fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
@@ -152,7 +152,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_
 																   -known $$(KNOWN_INDELS)")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
-	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
 									   $$(FIX_MATE) \
 									   INPUT=$$(<) \
 									   OUTPUT=$$(@) \
@@ -250,7 +250,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_F
 																		   ORIENTATIONS=FR")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA.bam
-	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 										$$(ADD_RG) \
 										INPUT=$$(<) \
 										OUTPUT=$$(@) \
@@ -320,32 +320,32 @@ $(foreach sample,$(SAMPLES),\
 
 define picard-metrics-standard
 metrics/$1_cl_aln_srt_MD_IR_FX2.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(BAM_INDEX) \
-									   INPUT=$$(<) \
-									   > $$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(BAM_INDEX) \
+									    INPUT=$$(<) \
+									    > $$(@)")
 									   
 metrics/$1_cl_aln_srt_MD_IR_FX2.aln_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(COLLECT_ALIGNMENT_METRICS) \
-									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
+									    $$(COLLECT_ALIGNMENT_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
 									   
 metrics/$1_cl_aln_srt_MD_IR_FX2.insert_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(COLLECT_INSERT_METRICS) \
- 									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX.insert_metrics.pdf \
-									   MINIMUM_PCT=0.5")
+	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
+									    $$(COLLECT_INSERT_METRICS) \
+ 									    INPUT=$$(<) \
+									    OUTPUT=$$(@) \
+									    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX.insert_metrics.pdf \
+									    MINIMUM_PCT=0.5")
 									   
 metrics/$1_cl_aln_srt_MD_IR_FX2.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(COLLECT_OXOG_METRICS) \
-									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_OXOG_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -353,32 +353,32 @@ $(foreach sample,$(SAMPLES),\
 		
 define picard-metrics-collapsed
 metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(BAM_INDEX) \
-									   INPUT=$$(<) \
-									   > $$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(BAM_INDEX) \
+									    INPUT=$$(<) \
+									    > $$(@)")
 									   
 metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.aln_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(COLLECT_ALIGNMENT_METRICS) \
-									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_ALIGNMENT_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
 									   
 metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(COLLECT_INSERT_METRICS) \
- 									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.pdf \
-									   MINIMUM_PCT=0.5")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_INSERT_METRICS) \
+ 									    INPUT=$$(<) \
+									    OUTPUT=$$(@) \
+									    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.pdf \
+									    MINIMUM_PCT=0.5")
 									   
 metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									   $$(COLLECT_OXOG_METRICS) \
-									   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_OXOG_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
