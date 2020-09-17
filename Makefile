@@ -399,6 +399,10 @@ fgbio_access :
 TARGETS += beadlink_prism
 beadlink_prism :
 	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
+	
+TARGETS += umi_tools
+umi_tools :
+	$(call RUN_MAKE,innovation-lab/rna_seq/umi_tools.mk)
 
 TARGETS += hotspot_summary
 hotspot_summary :
