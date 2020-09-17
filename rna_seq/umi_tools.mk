@@ -54,15 +54,17 @@ umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
 														 umi_tools extract \
 														 --bc-pattern=$$(UMI_PATTERN) \
-														 -I $$(<) | \
-														 gzip > $$(@)")
+														 -I $$(<) \
+														 --stdout $$(@) \
+														 --log=umi_tools/$1/$1_R1_cl.log")
 
 umi_tools/$1/$1_R2_cl.fastq.gz : umi_tools/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
 														 umi_tools extract \
 														 --bc-pattern=$$(UMI_PATTERN) \
-														 -I $$(<) | \
-														 gzip > $$(@)")
+														 -I $$(<) \
+														 --stdout $$(@) \
+														 --log=umi_tools/$1/$1_R2_cl.log")
 
 endef
 $(foreach sample,$(SAMPLES),\
