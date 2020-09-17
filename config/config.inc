@@ -42,7 +42,7 @@ JAVA7 ?= $(HOME)/share/usr/java/jdk1.7.0_80/bin/java -Djava.io.tmpdir=$(TMPDIR)
 JAVA8 ?= $(HOME)/share/usr/java/jdk1.8.0_74/bin/java -Djava.io.tmpdir=$(TMPDIR)
 
 # picard command lines
-PICARD_MEM = 24G
+PICARD_MEM = 36G
 PICARD_OPTS = VALIDATION_STRINGENCY=LENIENT MAX_RECORDS_IN_RAM=4000000 TMP_DIR=$(TMPDIR)
 SORT_SAM = $(PICARD) -Xmx$(PICARD_MEM) SortSam $(PICARD_OPTS)
 REORDER_SAM = $(PICARD) -Xmx$(PICARD_MEM) ReorderSam $(PICARD_OPTS)

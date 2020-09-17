@@ -121,7 +121,7 @@ fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 																		   ORIENTATIONS=FR")
 
 fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 										$$(MARK_DUP) \
 										INPUT=$$(<) \
 										OUTPUT=$$(@) \
