@@ -69,12 +69,12 @@ $(foreach sample,$(SAMPLES),\
 define align-fastq
 star/$1.Aligned.sortedByCoord.out.bam : umi_tools/$1/$1_R1_cl.fastq.gz umi_tools/$1/$1_R2_cl.fastq.gz
 	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
-                                   STAR $$(STAR_OPTS) \
-                                   --outFileNamePrefix star/$1. \
-                                   --runThreadN 4 \
-                                   --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
-                                   --readFilesIn $$(<) $$(<<) \
-                                   --readFilesCommand zcat")
+								   STAR $$(STAR_OPTS) \
+								   --outFileNamePrefix star/$1. \
+								   --runThreadN 4 \
+								   --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
+								   --readFilesIn $$(<) $$(<<) \
+								   --readFilesCommand zcat")
                                    
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
