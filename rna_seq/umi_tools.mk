@@ -30,7 +30,8 @@ umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.g
 			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz) \
 			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R2_cl.fastq.gz) \
 			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
-			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai)
+			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai) \
+			$(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 define copy-fastq
 umi_tools/$1/$1_R1.fastq.gz : $3
@@ -69,12 +70,12 @@ $(foreach sample,$(SAMPLES),\
 define align-fastq
 star/$1.Aligned.sortedByCoord.out.bam : umi_tools/$1/$1_R1_cl.fastq.gz umi_tools/$1/$1_R2_cl.fastq.gz
 	$$(call RUN,-n 4 -s 6G -m 10G -w 1440,"set -o pipefail && \
-								   STAR $$(STAR_OPTS) \
-								   --outFileNamePrefix star/$1. \
-								   --runThreadN 4 \
-								   --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
-								   --readFilesIn $$(<) $$(<<) \
-								   --readFilesCommand zcat")
+										   STAR $$(STAR_OPTS) \
+										   --outFileNamePrefix star/$1. \
+										   --runThreadN 4 \
+										   --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
+										   --readFilesIn $$(<) $$(<<) \
+										   --readFilesCommand zcat")
                                    
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
@@ -83,6 +84,19 @@ star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.ba
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call align-fastq,$(sample))))
+
+define dedup-bam
+bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV) -w 1440,"set -o pipefail && \
+																 umi_tools dedup \
+																 -I $(<) \
+																 -S $(@) \
+																 --output-stats=/umi_tools/$1/$1 \
+																 --paired")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call dedup-bam,$(sample))))
     
 ..DUMMY := $(shell mkdir -p version; \
 			 $(UMITOOLS_ENV)/bin/umi_tools --version > version/umi_tools.txt; \
