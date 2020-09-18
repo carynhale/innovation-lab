@@ -89,8 +89,8 @@ define dedup-bam
 bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV) -w 1440,"set -o pipefail && \
 																 umi_tools dedup \
-																 -I $(<) \
-																 -S $(@) \
+																 -I $$(<) \
+																 -S $$(@) \
 																 --output-stats=/umi_tools/$1/$1 \
 																 --paired")
 
