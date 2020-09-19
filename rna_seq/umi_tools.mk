@@ -90,7 +90,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call align-fastq,$(sample))))
 
 define dedup-bam
-bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
+bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam star/$1.Aligned.sortedByCoord.out.bam.bai
 	$$(call RUN,-c -n 1 -s 24G -m 48G -v $(UMITOOLS_ENV) -w 1440,"set -o pipefail && \
 																  umi_tools dedup \
 																  -I $$(<) \
