@@ -94,7 +94,7 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 																  --output-stats=/umi_tools/$1/$1 \
 																  --paired \
 																  --unmapped-reads=discard \
-																  --chimeric-pairs=use \
+																  --chimeric-pairs=discard \
 																  --unpaired-reads=discard")
 
 endef
