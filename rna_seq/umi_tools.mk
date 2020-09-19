@@ -18,6 +18,7 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --outSAMtype BAM SortedByCoordinate \
 			--twopassMode Basic \
             --outReadsUnmapped None \
+            --outSAMunmapped Within \
             --chimSegmentMin 12 \
             --chimJunctionOverhangMin 12 \
             --alignSJDBoverhangMin 10 \
