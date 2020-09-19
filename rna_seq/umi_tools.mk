@@ -1,5 +1,7 @@
 include innovation-lab/Makefile.inc
 include innovation-lab/config/align.inc
+include innovation-lab/config/gatk.inc
+include innovation-lab/genome_inc/b37.inc
 
 LOGDIR = log/umi_tools.$(NOW)
 
@@ -86,7 +88,16 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call align-fastq,$(sample))))
 
 define dedup-bam
-bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
+star/$1.Aligned.sortedByCoord.out_FX.bam : star/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   $$(FIX_MATE) \
+									   INPUT=$$(<) \
+									   OUTPUT=$$(@) \
+									   SORT_ORDER=coordinate \
+									   COMPRESSION_LEVEL=0 \
+									   CREATE_INDEX=true")
+									   
+bam/$1.bam : star/$1.Aligned.sortedByCoord.out_FX.bam
 	$$(call RUN,-c -n 1 -s 24G -m 48G -v $(UMITOOLS_ENV) -w 1440,"set -o pipefail && \
 																  umi_tools dedup \
 																  -I $$(<) \
@@ -94,7 +105,7 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 																  --output-stats=/umi_tools/$1/$1 \
 																  --paired \
 																  --unmapped-reads=discard \
-																  --chimeric-pairs=discard \
+																  --chimeric-pairs=use \
 																  --unpaired-reads=discard")
 
 endef
