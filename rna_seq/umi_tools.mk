@@ -94,7 +94,7 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 																  umi_tools dedup \
 																  -I $$(<) \
 																  -S $$(@) \
-																  --output-stats=/umi_tools/$1/$1 \
+																  --output-stats=umi_tools/$1/$1 \
 																  --paired")
 
 endef
