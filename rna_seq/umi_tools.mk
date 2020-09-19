@@ -95,9 +95,9 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 																  -S $$(@) \
 																  --output-stats=/umi_tools/$1/$1 \
 																  --paired \
-																  --unmapped-reads=correct \
-																  --chimeric-pairs=correct \
-																  --unpaired-reads=correct")
+																  --unmapped-reads=output \
+																  --chimeric-pairs=output \
+																  --unpaired-reads=output")
 
 endef
 $(foreach sample,$(SAMPLES),\
