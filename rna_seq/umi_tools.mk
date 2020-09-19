@@ -34,7 +34,8 @@ umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.g
 			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R2_cl.fastq.gz) \
 			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
 			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai) \
-			$(foreach sample,$(SAMPLES),bam/$(sample).bam)
+			$(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+			$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai)
 
 define copy-fastq
 umi_tools/$1/$1_R1.fastq.gz : $3
@@ -54,15 +55,15 @@ umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
 														 umi_tools extract \
 														 --bc-pattern=$$(UMI_PATTERN) \
-														 -I $$(<) \
+														 -I umi_tools/$1/$1_R1.fastq.gz \
 														 --stdout $$(@) \
 														 --log=umi_tools/$1/$1_R1_cl.log")
 
-umi_tools/$1/$1_R2_cl.fastq.gz : umi_tools/$1/$1_R2.fastq.gz
+umi_tools/$1/$1_R2_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
 														 umi_tools extract \
 														 --bc-pattern=$$(UMI_PATTERN) \
-														 -I $$(<) \
+														 -I umi_tools/$1/$1_R2.fastq.gz \
 														 --stdout $$(@) \
 														 --log=umi_tools/$1/$1_R2_cl.log")
 
@@ -96,6 +97,10 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 																  -S $$(@) \
 																  --output-stats=umi_tools/$1/$1 \
 																  --paired")
+																  
+bam/$1.bam.bai : bam/$1.bam
+	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+                                  $$(SAMTOOLS) index $$(<)")
 
 endef
 $(foreach sample,$(SAMPLES),\
