@@ -97,7 +97,7 @@ bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 																  --paired \
 																  --unmapped-reads=discard \
 																  --chimeric-pairs=discard \
-																  --unpaired-reads=output")
+																  --unpaired-reads=discard")
 
 endef
 $(foreach sample,$(SAMPLES),\
