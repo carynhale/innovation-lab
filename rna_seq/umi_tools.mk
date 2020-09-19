@@ -88,25 +88,16 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call align-fastq,$(sample))))
 
 define dedup-bam
-star/$1.Aligned.sortedByCoord.out_FX.bam : star/$1.Aligned.sortedByCoord.out.bam
-	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
-									   $$(FIX_MATE) \
-									   INPUT=$$(<) \
-									   OUTPUT=$$(@) \
-									   SORT_ORDER=coordinate \
-									   COMPRESSION_LEVEL=0 \
-									   CREATE_INDEX=true")
-									   
-bam/$1.bam : star/$1.Aligned.sortedByCoord.out_FX.bam
+bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-c -n 1 -s 24G -m 48G -v $(UMITOOLS_ENV) -w 1440,"set -o pipefail && \
 																  umi_tools dedup \
 																  -I $$(<) \
 																  -S $$(@) \
 																  --output-stats=/umi_tools/$1/$1 \
 																  --paired \
-																  --unmapped-reads=discard \
-																  --chimeric-pairs=use \
-																  --unpaired-reads=discard")
+																  --unmapped-reads=correct \
+																  --chimeric-pairs=correct \
+																  --unpaired-reads=correct")
 
 endef
 $(foreach sample,$(SAMPLES),\
