@@ -58,7 +58,7 @@ umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
 														 -S umi_tools/$1/$1_R1_cl.fastq.gz \
 														 --bc-pattern2=$$(UMI_PATTERN) \
 														 --read2-in=umi_tools/$1/$1_R2.fastq.gz \
-														 --read2-out=umi_tools/$1/$1_R2.fastq.gz \
+														 --read2-out=umi_tools/$1/$1_R2_cl.fastq.gz \
 														 --log=umi_tools/$1/$1_cl.log")
 
 endef
