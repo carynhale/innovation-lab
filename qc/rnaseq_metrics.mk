@@ -8,13 +8,17 @@ STRAND_SPECIFICITY ?= NONE
 
 rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_alignment_metrics.txt) \
+				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_insert_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_rnaseq_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_alignment_metrics.txt) \
+				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_insert_metrics.txt) \
                  summary/rnaseq_aln_metrics.txt \
 				 summary/alignment_aln_metrics.txt \
+				 summary/insert_aln_metrics.txt \
 				 summary/rnaseq_aln_dd_metrics.txt \
-				 summary/alignment_aln_dd_metrics.txt
-
+				 summary/alignment_aln_dd_metrics.txt \
+				 summary/insert_aln_dd_metrics.txt
+				 
 define rnaseq-metrics
 metrics/$1_aln_rnaseq_metrics.txt : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
@@ -58,6 +62,25 @@ metrics/$1_aln_dd_alignment_metrics.txt : bam/$1.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call alignment-metrics,$(sample))))
+		
+define insert-size-metrics
+metrics/$1_aln_insert_metrics.txt : star/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(COLLECT_INSERT_METRICS) \
+ 								 INPUT=$$(<) \
+								 OUTPUT=$$(@) \
+								 HISTOGRAM_FILE=metrics/$1_aln.insert_metrics.pdf")
+
+metrics/$1_aln_dd_insert_metrics.txt : bam/$1.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+								 $$(COLLECT_INSERT_METRICS) \
+ 								 INPUT=$$(<) \
+								 OUTPUT=$$(@) \
+								 HISTOGRAM_FILE=metrics/$1_aln_dd.insert_metrics.pdf")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call insert_size-metrics,$(sample))))
 
 
 summary/rnaseq_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metrics.txt)
@@ -75,6 +98,14 @@ summary/rnaseq_aln_dd_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample
 summary/alignment_aln_dd_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_alignment_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
                                      $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
+									 
+summary/insert_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
+                                     $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 5 --sample_names '$(SAMPLES)'")
+
+summary/insert_aln_dd_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
+                                     $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 6 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 echo "picard" >> version/rnaseq_metrics.txt; \
