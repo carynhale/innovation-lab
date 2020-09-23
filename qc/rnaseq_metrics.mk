@@ -80,7 +80,7 @@ metrics/$1_aln_dd_insert_metrics.txt : bam/$1.bam
 
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call insert_size-metrics,$(sample))))
+		$(eval $(call insert-size-metrics,$(sample))))
 
 
 summary/rnaseq_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metrics.txt)
