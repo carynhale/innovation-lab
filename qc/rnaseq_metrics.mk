@@ -12,7 +12,7 @@ rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metric
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_rnaseq_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_alignment_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_insert_metrics.txt) \
-                 summary/rnaseq_aln_metrics.txt \
+				 summary/rnaseq_aln_metrics.txt \
 				 summary/alignment_aln_metrics.txt \
 				 summary/insert_aln_metrics.txt \
 				 summary/rnaseq_aln_dd_metrics.txt \
