@@ -408,5 +408,8 @@ TARGETS += defuse_umi
 defuse_umi :
 	$(call RUN_MAKE,innovation-lab/workflows/defuse_umi.mk)
 
-
+TARGETS += fusioncatcher_umi
+fusioncatcher_umi :
+	$(call RUN_MAKE,innovation-lab/workflows/fusioncatcher_umi.mk)
+	
 .PHONY : $(TARGETS)
