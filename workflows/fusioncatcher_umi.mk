@@ -6,7 +6,6 @@ fusioncatcher_umi : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/$(
 #					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
 #					fusioncatcher/summary.dedup.txt
 
-
 CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
 
 define fusioncatcher-dedup
