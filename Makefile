@@ -404,38 +404,9 @@ TARGETS += umi_tools
 umi_tools :
 	$(call RUN_MAKE,innovation-lab/rna_seq/umi_tools.mk)
 
-TARGETS += hotspot_summary
-hotspot_summary :
-	$(MAKE) -f innovation-lab/variant_callers/genotypehotspots.mk -j $(NUM_JOBS)
-	$(call RUN_MAKE,innovation-lab/summary/hotspotsummary.mk)
-	
-TARGETS += cnvkit_coverage
-cnvkit_coverage :
-	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitcoverage.mk)
-	
-TARGETS += cnvkit_reference
-cnvkit_reference :
-	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitreference.mk)
-	
-TARGETS += cnvkit_fix
-cnvkit_fix :
-	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitfix.mk)
-
-TARGETS += cnvkit_plot
-cnvkit_plot :
-	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitplot.mk)
-	
-TARGETS += cnvkit_heatmap
-cnvkit_heatmap :
-	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitheatmap.mk)
-	
-TARGETS += cnvkit_pca
-cnvkit_pca :
-	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitprcomp.mk)
-	
-TARGETS += cnvkit_qc
-cnvkit_qc :
-	$(call RUN_MAKE,innovation-lab/copy_number/cnvkitqc.mk)
+TARGETS += defuse_umi
+defuse_umi :
+	$(call RUN_MAKE,innovation-lab/worksflows/defuse_umi.mk)
 
 
 .PHONY : $(TARGETS)
