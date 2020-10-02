@@ -412,4 +412,9 @@ TARGETS += fusioncatcher_umi
 fusioncatcher_umi :
 	$(call RUN_MAKE,innovation-lab/workflows/fusioncatcher_umi.mk)
 	
+TARGETS += starfusion_umi
+starfusion_umi :
+	$(call RUN_MAKE,innovation-lab/workflows/starfusion_umi.mk)
+
+
 .PHONY : $(TARGETS)
