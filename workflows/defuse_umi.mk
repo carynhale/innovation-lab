@@ -13,8 +13,8 @@ DEFUSE_E75 = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/
 define defuse-dedup
 defuse/%.dedup.1.fastq : bam/%.bam
 	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
-								  $(SAMTOOLS) sort -T $$(<D)/$$(*) -O bam -n -@ 4 -m 6G $< | \
-								  $(SAMTOOLS) fastq -f 1 -1 defuse/$$(*).dedup.1.fastq -2 defuse/$$(*).dedup.2.fastq")
+								  $$(SAMTOOLS) sort -T $$(<D)/$$(*) -O bam -n -@ 4 -m 6G $$(<) | \
+								  $$(SAMTOOLS) fastq -f 1 -1 defuse/$$(*).dedup.1.fastq -2 defuse/$$(*).dedup.2.fastq")
 
 defuse/%.dedup/results.candidate.tsv : defuse/%.dedup.1.fastq
 	$$(call RUN,-c -n 10 -s 2G -m 3G -w 72:00:00 -v $(DEFUSE_ENV),"set -o pipefail && \

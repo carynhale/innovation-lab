@@ -1,18 +1,19 @@
 include innovation-lab/Makefile.inc
 
-LOGDIR ?= log/fusion_catcher.$(NOW)
-
-CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
+LOGDIR ?= log/fusioncatcher_umi.$(NOW)
 
 fusioncatcher_umi : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/$(sample).1.fastq.gz)
 #					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
 #					fusioncatcher/summary.dedup.txt
 
+
+CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
+
 define fusioncatcher-dedup
 fusioncatcher/%.dedup/%.1.fastq.gz : bam/%.bam
 	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
-								  $(SAMTOOLS) sort -T $$(<D)/$$(*) -O bam -n -@ 4 -m 6G $< | \
-								  $(SAMTOOLS) fastq -f 1 -1 fusioncatcher/$$(*).dedup/$$(*).1.fastq -2 fusioncatcher/$$(*).dedup/$$(*).2.fastq && \
+								  $$(SAMTOOLS) sort -T $$(<D)/$$(*) -O bam -n -@ 4 -m 6G $$(<) | \
+								  $$(SAMTOOLS) fastq -f 1 -1 fusioncatcher/$$(*).dedup/$$(*).1.fastq -2 fusioncatcher/$$(*).dedup/$$(*).2.fastq && \
 								  gzip fusioncatcher/$$(*).dedup/$$(*).1.fastq && \
 								  gzip fusioncatcher/$$(*).dedup/$$(*).2.fastq")
 
