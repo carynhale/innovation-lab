@@ -2,10 +2,10 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/defuse_umi.$(NOW)
 
-defuse_umi : $(foreach sample,$(SAMPLES),defuse/$(sample).dedup.1.fastq)
-#			 $(foreach sample,$(SAMPLES),defuse/$(sample).dedup/results.candidate.tsv) \
-#			 $(foreach sample,$(SAMPLES),defuse/$(sample).dedup/taskcomplete) \
-#			 defuse/summary.dedup.txt
+defuse_umi : $(foreach sample,$(SAMPLES),defuse/$(sample).dedup.1.fastq) \
+			 $(foreach sample,$(SAMPLES),defuse/$(sample).dedup/results.candidate.tsv) \
+			 $(foreach sample,$(SAMPLES),defuse/$(sample).dedup/taskcomplete) \
+			 defuse/summary.dedup.txt
 		 
 DEFUSE_CONFIG = innovation-lab/config/defuse.inc
 DEFUSE_E75 = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/Grch37.p13/Sequence/defuse_e75
