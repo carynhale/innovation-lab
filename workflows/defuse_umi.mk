@@ -10,11 +10,15 @@ defuse_umi : $(foreach sample,$(SAMPLES),defuse/$(sample).dedup.1.fastq) \
 DEFUSE_CONFIG = innovation-lab/config/defuse.inc
 DEFUSE_E75 = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/Grch37.p13/Sequence/defuse_e75
 
+define extract-fastq
 defuse/%.dedup.1.fastq : %.bam
 	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
 								  $(SAMTOOLS) sort -T $(<D)/$* -O bam -n -@ 4 -m 6G $< | $(SAMTOOLS) fastq -f 1 -1 defuse/$*.dedup.1.fastq -2 defuse/$*.dedup.2.fastq")
 
-
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call extract-fastq,$(sample))))
+		
 define run-defuse
 defuse/%.dedup/results.candidate.tsv : defuse/%.dedup.1.fastq defuse/%.dedup.2.fastq
 	$$(call RUN,-c -n 10 -s 2G -m 3G -w 72:00:00 -v $(DEFUSE_ENV),"set -o pipefail && \
