@@ -16,7 +16,7 @@ fusioncatcher/$1.dedup/$1.1.fastq.gz : bam/$1.bam
 								  gzip fusioncatcher/$$(*).dedup/$$(*).1.fastq && \
 								  gzip fusioncatcher/$$(*).dedup/$$(*).2.fastq")
 
-fusioncatcher/%.dedup/out/taskcomplete : fusioncatcher/%.dedup/%.1.fastq.gz
+fusioncatcher/$1.dedup/out/taskcomplete : fusioncatcher/$1.dedup/$1.1.fastq.gz
 	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(FUSIONCATCHER_ENV) -w 72:00:00,"set -o pipefail && \
 																		 mkdir -p fusioncatcher/$1.dedup/out && \
 																		 fusioncatcher.py \
