@@ -406,7 +406,7 @@ umi_tools :
 
 TARGETS += defuse_umi
 defuse_umi :
-	$(call RUN_MAKE,innovation-lab/worksflows/defuse_umi.mk)
+	$(call RUN_MAKE,innovation-lab/workflows/defuse_umi.mk)
 
 
 .PHONY : $(TARGETS)
