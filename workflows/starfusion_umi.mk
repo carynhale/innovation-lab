@@ -35,7 +35,7 @@ starfusion/summary.dedup.txt : $(foreach sample,$(SAMPLES),starfusion/$(sample).
 	
 
 ..DUMMY := $(shell mkdir -p version; \
-			 ~/share/usr/env/starfusion-1.6.0/bin/STAR-Fusion --help &> version/starfusion_umim.txt)
+			 ~/share/usr/env/starfusion-1.6.0/bin/STAR-Fusion --help &> version/starfusion_umi.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: starfusion_umi
