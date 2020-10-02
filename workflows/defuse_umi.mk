@@ -21,9 +21,8 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call extract-fastq,$(sample))))
 		
 define run-defuse
-defuse/%.dedup/results.candidate.tsv : defuse/%.dedup.1.fastq defuse/%.dedup.2.fastq
+defuse/%.dedup/results.candidate.tsv : defuse/%.dedup.1.fastq
 	$$(call RUN,-c -n 10 -s 2G -m 3G -w 72:00:00 -v $(DEFUSE_ENV),"set -o pipefail && \
-												  				   mkdir -p defuse && \
 												  				   $$(DEFUSE) \
 												  				   --config $$(DEFUSE_CONFIG) \
 												  				   --dataset $$(DEFUSE_E75) \
