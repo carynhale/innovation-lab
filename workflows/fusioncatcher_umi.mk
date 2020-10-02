@@ -4,9 +4,9 @@ LOGDIR ?= log/fusion_catcher.$(NOW)
 
 CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
 
-fusioncatcher_umi : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/$(sample).1.fastq.gz) \
-					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
-					fusioncatcher/summary.dedup.txt
+fusioncatcher_umi : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/$(sample).1.fastq.gz)
+#					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
+#					fusioncatcher/summary.dedup.txt
 
 define fusioncatcher-dedup
 fusioncatcher/%.dedup/%.1.fastq.gz : bam/%.bam
