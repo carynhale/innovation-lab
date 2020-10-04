@@ -12,9 +12,7 @@ define fusioncatcher-dedup
 fusioncatcher/$1.dedup/$1.1.fastq.gz : bam/$1.bam
 	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
 								  $$(SAMTOOLS) sort -T bam/$1 -O bam -n -@ 4 -m 6G $$(<) | \
-								  $$(SAMTOOLS) fastq -f 1 -1 fusioncatcher/$1.dedup/$1.1.fastq -2 fusioncatcher/$1.dedup/$1.2.fastq && \
-								  gzip fusioncatcher/$1.dedup/$1.1.fastq && \
-								  gzip fusioncatcher/$1.dedup/$1.2.fastq")
+								  $$(SAMTOOLS) fastq -f 1 -1 >(gzip -c > fusioncatcher/$1.dedup/$1.1.fastq.gz)  -2 >(gzip -c > fusioncatcher/$1.dedup/$1.2.fastq.gz) -")
 
 fusioncatcher/$1.dedup/out/taskcomplete : fusioncatcher/$1.dedup/$1.1.fastq.gz
 	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(FUSIONCATCHER_ENV) -w 72:00:00,"set -o pipefail && \

@@ -12,7 +12,7 @@ define starfusion-dedup
 starfusion/$1.dedup/$1.1.fastq : bam/$1.bam
 	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
 								  $$(SAMTOOLS) sort -T bam/$1 -O bam -n -@ 4 -m 6G $$(<) | \
-								  $$(SAMTOOLS) fastq -f 1 -1 fusioncatcher/$1.dedup/$1.1.fastq -2 fusioncatcher/$1.dedup/$1.2.fastq")
+								  $$(SAMTOOLS) fastq -f 1 -1 fusioncatcher/$1.dedup/$1.1.fastq -2 fusioncatcher/$1.dedup/$1.2.fastq -")
 								  
 starfusion/$1.dedup/taskcomplete : starfusion/$1.dedup/$1.1.fastq
 	$$(call RUN,-c -n 20 -s 1G -m 2G -v $(STARFUSION_ENV) -w 36:00:00,"set -o pipefail && \
