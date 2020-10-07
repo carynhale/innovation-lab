@@ -167,5 +167,5 @@ fusioncatcher/summary.dedup.txt : $(foreach sample,$(SAMPLES),fusioncatcher/$(sa
 .PHONY: fusioncatcher_umi
 
 include innovation-lab/fastq_tools/fastq.mk
-include innovation-lab/bam_tools/process_bam.mk
-#include innovation-lab/aligners/align.mk
+#include innovation-lab/bam_tools/process_bam.mk
+include innovation-lab/aligners/align.mk
