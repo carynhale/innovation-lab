@@ -166,6 +166,6 @@ fusioncatcher/summary.dedup.txt : $(foreach sample,$(SAMPLES),fusioncatcher/$(sa
 .DELETE_ON_ERROR:
 .PHONY: fusioncatcher_umi
 
-#include innovation-lab/fastq_tools/fastq.mk
+include innovation-lab/fastq_tools/fastq.mk
 #include innovation-lab/bam_tools/process_bam.mk
 #include innovation-lab/aligners/align.mk
