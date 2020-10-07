@@ -5,8 +5,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/fusioncatcher_umi.$(NOW)
 
-fusioncatcher_umi : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz)
-#					$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz) \
+fusioncatcher_umi : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz) \
+					$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz)
 #					$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
 #					$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai) \
 #					$(foreach sample,$(SAMPLES),bam/$(sample).bam) \
