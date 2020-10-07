@@ -1,7 +1,7 @@
 include innovation-lab/Makefile.inc
-include innovation-lab/config/align.inc
-include innovation-lab/config/gatk.inc
-include innovation-lab/genome_inc/b37.inc
+#include innovation-lab/config/align.inc
+#include innovation-lab/config/gatk.inc
+#include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/fusioncatcher_umi.$(NOW)
 
@@ -42,7 +42,7 @@ fusioncatcher_umi : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1
 #            --chimOutType WithinBAM \
 #			--quantMode GeneCounts
 
-CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
+#CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
 
 define copy-fastq
 umi_tools/$1/$1_R1.fastq.gz : $3
