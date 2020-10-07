@@ -18,31 +18,23 @@ fusioncatcher_umi : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
 					fusioncatcher/summary.dedup.txt
 
-#ALIGNER := star
-#BAM_NO_REALN = true
-#BAM_NO_RECAL = true
-#BAM_NO_FILTER = true
-#BAM_DUP_TYPE = none
-#SEQ_PLATFROM = illumina
-#
-#UMI_PATTERN = NNNX
-#
-#STAR_OPTS = --genomeDir $(STAR_REF) \
-#            --outSAMtype BAM SortedByCoordinate \
-#			--twopassMode Basic \
-#            --outReadsUnmapped None \
-#            --outSAMunmapped Within \
-#            --chimSegmentMin 12 \
-#            --chimJunctionOverhangMin 12 \
-#            --alignSJDBoverhangMin 10 \
-#            --alignMatesGapMax 200000 \
-#            --alignIntronMax 200000 \
-#            --chimSegmentReadGapMax parameter 3 \
-#            --alignSJstitchMismatchNmax 5 -1 5 5 \
-#            --chimOutType WithinBAM \
-#			--quantMode GeneCounts
-
-#CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
+SEQ_PLATFROM = illumina
+UMI_PATTERN = NNNX
+STAR_OPTS = --genomeDir $(STAR_REF) \
+            --outSAMtype BAM SortedByCoordinate \
+			--twopassMode Basic \
+            --outReadsUnmapped None \
+            --outSAMunmapped Within \
+            --chimSegmentMin 12 \
+            --chimJunctionOverhangMin 12 \
+            --alignSJDBoverhangMin 10 \
+            --alignMatesGapMax 200000 \
+            --alignIntronMax 200000 \
+            --chimSegmentReadGapMax parameter 3 \
+            --alignSJstitchMismatchNmax 5 -1 5 5 \
+            --chimOutType WithinBAM \
+			--quantMode GeneCounts
+CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
 
 define copy-fastq
 umi_tools/$1/$1_R1.fastq.gz : $3
