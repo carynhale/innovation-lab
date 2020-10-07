@@ -57,22 +57,22 @@ endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 	
-#define clip-fastq
-#umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
-#	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
-#														 umi_tools extract \
-#														 -p $$(UMI_PATTERN) \
-#														 -I umi_tools/$1/$1_R1.fastq.gz \
-#														 -S umi_tools/$1/$1_R1_cl.fastq.gz \
-#														 --bc-pattern2=$$(UMI_PATTERN) \
-#														 --read2-in=umi_tools/$1/$1_R2.fastq.gz \
-#														 --read2-out=umi_tools/$1/$1_R2_cl.fastq.gz \
-#														 --log=umi_tools/$1/$1_cl.log")
-#
-#endef
-#$(foreach sample,$(SAMPLES),\
-#	$(eval $(call clip-fastq,$(sample))))
-#
+define clip-fastq
+umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
+	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
+														 umi_tools extract \
+														 -p $$(UMI_PATTERN) \
+														 -I umi_tools/$1/$1_R1.fastq.gz \
+														 -S umi_tools/$1/$1_R1_cl.fastq.gz \
+														 --bc-pattern2=$$(UMI_PATTERN) \
+														 --read2-in=umi_tools/$1/$1_R2.fastq.gz \
+														 --read2-out=umi_tools/$1/$1_R2_cl.fastq.gz \
+														 --log=umi_tools/$1/$1_cl.log")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call clip-fastq,$(sample))))
+
 #define align-fastq
 #star/$1.Aligned.sortedByCoord.out.bam : umi_tools/$1/$1_R1_cl.fastq.gz
 #	$$(call RUN,-n 4 -s 6G -m 10G -w 1440,"set -o pipefail && \
