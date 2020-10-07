@@ -13,10 +13,10 @@ fusioncatcher_umi : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1
 					$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete) \
-#					fusioncatcher/summary.txt \
+					fusioncatcher/summary.txt \
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/$(sample).1.fastq.gz) \
-					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete)
-#					fusioncatcher/summary.dedup.txt
+					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
+					fusioncatcher/summary.dedup.txt
 
 #ALIGNER := star
 #BAM_NO_REALN = true
