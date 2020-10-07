@@ -166,7 +166,7 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 
 ..DUMMY := $(shell mkdir -p version; \
 			 ~/share/usr/env/fusioncatcher-1.2.0/bin/fusioncatcher.py --version &> version/fusioncatcher_umi.txt; \
-			 $(UMITOOLS_ENV)/bin/umi_tools --version > version/fusioncatcher_umi.txt; \
+			 $(UMITOOLS_ENV)/bin/umi_tools --version >> version/fusioncatcher_umi.txt; \
              echo "STAR" >> version/fusioncatcher_umi.txt; \
 			 STAR --version >> version/fusioncatcher_umi.txt; \
              $(SAMTOOLS) --version >> version/fusioncatcher_umi.txt)
