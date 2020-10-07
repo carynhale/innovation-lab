@@ -10,9 +10,9 @@ fusioncatcher_umi : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1
 					$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
 					$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai) \
 					$(foreach sample,$(SAMPLES),bam/$(sample).bam) \
-					$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) 
-#					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
-#					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete) \
+					$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
+					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
+					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete)
 #					fusioncatcher/summary.txt \
 #					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/$(sample).1.fastq.gz) \
 #					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
@@ -108,27 +108,27 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call dedup-bam,$(sample))))
 	
-#define fusioncatcher
-#fusioncatcher/$1/$1.1.fastq.gz : star/$1.Aligned.sortedByCoord.out.bam
-#	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
-#								  $$(SAMTOOLS) sort -T star/$1 -O bam -n -@ 4 -m 6G $$(<) | \
-#								  bedtools bamtofastq -i - -fq >(gzip -c > fusioncatcher/$1/$1.1.fastq.gz) -fq2 >(gzip -c > fusioncatcher/$1/$1.2.fastq.gz)")
-#
-#fusioncatcher/$1/out/taskcomplete : fusioncatcher/$1/$1.1.fastq.gz
-#	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(FUSIONCATCHER_ENV) -w 72:00:00,"set -o pipefail && \
-#																		 mkdir -p fusioncatcher/$1/out && \
-#																		 fusioncatcher.py \
-#																		 -i fusioncatcher/$1 \
-#																		 -o fusioncatcher/$1/out \
-#																		 -d $$(CACHE) \
-#																		 -p 8 && \
-#																		 echo $1 > fusioncatcher/$1/out/taskcomplete")
-#
-#endef
-#$(foreach sample,$(SAMPLES),\
-#		$(eval $(call fusioncatcher,$(sample))))
-#		
-#
+define fusioncatcher
+fusioncatcher/$1/$1.1.fastq.gz : star/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
+								  $$(SAMTOOLS) sort -T star/$1 -O bam -n -@ 4 -m 6G $$(<) | \
+								  bedtools bamtofastq -i - -fq >(gzip -c > fusioncatcher/$1/$1.1.fastq.gz) -fq2 >(gzip -c > fusioncatcher/$1/$1.2.fastq.gz)")
+
+fusioncatcher/$1/out/taskcomplete : fusioncatcher/$1/$1.1.fastq.gz
+	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(FUSIONCATCHER_ENV) -w 72:00:00,"set -o pipefail && \
+																		 mkdir -p fusioncatcher/$1/out && \
+																		 fusioncatcher.py \
+																		 -i fusioncatcher/$1 \
+																		 -o fusioncatcher/$1/out \
+																		 -d $$(CACHE) \
+																		 -p 8 && \
+																		 echo $1 > fusioncatcher/$1/out/taskcomplete")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call fusioncatcher,$(sample))))
+
+
 #define fusioncatcher-dedup
 #fusioncatcher/$1.dedup/$1.1.fastq.gz : bam/$1.bam
 #	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
