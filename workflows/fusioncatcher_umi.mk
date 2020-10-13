@@ -13,10 +13,10 @@ fusioncatcher_umi : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1
 					$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete) \
-					fusioncatcher/summary.txt \
+					fusioncatcher/summary.1.txt \
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/$(sample).1.fastq.gz) \
 					$(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete) \
-					fusioncatcher/summary.dedup.txt
+					fusioncatcher/summary.2.txt
 
 SEQ_PLATFROM = illumina
 UMI_PATTERN = NNNX
@@ -142,17 +142,17 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fusioncatcher-dedup,$(sample))))
 
 
-fusioncatcher/summary.txt : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete)
-	echo "Gene_1_symbol(5end_fusion_partner)	Gene_2_symbol(3end_fusion_partner)	Fusion_description	Counts_of_common_mapping_reads	Spanning_pairs	Spanning_unique_reads	Longest_anchor_found	Fusion_finding_method	Fusion_point_for_gene_1(5end_fusion_partner)	Fusion_point_for_gene_2(3end_fusion_partner)	Gene_1_id(5end_fusion_partner)	Gene_2_id(3end_fusion_partner)	Exon_1_id(5end_fusion_partner)	Exon_2_id(3end_fusion_partner)	Fusion_sequence	Predicted_effect	Sample_name" > fusioncatcher/summary.txt; \
+fusioncatcher/summary.1.txt : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete)
+	echo "Gene_1_symbol(5end_fusion_partner)	Gene_2_symbol(3end_fusion_partner)	Fusion_description	Counts_of_common_mapping_reads	Spanning_pairs	Spanning_unique_reads	Longest_anchor_found	Fusion_finding_method	Fusion_point_for_gene_1(5end_fusion_partner)	Fusion_point_for_gene_2(3end_fusion_partner)	Gene_1_id(5end_fusion_partner)	Gene_2_id(3end_fusion_partner)	Exon_1_id(5end_fusion_partner)	Exon_2_id(3end_fusion_partner)	Fusion_sequence	Predicted_effect	Sample_name" > fusioncatcher/summary.1.txt; \
 	for i in $(SAMPLES); do \
-		sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed "s/$$/\t$$i/" >> fusioncatcher/summary.txt; \
+		sed -e "1d" fusioncatcher/$$i/out/final-list_candidate-fusion-genes.hg19.txt | sed "s/$$/\t$$i/" >> fusioncatcher/summary.1.txt; \
 	done
 
 
-fusioncatcher/summary.dedup.txt : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete)
-	echo "Gene_1_symbol(5end_fusion_partner)	Gene_2_symbol(3end_fusion_partner)	Fusion_description	Counts_of_common_mapping_reads	Spanning_pairs	Spanning_unique_reads	Longest_anchor_found	Fusion_finding_method	Fusion_point_for_gene_1(5end_fusion_partner)	Fusion_point_for_gene_2(3end_fusion_partner)	Gene_1_id(5end_fusion_partner)	Gene_2_id(3end_fusion_partner)	Exon_1_id(5end_fusion_partner)	Exon_2_id(3end_fusion_partner)	Fusion_sequence	Predicted_effect	Sample_name" > fusioncatcher/summary.dedup.txt; \
+fusioncatcher/summary.2.txt : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample).dedup/out/taskcomplete)
+	echo "Gene_1_symbol(5end_fusion_partner)	Gene_2_symbol(3end_fusion_partner)	Fusion_description	Counts_of_common_mapping_reads	Spanning_pairs	Spanning_unique_reads	Longest_anchor_found	Fusion_finding_method	Fusion_point_for_gene_1(5end_fusion_partner)	Fusion_point_for_gene_2(3end_fusion_partner)	Gene_1_id(5end_fusion_partner)	Gene_2_id(3end_fusion_partner)	Exon_1_id(5end_fusion_partner)	Exon_2_id(3end_fusion_partner)	Fusion_sequence	Predicted_effect	Sample_name" > fusioncatcher/summary.2.txt; \
 	for i in $(SAMPLES); do \
-		sed -e "1d" fusioncatcher/$$i.dedup/out/final-list_candidate-fusion-genes.hg19.txt | sed "s/$$/\t$$i/" >> fusioncatcher/summary.dedup.txt; \
+		sed -e "1d" fusioncatcher/$$i.dedup/out/final-list_candidate-fusion-genes.hg19.txt | sed "s/$$/\t$$i/" >> fusioncatcher/summary.2.txt; \
 	done
 
 
