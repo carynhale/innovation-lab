@@ -23,9 +23,7 @@ kallisto/$1/taskcomplete : kallisto/$1/$1.1.fastq.gz
 														-i $$(KALLISTO_INDEX) \
 														-o kallisto/$1 \
 														kallisto/$1/$1.1.fastq.gz kallisto/$1/$1.2.fastq.gz \
-														--bias \
-														-b 100 \
-														-t 8 \
+														--bias -b 100 -t 8 && \
 														echo $1 > kallisto/$1/taskcomplete")
 
 endef
