@@ -1,4 +1,5 @@
 include innovation-lab/Makefile.inc
+include innovation-lab/genome_inc/b37.inc
 
 LOGDIR = log/kallisto.$(NOW)
 
