@@ -14,6 +14,7 @@ CHROMOSOMES := $(shell grep -v '@' $(TARGETS_FILE) | cut -f1 | sort | uniq)
 REF_MSI = $(REF_DIR)/b37/human_g1k_v37_msi.list
 ENSEMBL = $(HOME)/share/lib/resource_files/Ensemble_b37.RData
 STAR_REF = $(REF_DIR)/STAR_b37
+KALLISTO_INDEX = $(REF_DIR)/b37/human_g1k_v37
 
 endif
 B37_INC = true
