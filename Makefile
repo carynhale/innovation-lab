@@ -299,6 +299,9 @@ TARGETS += sum_reads
 sum_reads :
 	$(call RUN_MAKE,innovation-lab/rna_seq/sum_reads.mk)
 
+TARGETS += kallisto
+kallisto :
+	$(call RUN_MAKE,innovation-lab/rna_seq/kallisto.mk)
 
 #==================================================
 # Clonality
