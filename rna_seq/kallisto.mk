@@ -1,5 +1,4 @@
 include innovation-lab/Makefile.inc
-include innovation-lab/genome_inc/b37.inc
 
 LOGDIR = log/kallisto.$(NOW)
 
@@ -21,7 +20,7 @@ define fastq-to-kallisto
 kallisto/$1/taskcomplete : kallisto/$1/$1.1.fastq.gz
 	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(KALLISTO_ENV),"set -o pipefail && \
 														kallisto -quant \
-														-i $$(KALLISTO INDEX) \
+														-i $$(KALLISTO_INDEX) \
 														-o kallisto/$1 \
 														kallisto/$1/$1.1.fastq.gz kallisto/$1/$1.2.fastq.gz \
 														--bias \
