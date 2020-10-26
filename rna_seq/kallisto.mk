@@ -6,7 +6,7 @@ kallisto : $(foreach sample,$(SAMPLES),kallisto/$(sample)/$(sample).1.fastq) \
 		   $(foreach sample,$(SAMPLES),kallisto/$(sample)/abundance.tsv) \
 		   kallisto/tpm_bygene.txt
 
-SLEUTH_ANNOT = $(HOME)/share/lib/resource_files/Hugo_ENST_ensembl75_fixed.txt
+SLEUTH_ANNOT ?= $(HOME)/share/lib/resource_files/Hugo_ENST_ensembl75_fixed.txt
 
 define bam-to-fastq
 kallisto/$1/$1.1.fastq : bam/$1.bam
