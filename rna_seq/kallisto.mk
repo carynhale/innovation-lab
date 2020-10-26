@@ -20,7 +20,7 @@ $(foreach sample,$(SAMPLES),\
 define fastq-to-kallisto
 kallisto/$1/abundance.tsv : kallisto/$1/$1.1.fastq
 	$$(call RUN,-c -n 12 -s 2G -m 3G -v $(KALLISTO_ENV),"set -o pipefail && \
-														 kallisto -quant \
+														 kallisto quant \
 														 -i $$(KALLISTO_INDEX) \
 														 -o kallisto/$1 \
 														 --bias -b 100 -t 12 -rf-stranded \
