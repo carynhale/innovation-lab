@@ -3,8 +3,10 @@ include innovation-lab/Makefile.inc
 LOGDIR = log/kallisto.$(NOW)
 
 kallisto : $(foreach sample,$(SAMPLES),kallisto/$(sample)/$(sample).1.fastq) \
-		   $(foreach sample,$(SAMPLES),kallisto/$(sample)/abundance.tsv)
+		   $(foreach sample,$(SAMPLES),kallisto/$(sample)/abundance.tsv) \
+		   kallisto/tpm_bygene.txt
 
+SLEUTH_ANNOT = $(HOME)/share/lib/resource_files/Hugo_ENST_ensembl75_fixed.txt
 
 define bam-to-fastq
 kallisto/$1/$1.1.fastq : bam/$1.bam
@@ -29,10 +31,16 @@ kallisto/$1/abundance.tsv : kallisto/$1/$1.1.fastq
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-kallisto,$(sample))))
+		
+kallisto/tpm_byegene.txt : $(foreach sample,$(SAMPLES),kallisto/$(sample)/abundance.tsv)
+	$(call RUN, -c -n 12 -s 2G -m 3G -v $(KALLISTO_ENV),"set -o pipefail && \
+														$(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_sleuth.R --annotation $(SLEUTH_ANNOT) --samples '$(SAMPLES)'")
+
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(SAMTOOLS) --version > version/kallisto.txt; \
-			 ~/share/usr/env/kallisto-0.46.2/bin/kallisto version >> version/kallisto.txt)
+			 ~/share/usr/env/kallisto-0.46.2/bin/kallisto version >> version/kallisto.txt; \
+			 ~/share/usr/env/kallisto-0.46.2/bin/R --version >> version/kallisto.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: kallisto
