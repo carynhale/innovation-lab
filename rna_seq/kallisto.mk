@@ -3,7 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR = log/kallisto.$(NOW)
 
 kallisto : $(foreach sample,$(SAMPLES),kallisto/$(sample)/$(sample).1.fastq) \
-		   $(foreach sample,$(SAMPLES),kallisto/$(sample)/taskcomplete)
+		   $(foreach sample,$(SAMPLES),kallisto/$(sample)/abundance.tsv)
 
 
 define bam-to-fastq
@@ -18,14 +18,13 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call bam-to-fastq,$(sample))))
 
 define fastq-to-kallisto
-kallisto/$1/taskcomplete : kallisto/$1/$1.1.fastq
+kallisto/$1/abundance.tsv : kallisto/$1/$1.1.fastq
 	$$(call RUN,-c -n 12 -s 2G -m 3G -v $(KALLISTO_ENV),"set -o pipefail && \
 														 kallisto -quant \
 														 -i $$(KALLISTO_INDEX) \
 														 -o kallisto/$1 \
 														 --bias -b 100 -t 12 -rf-stranded \
-														 --fusion kallisto/$1/$1.1.fastq kallisto/$1/$1.2.fastq && \
-														 echo $1 > kallisto/$1/taskcomplete")
+														 --fusion kallisto/$1/$1.1.fastq kallisto/$1/$1.2.fastq")
 
 endef
 $(foreach sample,$(SAMPLES),\
