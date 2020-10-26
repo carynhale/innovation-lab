@@ -407,8 +407,4 @@ TARGETS += umi_tools
 umi_tools :
 	$(call RUN_MAKE,innovation-lab/rna_seq/umi_tools.mk)
 
-TARGETS += fusioncatcher_umi
-fusioncatcher_umi :
-	$(call RUN_MAKE,innovation-lab/workflows/fusioncatcher_umi.mk)
-	
 .PHONY : $(TARGETS)
