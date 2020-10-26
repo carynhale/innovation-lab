@@ -33,8 +33,8 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-kallisto,$(sample))))
 		
 kallisto/tpm_byegene.txt : $(foreach sample,$(SAMPLES),kallisto/$(sample)/abundance.tsv)
-	$(call RUN, -c -n 24 -s 1G -m 2G -v $(KALLISTO_ENV),"set -o pipefail && \
-														$(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_sleuth.R --annotation $(SLEUTH_ANNOT) --samples '$(SAMPLES)'")
+	$$(call RUN, -c -n 24 -s 1G -m 2G -v $(KALLISTO_ENV),"set -o pipefail && \
+														$$(RSCRIPT) $$(SCRIPTS_DIR)/rna_seq/summarize_sleuth.R --annotation $$(SLEUTH_ANNOT) --samples '$$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
