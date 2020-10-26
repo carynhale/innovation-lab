@@ -2,29 +2,30 @@ include innovation-lab/Makefile.inc
 
 LOGDIR = log/kallisto.$(NOW)
 
-kallisto : $(foreach sample,$(SAMPLES),kallisto/$(sample)/$(sample).1.fastq.gz) \
+kallisto : $(foreach sample,$(SAMPLES),kallisto/$(sample)/$(sample).1.fastq) \
 		   $(foreach sample,$(SAMPLES),kallisto/$(sample)/taskcomplete)
+
 
 define bam-to-fastq
 kallisto/$1/$1.1.fastq.gz : bam/$1.bam
 	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
 								  mkdir -p kallisto/$1 && \
 								  $$(SAMTOOLS) sort -T kallisto/$1/$1 -O bam -n -@ 4 -m 6G $$(<) | \
-								  bedtools bamtofastq -i - -fq >(gzip -c > kallisto/$1/$1.1.fastq.gz) -fq2 >(gzip -c > kallisto/$1/$1.2.fastq.gz)")
+								  bedtools bamtofastq -i - -fq kallisto/$1/$1.1.fastq -fq2 kallisto/$1/$1.2.fastq")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call bam-to-fastq,$(sample))))
 
 define fastq-to-kallisto
-kallisto/$1/taskcomplete : kallisto/$1/$1.1.fastq.gz
-	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(KALLISTO_ENV),"set -o pipefail && \
-														kallisto -quant \
-														-i $$(KALLISTO_INDEX) \
-														-o kallisto/$1 \
-														kallisto/$1/$1.1.fastq.gz kallisto/$1/$1.2.fastq.gz \
-														--bias -b 100 -t 8 && \
-														echo $1 > kallisto/$1/taskcomplete")
+kallisto/$1/taskcomplete : kallisto/$1/$1.1.fastq
+	$$(call RUN,-c -n 12 -s 2G -m 3G -v $(KALLISTO_ENV),"set -o pipefail && \
+														 kallisto -quant \
+														 -i $$(KALLISTO_INDEX) \
+														 -o kallisto/$1 \
+														 --bias -b 100 -t 12 -rf-stranded \
+														 --fusion kallisto/$1/$1.1.fastq kallisto/$1/$1.2.fastq && \
+														 echo $1 > kallisto/$1/taskcomplete")
 
 endef
 $(foreach sample,$(SAMPLES),\
