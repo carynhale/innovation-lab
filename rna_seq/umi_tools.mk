@@ -34,7 +34,8 @@ umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.g
 			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
 			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai) \
 			$(foreach sample,$(SAMPLES),bam/$(sample).bam) \
-			$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai)
+			$(foreach sample,$(SAMPLES),bam/$(sample).bam.bai) \
+			summary/umi_summary.txt
 
 define copy-fastq
 umi_tools/$1/$1_R1.fastq.gz : $3
@@ -99,6 +100,10 @@ bam/$1.bam.bai : bam/$1.bam
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call dedup-bam,$(sample))))
+	
+summary/umi_summary.txt : bam/%.bam bam/%.bam.bai
+	$(call RUN,-n 1 -s 24G -m 48G,"$(RSCRIPT) $(SUMMARY_UMI) \
+                                   --sample_names '$(SAMPLES)'")
     
 ..DUMMY := $(shell mkdir -p version; \
 			 $(UMITOOLS_ENV)/bin/umi_tools --version > version/umi_tools.txt; \
