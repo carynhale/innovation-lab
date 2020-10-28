@@ -101,7 +101,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call dedup-bam,$(sample))))
 	
-summary/umi_summary.txt : bam/%.bam bam/%.bam.bai
+summary/umi_summary.txt : $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 	$(call RUN,-n 1 -s 24G -m 48G,"$(RSCRIPT) $(SUMMARY_UMI) \
                                    --sample_names '$(SAMPLES)'")
     
