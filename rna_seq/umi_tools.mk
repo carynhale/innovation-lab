@@ -28,7 +28,7 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --alignSJstitchMismatchNmax 5 -1 5 5 \
             --chimOutType WithinBAM \
 			--quantMode GeneCounts
-
+			
 umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz) \
 			$(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz) \
 			$(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
@@ -102,8 +102,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call dedup-bam,$(sample))))
 	
 summary/umi_summary.txt : $(foreach sample,$(SAMPLES),bam/$(sample).bam)
-	$(call RUN,-n 1 -s 48G -m 96G,"$(RSCRIPT) $(SUMMARY_UMI) \
-                                   --sample_names '$(SAMPLES)'")
+	$(call RUN,-n 1 -s 48G -m 96G,"$(RSCRIPT) $(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_umi.R --sample_names '$(SAMPLES)'")
     
 ..DUMMY := $(shell mkdir -p version; \
 			 $(UMITOOLS_ENV)/bin/umi_tools --version > version/umi_tools.txt; \
