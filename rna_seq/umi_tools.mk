@@ -102,7 +102,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call dedup-bam,$(sample))))
 	
 summary/umi_summary.txt : $(foreach sample,$(SAMPLES),bam/$(sample).bam)
-	$(call RUN,-n 1 -s 48G -m 96G,"$(RSCRIPT) $(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_umi.R --sample_names '$(SAMPLES)'")
+	$(call RUN,-n 1 -s 48G -m 96G,"$(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_umi.R --sample_names '$(SAMPLES)'")
     
 ..DUMMY := $(shell mkdir -p version; \
 			 $(UMITOOLS_ENV)/bin/umi_tools --version > version/umi_tools.txt; \
