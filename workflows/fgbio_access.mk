@@ -23,7 +23,15 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
 			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-simplex.bam) \
-			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-duplex.bam)
+			   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-duplex.bam) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.idx_stats.txt) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.aln_metrics.txt) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.insert_metrics.txt) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.oxog_metrics.txt) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
+			   $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.oxog_metrics.txt)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -265,6 +273,72 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-duplex.bam : fgbio/$1/$1_cl_
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call filter-consensus,$(sample))))
+	
+define picard-metrics-standard
+metrics/$1_cl_aln_srt_MD_IR_FX.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(BAM_INDEX) \
+									    INPUT=$$(<) \
+									    > $$(@)")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX.aln_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
+									    $$(COLLECT_ALIGNMENT_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX.insert_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
+									    $$(COLLECT_INSERT_METRICS) \
+ 									    INPUT=$$(<) \
+									    OUTPUT=$$(@) \
+									    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX.insert_metrics.pdf \
+									    MINIMUM_PCT=0.5")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_OXOG_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call picard-metrics-standard,$(sample))))
+		
+define picard-metrics-collapsed
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(BAM_INDEX) \
+									    INPUT=$$(<) \
+									    > $$(@)")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.aln_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_ALIGNMENT_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.insert_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_INSERT_METRICS) \
+ 									    INPUT=$$(<) \
+									    OUTPUT=$$(@) \
+									    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.pdf \
+									    MINIMUM_PCT=0.5")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+									    $$(COLLECT_OXOG_METRICS) \
+									    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+									    INPUT=$$(<) \
+									    OUTPUT=$$(@)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call picard-metrics-collapsed,$(sample))))
 
 	
 ..DUMMY := $(shell mkdir -p version; \
