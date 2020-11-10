@@ -58,6 +58,7 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 				 summary/aln_metrics.txt \
 				 summary/insert_metrics.txt \
 				 summary/oxog_metrics.txt \
+				 summary/hs_metrics.txt \
 				 summary/all_family_sizes.txt \
 				 summary/duplex_family_sizes.txt \
 				 summary/duplex_yield_metrics.txt
@@ -545,34 +546,39 @@ summary/insert_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_al
 summary/oxog_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.oxog_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 4 --sample_names '$(SAMPLES)'")
+									  
+summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 5 --sample_names '$(SAMPLES)'")
 
 summary/umi_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 5 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 6 --sample_names '$(SAMPLES)'")
 									  
 summary/umi_fixed_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 6 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 7 --sample_names '$(SAMPLES)'")
 									  
 summary/umi_duplex_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 7 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 8 --sample_names '$(SAMPLES)'")
 									  
 summary/umi_fixed_duplex_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 8 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 9 --sample_names '$(SAMPLES)'")
 
 summary/all_family_sizes.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 9 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 10 --sample_names '$(SAMPLES)'")
 									  
 summary/duplex_family_sizes.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 10 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 11 --sample_names '$(SAMPLES)'")
 
 summary/duplex_yield_metrics.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 11 --sample_names '$(SAMPLES)'")
+									  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 12 --sample_names '$(SAMPLES)'")
+									  
 
 ..DUMMY := $(shell mkdir -p version; \
 			 $(JAVA8) -jar $(FGBIO) --help &> version/beadlink_prism.txt; \
