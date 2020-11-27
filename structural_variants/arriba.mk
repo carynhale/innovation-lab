@@ -18,9 +18,8 @@ ARRIBA = $(HOME)/share/usr/arriba_v2.0.0/arriba
 define run-arriba
 arriba/$1/$1.fusion.tsv : bam/$1.bam
 	$$(call RUN,-c -n 1 -s 8G -m 12G -v $(STARFUSION_ENV) -w 36:00:00,"set -o pipefail && \
-																	  tee bam/$1.bam | \
 																	  /home/brownd7/share/usr/arriba_v2.0.0/arriba \
-																	  -x /dev/stdin \
+																	  -x bam/$1.bam \
 																	  -o arriba/$1/$1.fusion.tsv -O arriba/$1/$1.discarded.tsv \
 																	  -a $$(ASSEMBLY_FA) \
 																	  -g $$(ANNOTATION_GTF) \
