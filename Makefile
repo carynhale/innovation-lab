@@ -217,6 +217,10 @@ delly :
 # RNA structural variant/fusion callers
 #==================================================
 
+TARGETS += arriba
+arriba :
+	$(call RUN_MAKE,innovation-lab/structural_variants/arriba.mk)
+
 TARGETS += defuse
 defuse :
 	$(call RUN_MAKE,innovation-lab/structural_variants/defuse.mk)
