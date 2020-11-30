@@ -6,7 +6,8 @@ LOGDIR ?= log/arriba.$(NOW)
 arriba : $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).1.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).2.fastq.gz) \
 		 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).Aligned.out.bam) \
-		 $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.tsv)
+		 $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.tsv) \
+		 arriba/summary.txt
 
 
 define merged-fastq
@@ -68,6 +69,10 @@ arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call run-arriba,$(sample))))
+		
+arriba/summary.txt : $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.tsv)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+									   $(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_arriba.R --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
