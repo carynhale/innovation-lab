@@ -1,11 +1,3 @@
-FACETS_HET_THRESHOLD ?= 0.25
-FACETS_MIN_NHET ?= 25
-FACETS_SNP_NBHD ?= 250
-FACETS_NDEPTH_MAX ?= 1000
-FACETS_PRE_CVAL ?= 50
-FACETS_CVAL1 ?= 150
-FACETS_CVAL2 ?= 50
-
 ARRIBA_EXE ?= $(HOME)/share/usr/env/arriba-2.0.0/src/arriba_v2.0.0/arriba
 ANNOTATION_GTF ?= $(HOME)/share/usr/env/arriba-2.0.0/src/arriba_v2.0.0/GENCODE19.gtf
 ASSEMBLY_FA ?= $(HOME)/share/usr/env/arriba-2.0.0/src/arriba_v2.0.0/GRCh37viral.fa
