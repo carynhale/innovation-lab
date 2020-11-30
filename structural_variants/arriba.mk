@@ -2,7 +2,8 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/arriba.$(NOW)
 
-arriba : $(foreach sample,$(SAMPLES),arriba/$(sample)-nodedup/$(sample)-nodedup.tsv)
+arriba : $(foreach sample,$(SAMPLES),arriba/$(sample)-nodedup/$(sample)-nodedup.tsv) \
+	 	 $(foreach sample,$(SAMPLES),arriba/$(sample)-dedup/$(sample)-dedup.tsv)
 
 ARRIBA_ENV = $(HOME)/share/usr/env/arriba-2.0.0
 ARRIBA_EXE = $(HOME)/share/usr/env/arriba-2.0.0/src/arriba_v2.0.0/arriba
@@ -17,49 +18,98 @@ THREADS = 16
 define arriba-nodedup
 arriba/$1-nodedup/$1.Aligned.out.bam : umi_tools/$1/$1_R1_cl.fastq.gz
 	$$(call RUN,-c -n $(THREADS) -s 1G -m 2G -v $(ARRIBA_ENV) -w 72:00:00,"set -o pipefail && \
-																		   STAR \
-																		   --runThreadN $$(THREADS) \
-																		   --genomeDir $$(STAR_INDEX_DIR) \
-																		   --genomeLoad NoSharedMemory \
-																		   --readFilesIn umi_tools/$1/$1_R1_cl.fastq.gz umi_tools/$1/$1_R2_cl.fastq.gz \
-																		   --readFilesCommand zcat \
-																		   --outStd BAM_Unsorted \
-																		   --outSAMtype BAM Unsorted \
-																		   --outSAMunmapped Within \
-																		   --outBAMcompression 0 \
-																		   --outFilterMultimapNmax 50 \
-																		   --peOverlapNbasesMin 10 \
-																		   --alignSplicedMateMapLminOverLmate 0.5 \
-																		   --alignSJstitchMismatchNmax 5 -1 5 5 \
-																		   --chimSegmentMin 10 \
-																		   --chimOutType WithinBAM HardClip \
-																		   --chimJunctionOverhangMin 10 \
-																		   --chimScoreDropMax 30 \
-																		   --chimScoreJunctionNonGTAG 0 \
-																		   --chimScoreSeparation 1 \
-																		   --chimSegmentReadGapMax 3 \
-																		   --chimMultimapNmax 50 \
-																		   --outFileNamePrefix arriba/$1-nodedup/$1. > arriba/$1-nodedup/$1.Aligned.out.bam")
+										STAR \
+										--runThreadN $$(THREADS) \
+										--genomeDir $$(STAR_INDEX_DIR) \
+										--genomeLoad NoSharedMemory \
+										--readFilesIn umi_tools/$1/$1_R1_cl.fastq.gz umi_tools/$1/$1_R2_cl.fastq.gz \
+										--readFilesCommand zcat \
+										--outStd BAM_Unsorted \
+										--outSAMtype BAM Unsorted \
+										--outSAMunmapped Within \
+										--outBAMcompression 0 \
+										--outFilterMultimapNmax 50 \
+										--peOverlapNbasesMin 10 \
+										--alignSplicedMateMapLminOverLmate 0.5 \
+										--alignSJstitchMismatchNmax 5 -1 5 5 \
+										--chimSegmentMin 10 \
+										--chimOutType WithinBAM HardClip \
+										--chimJunctionOverhangMin 10 \
+										--chimScoreDropMax 30 \
+										--chimScoreJunctionNonGTAG 0 \
+										--chimScoreSeparation 1 \
+										--chimSegmentReadGapMax 3 \
+										--chimMultimapNmax 50 \
+										--outFileNamePrefix arriba/$1-nodedup/$1. > arriba/$1-nodedup/$1.Aligned.out.bam")
 
 
 arriba/$1-nodedup/$1-nodedup.tsv : arriba/$1-nodedup/$1.Aligned.out.bam
-	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(ARRIBA_ENV),"set -o pipefail && \
-													  $$(ARRIBA_EXE) -x arriba/$1-nodedup/$1.Aligned.out.bam \
-													  -o arriba/$1-nodedup/$1-nodedup.tsv -O arriba/$1-nodedup/$1-nodedup.discarded.tsv \
-													  -a $$(ASSEMBLY_FA) \
-													  -g $$(ANNOTATION_GTF) \
-													  -b $$(BLACKLIST_TSV) \
-													  -k $$(KNOWN_FUSIONS_TSV) \
-													  -t $$(KNOWN_FUSIONS_TSV) \
-													  -p $$(PROTEIN_DOMAINS_GFF3)")
+	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(ARRIBA_ENV),"set -o pipefail && \
+								$$(ARRIBA_EXE) -x arriba/$1-nodedup/$1.Aligned.out.bam \
+								-o arriba/$1-nodedup/$1-nodedup.tsv -O arriba/$1-nodedup/$1-nodedup.discarded.tsv \
+								-a $$(ASSEMBLY_FA) \
+								-g $$(ANNOTATION_GTF) \
+								-b $$(BLACKLIST_TSV) \
+								-k $$(KNOWN_FUSIONS_TSV) \
+								-t $$(KNOWN_FUSIONS_TSV) \
+								-p $$(PROTEIN_DOMAINS_GFF3)")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call arriba-nodedup,$(sample))))
 
+define arriba-dedup
+arriba/$1-dedup/$1.1.fastq.gz : bam/$1.bam
+	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
+					$$(SAMTOOLS) sort -T bam/$1 -O bam -n -@ 4 -m 6G $$(<) | \
+					bedtools bamtofastq -i - -fq >(gzip -c > arriba/$1-dedup/$1.1.fastq.gz) -fq2 >(gzip -c > arriba/$1-dedup/$1.2.fastq.gz)")
+
+arriba/$1-dedup/$1.Aligned.out.bam : arriba/$1-dedup/$1.1.fastq.gz
+	$$(call RUN,-c -n $(THREADS) -s 1G -m 2G -v $(ARRIBA_ENV) -w 72:00:00,"set -o pipefail && \
+										STAR \
+										--runThreadN $$(THREADS) \
+										--genomeDir $$(STAR_INDEX_DIR) \
+										--genomeLoad NoSharedMemory \
+										--readFilesIn arriba/$1-dedup/$1.1.fastq.gz arriba/$1-dedup/$1.2.fastq.gz \
+										--readFilesCommand zcat \
+										--outStd BAM_Unsorted \
+										--outSAMtype BAM Unsorted \
+										--outSAMunmapped Within \
+										--outBAMcompression 0 \
+										--outFilterMultimapNmax 50 \
+										--peOverlapNbasesMin 10 \
+										--alignSplicedMateMapLminOverLmate 0.5 \
+										--alignSJstitchMismatchNmax 5 -1 5 5 \
+										--chimSegmentMin 10 \
+										--chimOutType WithinBAM HardClip \
+										--chimJunctionOverhangMin 10 \
+										--chimScoreDropMax 30 \
+										--chimScoreJunctionNonGTAG 0 \
+										--chimScoreSeparation 1 \
+										--chimSegmentReadGapMax 3 \
+										--chimMultimapNmax 50 \
+										--outFileNamePrefix arriba/$1-dedup/$1. > arriba/$1-dedup/$1.Aligned.out.bam")
+
+
+arriba/$1-dedup/$1-dedup.tsv : arriba/$1-dedup/$1.Aligned.out.bam
+	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(ARRIBA_ENV),"set -o pipefail && \
+								$$(ARRIBA_EXE) -x arriba/$1-dedup/$1.Aligned.out.bam \
+								-o arriba/$1-dedup/$1-dedup.tsv -O arriba/$1-dedup/$1-dedup.discarded.tsv \
+								-a $$(ASSEMBLY_FA) \
+								-g $$(ANNOTATION_GTF) \
+								-b $$(BLACKLIST_TSV) \
+								-k $$(KNOWN_FUSIONS_TSV) \
+								-t $$(KNOWN_FUSIONS_TSV) \
+								-p $$(PROTEIN_DOMAINS_GFF3)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+                $(eval $(call arriba-dedup,$(sample))))
+
+
 
 ..DUMMY := $(shell mkdir -p version; \
-			 $(ARRIBA) -h > version/arriba.txt)
+			 $(ARRIBA_EXE) -h > version/arriba.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: arriba

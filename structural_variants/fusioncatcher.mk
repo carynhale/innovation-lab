@@ -2,12 +2,12 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/fusion_catcher.$(NOW)
 
-CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
-
 fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).2.fastq.gz) \
 		 		 $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/out/taskcomplete) \
 		 		 fusioncatcher/summary.txt
+				 
+CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
 
 define merged-fastq
 fusioncatcher/$1/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
