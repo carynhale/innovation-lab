@@ -90,7 +90,7 @@ $(foreach sample,$(SAMPLES),\
 define hs-metrics
 metrics/$1_aln_hs_metrics.txt : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
-									  java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									  $$(CALC_HS_METRICS) \
 									  R=$(REF_FASTA) \
 									  I=$$(<) \
 									  O=$$(@) \
@@ -100,7 +100,7 @@ metrics/$1_aln_hs_metrics.txt : star/$1.Aligned.sortedByCoord.out.bam
 
 metrics/$1_aln_dd_hs_metrics.txt : bam/$1.bam
 	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
-								 	  java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+								 	  $$(CALC_HS_METRICS) \
 									  R=$(REF_FASTA) \
 									  I=$$(<) \
 									  O=$$(@) \
