@@ -5,13 +5,16 @@ LOGDIR ?= log/rnaseq_metrics.$(NOW)
 REF_FLAT ?= $(HOME)/share/lib/resource_files/refFlat_ensembl.v75.txt
 RIBOSOMAL_INTERVALS ?= $(HOME)/share/lib/resource_files/Homo_sapiens.GRCh37.75.rRNA.interval_list
 STRAND_SPECIFICITY ?= NONE
+TARGETS_LIST ?= $(HOME)/share/lib/resource_files/IDT_exome_research_targets.list
 
 rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_alignment_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_insert_metrics.txt) \
+				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_hs_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_rnaseq_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_alignment_metrics.txt) \
 				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_insert_metrics.txt) \
+				 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_hs_metrics.txt) \
 				 summary/rnaseq_aln_metrics.txt \
 				 summary/alignment_aln_metrics.txt \
 				 summary/insert_aln_metrics.txt \
@@ -83,6 +86,31 @@ metrics/$1_aln_dd_insert_metrics.txt : bam/$1.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call insert-size-metrics,$(sample))))
+		
+define hs-metrics
+metrics/$1_aln_hs_metrics.txt : star/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
+									  java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									  R=$(REF_FASTA) \
+									  I=$$(<) \
+									  O=$$(@) \
+									  BAIT_INTERVALS=$(TARGETS_LIST) \
+									  TARGET_INTERVALS=$(TARGETS_LIST) \
+									  TMP_DIR=$(TMPDIR)")
+
+metrics/$1_aln_dd_hs_metrics.txt : bam/$1.bam
+	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
+								 	  java -Djava.io.tmpdir=$(TMPDIR) -Xms2G -Xmx8G -jar $$(PICARD_JAR) CalculateHsMetrics \
+									  R=$(REF_FASTA) \
+									  I=$$(<) \
+									  O=$$(@) \
+									  BAIT_INTERVALS=$(TARGETS_LIST) \
+									  TARGET_INTERVALS=$(TARGETS_LIST) \
+									  TMP_DIR=$(TMPDIR)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call hs-metrics,$(sample))))
 
 
 summary/rnaseq_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metrics.txt)
