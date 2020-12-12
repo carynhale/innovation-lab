@@ -22,7 +22,9 @@ rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metric
 				 summary/rnaseq_aln_dd_metrics.txt \
 				 summary/alignment_aln_dd_metrics.txt \
 				 summary/insert_aln_dd_metrics.txt \
-				 summary/dv200_aln_dd_metrics.txt
+				 summary/dv200_aln_dd_metrics.txt \
+				 summary/aln_hs_metrics.txt \
+				 summary/aln_dd_hs_metrics.txt
 
 define rnaseq-metrics
 metrics/$1_aln_rnaseq_metrics.txt : star/$1.Aligned.sortedByCoord.out.bam
@@ -144,6 +146,14 @@ summary/dv200_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_al
 summary/dv200_aln_dd_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
                                      $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 8 --sample_names '$(SAMPLES)'")
+                                     
+summary/aln_hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
+                                     $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 9 --sample_names '$(SAMPLES)'")
+
+summary/aln_dd_hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_dd_hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
+                                     $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 10 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 			 echo "picard" >> version/rnaseq_metrics.txt; \
