@@ -4,12 +4,12 @@ LOGDIR ?= log/merge_split_fastq.$(NOW)
 
 fastq: $(foreach sample,$(SAMPLES),fastq/$(sample).1.fastq.gz fastq/$(sample).2.fastq.gz)
 
-define merged-fastq
-fastq/$1.%.fastq.gz : $$(foreach split,$2,fastq/$$(split).%.fastq.gz)
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) | gzip -c > $$(@)")
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
+#define merged-fastq
+#fastq/$1.%.fastq.gz : $$(foreach split,$2,fastq/$$(split).%.fastq.gz)
+#	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) | gzip -c > $$(@)")
+#endef
+#$(foreach sample,$(SAMPLES),\
+#		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 define merged-fastq2
 fastq/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
