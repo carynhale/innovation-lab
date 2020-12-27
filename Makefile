@@ -53,6 +53,10 @@ TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
 
+TARGETS += bismark_bt2
+bismark_bt2 :
+	$(call RUN_MAKE,innovation-lab/aligners/bismark_bt2.mk)
+
 TARGETS += star_align
 star_align :
 	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
