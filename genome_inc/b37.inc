@@ -15,7 +15,7 @@ REF_MSI = $(REF_DIR)/b37/human_g1k_v37_msi.list
 ENSEMBL = $(HOME)/share/lib/resource_files/Ensemble_b37.RData
 STAR_REF = $(REF_DIR)/STAR_b37
 KALLISTO_INDEX = $(REF_DIR)/b37/ensembl_v75-0.43.0_kallisto_index
-BISMARK_GENOME = $(REF_DIR)/b37/
+BISMARK_GENOME = $(REF_DIR)/b37/bismark_bt2/
 
 endif
 B37_INC = true
