@@ -25,8 +25,8 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
 
-BISMARK_PARALLEL = 4
-BISMARK_THREADS = 20
+BISMARK_PARALLEL = 8
+BISMARK_THREADS = 40
 BISMARK_MEM_THREAD = 4G
 
 define copy-fastq
