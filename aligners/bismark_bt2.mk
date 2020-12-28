@@ -39,16 +39,16 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 
 define fastq-to-bam
 bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
-	$$(call RUN,-c -s 24G -m 36G -v $(BISMARK_ENV),"set -o pipefail && \
-						        cd bismark/$1 && \
-						        bismark --fastq \
-						        --genome_folder $$(BISMARK_GENOME) \
-						        -1 $1_R1.fastq.gz \
-						        -2 $1_R2.fastq.gz \
-						        --output_dir . && \
-						        mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
-						        mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
-						        cd ../..")
+	$$(call RUN,-c -s 24G -m 36G -v $(BISMARK_ENV) -w 72:00:00,"set -o pipefail && \
+								    cd bismark/$1 && \
+								    bismark --fastq \
+								    --genome_folder $$(BISMARK_GENOME) \
+								    -1 $1_R1.fastq.gz \
+								    -2 $1_R2.fastq.gz \
+								    --output_dir . && \
+								    mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
+								    mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
+								    cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
