@@ -3,29 +3,24 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
-bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.bam) \
-	  
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX__F1R2.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX__F2R1.bam) \
-
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.rrbs_summary_metrics) \
-	  
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.txt) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.txt) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.txt) \
-
-	  summary/rrbs_metrics.txt \
-	  summary/alignment_metrics.txt
-
+bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz)
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.bam) \
+#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX.bam) \
+#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX__F1R2.bam) \
+#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX__F2R1.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.txt) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.txt) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.txt) \
+#	  summary/rrbs_metrics.txt \
+#	  summary/alignment_metrics.txt
 
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
