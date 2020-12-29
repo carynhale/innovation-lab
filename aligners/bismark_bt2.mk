@@ -74,13 +74,13 @@ bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 						       cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
 
 bismark/$1/$1_aln_srt_MD_FX.bam : bismark/$1/$1_aln_srt_MD.bam
-	$$(call RUN,-c -n 1 -s 12G -m 18G -w 72:00:00,"set -o pipefail && \
-						       $$(FIX_MATE) \
-						       INPUT=$$(<) \
-						       OUTPUT=$$(@) \
-						       SORT_ORDER=coordinate \
-						       COMPRESSION_LEVEL=0 \
-						       CREATE_INDEX=true")
+	$$(call RUN,-c -n 12 -s 3G -m 4G -w 72:00:00,"set -o pipefail && \
+						      $$(FIX_MATE) \
+						      INPUT=$$(<) \
+						      OUTPUT=$$(@) \
+						      SORT_ORDER=coordinate \
+						      COMPRESSION_LEVEL=0 \
+						      CREATE_INDEX=true")
 
 endef
 $(foreach sample,$(SAMPLES),\
