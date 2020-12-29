@@ -4,8 +4,8 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.bam) \
@@ -23,7 +23,7 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 #	  summary/alignment_metrics.txt
 
 SAMTOOLS_THREADS = 8
-SAMTOOLS_MEM_THREAD = 2G
+SAMTOOLS_MEM_THREAD = 5G
 
 BISMARK_PARALLEL = 8
 BISMARK_THREADS = 40
@@ -57,10 +57,10 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
 								    					   cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
-									       $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
-									       $$(SAMTOOLS) index $$(@) && \
-									       cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
+											   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
+											   $$(SAMTOOLS) index $$(@) && \
+											   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 
 bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
