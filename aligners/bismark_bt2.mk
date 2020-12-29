@@ -6,8 +6,8 @@ LOGDIR ?= log/bismark_bt2.$(NOW)
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.bam) \
 #	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX.bam) \
@@ -63,24 +63,24 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 											   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 
 bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 12G -m 18G -w 72:00,"set -o pipefail && \
-						     $$(MARK_DUP) \
-						     INPUT=$$(<) \
-						     OUTPUT=$$(@) \
-						     METRICS_FILE=bismark/$1/$1_cl_aln_srt.txt \
-						     REMOVE_DUPLICATES=false \
-						     ASSUME_SORTED=true && \
-						     $$(SAMTOOLS) index $$(@) && \
-						     cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
+	$$(call RUN, -c -n 12 -s 3G -m 4G -w 12:00:00,"set -o pipefail && \
+						       $$(MARK_DUP) \
+						       INPUT=$$(<) \
+						       OUTPUT=$$(@) \
+						       METRICS_FILE=bismark/$1/$1_cl_aln_srt.txt \
+						       REMOVE_DUPLICATES=false \
+						       ASSUME_SORTED=true && \
+						       $$(SAMTOOLS) index $$(@) && \
+						       cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
 
 bismark/$1/$1_aln_srt_MD_FX.bam : bismark/$1/$1_aln_srt_MD.bam
-	$$(call RUN,-c -n 1 -s 12G -m 18G,"set -o pipefail && \
-					   $$(FIX_MATE) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   SORT_ORDER=coordinate \
-					   COMPRESSION_LEVEL=0 \
-					   CREATE_INDEX=true")
+	$$(call RUN,-c -n 1 -s 12G -m 18G -w 72:00:00,"set -o pipefail && \
+						       $$(FIX_MATE) \
+						       INPUT=$$(<) \
+						       OUTPUT=$$(@) \
+						       SORT_ORDER=coordinate \
+						       COMPRESSION_LEVEL=0 \
+						       CREATE_INDEX=true")
 
 endef
 $(foreach sample,$(SAMPLES),\
