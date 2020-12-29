@@ -5,8 +5,8 @@ LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.bam) \
@@ -57,21 +57,21 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
 								    					   cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 12:00:00,"set -o pipefail && \
 											   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 											   $$(SAMTOOLS) index $$(@) && \
 											   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 
 bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 12G -m 18G,"set -o pipefail && \
-					    $$(MARK_DUP) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    METRICS_FILE=bismark/$1/$1_cl_aln_srt.txt \
-					    REMOVE_DUPLICATES=false \
-					    ASSUME_SORTED=true && \
-					    $$(SAMTOOLS) index $$(@) && \
-					    cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
+	$$(call RUN, -c -n 1 -s 12G -m 18G -w 72:00,"set -o pipefail && \
+						     $$(MARK_DUP) \
+						     INPUT=$$(<) \
+						     OUTPUT=$$(@) \
+						     METRICS_FILE=bismark/$1/$1_cl_aln_srt.txt \
+						     REMOVE_DUPLICATES=false \
+						     ASSUME_SORTED=true && \
+						     $$(SAMTOOLS) index $$(@) && \
+						     cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
 
 bismark/$1/$1_aln_srt_MD_FX.bam : bismark/$1/$1_aln_srt_MD.bam
 	$$(call RUN,-c -n 1 -s 12G -m 18G,"set -o pipefail && \
