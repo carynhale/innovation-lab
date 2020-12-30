@@ -98,12 +98,12 @@ bismark/$1/$1_aln_srt_MD_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 
 bismark/$1/$1_aln_srt_MD_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 12:00:00,"set -o pipefail && \
-											  $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > bismark/$1/$1_aln_srt__F2R1.bam && \
-											  $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2R1.bam && \
-											  $$(SAMTOOLS) view -b -f 80 $$(<) > bismark/$1/$1_aln_srt__F2F1.bam && \
-											  $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2F1.bam && \
-											  $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F2R1.bam bismark/$1/$1_aln_srt__F2F1.bam && \
-											  $$(SAMTOOLS) index $$(@)")
+											   $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > bismark/$1/$1_aln_srt__F2R1.bam && \
+											   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2R1.bam && \
+											   $$(SAMTOOLS) view -b -f 80 $$(<) > bismark/$1/$1_aln_srt__F2F1.bam && \
+											   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2F1.bam && \
+											   $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F2R1.bam bismark/$1/$1_aln_srt__F2F1.bam && \
+											   $$(SAMTOOLS) index $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
