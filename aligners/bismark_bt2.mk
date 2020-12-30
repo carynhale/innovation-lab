@@ -81,29 +81,54 @@ bismark/$1/$1_aln_srt_MD_FX.bam : bismark/$1/$1_aln_srt_MD.bam
 						      SORT_ORDER=coordinate \
 						      COMPRESSION_LEVEL=0 \
 						      CREATE_INDEX=true")
+						      
+bismark/$1/$1_aln_srt_MD_FX_RG.bam : bismark/$1/$1_aln_srt_MD_FX.bam
+	$$(call RUN, -c -n 12 -s 3G -m 4G -w 24:00:00,"set -o pipefail && \
+						       $$(ADD_RG) \
+						       INPUT=$$(<) \
+						       OUTPUT=$$(@) \
+						       RGID=$1 \
+						       RGLB=$1 \
+						       RGPL=illumina \
+						       RGPU=NA \
+						       RGSM=$1 && \
+						       $$(SAMTOOLS) index $$(@) && \
+						       cp bismark/$1/$1_aln_srt_MD_FX_RG.bam.bai bismark/$1/$1_aln_srt_MD_FX_RG.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-to-bam,$(sample))))
 
 define filter-bam
-bismark/$1/$1_aln_srt_MD_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 12:00:00,"set -o pipefail && \
-											   $$(SAMTOOLS) view -b -f 144 $$(<) > bismark/$1/$1_aln_srt__F1R2.bam && \
-											   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F1R2.bam && \
-											   $$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > bismark/$1/$1_aln_srt__F1F2.bam && \
-											   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F1F2.bam && \
-											   $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F1R2.bam bismark/$1/$1_aln_srt__F1F2.bam && \
-											   $$(SAMTOOLS) index $$(@)")
+bismark/$1/$1_aln_srt_MD_FX__F1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
+	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
+						$$(SAMTOOLS) view -b -f 144 $$(<) > $$(@) && \
+						$$(SAMTOOLS) index $$(@)")
 
-bismark/$1/$1_aln_srt_MD_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 12:00:00,"set -o pipefail && \
-											   $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > bismark/$1/$1_aln_srt__F2R1.bam && \
-											   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2R1.bam && \
-											   $$(SAMTOOLS) view -b -f 80 $$(<) > bismark/$1/$1_aln_srt__F2F1.bam && \
-											   $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2F1.bam && \
-											   $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F2R1.bam bismark/$1/$1_aln_srt__F2F1.bam && \
-											   $$(SAMTOOLS) index $$(@)")
+bismark/$1/$1_aln_srt_MD_FX__R2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
+	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
+						$$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > $$(@) && \
+						$$(SAMTOOLS) index $$(@)")
+
+bismark/$1/$1_aln_srt_MD_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_FX__F1.bam bismark/$1/$1_aln_srt_MD_FX__R2.bam
+	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
+						$$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
+						$$(SAMTOOLS) index $$(@)")
+											   
+bismark/$1/$1_aln_srt_MD_FX__F2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
+	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
+						$$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > $$(@) && \
+						$$(SAMTOOLS) index $$(@)")
+
+bismark/$1/$1_aln_srt_MD_FX__R1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
+	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
+						$$(SAMTOOLS) view -b -f 80 $$(<) > $$(@) && \
+						$$(SAMTOOLS) index $$(@)")
+
+bismark/$1/$1_aln_srt_MD_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_FX__F2.bam bismark/$1/$1_aln_srt_MD_FX__R1.bam
+	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
+						$$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
+						$$(SAMTOOLS) index $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -178,8 +203,6 @@ bismark/$1/$1_aln_srt_MD_FX__F2R1.txt : bismark/$1/$1_aln_srt_MD_FX__F2R1.bam
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
-		
-
 		
 summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.rrbs_summary_metrics)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
