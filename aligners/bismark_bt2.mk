@@ -3,14 +3,7 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
-bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F1R2.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX__F2R1.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX.bam) \
+bismark : $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX.bam) \
 	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX__F1R2.bam) \
 	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_FX__F2R1.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_FX.rrbs_summary_metrics) \
@@ -54,13 +47,16 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
 								    					   --output_dir . && \
 								    					   mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
 								    					   mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
-								    					   cd ../..")
+								    					   cd ../.. && \
+													   $$(RM) bismark/$1/$1_R1.fastq.gz && \
+													   $$(RM) bismark/$1/$1_R2.fastq.gz")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 12:00:00,"set -o pipefail && \
 											   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 											   $$(SAMTOOLS) index $$(@) && \
-											   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
+											   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai && \
+											   $$(RM) $$(^)")
 
 bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 	$$(call RUN, -c -n 12 -s 3G -m 4G -w 12:00:00,"set -o pipefail && \
@@ -71,7 +67,8 @@ bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 						       REMOVE_DUPLICATES=false \
 						       ASSUME_SORTED=true && \
 						       $$(SAMTOOLS) index $$(@) && \
-						       cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
+						       cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai && \
+						       $$(RM)  $$(^)")
 
 bismark/$1/$1_aln_srt_MD_FX.bam : bismark/$1/$1_aln_srt_MD.bam
 	$$(call RUN,-c -n 12 -s 3G -m 4G -w 24:00:00,"set -o pipefail && \
@@ -80,7 +77,8 @@ bismark/$1/$1_aln_srt_MD_FX.bam : bismark/$1/$1_aln_srt_MD.bam
 						      OUTPUT=$$(@) \
 						      SORT_ORDER=coordinate \
 						      COMPRESSION_LEVEL=0 \
-						      CREATE_INDEX=true")
+						      CREATE_INDEX=true && \
+						      $$(RM) $$(^)")
 						      
 bismark/$1/$1_aln_srt_MD_FX_RG.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN, -c -n 12 -s 3G -m 4G -w 24:00:00,"set -o pipefail && \
@@ -103,7 +101,7 @@ define filter-bam
 bismark/$1/$1_aln_srt_MD_FX__F1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
 						$$(SAMTOOLS) view -b -f 144 $$(<) > $$(@) && \
-						$$(SAMTOOLS) index $$(@)")
+						$$(SAMTOOLS) index $$(@) &&")
 
 bismark/$1/$1_aln_srt_MD_FX__R2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
@@ -113,7 +111,9 @@ bismark/$1/$1_aln_srt_MD_FX__R2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 bismark/$1/$1_aln_srt_MD_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_FX__F1.bam bismark/$1/$1_aln_srt_MD_FX__R2.bam
 	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
 						$$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
-						$$(SAMTOOLS) index $$(@)")
+						$$(SAMTOOLS) index $$(@) && \
+						$$(RM) $$(<) && \
+						$$(RM) $$(<<)")
 											   
 bismark/$1/$1_aln_srt_MD_FX__F2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
@@ -128,7 +128,9 @@ bismark/$1/$1_aln_srt_MD_FX__R1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 bismark/$1/$1_aln_srt_MD_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_FX__F2.bam bismark/$1/$1_aln_srt_MD_FX__R1.bam
 	$$(call RUN,-c -s 2G -m 4G -w 12:00:00,"set -o pipefail && \
 						$$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
-						$$(SAMTOOLS) index $$(@)")
+						$$(SAMTOOLS) index $$(@) && \
+						$$(RM) $$(<) && \
+						$$(RM) $$(<<)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -139,19 +141,22 @@ bam/$1_aln_srt_MD_FX.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_MD_FX.bam.bai bam/$1_aln_srt_MD_FX.bai")
+				    cp bam/$1_aln_srt_MD_FX.bam.bai bam/$1_aln_srt_MD_FX.bai && \
+				    $$(RM) $$(^)")
 
 bam/$1_aln_srt_MD_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_FX__F1R2.bam
 	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_MD_FX__F1R2.bam.bai bam/$1_aln_srt_MD_FX__F1R2.bai")
+				    cp bam/$1_aln_srt_MD_FX__F1R2.bam.bai bam/$1_aln_srt_MD_FX__F1R2.bai && \
+				    $$(RM) $$(^)")
 
 bam/$1_aln_srt_MD_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_FX__F2R1.bam
 	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_MD_FX__F2R1.bam.bai bam/$1_aln_srt_MD_FX__F2R1.bai")
+				    cp bam/$1_aln_srt_MD_FX__F2R1.bam.bai bam/$1_aln_srt_MD_FX__F2R1.bai && \
+				    $$(RM) $$(^)")
 
 endef
 $(foreach sample,$(SAMPLES),\
