@@ -6,24 +6,24 @@ SUM_READS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads.R
 SUM_EXONS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads_byexon.R
 
 sum_reads : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt) \
-			sumreads/rpkm_bygene.txt \
-			sumreads/counts_bygene.txt \
+	    sumreads/rpkm_bygene.txt \
+	    sumreads/counts_bygene.txt \
             $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt) \
-			sumreads/rpkm_byexon.txt \
+	    sumreads/rpkm_byexon.txt \
             sumreads/counts_byexon.txt
 
 sumreads/%.sumreads_bygene.txt : bam/%.bam bam/%.bam.bai
 	$(call RUN,-n 1 -s 24G -m 48G -v $(SUMREADS_ENV),"$(RSCRIPT) $(SUM_READS_RSCRIPT) \
-                                                      --genome $(REF) \
-                                                      --in_file $(<) \
-                                                      --out_file $(@)")
+							  --genome $(REF) \
+							  --in_file $(<) \
+							  --out_file $(@)")
 
 sumreads/%.sumreads_byexon.txt : bam/%.bam bam/%.bam.bai
 	$(call RUN,-n 1 -s 24G -m 48G -v $(SUMREADS_ENV),"$(RSCRIPT) $(SUM_EXONS_RSCRIPT) \
-                                                      --genome $(REF) \
-                                                      --in_file $(<) \
-                                                      --out_file $(@) \
-                                                      --target_file $(TARGETS_FILE)")
+							  --genome $(REF) \
+							  --in_file $(<) \
+							  --out_file $(@) \
+							  --target_file $(TARGETS_FILE)")
 
 sumreads/rpkm_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt)
 	cut -f 2 $< > $@; \
@@ -43,7 +43,7 @@ sumreads/counts_byexon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumr
 
 
 ..DUMMY := $(shell mkdir -p version; \
-			 R --version >> version/sum_reads.txt)
+	     R --version >> version/sum_reads.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: sum_reads
