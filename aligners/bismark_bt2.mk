@@ -86,38 +86,38 @@ $(foreach sample,$(SAMPLES),\
 
 define filter-bam
 bismark/$1/$1_aln_srt_MD_FX__F1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
-	$$(call RUN,-c -s 4G -m 8G -w 12:00:00,"set -o pipefail && \
-						$$(SAMTOOLS) view -b -f 144 $$(<) > $$(@) && \
-						$$(SAMTOOLS) index $$(@) &&")
+	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
+						 $$(SAMTOOLS) view -b -f 144 $$(<) > $$(@) && \
+						 $$(SAMTOOLS) index $$(@) &&")
 
 bismark/$1/$1_aln_srt_MD_FX__R2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
-	$$(call RUN,-c -s 4G -m 8G -w 12:00:00,"set -o pipefail && \
-						$$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > $$(@) && \
-						$$(SAMTOOLS) index $$(@)")
+	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
+						 $$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > $$(@) && \
+						 $$(SAMTOOLS) index $$(@)")
 
 bismark/$1/$1_aln_srt_MD_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_FX__F1.bam bismark/$1/$1_aln_srt_MD_FX__R2.bam
-	$$(call RUN,-c -s 4G -m 8G -w 12:00:00,"set -o pipefail && \
-						$$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
-						$$(SAMTOOLS) index $$(@) && \
-						$$(RM) $$(<) && \
-						$$(RM) $$(<<)")
+	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
+						 $$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
+						 $$(SAMTOOLS) index $$(@) && \
+						 $$(RM) $$(<) && \
+						 $$(RM) $$(<<)")
 											   
 bismark/$1/$1_aln_srt_MD_FX__F2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
-	$$(call RUN,-c -s 4G -m 8G -w 12:00:00,"set -o pipefail && \
-						$$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > $$(@) && \
-						$$(SAMTOOLS) index $$(@)")
+	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
+						 $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > $$(@) && \
+						 $$(SAMTOOLS) index $$(@)")
 
 bismark/$1/$1_aln_srt_MD_FX__R1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
-	$$(call RUN,-c -s 4G -m 8G -w 12:00:00,"set -o pipefail && \
-						$$(SAMTOOLS) view -b -f 80 $$(<) > $$(@) && \
-						$$(SAMTOOLS) index $$(@)")
+	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
+						 $$(SAMTOOLS) view -b -f 80 $$(<) > $$(@) && \
+						 $$(SAMTOOLS) index $$(@)")
 
 bismark/$1/$1_aln_srt_MD_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_FX__F2.bam bismark/$1/$1_aln_srt_MD_FX__R1.bam
-	$$(call RUN,-c -s 4G -m 8G -w 12:00:00,"set -o pipefail && \
-						$$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
-						$$(SAMTOOLS) index $$(@) && \
-						$$(RM) $$(<) && \
-						$$(RM) $$(<<)")
+	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
+						 $$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
+						 $$(SAMTOOLS) index $$(@) && \
+						 $$(RM) $$(<) && \
+						 $$(RM) $$(<<)")
 
 endef
 $(foreach sample,$(SAMPLES),\
