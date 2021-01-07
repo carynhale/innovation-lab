@@ -88,7 +88,7 @@ define filter-bam
 bismark/$1/$1_aln_srt_MD_FX__F1.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
 						 $$(SAMTOOLS) view -b -f 144 $$(<) > $$(@) && \
-						 $$(SAMTOOLS) index $$(@) &&")
+						 $$(SAMTOOLS) index $$(@)")
 
 bismark/$1/$1_aln_srt_MD_FX__R2.bam : bismark/$1/$1_aln_srt_MD_FX.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
