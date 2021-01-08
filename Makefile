@@ -204,18 +204,6 @@ TARGETS += manta
 manta :
 	$(call RUN_MAKE,innovation-lab/structural_variants/manta.mk)
 
-TARGETS += lumpy
-lumpy :
-	$(call RUN_MAKE,innovation-lab/structural_variants/lumpy.mk)
-
-TARGETS += hydra
-hydra :
-	$(call RUN_MAKE,innovation-lab/structural_variants/hydra.mk)
-
-TARGETS += delly
-delly :
-	$(call RUN_MAKE,innovation-lab/structural_variants/delly.mk)
-	
 
 #==================================================
 # RNA structural variant/fusion callers
@@ -236,26 +224,6 @@ fusion_catcher :
 TARGETS += star_fusion
 star_fusion :
 	$(call RUN_MAKE,innovation-lab/structural_variants/starfusion.mk)
-
-TARGETS += soap_fuse
-soap_fuse :
-	$(call RUN_MAKE,innovation-lab/structural_variants/soapfuse.mk)
-
-TARGETS += map_splice
-map_splice :
-	$(call RUN_MAKE,innovation-lab/structural_variants/mapsplice.mk)
-
-TARGETS += onco_fuse
-onco_fuse :
-	$(call RUN_MAKE,innovation-lab/structural_variants/oncofuse.mk)
-
-TARGETS += integrate
-integrate :
-	$(call RUN_MAKE,innovation-lab/structural_variants/integrate.mk)
-
-TARGETS += tophat_fusion
-tophat_fusion :
-	$(call RUN_MAKE,innovation-lab/structural_variants/tophat.mk)
 
 
 #==================================================
