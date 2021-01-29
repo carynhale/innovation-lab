@@ -503,6 +503,15 @@ metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt : bam
 					   OUTPUT=$$(@) \
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+					   
+metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					   $$(COLLECT_GC_BIAS) \
+					   INPUT=$$(<) \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.pdf \
+					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					   SUMMARY_OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
