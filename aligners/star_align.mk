@@ -11,18 +11,18 @@ BAM_DUP_TYPE = none
 SEQ_PLATFROM = illumina
 
 STAR_OPTS = --genomeDir $(STAR_REF) \
-            --outSAMtype BAM SortedByCoordinate \
-			--twopassMode Basic \
-            --outReadsUnmapped None \
-            --chimSegmentMin 12 \
-            --chimJunctionOverhangMin 12 \
-            --alignSJDBoverhangMin 10 \
-            --alignMatesGapMax 200000 \
-            --alignIntronMax 200000 \
-            --chimSegmentReadGapMax parameter 3 \
-            --alignSJstitchMismatchNmax 5 -1 5 5 \
-            --chimOutType WithinBAM \
-			--quantMode GeneCounts
+	    --outSAMtype BAM SortedByCoordinate \
+	    --twopassMode Basic \
+	    --outReadsUnmapped None \
+	    --chimSegmentMin 12 \
+	    --chimJunctionOverhangMin 12 \
+	    --alignSJDBoverhangMin 10 \
+	    --alignMatesGapMax 200000 \
+	    --alignIntronMax 200000 \
+	    --chimSegmentReadGapMax parameter 3 \
+	    --alignSJstitchMismatchNmax 5 -1 5 5 \
+	    --chimOutType WithinBAM \
+	    --quantMode GeneCounts
 
 star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
                                    star/$(sample).Aligned.sortedByCoord.out.bam.bai \
