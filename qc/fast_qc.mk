@@ -11,7 +11,7 @@ fastqc/$1/taskcomplete.txt : $3
 							  $(FASTQC) \
 							  -o fastqc/$1 \
 							  '$$^' && \
-							  touch fastqc/$1/taskcomplete.txt")
+							  echo $1 > fastqc/$1/taskcomplete.txt")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
