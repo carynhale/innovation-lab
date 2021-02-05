@@ -4,10 +4,6 @@ include innovation-lab/config/align.inc
 LOGDIR = log/star_align.$(NOW)
 
 ALIGNER := star
-BAM_NO_REALN = true
-BAM_NO_RECAL = true
-BAM_NO_FILTER = true
-BAM_DUP_TYPE = none
 SEQ_PLATFROM = illumina
 
 STAR_OPTS = --genomeDir $(STAR_REF) \
