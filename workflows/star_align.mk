@@ -37,7 +37,6 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
 	$$(call RUN,-n $(STAR_THREADS) -s 4G -m 8G,"set -o pipefail && \
 						    STAR $$(STAR_OPTS) \
 						    --outFileNamePrefix star/$1. \
-						    --runThreadN $$(STAR_THREADS) \
 						    --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
 						    --readFilesIn $$^ \
 						    --readFilesCommand zcat")
