@@ -4,7 +4,7 @@ include innovation-lab/config/align.inc
 LOGDIR = log/star_align.$(NOW)
 
 SEQ_PLATFROM = illumina
-STAR_THREADS = 16
+STAR_THREADS = 4
 
 STAR_OPTS = --genomeDir $(STAR_REF) \
 	    --runThreadN $(STAR_THREADS) \
@@ -34,7 +34,7 @@ star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam 
 
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3
-	$$(call RUN,-n $(STAR_THREADS) -s 2G -m 4G,"set -o pipefail && \
+	$$(call RUN,-n $(STAR_THREADS) -s 4G -m 8G,"set -o pipefail && \
 						    STAR $$(STAR_OPTS) \
 						    --outFileNamePrefix star/$1. \
 						    --runThreadN $$(STAR_THREADS) \
