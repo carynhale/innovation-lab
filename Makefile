@@ -244,7 +244,7 @@ rnaseq_metrics :
 
 TARGETS += fastqc
 fastqc :
-	$(call RUN_MAKE,innovation-lab/qc/fastqc.mk)
+	$(call RUN_MAKE,innovation-lab/qc/fast_qc.mk)
 
 TARGETS += interval_qc
 interval_qc :
