@@ -15,7 +15,7 @@ fastqc/$1/taskcomplete.txt : $3
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
-	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+	$(if $(fq.$(ss)),$(eval $(call fast-qc,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(FASTQC_ENV)/bin/$(FASTQC) --version &> version/fastqc.txt)
