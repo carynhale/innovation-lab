@@ -1,4 +1,4 @@
-include modules/Makefile.inc
+include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/fastqc.$(NOW)
 
