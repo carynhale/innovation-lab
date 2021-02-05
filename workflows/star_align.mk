@@ -8,23 +8,23 @@ STAR_THREADS = 16
 
 STAR_OPTS = --genomeDir $(STAR_REF) \
 	    --runThreadN $(STAR_THREADS) \
-	    --sjdbGTFfile $(HOME)/share/lib/resource_files/Ensembl/GRCh37/Annotation/Genes/mirna.gtf
-	    --alignEndsType EndToEnd
-	    --outFilterMismatchNmax 1
-	    --outFilterMultimapScoreRange 0
-	    --quantMode TranscriptomeSAM GeneCounts
-	    --outReadsUnmapped Fastx
-	    --outSAMtype BAM SortedByCoordinate
-	    --outFilterMultimapNmax 10
-	    --outSAMunmapped Within
-	    --outFilterScoreMinOverLread 0
-	    --outFilterMatchNminOverLread 0
-	    --outFilterMatchNmin 16
-	    --alignSJDBoverhangMin 1000
-	    --alignIntronMax 1
-	    --outWigType wiggle
-	    --outWigStrand Stranded
-	    --outWigNorm RPM
+	    --sjdbGTFfile $(HOME)/share/lib/resource_files/Ensembl/GRCh37/Annotation/Genes/mirna.gtf \
+	    --alignEndsType EndToEnd \
+	    --outFilterMismatchNmax 1 \
+	    --outFilterMultimapScoreRange 0 \
+	    --quantMode TranscriptomeSAM GeneCounts \
+	    --outReadsUnmapped Fastx \
+	    --outSAMtype BAM SortedByCoordinate \
+	    --outFilterMultimapNmax 10 \
+	    --outSAMunmapped Within \
+	    --outFilterScoreMinOverLread 0 \
+	    --outFilterMatchNminOverLread 0 \
+	    --outFilterMatchNmin 16 \
+	    --alignSJDBoverhangMin 1000 \
+	    --alignIntronMax 1 \
+	    --outWigType wiggle \
+	    --outWigStrand Stranded \
+	    --outWigNorm RPM \
 
 star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
                                    star/$(sample).Aligned.sortedByCoord.out.bam.bai \
@@ -34,13 +34,13 @@ star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam 
 
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3
-	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
-                                   STAR $$(STAR_OPTS) \
-                                   --outFileNamePrefix star/$1. \
-                                   --runThreadN 4 \
-                                   --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
-                                   --readFilesIn $$^ \
-                                   --readFilesCommand zcat")
+	$$(call RUN,-n $(STAR_THREADS) -s 2G -m 4G,"set -o pipefail && \
+						    STAR $$(STAR_OPTS) \
+						    --outFileNamePrefix star/$1. \
+						    --runThreadN $$(STAR_THREADS) \
+						    --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
+						    --readFilesIn $$^ \
+						    --readFilesCommand zcat")
                                    
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
