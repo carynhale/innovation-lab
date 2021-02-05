@@ -24,7 +24,7 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 	    --alignIntronMax 1 \
 	    --outWigType wiggle \
 	    --outWigStrand Stranded \
-	    --outWigNorm RPM \
+	    --outWigNorm RPM
 
 star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
                                    star/$(sample).Aligned.sortedByCoord.out.bam.bai \
