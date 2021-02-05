@@ -5,7 +5,7 @@ LOGDIR ?= log/fastqc.$(NOW)
 fast_qc : $(foreach sample,$(SAMPLES),fastqc/$(sample)/taskcomplete.txt)
 
 define fast-qc
-fastqc/$1/taskcomplete : $3
+fastqc/$1/taskcomplete.txt : $3
 	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(FASTQC_ENV),"set -o pipefail && \
 							  mkdir -p fastqc/$1 && \
 							  $(FASTQC) \
