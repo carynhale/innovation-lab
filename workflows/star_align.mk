@@ -3,26 +3,28 @@ include innovation-lab/config/align.inc
 
 LOGDIR = log/star_align.$(NOW)
 
-ALIGNER := star
-BAM_NO_REALN = true
-BAM_NO_RECAL = true
-BAM_NO_FILTER = true
-BAM_DUP_TYPE = none
 SEQ_PLATFROM = illumina
+STAR_THREADS = 16
 
 STAR_OPTS = --genomeDir $(STAR_REF) \
-            --outSAMtype BAM SortedByCoordinate \
-			--twopassMode Basic \
-            --outReadsUnmapped None \
-            --chimSegmentMin 12 \
-            --chimJunctionOverhangMin 12 \
-            --alignSJDBoverhangMin 10 \
-            --alignMatesGapMax 200000 \
-            --alignIntronMax 200000 \
-            --chimSegmentReadGapMax parameter 3 \
-            --alignSJstitchMismatchNmax 5 -1 5 5 \
-            --chimOutType WithinBAM \
-			--quantMode GeneCounts
+	    --runThreadN $(STAR_THREADS) \
+	    --sjdbGTFfile $(HOME)/share/lib/resource_files/Ensembl/GRCh37/Annotation/Genes/mirna.gtf
+	    --alignEndsType EndToEnd
+	    --outFilterMismatchNmax 1
+	    --outFilterMultimapScoreRange 0
+	    --quantMode TranscriptomeSAM GeneCounts
+	    --outReadsUnmapped Fastx
+	    --outSAMtype BAM SortedByCoordinate
+	    --outFilterMultimapNmax 10
+	    --outSAMunmapped Within
+	    --outFilterScoreMinOverLread 0
+	    --outFilterMatchNminOverLread 0
+	    --outFilterMatchNmin 16
+	    --alignSJDBoverhangMin 1000
+	    --alignIntronMax 1
+	    --outWigType wiggle
+	    --outWigStrand Stranded
+	    --outWigNorm RPM
 
 star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
                                    star/$(sample).Aligned.sortedByCoord.out.bam.bai \
@@ -63,7 +65,7 @@ $(foreach ss,$(SPLIT_SAMPLES), \
     
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" > version/star_align.txt; \
-			 STAR --version >> version/star_align.txt; \
+	     STAR --version >> version/star_align.txt; \
              $(SAMTOOLS) --version >> version/star_align.txt)
 .SECONDARY: 
 .DELETE_ON_ERROR:
