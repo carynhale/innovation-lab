@@ -19,6 +19,7 @@ BISMARK_ENV ?= $(HOME)/share/usr/env/bismark-0.22.1
 UMITOOLS_ENV ?= $(HOME)/share/usr/env/umi-tools-1.0.1
 KALLISTO_ENV ?= $(HOME)/share/usr/env/kallisto-0.46.2
 ARRIBA_ENV ?= $(HOME)/share/usr/env/arriba-2.0.0
+FASTQC_ENV ?= $(HOME)/share/usr/env/cutadapt-3.2
 
 # aliases
 PYTHON ?= python
@@ -38,6 +39,8 @@ GENOTYPE_VARIANTS ?= genotype_variants
 VCF2MAF ?= vcf2maf.pl
 DEFUSE ?= defuse_run.pl
 STAR_FUSION ?= STAR-Fusion
+FASTQC ?= fastqc
+CUTADAPT ?= cutadapt
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)

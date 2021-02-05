@@ -1,19 +1,24 @@
 include modules/Makefile.inc
 
-FASTQC_SUMMARY_PLOT = $(RSCRIPT) $(SCRIPTS_DIR)/qc/fastqc_summary.R
-
 LOGDIR ?= log/fastqc.$(NOW)
 
-.PHONY: fastqc
-.SECONDARY: 
+fast_qc : $(foreach sample,$(SAMPLES),fastqc/$(sample)/taskcomplete.txt)
 
-fastqc : $(foreach sample,$(SAMPLES),fastqc/$(sample)_fastqc/summary.txt) fastqc/all_summary.txt
+define fast-qc
+fastqc/$1/taskcomplete : $3
+	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(FASTQC_ENV),"set -o pipefail && \
+							  mkdir -p fastqc/$1 && \
+							  $(FASTQC) \
+							  -o fastqc/$1 \
+							  '$$^' && \
+							  touch fastqc/$1/taskcomplete.txt")
 
-fastqc/%_fastqc.zip : bam/%.bam
-	$(call RUN,-N $*_fastqc -s 4G -m 12G,"$(FASTQC) -o fastqc $^")
+endef
+$(foreach ss,$(SPLIT_SAMPLES),\
+	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 
-fastqc/%_fastqc/summary.txt : fastqc/%_fastqc.zip
-	$(INIT) $(UNZIP) -o -d fastqc $< &> $(LOG) && touch $@
-
-fastqc/all_summary.txt : $(foreach sample,$(SAMPLES),fastqc/$(sample)_fastqc/summary.txt)
-	$(INIT) $(FASTQC_SUMMARY_PLOT) --outPrefix fastqc/all_summary $^ &> $(LOG)
+..DUMMY := $(shell mkdir -p version; \
+	     $(FASTQC_ENV)/bin/$(FASTQC) --version &> version/fastqc.txt)
+.SECONDARY:
+.DELETE_ON_ERROR:
+.PHONY: fast_qc
