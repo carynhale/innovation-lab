@@ -387,9 +387,4 @@ TARGETS += beadlink_prism
 beadlink_prism :
 	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
 	
-TARGETS += star_mirna
-star_mirna :
-	$(call RUN_MAKE,innovation-lab/workflows/star_align.mk)
-	
-
 .PHONY : $(TARGETS)
