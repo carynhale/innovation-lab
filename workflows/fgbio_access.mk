@@ -24,7 +24,7 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
-	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR.bam) \
+	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
 	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
 	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
 	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam)
