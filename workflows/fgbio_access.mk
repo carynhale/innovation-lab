@@ -47,7 +47,18 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt)
+	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
+#	       summary/umi_counts.txt \
+#	       summary/umi_duplex_counts.txt \
+#	       summary/duplex_family_sizes.txt \
+#	       summary/duplex_yield_metrics.txt
+	       summary/idx_metrics.txt
+#	       summary/aln_metrics.txt \
+#	       summary/insert_metrics.txt \
+#	       summary/oxog_metrics.txt \
+#	       summary/hs_metrics.txt \
+#	       summary/all_family_sizes.txt \
+
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -483,6 +494,10 @@ metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : fgbio
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-duplex,$(sample))))
+		
+summary/idx_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/fgbio_access.R --option 1 --sample_names '$(SAMPLES)'")
 
 	
 ..DUMMY := $(shell mkdir -p version; \
