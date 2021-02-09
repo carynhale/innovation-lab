@@ -27,23 +27,23 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
 	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam) \
 	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
-	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.idx_stats.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.aln_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.insert_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.oxog_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt)
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt)
+	       $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam)
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.idx_stats.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.aln_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.insert_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX.oxog_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt)
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
+#	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt)
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
