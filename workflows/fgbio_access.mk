@@ -372,6 +372,10 @@ metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.oxog_metrics.txt : fgbio/$1/$
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 					    
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call picard-metrics-collapsed,$(sample))))
+					    
 define picard-metrics-simplex
 metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
@@ -405,38 +409,38 @@ endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-simplex,$(sample))))
 		
-#define picard-metrics-duplex
-#metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-#	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-#					    $$(BAM_INDEX) \
-#					    INPUT=$$(<) \
-#					    > $$(@)")
-#									   
-#metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-#	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-#					    $$(COLLECT_ALIGNMENT_METRICS) \
-#					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
-#					    INPUT=$$(<) \
-#					    OUTPUT=$$(@)")
-#									   
-#metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-#	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-#					    $$(COLLECT_INSERT_METRICS) \
-#					    INPUT=$$(<) \
-#					    OUTPUT=$$(@) \
-#					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.pdf \
-#					    MINIMUM_PCT=0.5")
-#									   
-#metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-#	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-#					    $$(COLLECT_OXOG_METRICS) \
-#					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
-#					    INPUT=$$(<) \
-#					    OUTPUT=$$(@)")
-#
-#endef
-#$(foreach sample,$(SAMPLES),\
-# 		$(eval $(call picard-metrics-duplex,$(sample))))
+define picard-metrics-duplex
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(BAM_INDEX) \
+					    INPUT=$$(<) \
+					    > $$(@)")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_ALIGNMENT_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@)")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_INSERT_METRICS) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.pdf \
+					    MINIMUM_PCT=0.5")
+									   
+metrics/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_OXOG_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call picard-metrics-duplex,$(sample))))
 
 	
 ..DUMMY := $(shell mkdir -p version; \
