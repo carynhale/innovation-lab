@@ -46,7 +46,7 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
-	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt)
+	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt)
 
 BWAMEM_THREADS = 12
