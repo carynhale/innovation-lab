@@ -56,7 +56,7 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       summary/umi_counts.txt \
 	       summary/umi_duplex_counts.txt \
 	       summary/duplex_family_sizes.txt \
-	       summary/duplex_yield_metrics.txt
+	       summary/duplex_yield_metrics.txt \
 	       summary/all_family_sizes.txt
 
 
