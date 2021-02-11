@@ -1,19 +1,10 @@
 include innovation-lab/Makefile.inc
-include innovation-lab/config/align.inc
-include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
 
 LOGDIR = log/umi_tools.$(NOW)
 
-ALIGNER := star
-BAM_NO_REALN = true
-BAM_NO_RECAL = true
-BAM_NO_FILTER = true
-BAM_DUP_TYPE = none
 SEQ_PLATFROM = illumina
-
 UMI_PATTERN = NNNX
-
 STAR_OPTS = --genomeDir $(STAR_REF) \
             --outSAMtype BAM SortedByCoordinate \
 	    --twopassMode Basic \
@@ -27,7 +18,7 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
             --chimSegmentReadGapMax parameter 3 \
             --alignSJstitchMismatchNmax 5 -1 5 5 \
             --chimOutType WithinBAM \
-			--quantMode GeneCounts
+	    --quantMode GeneCounts
 			
 umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz) \
@@ -116,7 +107,3 @@ summary/umi_per_position_summary.txt : $(foreach sample,$(SAMPLES),bam/$(sample)
 .SECONDARY: 
 .DELETE_ON_ERROR:
 .PHONY: umi_tools
-
-include innovation-lab/fastq_tools/fastq.mk
-include innovation-lab/bam_tools/process_bam.mk
-include innovation-lab/aligners/align.mk
