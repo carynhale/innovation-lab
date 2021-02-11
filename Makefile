@@ -244,7 +244,7 @@ rnaseq_metrics :
 
 TARGETS += fastqc
 fastqc :
-	$(call RUN_MAKE,innovation-lab/qc/fastqc.mk)
+	$(call RUN_MAKE,innovation-lab/qc/fast_qc.mk)
 
 TARGETS += interval_qc
 interval_qc :
@@ -282,6 +282,10 @@ sum_reads :
 TARGETS += kallisto
 kallisto :
 	$(call RUN_MAKE,innovation-lab/rna_seq/kallisto.mk)
+	
+TARGETS += sum_mirnas
+sum_mirnas :
+	$(call RUN_MAKE,innovation-lab/rna_seq/sum_mirnas.mk)
 
 #==================================================
 # Clonality
@@ -383,5 +387,4 @@ TARGETS += beadlink_prism
 beadlink_prism :
 	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
 	
-
 .PHONY : $(TARGETS)
