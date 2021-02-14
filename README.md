@@ -1,12 +1,16 @@
 # innovation-lab
 [![Build Status](https://travis-ci.com/ndbrown6/innovation-lab.svg?token=WQkjmC3gu8Nd4XcQmFkn&branch=master)](https://travis-ci.com/ndbrown6/innovation-lab)
 
-## Introduction
-This is a lightweight fork of a previous project [modules](https://github.com/ndbrown6/modules).
 
-## Installation
-For outside users, the easiest way to download/ execute this pipeline is to install
-locally miniconda with its dependencies and clone this git repository
+## Introduction
+This is a lightweight fork of a previous project [modules](https://github.com/jrflab/modules).
+
+
+## Dependencies
+- An instance of [anaconda](https://www.anaconda.com) or [miniconda](https://conda.io/en/latest/miniconda.html)
+- IMB's Platform Load Sharing Facility (LSF) for resource management
+- [Full dependencies](https://github.com/ndbrown6/innovation-lab/tree/master/conda)
+
 
 ```
 wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O $HOME/miniconda.sh
@@ -25,21 +29,3 @@ source activate $HOME/share/usr/env/innovation-lab-$INNOVATION_ENV_VERSION
 git clone https://github.com/ndbrown6/innovation-lab.git
 ```
 
-## Dependencies
-- An instance of [anaconda](https://www.anaconda.com) or [miniconda](https://conda.io/en/latest/miniconda.html)
-- IMB's Platform Load Sharing Facility (LSF) for resource management
-- [Full dependencies](https://github.com/ndbrown6/innovation-lab/tree/master/conda)
-
-## Best practices
-	
-### Conventions
-
-### Whole genome, whole exome and targeted sequencing
-
-## Detailed usage
-
-## Known issues
-
-## See also
-
-## Contributors
