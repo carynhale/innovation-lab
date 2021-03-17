@@ -33,7 +33,7 @@ msk_access :
 	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
 	
 TARGETS += pileup_metrics
-waltz_access :
+pileup_metrics :
 	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
 	
 TARGETS += genotype_access
