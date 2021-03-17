@@ -55,7 +55,7 @@ waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz : bam/$1
 					 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
 					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $$(REF_FASTA) .bed && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-simplex-pileup-without-duplicates.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals-without-duplicates.txt && \
 					 unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam && \
