@@ -26,6 +26,8 @@ waltz/$1_cl_aln_srt_MD_IR_FX2-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2.bam
 					 gzip $1_cl_aln_srt_MD_IR_FX2-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2-intervals.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2.bai && \
 					 cd ..")
 									 
 waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
@@ -40,6 +42,8 @@ waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup.txt.gz : bam/$1_cl_aln_
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-intervals.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai && \
 					 cd ..")
 									 
 waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
@@ -54,6 +58,8 @@ waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz : bam/$1
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-simplex-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bai && \
 					 cd ..")
 									 
 waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam
@@ -68,6 +74,8 @@ waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz : bam/$1_
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-intervals.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
 					 cd ..")
 
 endef
