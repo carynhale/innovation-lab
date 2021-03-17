@@ -516,7 +516,7 @@ waltz/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX-pileup.txt : fgbio/$1/$1_cl_aln
 				     cd waltz && \
 				     ln -sf ../fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam $1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam && \
 				     ln -sf ../fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bai $1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bai && \
-				     ln -sf ../fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bai $1.bai && \
+				     ln -sf ../fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam.bai $1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam.bai && \
 				     if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
 				     $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam $$(REF_FASTA) .bed && \
 				     unlink $1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam && \

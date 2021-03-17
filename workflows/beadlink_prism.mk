@@ -2,6 +2,7 @@ include innovation-lab/Makefile.inc
 include innovation-lab/config/fgbio.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
+include innovation-lab/config/waltz.inc
 
 LOGDIR ?= log/beadlink_prism.$(NOW)
 
@@ -79,6 +80,7 @@ GATK_MEM_THREAD = 2G
 UMI_LIST = $(HOME)/share/lib/resource_files/NEB_Prism_UMIs.txt
 
 TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
+WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 
 define copy-fastq
 fgbio/$1/$1_R1.fastq.gz : $3
@@ -568,6 +570,37 @@ metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.tx
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-duplex,$(sample))))
+		
+define pileup-metric
+waltz/$1_cl_aln_srt_MD_IR_FX2-pileup.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+				     cd waltz && \
+				     ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2.bam $1_cl_aln_srt_MD_IR_FX2.bam && \
+				     ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2.bai $1_cl_aln_srt_MD_IR_FX2.bai && \
+				     ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2.bai $1_cl_aln_srt_MD_IR_FX2.bam.bai && \
+				     if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
+				     $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2.bam $$(REF_FASTA) .bed && \
+				     unlink $1_cl_aln_srt_MD_IR_FX2.bam && \
+				     unlink $1_cl_aln_srt_MD_IR_FX2.bai && \
+				     unlink $1_cl_aln_srt_MD_IR_FX2.bam.bai && \
+				     cd ../..")
+									 
+waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
+				     cd waltz && \
+				     ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam && \
+				     ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai && \
+				     ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam.bai && \
+				     if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
+				     $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam $$(REF_FASTA) .bed && \
+				     unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam && \
+				     unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai && \
+				     unlink $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam.bai && \
+				     cd ../..")
+								 
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call pileup-metric,$(sample))))
 
 		
 summary/idx_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt)
