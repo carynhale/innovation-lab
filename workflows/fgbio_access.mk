@@ -2,6 +2,7 @@ include innovation-lab/Makefile.inc
 include innovation-lab/config/fgbio.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
+include innovation-lab/config/waltz.inc
 
 LOGDIR ?= log/fgbio_access.$(NOW)
 
