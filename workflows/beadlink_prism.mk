@@ -55,6 +55,8 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) \
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) \
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2-pileup.txt) \
+		 $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup.txt) \
 		 summary/umi_counts.txt \
 		 summary/umi_duplex_counts.txt \
 		 summary/umi_fixed_counts.txt \
