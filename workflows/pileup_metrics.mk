@@ -10,7 +10,7 @@ pileup_metrics : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz)
 
 
-WALTZ_MIN_MAPQ ?= 30
+WALTZ_MIN_MAPQ ?= 20
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 
 define waltz-genotype
