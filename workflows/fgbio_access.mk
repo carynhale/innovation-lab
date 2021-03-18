@@ -2,7 +2,6 @@ include innovation-lab/Makefile.inc
 include innovation-lab/config/fgbio.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
-include innovation-lab/config/waltz.inc
 
 LOGDIR ?= log/fgbio_access.$(NOW)
 
@@ -71,7 +70,6 @@ GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
 TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
-WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 
 define copy-fastq
 fgbio/$1/$1_R1.fastq.gz : $3
