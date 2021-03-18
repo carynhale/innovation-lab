@@ -10,7 +10,7 @@ pileup_metrics : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz)
 
 
-WALTZ_MIN_MAPQ ?= 20
+WALTZ_MIN_MAPQ ?= 30
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 
 define waltz-genotype
@@ -20,8 +20,7 @@ waltz/$1_cl_aln_srt_MD_IR_FX2-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2.bam
 					 cd waltz && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2.bam $1_cl_aln_srt_MD_IR_FX2.bam && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2.bai $1_cl_aln_srt_MD_IR_FX2.bai && \
-					 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2.bam $$(REF_FASTA) .bed && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2.bam $$(REF_FASTA) $$(WALTZ_BED_FILE) && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2-pileup.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2-intervals.txt && \
@@ -36,8 +35,7 @@ waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup.txt.gz : bam/$1_cl_aln_
 					 cd waltz && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai && \
-					 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam $$(REF_FASTA) .bed && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam $$(REF_FASTA) $$(WALTZ_BED_FILE) && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-intervals.txt && \
@@ -52,8 +50,7 @@ waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz : bam/$1
 					 cd waltz && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bai $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bai && \
-					 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $$(REF_FASTA) .bed && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $$(REF_FASTA) $$(WALTZ_BED_FILE) && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals.txt && \
@@ -68,8 +65,7 @@ waltz/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz : bam/$1_
 					 cd waltz && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam && \
 					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bai $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
-					 if [[ ! -f '.bed' ]]; then cp $$(WALTZ_BED_FILE) .bed; fi && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam $$(REF_FASTA) .bed && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(WALTZ_MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam $$(REF_FASTA) $$(WALTZ_BED_FILE) && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup-without-duplicates.txt && \
 					 gzip $1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-intervals.txt && \
