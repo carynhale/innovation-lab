@@ -100,7 +100,7 @@ waltz/intervals_duplex_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(JAVA8) -version &> version/pileup_metrics.txt; \
-	     R --version >> version/pileup_metrics.txt)
+	     $(RSCRIPT) --version >> version/pileup_metrics.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: pileup_metrics
