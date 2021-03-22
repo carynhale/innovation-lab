@@ -116,60 +116,6 @@ annotate_vcf_maf :
 
 
 #==================================================
-# Somatic variant callers
-#==================================================
-
-TARGETS += mutect
-mutect :
-	$(call RUN_MAKE,innovation-lab/variant_callers/mutect.mk)
-	
-TARGETS += varscan
-varscan :
-	$(call RUN_MAKE,innovation-lab/variant_callers/varscan.mk)
-	
-TARGETS += strelka
-strelka :
-	$(call RUN_MAKE,innovation-lab/variant_callers/strelka.mk)
-	
-TARGETS += scalpel
-scalpel :
-	$(call RUN_MAKE,innovation-lab/variant_callers/scalpel.mk)
-    
-TARGETS += lancet
-lancet :
-	$(call RUN_MAKE,innovation-lab/variant_callers/lancet.mk)
-	
-TARGETS += platypus
-platypus :
-	$(call RUN_MAKE,innovation-lab/variant_callers/platypus.mk)
-	
-	
-#==================================================
-# Special variant callers
-#==================================================
-	
-TARGETS += hla_polysolver
-hla_polysolver :
-	$(call RUN_MAKE,innovation-lab/variant_callers/somatic/hla_polysolver.mk)
-	
-TARGETS += msi_sensor
-msi_sensor :
-	$(call RUN_MAKE,innovation-lab/variant_callers/somatic/msi_sensor.mk)
-
-TARGETS += haplotype_caller
-haplotype_caller : 
-	$(call RUN_MAKE,innovation-lab/variant_callers/haplotype_caller.mk)
-	
-TARGETS += genotype_hotspot
-genotype_hotspot : 
-	$(call RUN_MAKE,innovation-lab/variant_callers/genotype_hotspots.mk)
-	
-TARGETS += multisample_genotype
-multisample_genotype :
-	$(call RUN_MAKE,innovation-lab/variant_callers/multisample_genotype.mk)
-	
-
-#==================================================
 # Copy number aberration callers
 #==================================================
 
