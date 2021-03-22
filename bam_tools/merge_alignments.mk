@@ -66,7 +66,6 @@ endef
  $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-alignments,$(sample))))
 
-
 ..DUMMY := $(shell mkdir -p version; \
 	     echo "picard" > version/merge_alignments.txt; \
 	     $(PICARD) MarkDuplicates --version >> version/merge_alignments.txt; \
