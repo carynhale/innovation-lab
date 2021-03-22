@@ -1,48 +1,46 @@
 include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
-LOGDIR ?= log/bam_interval_metrics.$(NOW)
-PHONY += metrics metrics/pileup metrics/cov metrics/picard metrics/summary metrics/report
+LOGDIR ?= log/bam_metrics.$(NOW)
 
-TARGETS_LIST ?= $(HOME)/share/reference/target_panels/MSK-IMPACT-468.list
-
-interval_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.txt) \
-			   	   $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-ontarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-offtarget.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-idx_stats.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-aln_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-insert_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-oxog_metrics.txt) \
-				   $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-hs_metrics.txt) \
-				   metrics/summary/metrics_idx.tsv \
-				   metrics/summary/metrics_aln.tsv \
-				   metrics/summary/metrics_insert.tsv \
-				   metrics/summary/metrics_insert_distribution.tsv \
-				   metrics/summary/metrics_oxog.tsv \
-				   metrics/summary/metrics_hs.tsv \
-				   metrics/summary/metrics_coverage.tsv \
-				   metrics/report/target_coverage.pdf \
-				   metrics/report/alignment_summary.pdf \
-				   metrics/report/insert_size_summary.pdf \
-				   metrics/report/insert_size_distribution.pdf \
-				   metrics/report/non_reference_calls.pdf \
-				   metrics/report/oxog_error_rate.pdf \
-				   metrics/report/read_alignment_summary.pdf \
-				   metrics/report/combined_report.pdf
+bam_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-ontarget.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-offtarget.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-idx_stats.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-aln_metrics.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-insert_metrics.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-oxog_metrics.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-hs_metrics.txt) \
+	      metrics/summary/metrics_idx.tsv \
+	      metrics/summary/metrics_aln.tsv \
+	      metrics/summary/metrics_insert.tsv \
+	      metrics/summary/metrics_insert_distribution.tsv \
+	      metrics/summary/metrics_oxog.tsv \
+	      metrics/summary/metrics_hs.tsv \
+	      metrics/summary/metrics_coverage.tsv \
+	      metrics/report/target_coverage.pdf \
+	      metrics/report/alignment_summary.pdf \
+	      metrics/report/insert_size_summary.pdf \
+	      metrics/report/insert_size_distribution.pdf \
+	      metrics/report/non_reference_calls.pdf \
+	      metrics/report/oxog_error_rate.pdf \
+	      metrics/report/read_alignment_summary.pdf \
+	      metrics/report/combined_report.pdf
 				   
+TARGETS_LIST ?= $(HOME)/share/reference/target_panels/MSK-IMPACT-468.list
 
 define pileup-metric
 metrics/pileup/$1-pileup.txt : bam/$1.bam
 	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-								 cp bam/$1.bam metrics/pileup/$1.bam && \
-								 cp bam/$1.bam.bai metrics/pileup/$1.bam.bai && \
-								 cp bam/$1.bai metrics/pileup/$1.bai && \
-								 cd metrics/pileup && \
-								 $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(TARGETS_FILE) && \
-								 rm -rf $1.bam && \
-								 rm -rf $1.bam.bai && \
-								 rm -rf $1.bai && \
-								 cd ../..")
+				     cp bam/$1.bam metrics/pileup/$1.bam && \
+				     cp bam/$1.bam.bai metrics/pileup/$1.bam.bai && \
+				     cp bam/$1.bai metrics/pileup/$1.bai && \
+				     cd metrics/pileup && \
+				     $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(TARGETS_FILE) && \
+				     rm -rf $1.bam && \
+				     rm -rf $1.bam.bai && \
+				     rm -rf $1.bai && \
+				     cd ../..")
 									 
 endef
 $(foreach sample,$(SAMPLES),\
