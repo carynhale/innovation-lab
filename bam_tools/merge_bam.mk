@@ -1,4 +1,5 @@
 include innovation-lab/Makefile.inc
+include innovation-lab/bam_tools/process_bam.mk
 
 LOGDIR = log/merge_bam.$(NOW)
 
@@ -30,11 +31,9 @@ bam/%.bam : merged_bam/%.rg.bam
 
 
 ..DUMMY := $(shell mkdir -p version && \
-			 echo "picard" > version/merge_bam.txt && \
-			 $(PICARD) MergeSamFiles --version >> version/merge_bam.txt
-			 $(SAMTOOLS) --version >> version/merge_bam.txt)
+	     echo "picard" > version/merge_bam.txt && \
+	     $(PICARD) MergeSamFiles --version >> version/merge_bam.txt
+	     $(SAMTOOLS) --version >> version/merge_bam.txt)
 .SECONDARY:
 .DELETE_ON_ERROR: 
 .PHONY : merge_bam
-
-include innovation-lab/bam_tools/process_bam.mk
