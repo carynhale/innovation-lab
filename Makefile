@@ -74,9 +74,9 @@ star_align :
 # BAM file utilities
 #==================================================
 
-TARGETS += fix_bam
-fix_bam :
-	$(call RUN_MAKE,innovation-lab/bam_tools/fix_bam.mk)
+TARGETS += merge_alignments
+merge_alignments :
+	$(call RUN_MAKE,innovation-lab/bam_tools/merge_alignments.mk)
 
 TARGETS += unmapped_fasta
 unmapped_fasta :
