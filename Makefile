@@ -36,6 +36,10 @@ TARGETS += beadlink_prism
 beadlink_prism :
 	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
 	
+TARGETS += fgbio_access
+fgbio_access :
+	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
+	
 
 #==================================================
 # MSK-ACCESS workflows
@@ -44,10 +48,6 @@ beadlink_prism :
 TARGETS += msk_access
 msk_access :
 	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
-	
-TARGETS += fgbio_access
-fgbio_access :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
 	
 TARGETS += pileup_metrics
 pileup_metrics :
@@ -233,35 +233,6 @@ TARGETS += fetch_impact
 fetch_impact :
 	$(call RUN_MAKE,innovation-lab/test/workflows/fetch_impact.mk)
 
-
-#==================================================
-# Reports
-#==================================================
-
-TARGETS += genome_summary
-genome_summary :
-	$(call RUN_MAKE,innovation-lab/summary/genomesummary.mk)
-
-TARGETS += mutation_summary
-mutation_summary :
-	$(call RUN_MAKE,innovation-lab/summary/mutationsummary.mk)
-	
-TARGETS += cravat_summary
-cravat_summary :
-	$(call RUN_MAKE,innovation-lab/summary/cravat_summary.mk)
-	
-TARGETS += copynumber_summary
-copynumber_summary :
-	$(call RUN_MAKE,innovation-lab/test/workflows/copynumber_summary.mk)
-	
-TARGETS += somatic_indels
-somatic_indels :
-	$(call RUN_MAKE,innovation-lab/test/workflows/somatic_indels.mk)
-	
-TARGETS += somatic_variants
-somatic_variants :
-	$(call RUN_MAKE,innovation-lab/test/workflows/somatic_variants.mk)
-	
 
 #==================================================
 # Annotations
