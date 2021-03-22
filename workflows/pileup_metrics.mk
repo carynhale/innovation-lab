@@ -83,20 +83,20 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
 		
 waltz/intervals_standard_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2-pileup.txt.gz)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 1 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
+					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
 waltz/intervals_collapsed_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX-pileup.txt.gz)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 2 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
+					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 
 waltz/intervals_simplex_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 3 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
+					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 3 --sample_names '$(SAMPLES)'")
 
 waltz/intervals_duplex_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 4 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
+					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --option 4 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(JAVA8) -version &> version/pileup_metrics.txt)
