@@ -148,7 +148,6 @@ TARGETS += star_fusion
 star_fusion :
 	$(call RUN_MAKE,innovation-lab/structural_variants/starfusion.mk)
 
-
 #==================================================
 # Quality control
 #==================================================
@@ -189,7 +188,6 @@ TARGETS += cluster_samples
 cluster_samples :
 	$(call RUN_MAKE,innovation-lab/qc/cluster_samples.mk)
 
-
 #==================================================
 # RNA sequencing
 #==================================================
@@ -209,19 +207,6 @@ kallisto :
 TARGETS += sum_mirnas
 sum_mirnas :
 	$(call RUN_MAKE,innovation-lab/rna_seq/sum_mirnas.mk)
-
-#==================================================
-# Clonality
-#==================================================
-
-TARGETS += absolute
-absolute :
-	$(call RUN_MAKE,innovation-lab/clonality/absolute.mk)
-	
-TARGETS += pyclone
-pyclone :
-	$(call RUN_MAKE,innovation-lab/clonality/pyclone.mk)
-
 
 #==================================================
 # Miscellaneous
