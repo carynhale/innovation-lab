@@ -40,7 +40,10 @@ TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
 	
-
+TARGETS += pileup_metrics
+pileup_metrics :
+	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
+	
 #==================================================
 # MSK-ACCESS workflows
 #==================================================
@@ -48,10 +51,6 @@ fgbio_access :
 TARGETS += msk_access
 msk_access :
 	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
-	
-TARGETS += pileup_metrics
-pileup_metrics :
-	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
 	
 TARGETS += genotype_access
 genotype_access :
