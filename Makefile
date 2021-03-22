@@ -48,9 +48,9 @@ pileup_metrics :
 # MSK-ACCESS workflows
 #==================================================
 
-TARGETS += msk_access
-msk_access :
-	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
+TARGETS += marianas_access
+marianas_access :
+	$(call RUN_MAKE,innovation-lab/workflows/marianas_access.mk)
 	
 TARGETS += genotype_access
 genotype_access :
