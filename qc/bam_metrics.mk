@@ -3,7 +3,7 @@ include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/bam_metrics.$(NOW)
 
-bam_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.txt) \
+bam_metrics : $(foreach sample,$(SAMPLES),waltz/$(sample)-pileup.txt.gz) \
 	      $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-ontarget.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/cov/$(sample)-offtarget.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/picard/$(sample)-idx_stats.txt) \
@@ -30,17 +30,20 @@ bam_metrics : $(foreach sample,$(SAMPLES),metrics/pileup/$(sample)-pileup.txt) \
 TARGETS_LIST ?= $(HOME)/share/reference/target_panels/MSK-IMPACT-468.list
 
 define pileup-metric
-metrics/pileup/$1-pileup.txt : bam/$1.bam
-	$$(call RUN,-c -s 6G -m 12G,"set -o pipefail && \
-				     cp bam/$1.bam metrics/pileup/$1.bam && \
-				     cp bam/$1.bam.bai metrics/pileup/$1.bam.bai && \
-				     cp bam/$1.bai metrics/pileup/$1.bai && \
-				     cd metrics/pileup && \
-				     $(HOME)/share/usr/jdk1.8.0_74/bin/java -server -Xms2G -Xmx8G -cp $(WALTZ) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $(REF_FASTA) $(TARGETS_FILE) && \
-				     rm -rf $1.bam && \
-				     rm -rf $1.bam.bai && \
-				     rm -rf $1.bai && \
-				     cd ../..")
+waltz/$1-pileup.txt.gz : bam/$1.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+					 mkdir -p waltz && \
+					 cd waltz && \
+					 ln -sf ../bam/$1.bam $1.bam && \
+					 ln -sf ../bam/$1.bai $1.bai && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics 20 $1.bam $$(REF_FASTA) $$(TARGETS_FILE) && \
+					 gzip $1-pileup.txt && \
+					 gzip $1-pileup-without-duplicates.txt && \
+					 gzip $1-intervals.txt && \
+					 gzip $1-intervals-without-duplicates.txt && \
+					 unlink $1.bam && \
+					 unlink $1.bai && \
+					 cd ..")
 									 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -193,8 +196,10 @@ metrics/report/combined_report.pdf : metrics/report/target_coverage.pdf metrics/
 									  metrics/report/read_alignment_summary.pdf \
 									  metrics/report/snps_clustering.pdf")
 									  
-include modules/qc/cluster_samples.mk
-
+..DUMMY := $(shell mkdir -p version; \
+	     echo "gatk3" > version/bam_metrics.txt; \
+	     $(GATK) --version >> version/bam_metrics.txt; \
+	     R --version >> version/bam_metrics.txt)
 .DELETE_ON_ERROR:
-.SECONDARY:
-.PHONY: $(PHONY)
+.SECONDARY: 
+.PHONY: bam_metrics
