@@ -52,7 +52,6 @@ TARGETS += cluster_access
 cluster_access :
 	$(call RUN_MAKE,innovation-lab/workflows/cluster_access.mk)
 
-
 #==================================================
 # FASTQ / BAM file aligners
 #==================================================
@@ -68,7 +67,6 @@ bismark_bt2 :
 TARGETS += star_align
 star_align :
 	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
-
 
 #==================================================
 # BAM file utilities
@@ -114,7 +112,6 @@ TARGETS += annotate_vcf_maf
 annotate_vcf_maf :
 	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_vcf_maf.mk)
 
-
 #==================================================
 # Copy number aberration callers
 #==================================================
@@ -130,24 +127,6 @@ ascat :
 TARGETS += cnvkit
 cnvkit :
 	$(call RUN_MAKE,innovation-lab/copy_number/cnvkit.mk)
-
-TARGETS += qdnaseq
-qdnaseq :
-	$(call RUN_MAKE,innovation-lab/test/workflows/qdna_seq.mk)
-	
-TARGETS += cnvaccess
-cnvaccess :
-	$(call RUN_MAKE,innovation-lab/test/workflows/cnv_access.mk)
-	
-
-#==================================================
-# DNA structural variant callers
-#==================================================
-
-TARGETS += manta
-manta :
-	$(call RUN_MAKE,innovation-lab/structural_variants/manta.mk)
-
 
 #==================================================
 # RNA structural variant/fusion callers
