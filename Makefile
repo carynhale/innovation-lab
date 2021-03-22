@@ -99,13 +99,8 @@ extract_fastq :
 	$(call RUN_MAKE,innovation-lab/fastq_tools/extract_fastq.mk)
 
 TARGETS += merge_fastq
-merge_fastq : 
-	$(call RUN_MAKE,innovation-lab/fastq_tools/merge_fastq.mk)
-
-TARGETS += merge_split_fastq
-merge_split_fastq :
+merge_fastq :
 	$(call RUN_MAKE,innovation-lab/fastq_tools/merge_split_fastq.mk)
-
 
 #==================================================
 # VCF file utilities
