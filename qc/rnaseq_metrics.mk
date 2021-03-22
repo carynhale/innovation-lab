@@ -14,7 +14,7 @@ rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_rnaseq_metrics.tx
 		 summary/rnaseq_metrics.txt \
 		 summary/alignment_metrics.txt \
 		 summary/insert_metrics.txt \
-		 summary/aln_hs_metrics.txt
+		 summary/hs_metrics.txt
 
 define rnaseq-metrics
 metrics/$1_rnaseq_metrics.txt : bam/$1.bam
@@ -71,19 +71,19 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call hs-metrics,$(sample))))
 
 
-summary/rnaseq_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metrics.txt)
+summary/rnaseq_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_rnaseq_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
-summary/alignment_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_alignment_metrics.txt)
+summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_alignment_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 									 
-summary/insert_aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_insert_metrics.txt)
+summary/insert_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 3 --sample_names '$(SAMPLES)'")
 
-summary/aln_hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_hs_metrics.txt)
+summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_hs_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
 
