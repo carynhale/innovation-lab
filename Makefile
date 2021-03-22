@@ -217,45 +217,5 @@ TARGETS += sum_mirnas
 sum_mirnas :
 	$(call RUN_MAKE,innovation-lab/rna_seq/sum_mirnas.mk)
 
-#==================================================
-# Miscellaneous
-#==================================================
-
-TARGETS += viral_detection
-viral_detection :
-	$(call RUN_MAKE,innovation-lab/test/workflows/viral_detection.mk)
-	
-TARGETS += krona_classify
-krona_classify :
-	$(call RUN_MAKE,innovation-lab/virus/krona_classify.mk)
-	
-TARGETS += fetch_impact
-fetch_impact :
-	$(call RUN_MAKE,innovation-lab/test/workflows/fetch_impact.mk)
-
-
-#==================================================
-# Annotations
-#==================================================
-
-TARGETS += ann_ext_vcf
-ann_ext_vcf: 
-	$(call RUN_MAKE,innovation-lab/vcf_tools/annotateExtVcf.mk)
-
-TARGETS += ann_somatic_vcf
-ann_somatic_vcf: 
-	$(call RUN_MAKE,innovation-lab/vcf_tools/annotateSomaticVcf.mk)
-
-TARGETS += ann_vcf
-ann_vcf: 
-	$(call RUN_MAKE,innovation-lab/vcf_tools/annotateVcf.mk)
-	
-TARGETS += cravat_annotation
-cravat_annotation :
-	$(call RUN_MAKE,innovation-lab/test/workflows/cravat_annotation.mk)
-	
-TARGETS += cravat_annotate
-cravat_annotate :
-	$(call RUN_MAKE,innovation-lab/vcf_tools/cravat_annotation.mk)
 
 .PHONY : $(TARGETS)
