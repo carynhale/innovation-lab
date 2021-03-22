@@ -165,10 +165,6 @@ TARGETS += bam_metrics
 bam_metrics :
 	$(call RUN_MAKE,innovation-lab/qc/bam_metrics.mk)
 
-TARGETS += bam_interval_metrics
-bam_interval_metrics :
-	$(call RUN_MAKE,innovation-lab/qc/bam_interval_metrics.mk)
-
 TARGETS += rnaseq_metrics
 rnaseq_metrics :
 	$(call RUN_MAKE,innovation-lab/qc/rnaseq_metrics.mk)
@@ -177,22 +173,6 @@ TARGETS += fast_qc
 fast_qc :
 	$(call RUN_MAKE,innovation-lab/qc/fast_qc.mk)
 
-TARGETS += interval_qc
-interval_qc :
-	$(call RUN_MAKE,innovation-lab/qc/interval_bam_qc.mk)
-
-TARGETS += rseqc
-rseqc :
-	$(call RUN_MAKE,innovation-lab/qc/rseqc.mk)
-
-TARGETS += qualimap
-qualimap :
-	$(call RUN_MAKE,innovation-lab/qc/qualimap_qc.mk)
-
-TARGETS += bam_stats
-bam_stats :
-	$(call RUN_MAKE,innovation-lab/qc/bam_stats.mk)
-	
 TARGETS += cluster_samples
 cluster_samples :
 	$(call RUN_MAKE,innovation-lab/qc/cluster_samples.mk)
