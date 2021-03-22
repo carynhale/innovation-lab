@@ -22,7 +22,7 @@ vcf/%.maf : vcf/%.vcf
 									--species homo_sapiens \
 									--ncbi-build GRCh37 \
 									--maf-center MSKCC && \
-									rm $$(TMPDIR)/$$(*).vep.vcf")
+									$$(RM) $$(TMPDIR)/$$(*).vep.vcf")
 
 endef
  $(foreach sample,$(SAMPLES),\
