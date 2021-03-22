@@ -32,6 +32,14 @@ TARGETS += msk_access
 msk_access :
 	$(call RUN_MAKE,innovation-lab/workflows/msk_access.mk)
 	
+TARGETS += fgbio_access
+fgbio_access :
+	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
+	
+TARGETS += beadlink_prism
+beadlink_prism :
+	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
+	
 TARGETS += pileup_metrics
 pileup_metrics :
 	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
@@ -82,11 +90,6 @@ TARGETS += merge_bam
 merge_bam :
 	$(call RUN_MAKE,innovation-lab/bam_tools/merge_bam.mk)
 	
-TARGETS += link_bam
-link_bam :
-	$(call RUN_MAKE,innovation-lab/bam_tools/link_bam.mk)
-
-
 #==================================================
 # FASTQ file utilities
 #==================================================
@@ -379,12 +382,6 @@ TARGETS += em_seq
 em_seq :
 	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
 	
-TARGETS += fgbio_access
-fgbio_access :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
-	
-TARGETS += beadlink_prism
-beadlink_prism :
-	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
+
 	
 .PHONY : $(TARGETS)
