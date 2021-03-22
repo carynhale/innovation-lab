@@ -25,7 +25,7 @@ endef
 RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+$(MAKE) -f $1,$(call RUN_QMAKE,$1,$(NUM_JOBS)))
 
 #==================================================
-# Beta testing
+# BETA testing
 #==================================================
 
 TARGETS += em_seq
