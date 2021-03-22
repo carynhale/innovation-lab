@@ -13,7 +13,7 @@ $(foreach sample,$(SAMPLES),\
 
 
 ..DUMMY := $(shell mkdir -p version; \
-			 $(SAMTOOLS) --version > version/unmapped_fasta.txt)
+	     $(SAMTOOLS) --version > version/unmapped_fasta.txt)
 .SECONDARY:
 .DELETE_ON_ERROR: 
 .PHONY: unmapped_fasta

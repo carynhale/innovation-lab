@@ -13,7 +13,7 @@ $(foreach sample,$(SAMPLES),\
 
 
 ..DUMMY := $(shell mkdir -p version; \
-			 $(SAMTOOLS) --version > version/unmapped_bam.txt)
+	     $(SAMTOOLS) --version > version/unmapped_bam.txt)
 .SECONDARY:
 .DELETE_ON_ERROR: 
 .PHONY: unmapped_bam
