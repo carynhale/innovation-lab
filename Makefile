@@ -25,6 +25,19 @@ endef
 RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+$(MAKE) -f $1,$(call RUN_QMAKE,$1,$(NUM_JOBS)))
 
 #==================================================
+# Beta testing
+#==================================================
+
+TARGETS += em_seq
+em_seq :
+	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
+	
+TARGETS += beadlink_prism
+beadlink_prism :
+	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
+	
+
+#==================================================
 # MSK-ACCESS workflows
 #==================================================
 
@@ -35,10 +48,6 @@ msk_access :
 TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
-	
-TARGETS += beadlink_prism
-beadlink_prism :
-	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
 	
 TARGETS += pileup_metrics
 pileup_metrics :
@@ -278,15 +287,4 @@ TARGETS += cravat_annotate
 cravat_annotate :
 	$(call RUN_MAKE,innovation-lab/vcf_tools/cravat_annotation.mk)
 
-
-#==================================================
-# Alpha testing
-#==================================================
-
-TARGETS += em_seq
-em_seq :
-	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
-	
-
-	
 .PHONY : $(TARGETS)
