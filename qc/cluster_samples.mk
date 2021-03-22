@@ -39,7 +39,8 @@ metrics/summary/snps_filtered.vcf : metrics/summary/snps_combined.vcf
 	
 metrics/summary/snps_filtered.tsv : metrics/summary/snps_filtered.vcf
 	$(call RUN, -c -n 1 -s 8G -m 12G -v $(VARIANT_ANNOTATION_ENV),"set -o pipefail && \
-								       $(CLUSTER_VCF) --switch 1")
+								       $(CLUSTER_VCF) \
+								       --switch 1")
 	
 metrics/report/snps_clustering.pdf : metrics/summary/snps_filtered.tsv
 	$(call RUN, -c -n 1 -s 12G -m 16G -v $(SUPERHEAT_ENV),"set -o pipefail && \
