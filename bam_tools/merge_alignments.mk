@@ -5,12 +5,12 @@ LOGDIR ?= log/merge_alignments.$(NOW)
 
 merge_alignments : $(foreach sample,$(SAMPLES),merged_alignments/$(sample).bam)
 
-define fix-bam
+define merge-alignments
 merged_alignments/%.ubam : bam/%.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
 					   $$(REVERT_SAM) \
 					   INPUT=$$(<) \
-					   OUTPUT=merged_alignments/$$(*).ubam \
+					   OUTPUT=$$(@) \
 					   SANITIZE=true \
 					   MAX_DISCARD_FRACTION=0.005 \
 					   ATTRIBUTE_TO_CLEAR=XT \
@@ -29,42 +29,42 @@ merged_alignments/%.fixed.bam : merged_alignments/%.ubam
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    UNMAPPED_BAM=$$(<) \
 					    ALIGNED_BAM=bam/$$(*).bam \
-					    OUTPUT=merged_alignments/$$(*).fixed.bam \
+					    OUTPUT=$$(@) \
 					    CREATE_INDEX=true \
 					    ADD_MATE_CIGAR=true \
 					    CLIP_ADAPTERS=true \
 					    CLIP_OVERLAPPING_READS=true \
 					    INCLUDE_SECONDARY_ALIGNMENTS=false \
 					    MAX_INSERTIONS_OR_DELETIONS=-1 && \
-					    rm -rf merged_alignments/$$(*).ubam")
+					    rm -rf $$(<)")
 					    
 merged_alignments/%.dedup.bam : merged_alignments/%.fixed.bam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 					    $$(MARK_DUP) \
 					    INPUT=$$(<) \
-					    OUTPUT=merged_alignments/$$(*).dedup.bam \
-					    METRICS_FILE=unprocessed_bam/$$(*).txt && \
-					    rm -rf merged_alignments/$$(*).fixed.bam")
+					    OUTPUT=$$(@) \
+					    METRICS_FILE=merged_alignments/$$(*).txt && \
+					    rm -rf $$(<)")
 					    
-fixed_bam/%.bam : unprocessed_bam/%.dedup.bam
+merged_alignments/%.bam : merged_alignments/%.dedup.bam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 					    $$(ADD_RG) \
 					    INPUT=$$(<) \
-					    OUTPUT=fixed_bam/$$(*).bam \
+					    OUTPUT=$$(@) \
 					    RGID=$$(*) \
 					    RGLB=$$(*) \
 					    RGPL=illumina \
 					    RGPU=NA \
 					    RGSM=$$(*) && \
-					    samtools index fixed_bam/$$(*).bam && \
-					    cp fixed_bam/$$(*).bam.bai fixed_bam/$$(*).bai && \
-					    rm -rf unprocessed_bam/$$(*).dedup.bam && \
-					    rm -rf unprocessed_bam/$$(*).fixed.bai && \
-					    rm -rf unprocessed_bam/$$(*).dedup.bai && \
-					    rm -rf unprocessed_bam/$$(*).txt")
+					    samtools index $$(@) && \
+					    cp merged_alignments/$$(*).bam.bai merged_alignments/$$(*).bai && \
+					    rm -rf merged_alignments/$$(*).dedup.bam && \
+					    rm -rf merged_alignments/$$(*).fixed.bai && \
+					    rm -rf merged_alignments/$$(*).dedup.bai && \
+					    rm -rf merged_alignments/$$(*).txt")
 endef
  $(foreach sample,$(SAMPLES),\
-		$(eval $(call fix-bam,$(sample))))
+		$(eval $(call merge-alignments,$(sample))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
