@@ -1,8 +1,8 @@
 include innovation-lab/Makefile.inc
 
-LOGDIR ?= log/unmapped_bam.$(NOW)
+LOGDIR ?= log/unmap_bam.$(NOW)
 
-unmapped_bam : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).bam)
+unmap_bam : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).bam)
 
 define extract-unmapped-reads
 unmapped_reads/%.bam : bam/%.bam
@@ -13,7 +13,7 @@ $(foreach sample,$(SAMPLES),\
 
 
 ..DUMMY := $(shell mkdir -p version; \
-	     $(SAMTOOLS) --version > version/unmapped_bam.txt)
+	     $(SAMTOOLS) --version > version/unmap_bam.txt)
 .SECONDARY:
 .DELETE_ON_ERROR: 
-.PHONY: unmapped_bam
+.PHONY: unmap_bam

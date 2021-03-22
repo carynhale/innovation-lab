@@ -78,13 +78,13 @@ TARGETS += merge_alignments
 merge_alignments :
 	$(call RUN_MAKE,innovation-lab/bam_tools/merge_alignments.mk)
 
-TARGETS += unmapped_fasta
-unmapped_fasta :
-	$(call RUN_MAKE,innovation-lab/bam_tools/unmapped_fasta.mk)
+TARGETS += unmap_fasta
+unmap_fasta :
+	$(call RUN_MAKE,innovation-lab/bam_tools/unmap_fasta.mk)
 	
-TARGETS += unmapped_bam
-unmapped_bam :
-	$(call RUN_MAKE,innovation-lab/bam_tools/unmapped_bam.mk)
+TARGETS += unmap_bam
+unmap_bam :
+	$(call RUN_MAKE,innovation-lab/bam_tools/unmap_bam.mk)
 
 TARGETS += merge_bam
 merge_bam :

@@ -60,81 +60,81 @@ endif
 
 %.filtered.bam : %.bam
 	$(call RUN,-s 6G -m 7G,"$(SAMTOOLS) view -bF $(BAM_FILTER_FLAGS) $< > $@ && \
-						  	$(RM) $<")
+				$(RM) $<")
 
 %.fixmate.bam : %.bam
 	$(call RUN,-s 9G -m 14G,"$(FIX_MATE) \
-							 INPUT=$< \
-							 OUTPUT=$@ && \
-							 $(RM) $<")
+				 INPUT=$< \
+				 OUTPUT=$@ && \
+				 $(RM) $<")
 
 %.recal_report.grp : %.bam %.bai
 	$(call RUN,-s 15G -m 15G,"$(call GATK_CMD,7G) \
-							  -T BaseRecalibrator \
-							  -R $(REF_FASTA) \
-							  $(BAM_BASE_RECAL_OPTS) \
-							  -I $< \
-							  -o $@")
+				  -T BaseRecalibrator \
+				  -R $(REF_FASTA) \
+				  $(BAM_BASE_RECAL_OPTS) \
+				  -I $< \
+				  -o $@")
 
 %.sorted.bam : %.bam
 	$(call RUN,-s 30G -m 30G,"$(SORT_SAM) I=$< O=$@ SO=coordinate VERBOSITY=ERROR && \
-							  $(RM) $<")
+				  $(RM) $<")
 
 %.markdup.bam : %.bam
 	$(call RUN,-s 22G -m 22G,"$(MKDIR) metrics && \
-							  $(MARK_DUP) \
-							  INPUT=$< \
-							  OUTPUT=$@ \
-							  METRICS_FILE=metrics/$(call strip-suffix,$(@F)).dup_metrics.txt && \
-							  $(RM) $<")
+				  $(MARK_DUP) \
+				  INPUT=$< \
+				  OUTPUT=$@ \
+				  METRICS_FILE=metrics/$(call strip-suffix,$(@F)).dup_metrics.txt && \
+				  $(RM) $<")
 
 %.rmdup.bam : %.bam
 	$(call RUN,-s 4G -m 7G,"$(SAMTOOLS) rmdup $< $@ && \
-							$(RM) $<")
+				$(RM) $<")
 
 %.clean.bam : %.bam
 	$(call RUN,-s 6G -m 12G,"$(CLEAN_BAM) \
-							 INPUT=$< \
-							 OUTPUT=$@")
+				 INPUT=$< \
+				 OUTPUT=$@")
 
 %.rg.bam : %.bam
 	$(call RUN,-s 12G -m 16G,"$(ADD_RG) \
-							  INPUT=$< \
-							  OUTPUT=$@ \
-							  RGLB=$(call strip-suffix,$(@F)) \
-							  RGPL=$(SEQ_PLATFORM) RGPU=00000000 \
-							  RGSM=$(call strip-suffix,$(@F)) \
-							  RGID=$(call strip-suffix,$(@F)) \
-							  VERBOSITY=ERROR && \
-							  $(RM) $<")
+				  INPUT=$< \
+				  OUTPUT=$@ \
+				  RGLB=$(call strip-suffix,$(@F)) \
+				  RGPL=$(SEQ_PLATFORM) RGPU=00000000 \
+				  RGSM=$(call strip-suffix,$(@F)) \
+				  RGID=$(call strip-suffix,$(@F)) \
+				  VERBOSITY=ERROR && \
+				  $(RM) $<")
 
 ifeq ($(SPLIT_CHR),true)
 define chr-target-realn
 %.$1.chr_split.intervals : %.bam %.bam.bai
 	$$(call RUN,-n 4 -s 4G -m 4G,"$$(call GATK_CMD,5G) \
-								  -T RealignerTargetCreator \
-								  -I $$(<) \
-								  -L $1 \
-								  -nt 4 -R $$(REF_FASTA)  -o $$@ $$(BAM_REALN_TARGET_OPTS)")
+				      -T RealignerTargetCreator \
+				      -I $$(<) \
+				      -L $1 \
+				      -nt 4 -R $$(REF_FASTA)  -o $$@ $$(BAM_REALN_TARGET_OPTS)")
 endef
 $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-target-realn,$(chr))))
 
 define chr-realn
 %.$(1).chr_realn.bam : %.bam %.$(1).chr_split.intervals %.bam.bai
 	$$(call RUN,-s 16G -m 16G,"if [[ -s $$(word 2,$$^) ]]; then $$(call GATK_CMD,4G) -T IndelRealigner \
-							   -I $$(<) -R $$(REF_FASTA) -L $1 -targetIntervals $$(word 2,$$^) \
-							   -o $$(@) $$(BAM_REALN_OPTS); \
-							   else $$(call GATK_CMD,8G) -T PrintReads -R $$(REF_FASTA) -I $$< -L $1 -o $$@ ; fi")
+				   -I $$(<) -R $$(REF_FASTA) -L $1 -targetIntervals $$(word 2,$$^) \
+				   -o $$(@) $$(BAM_REALN_OPTS); \
+				   else $$(call GATK_CMD,8G) -T PrintReads -R $$(REF_FASTA) -I $$< -L $1 -o $$@ ; fi")
 endef
 $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-realn,$(chr))))
 
 %.realn.bam : $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_realn.bam) $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_realn.bai)
 	$(call RUN,-n 2 -s 10G -m 11G,"$(MERGE_SAM) $(foreach i,$(filter %.bam,$^), I=$(i)) SORT_ORDER=coordinate O=$@ USE_THREADING=true && \
-								   $(RM) $^ $(@:.realn.bam=.bam)")
+				       $(RM) $^ $(@:.realn.bam=.bam)")
 
 %.recal.bam : $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_recal.bam) $(foreach chr,$(CHROMOSOMES),%.$(chr).chr_recal.bai)
 	$(call RUN,-n 2 -s 10G -m 11G,"$(MERGE_SAM) $(foreach i,$(filter %.bam,$^), I=$(i)) SORT_ORDER=coordinate O=$@ USE_THREADING=true && \
-								   $(RM) $^ $(@:.recal.bam=.bam)")
+				       $(RM) $^ $(@:.recal.bam=.bam)")
 
 define chr-recal
 %.$1.chr_recal.bam : %.bam %.recal_report.grp
@@ -146,18 +146,18 @@ else
 
 %.recal.bam : %.bam %.recal_report.grp
 	$(call RUN,-s 14G -m 15G,"$(call GATK_CMD,7G) -T PrintReads -R $(REF_FASTA) -I $< -BQSR $(word 2,$^) -o $@ && \
-							  $(RM) $<")
+				  $(RM) $<")
 
 %.realn.bam : %.bam %.intervals %.bam.bai
 	if [[ -s $(word 2,$^) ]]; then $(call RUN,-s 16G -m 16G,"$(call GATK_CMD,7G) -T IndelRealigner \
-															 -I $< -R $(REF_FASTA) -targetIntervals $(<<) \
-															 -o $@ $(BAM_REALN_OPTS) && $(RM) $<") ; \
-															 else mv $< $@ ; fi
+								 -I $< -R $(REF_FASTA) -targetIntervals $(<<) \
+								 -o $@ $(BAM_REALN_OPTS) && $(RM) $<") ; \
+								 else mv $< $@ ; fi
 
 %.intervals : %.bam %.bam.bai
 	$(call RUN,-n 4 -s 3G -m 3.5G,"$(call GATK_CMD,6G) -T RealignerTargetCreator \
-								   -I $< \
-								   -nt 4 -R $(REF_FASTA) -o $@ $(BAM_REALN_TARGET_OPTS)")
+				       -I $< \
+				       -nt 4 -R $(REF_FASTA) -o $@ $(BAM_REALN_TARGET_OPTS)")
 endif
 
 endif

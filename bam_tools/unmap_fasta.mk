@@ -1,8 +1,8 @@
 include innovation-lab/Makefile.inc
 
-LOGDIR ?= log/unmapped_fasta.$(NOW)
+LOGDIR ?= log/unmap_fasta.$(NOW)
 
-unmapped_fasta : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).fasta)
+unmap_fasta : $(foreach sample,$(SAMPLES),unmapped_reads/$(sample).fasta)
 
 define extract-unmapped-reads
 unmapped_reads/%.fasta : bam/%.bam
@@ -13,7 +13,7 @@ $(foreach sample,$(SAMPLES),\
 
 
 ..DUMMY := $(shell mkdir -p version; \
-	     $(SAMTOOLS) --version > version/unmapped_fasta.txt)
+	     $(SAMTOOLS) --version > version/unmap_fasta.txt)
 .SECONDARY:
 .DELETE_ON_ERROR: 
-.PHONY: unmapped_fasta
+.PHONY: unmap_fasta

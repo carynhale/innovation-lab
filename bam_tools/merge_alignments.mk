@@ -36,7 +36,7 @@ merged_alignments/%.fixed.bam : merged_alignments/%.ubam
 					    CLIP_OVERLAPPING_READS=true \
 					    INCLUDE_SECONDARY_ALIGNMENTS=false \
 					    MAX_INSERTIONS_OR_DELETIONS=-1 && \
-					    rm -rf $$(<)")
+					    $$(RM) $$(<)")
 					    
 merged_alignments/%.dedup.bam : merged_alignments/%.fixed.bam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
@@ -44,7 +44,7 @@ merged_alignments/%.dedup.bam : merged_alignments/%.fixed.bam
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
 					    METRICS_FILE=merged_alignments/$$(*).txt && \
-					    rm -rf $$(<)")
+					    $(RM) $$(<)")
 					    
 merged_alignments/%.bam : merged_alignments/%.dedup.bam
 	$$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
@@ -58,10 +58,10 @@ merged_alignments/%.bam : merged_alignments/%.dedup.bam
 					    RGSM=$$(*) && \
 					    samtools index $$(@) && \
 					    cp merged_alignments/$$(*).bam.bai merged_alignments/$$(*).bai && \
-					    rm -rf merged_alignments/$$(*).dedup.bam && \
-					    rm -rf merged_alignments/$$(*).fixed.bai && \
-					    rm -rf merged_alignments/$$(*).dedup.bai && \
-					    rm -rf merged_alignments/$$(*).txt")
+					    $$(RM) merged_alignments/$$(*).dedup.bam && \
+					    $$(RM) merged_alignments/$$(*).fixed.bai && \
+					    $$(RM) merged_alignments/$$(*).dedup.bai && \
+					    $$(RM) merged_alignments/$$(*).txt")
 endef
  $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-alignments,$(sample))))
