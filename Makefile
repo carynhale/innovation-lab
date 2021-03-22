@@ -204,18 +204,13 @@ cluster_samples :
 TARGETS += umi_tools
 umi_tools :
 	$(call RUN_MAKE,innovation-lab/rna_seq/umi_tools.mk)
+	
+TARGETS += kallisto
+kallisto :
+	$(call RUN_MAKE,innovation-lab/rna_seq/kallisto.mk)
 
 TARGETS += sum_reads
 sum_reads :
 	$(call RUN_MAKE,innovation-lab/rna_seq/sum_reads.mk)
-
-TARGETS += kallisto
-kallisto :
-	$(call RUN_MAKE,innovation-lab/rna_seq/kallisto.mk)
-	
-TARGETS += sum_mirnas
-sum_mirnas :
-	$(call RUN_MAKE,innovation-lab/rna_seq/sum_mirnas.mk)
-
 
 .PHONY : $(TARGETS)
