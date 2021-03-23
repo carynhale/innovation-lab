@@ -160,10 +160,6 @@ star_fusion :
 # Quality control
 #==================================================
 
-TARGETS += bam_metrics
-bam_metrics :
-	$(call RUN_MAKE,innovation-lab/qc/bam_metrics.mk)
-
 TARGETS += rnaseq_metrics
 rnaseq_metrics :
 	$(call RUN_MAKE,innovation-lab/qc/rnaseq_metrics.mk)
