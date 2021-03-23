@@ -104,73 +104,40 @@ bismark/$1/$1_aln_srt_MD_IR_FX.bam : bismark/$1/$1_aln_srt_MD_IR.bam
 						      	COMPRESSION_LEVEL=0 \
 						      	CREATE_INDEX=true && \
 						      	$$(RM) $$(^)")
-							
-bismark/$1/$1_aln_srt_MD_IR_FX.grp : bismark/$1/$1_aln_srt_MD_IR_FX.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
-										   $$(SAMTOOLS) index $$(<) && \
-										   $$(call GATK_CMD,16G) \
-										   -T BaseRecalibrator \
-										   -R $$(REF_FASTA) \
-										   -knownSites $$(DBSNP) \
-										   -I $$(<) \
-										   -o $$(@)")
-							
-bismark/$1/$1_aln_srt_MD_IR_FX_BR.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam bismark/$1/$1_aln_srt_MD_IR_FX.grp
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
-										   $$(call GATK_CMD,16G) \
-										   -T PrintReads \
-										   -R $$(REF_FASTA) \
-										   -I $$(<) \
-										   -BQSR $$(<<) \
-										   -o $$(@)")
 
-bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN, -c -n 1 -s 12G -m 18G -w 24:00:00,"set -o pipefail && \
-							$$(ADD_RG) \
-							INPUT=$$(<) \
-							OUTPUT=$$(@) \
-					    		RGID=$1 \
-					    		RGLB=$1 \
-					    		RGPL=illumina \
-					    		RGPU=NA \
-					    		RGSM=$1 && \
-					    		$$(SAMTOOLS) index $$(@) && \
-					    		cp bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bam.bai bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bai")
-
-						      
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-to-bam,$(sample))))
 
 define filter-bam
-bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F1.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bam
+bismark/$1/$1_aln_srt_MD_IR_FX__F1.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
 						 $$(SAMTOOLS) view -b -f 144 $$(<) > $$(@) && \
 						 $$(SAMTOOLS) index $$(@)")
 
-bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__R2.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bam
+bismark/$1/$1_aln_srt_MD_IR_FX__R2.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
 						 $$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > $$(@) && \
 						 $$(SAMTOOLS) index $$(@)")
 
-bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F1.bam bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__R2.bam
+bismark/$1/$1_aln_srt_MD_IR_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_IR_FX__F1.bam bismark/$1/$1_aln_srt_MD_IR_FX__R2.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
 						 $$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
 						 $$(SAMTOOLS) index $$(@) && \
 						 $$(RM) $$(<) && \
 						 $$(RM) $$(<<)")
 											   
-bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F2.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bam
+bismark/$1/$1_aln_srt_MD_IR_FX__F2.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
 						 $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > $$(@) && \
 						 $$(SAMTOOLS) index $$(@)")
 
-bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__R1.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bam
+bismark/$1/$1_aln_srt_MD_IR_FX__R1.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
 						 $$(SAMTOOLS) view -b -f 80 $$(<) > $$(@) && \
 						 $$(SAMTOOLS) index $$(@)")
 
-bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F2.bam bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__R1.bam
+bismark/$1/$1_aln_srt_MD_IR_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_IR_FX__F2.bam bismark/$1/$1_aln_srt_MD_IR_FX__R1.bam
 	$$(call RUN,-c -s 8G -m 12G -w 12:00:00,"set -o pipefail && \
 						 $$(SAMTOOLS) merge -f $$(@) $$(<) $$(<<) && \
 						 $$(SAMTOOLS) index $$(@) && \
@@ -182,25 +149,25 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call filter-bam,$(sample))))
 
 define copy-bam
-bam/$1_aln_srt_MD_IR_FX_BR_RG.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG.bam
+bam/$1_aln_srt_MD_IR_FX.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_MD_IR_FX_BR_RG.bam.bai bam/$1_aln_srt_MD_IR_FX_BR_RG.bai && \
+				    cp bam/$1_aln_srt_MD_IR_FX.bam.bai bam/$1_aln_srt_MD_IR_FX.bai && \
 				    $$(RM) $$(^)")
 
-bam/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.bam
+bam/$1_aln_srt_MD_IR_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_IR_FX__F1R2.bam
 	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.bam.bai bam/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.bai && \
+				    cp bam/$1_aln_srt_MD_IR_FX__F1R2.bam.bai bam/$1_aln_srt_MD_IR_FX__F1R2.bai && \
 				    $$(RM) $$(^)")
 
-bam/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.bam : bismark/$1/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.bam
+bam/$1_aln_srt_MD_IR_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_IR_FX__F2R1.bam
 	$$(call RUN,-c -s 2G -m 4G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.bam.bai bam/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.bai && \
+				    cp bam/$1_aln_srt_MD_IR_FX__F2R1.bam.bai bam/$1_aln_srt_MD_IR_FX__F2R1.bai && \
 				    $$(RM) $$(^)")
 
 endef
@@ -208,42 +175,42 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call copy-bam,$(sample))))
 		
 define picard-metrics
-metrics/$1_aln_srt_MD_IR_FX_BR_RG.rrbs_summary_metrics : bam/$1_aln_srt_MD_IR_FX_BR_RG.bam
+metrics/$1_aln_srt_MD_IR_FX.rrbs_summary_metrics : bam/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
-				      M=metrics/$1_aln_srt_MD_IR_FX_BR_RG")
+				      M=metrics/$1_aln_srt_MD_IR_FX")
 								  
-metrics/$1_aln_srt_MD_IR_FX_BR_RG.txt : bam/$1_aln_srt_MD_IR_FX_BR_RG.bam
+metrics/$1_aln_srt_MD_IR_FX.txt : bam/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      O=$$(@)")
 
-metrics/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.rrbs_summary_metrics : bam/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.bam
+metrics/$1_aln_srt_MD_IR_FX__F1R2.rrbs_summary_metrics : bam/$1_aln_srt_MD_IR_FX__F1R2.bam
 	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
-				      M=metrics/$1_aln_srt_MD_IR_FX_BR_RG__F1R2")
+				      M=metrics/$1_aln_srt_MD_IR_FX__F1R2")
 
-metrics/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.txt : bam/$1_aln_srt_MD_IR_FX_BR_RG__F1R2.bam
+metrics/$1_aln_srt_MD_IR_FX__F1R2.txt : bam/$1_aln_srt_MD_IR_FX__F1R2.bam
 	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      O=$$(@)")
 								  
-metrics/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.rrbs_summary_metrics : bam/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.bam
+metrics/$1_aln_srt_MD_IR_FX__F2R1.rrbs_summary_metrics : bam/$1_aln_srt_MD_IR_FX__F2R1.bam
 	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_MD_IR_FX_BR_RG__F2R1")
 
-metrics/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.txt : bam/$1_aln_srt_MD_IR_FX_BR_RG__F2R1.bam
+metrics/$1_aln_srt_MD_IR_FX__F2R1.txt : bam/$1_aln_srt_MD_IR_FX__F2R1.bam
 	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
@@ -254,12 +221,12 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
 		
-summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F1R2.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F2R1.rrbs_summary_metrics)
+summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F1R2.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F2R1.rrbs_summary_metrics)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 					   mkdir -p summary && \
 					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/bismark_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
-summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F1R2.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F2R1.txt)
+summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F1R2.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F2R1.txt)
 	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
 					   mkdir -p summary && \
 					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/bismark_metrics.R --option 2 --sample_names '$(SAMPLES)'")
