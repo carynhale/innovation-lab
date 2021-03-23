@@ -3,15 +3,15 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
-bismark : $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX_BR_RG.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX_BR_RG__F1R2.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX_BR_RG__F2R1.bam) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F1R2.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F2R1.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG.txt) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F1R2.txt) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX_BR_RG__F2R1.txt) \
+bismark : $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX__F1R2.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX__F2R1.bam) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX.rrbs_summary_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F1R2.rrbs_summary_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F2R1.rrbs_summary_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F1R2.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F2R1.txt) \
 	  summary/rrbs_metrics.txt \
 	  summary/alignment_metrics.txt
 
@@ -208,7 +208,7 @@ metrics/$1_aln_srt_MD_IR_FX__F2R1.rrbs_summary_metrics : bam/$1_aln_srt_MD_IR_FX
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
-				      M=metrics/$1_aln_srt_MD_IR_FX_BR_RG__F2R1")
+				      M=metrics/$1_aln_srt_MD_IR_FX__F2R1")
 
 metrics/$1_aln_srt_MD_IR_FX__F2R1.txt : bam/$1_aln_srt_MD_IR_FX__F2R1.bam
 	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
