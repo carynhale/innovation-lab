@@ -108,6 +108,10 @@ TARGETS += merge_fastq
 merge_fastq :
 	$(call RUN_MAKE,innovation-lab/fastq_tools/merge_fastq.mk)
 
+TARGETS += subsample_fastq
+subsample_fastq :
+	$(call RUN_MAKE,innovation-lab/fastq_tools/subsample_fastq.mk)
+
 #==================================================
 # VCF file utilities
 #==================================================

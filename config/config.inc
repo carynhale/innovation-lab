@@ -20,6 +20,7 @@ UMITOOLS_ENV ?= $(HOME)/share/usr/env/umi-tools-1.0.1
 KALLISTO_ENV ?= $(HOME)/share/usr/env/kallisto-0.46.2
 ARRIBA_ENV ?= $(HOME)/share/usr/env/arriba-2.0.0
 FASTQC_ENV ?= $(HOME)/share/usr/env/cutadapt-3.2
+SEQTK_ENV ?= $(HOME)/share/usr/env/seqtk-1.3
 
 # aliases
 PYTHON ?= python
@@ -41,6 +42,7 @@ DEFUSE ?= defuse_run.pl
 STAR_FUSION ?= STAR-Fusion
 FASTQC ?= fastqc
 CUTADAPT ?= cutadapt
+SEQTK ?= seqtk
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
