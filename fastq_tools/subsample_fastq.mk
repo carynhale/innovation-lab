@@ -40,7 +40,7 @@ FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
 endef
 $(foreach sample,$(SAMPLES), \
 	$(foreach target,$(TARGETS), \
-		$(eval $(call sample-fastq,$(sample)))))
+		$(eval $(call sample-fastq,$(sample),$(target)))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
