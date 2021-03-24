@@ -20,11 +20,8 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 	    --chimOutType WithinBAM \
 	    --quantMode GeneCounts
 
-star : $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam \
-                                   star/$(sample).Aligned.sortedByCoord.out.bam.bai \
-                                   bam/$(sample).bam \
-                                   bam/$(sample).bam.bai \
-                                   bam/$(sample).bai)
+star : $(foreach sample,$(SAMPLES),bam/$(sample).bam \
+                                   bam/$(sample).bam.bai)
 
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3
@@ -42,16 +39,12 @@ star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.ba
 
 bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  cp $$(<) $$(@)")
+				      cp $$(<) $$(@)")
                                    
 bam/$1.bam.bai : star/$1.Aligned.sortedByCoord.out.bam.bai
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  cp $$(<) $$(@)")
+                                      cp $$(<) $$(@)")
                                    
-bam/$1.bai : star/$1.Aligned.sortedByCoord.out.bam.bai
-	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  cp $$(<) $$(@)")
-
 endef
 $(foreach ss,$(SPLIT_SAMPLES), \
 	$(if $(fq.$(ss)), \
