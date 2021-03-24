@@ -14,7 +14,16 @@ READS = 1000000 \
 	30000000 \
 	40000000 \
 	50000000
-TARGETS = $(seq 1 10)
+TARGETS = 1 \
+	  2 \
+	  3 \
+	  4 \
+	  5 \
+	  6 \
+	  7 \
+	  8 \
+	  9 \
+	  10
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
