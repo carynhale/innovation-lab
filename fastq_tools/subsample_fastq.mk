@@ -2,21 +2,20 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
-THREADS = 6
 SEED = 1
-TARGETS = 1000000 \
-	  2000000 \
-	  3000000 \
-	  4000000 \
-	  5000000 \
-	  7000000 \
-	  10000000 \
-	  15000000 \
-	  20000000 \
-	  25000000 \
-	  30000000 \
-	  40000000 \
-	  50000000
+TARGET_READS = 1000000 \
+	       2000000 \
+	       3000000 \
+	       4000000 \
+	       5000000 \
+	       7000000 \
+	       10000000 \
+	       15000000 \
+	       20000000 \
+	       25000000 \
+	       30000000 \
+	       40000000 \
+	       50000000
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
@@ -42,8 +41,8 @@ FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
 
 endef
 $(foreach sample,$(SAMPLES), \
-	$(foreach target,$(TARGETS), \
-		$(eval $(call sample-fastq,$(sample),$(target)))))
+	$(foreach targetreads,$(TARGET_READS), \
+		$(eval $(call sample-fastq,$(sample),$(targetreads)))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
