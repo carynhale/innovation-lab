@@ -2,21 +2,22 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
-subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
-		  $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/taskcomplete)
-
 THREADS = 6
 SEED = 1
-TARGETREADS = 1000000 \
-	      2000000 \
-	      5000000 \
-	      10000000 \
-	      15000000 \
-	      20000000 \
-	      25000000 \
-	      30000000 \
-	      40000000 \
-	      50000000
+TARGETS = 1000000 \
+	  2000000 \
+	  5000000 \
+	  10000000 \
+	  15000000 \
+	  20000000 \
+	  25000000 \
+	  30000000 \
+	  40000000 \
+	  50000000
+
+subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
+		  $(foreach sample,$(SAMPLES), \
+		  	$(foreach target,$(TARGETS),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1--$(target).fastq.gz))
 
 define copy-fastq
 FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz : $3
@@ -32,14 +33,14 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 
 define sample-fastq
-FASTQ_DOWNSAMPLE/$1/taskcomplete : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
+FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
 	$$(call RUN, -c -n $(THREADS) -s 4G -m 8G -v $(SEQTK_ENV),"set -o pipefail && \
-							   	   for i in $(TARGETREADS); do $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz \"\$i\" > FASTQ_DOWNSAMPLE/$1/$1_R1--{}.fastq.gz' && \
-							   	   echo $1 > FASTQ_DOWNSAMPLE/$1/taskcomplete")
+							   	   $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz $2 > FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz")
 
 endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call sample-fastq,$(sample))))
+$(foreach sample,$(SAMPLES), \
+	$(foreach target,$(TARGETS), \
+		$(eval $(call sample-fastq,$(sample)))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
