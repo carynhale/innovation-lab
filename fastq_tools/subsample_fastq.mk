@@ -34,8 +34,8 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 define sample-fastq
 FASTQ_DOWNSAMPLE/$1/taskcomplete : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
 	$$(call RUN, -c -n $(THREADS) -s 4G -m 8G -v $(SEQTK_ENV),"set -o pipefail && \
-							   echo $(TARGETREADS) | parallel -j $(THREADS) '$$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz {} > FASTQ_DOWNSAMPLE/$1/$1_R1--{}.fastq.gz' && \
-							   echo $1 > FASTQ_DOWNSAMPLE/$1/taskcomplete")
+							   	   for i in $(TARGETREADS); do $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz \"\$i\" > FASTQ_DOWNSAMPLE/$1/$1_R1--{}.fastq.gz' && \
+							   	   echo $1 > FASTQ_DOWNSAMPLE/$1/taskcomplete")
 
 endef
 $(foreach sample,$(SAMPLES),\
