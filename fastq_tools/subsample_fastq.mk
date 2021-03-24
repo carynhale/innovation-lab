@@ -14,8 +14,7 @@ READS = 1000000 \
 	30000000 \
 	40000000 \
 	50000000
-TARGETS = 0 \
-	  1 \
+TARGETS = 1 \
 	  2 \
 	  3 \
 	  4 \
@@ -23,7 +22,8 @@ TARGETS = 0 \
 	  6 \
 	  7 \
 	  8 \
-	  9
+	  9 \
+	  10
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
@@ -45,7 +45,7 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 define sample-fastq
 FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
 	$$(call RUN, -c -n $(THREADS) -s 4G -m 8G -v $(SEQTK_ENV),"set -o pipefail && \
-							   	   $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz $$(READS[$2]) > FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz")
+							   	   $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz $(READS[$2]) > FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz")
 
 endef
 $(foreach sample,$(SAMPLES), \
