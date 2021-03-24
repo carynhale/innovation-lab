@@ -2,7 +2,7 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
-subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample).taskcomplete)
+subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample).taskcomplete)
 
 THREADS = 6
 SEED = 1
@@ -18,27 +18,28 @@ TARGETREADS = 1000000 \
 	      50000000
 
 define copy-fastq
-FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz : $3
+FASTQ_DOWNSAMPLE/$1.taskcomplete : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p FASTQ_DOWNSAMPLE/fastq && \
+					 mkdir -p FASTQ_DOWNSAMPLE && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 					 --sample_name $1 \
-					 --directory_name 'FASTQ_DOWNSAMPLE/fastq' \
-					 --fastq_files '$$^'")
+					 --directory_name FASTQ_DOWNSAMPLE \
+					 --fastq_files '$$^' && \
+					 echo $1 > FASTQ_DOWNSAMPLE/$1.taskcomplete")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 
-define sample-fastq
-FASTQ_DOWNSAMPLE/fastq/$1.taskcomplete : FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz
-	$$(call RUN, -c -n $(THREADS) -s 4G -m 8G -v $(SEQTK_ENV),"set -o pipefail && \
-							   echo $(TARGETREADS) | parallel -j $(THREADS) '$$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz {} > FASTQ_DOWNSAMPLE/fastq/$1_R1--{}.fastq.gz' && \
-							   echo $1 > FASTQ_DOWNSAMPLE/fastq/$1.taskcomplete")
-
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call sample-fastq,$(sample))))
+#define sample-fastq
+#FASTQ_DOWNSAMPLE/fastq/$1.taskcomplete : FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz
+#	$$(call RUN, -c -n $(THREADS) -s 4G -m 8G -v $(SEQTK_ENV),"set -o pipefail && \
+#							   echo $(TARGETREADS) | parallel -j $(THREADS) '$$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz {} > FASTQ_DOWNSAMPLE/fastq/$1_R1--{}.fastq.gz' && \
+#							   echo $1 > FASTQ_DOWNSAMPLE/fastq/$1.taskcomplete")
+#
+#endef
+#$(foreach sample,$(SAMPLES),\
+#		$(eval $(call sample-fastq,$(sample))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
