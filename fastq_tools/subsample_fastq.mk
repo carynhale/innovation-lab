@@ -2,7 +2,7 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
-subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample).taskcomplete)
+subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz)
 
 THREADS = 6
 SEED = 1
@@ -18,14 +18,13 @@ TARGETREADS = 1000000 \
 	      50000000
 
 define copy-fastq
-FASTQ_DOWNSAMPLE/$1.taskcomplete : $3
+FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p FASTQ_DOWNSAMPLE && \
+					 mkdir -p FASTQ_DOWNSAMPLE/$1 && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 					 --sample_name $1 \
 					 --directory_name FASTQ_DOWNSAMPLE \
-					 --fastq_files '$$^' && \
-					 echo $1 > FASTQ_DOWNSAMPLE/$1.taskcomplete")
+					 --fastq_files '$$^'")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
