@@ -5,15 +5,18 @@ LOGDIR ?= log/subsample_fastq.$(NOW)
 THREADS = 6
 SEED = 1
 TARGETS = 1000000 \
-	2000000 \
-	5000000 \
-	10000000 \
-	15000000 \
-	20000000 \
-	25000000 \
-	30000000 \
-	40000000 \
-	50000000
+	  2000000 \
+	  3000000 \
+	  4000000 \
+	  5000000 \
+	  7000000 \
+	  10000000 \
+	  15000000 \
+	  20000000 \
+	  25000000 \
+	  30000000 \
+	  40000000 \
+	  50000000
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
@@ -34,8 +37,8 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 
 define sample-fastq
 FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
-	$$(call RUN, -c -n $(THREADS) -s 4G -m 8G -v $(SEQTK_ENV),"set -o pipefail && \
-							   	   $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz $2 > FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz")
+	$$(call RUN, -c -s 12G -m 24G -v $(SEQTK_ENV),"set -o pipefail && \
+						       $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz $2 > FASTQ_DOWNSAMPLE/$1/$1_R1--$2.fastq.gz")
 
 endef
 $(foreach sample,$(SAMPLES), \
