@@ -64,7 +64,3 @@ $(foreach ss,$(SPLIT_SAMPLES), \
 .SECONDARY: 
 .DELETE_ON_ERROR:
 .PHONY: star
-
-include innovation-lab/fastq_tools/fastq.mk
-include innovation-lab/bam_tools/process_bam.mk
-include innovation-lab/aligners/align.mk
