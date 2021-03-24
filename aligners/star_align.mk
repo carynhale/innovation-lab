@@ -25,17 +25,17 @@ star : $(foreach sample,$(SAMPLES),bam/$(sample).bam \
 
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3
-	$$(call RUN,-n 4 -s 6G -m 10G,"set -o pipefail && \
-                                   STAR $$(STAR_OPTS) \
-                                   --outFileNamePrefix star/$1. \
-                                   --runThreadN 4 \
-                                   --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
-                                   --readFilesIn $$^ \
-                                   --readFilesCommand zcat")
+	$$(call RUN,-n 12 -s 2G -m 4G,"set -o pipefail && \
+				       STAR $$(STAR_OPTS) \
+                                       --outFileNamePrefix star/$1. \
+                                       --runThreadN 4 \
+                                       --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
+                                       --readFilesIn $$^ \
+                                       --readFilesCommand zcat")
                                    
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
-                                  $$(SAMTOOLS) index $$(<)")
+				      $$(SAMTOOLS) index $$(<)")
 
 bam/$1.bam : star/$1.Aligned.sortedByCoord.out.bam
 	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
@@ -52,7 +52,7 @@ $(foreach ss,$(SPLIT_SAMPLES), \
     
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" > version/star_align.txt; \
-			 STAR --version >> version/star_align.txt; \
+	     STAR --version >> version/star_align.txt; \
              $(SAMTOOLS) --version >> version/star_align.txt)
 .SECONDARY: 
 .DELETE_ON_ERROR:
