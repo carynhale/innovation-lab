@@ -18,24 +18,22 @@ TARGETREADS = 1000000 \
 	      50000000
 
 define copy-fastq
-FASTQ_DOWNSAMPLE/fastq/$1_R1--0.fastq.gz : $3
+FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 					 mkdir -p FASTQ_DOWNSAMPLE/fastq && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 					 --sample_name $1 \
-					 --directory_name FASTQ_DOWNSAMPLE/fastq \
-					 --fastq_files '$$^' && \
-					 mv FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz FASTQ_DOWNSAMPLE/fastq/$1_R1--0.fastq.gz && \
-					 mv FASTQ_DOWNSAMPLE/fastq/$1_R2.fastq.gz FASTQ_DOWNSAMPLE/fastq/$1_R2--0.fastq.gz")
+					 --directory_name 'FASTQ_DOWNSAMPLE/fastq' \
+					 --fastq_files '$$^'")
 
 endef
 $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 
 define sample-fastq
-FASTQ_DOWNSAMPLE/fastq/$1.taskcomplete : FASTQ_DOWNSAMPLE/fastq/$1_R1--0.fastq.gz
+FASTQ_DOWNSAMPLE/fastq/$1.taskcomplete : FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz
 	$$(call RUN, -c -n $(THREADS) -s 4G -m 8G -v $(SEQTK_ENV),"set -o pipefail && \
-							   echo $(TARGETREADS) | parallel -j $(THREADS) '$$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1_R1--0.fastq.gz {} > FASTQ_DOWNSAMPLE/fastq/$1_R1--{}.fastq.gz' && \
+							   echo $(TARGETREADS) | parallel -j $(THREADS) '$$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1_R1.fastq.gz {} > FASTQ_DOWNSAMPLE/fastq/$1_R1--{}.fastq.gz' && \
 							   echo $1 > FASTQ_DOWNSAMPLE/fastq/$1.taskcomplete")
 
 endef
