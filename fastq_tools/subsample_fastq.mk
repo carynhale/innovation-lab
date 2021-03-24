@@ -4,16 +4,17 @@ LOGDIR ?= log/subsample_fastq.$(NOW)
 
 THREADS = 6
 SEED = 1
-TARGETS = 1000000 \
-	  2000000 \
-	  5000000 \
-	  10000000 \
-	  15000000 \
-	  20000000 \
-	  25000000 \
-	  30000000 \
-	  40000000 \
-	  50000000
+READS = 1000000 \
+	2000000 \
+	5000000 \
+	10000000 \
+	15000000 \
+	20000000 \
+	25000000 \
+	30000000 \
+	40000000 \
+	50000000
+TARGETS = $(seq 1 10)
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
