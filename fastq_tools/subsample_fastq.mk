@@ -4,12 +4,6 @@ LOGDIR ?= log/subsample_fastq.$(NOW)
 
 SEED = 1
 N = 1 2 3 4 5
-READS:
-    1: 1000000
-    2: 2000000
-    3: 3000000
-    4: 4000000
-    5: 5000000
     
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
