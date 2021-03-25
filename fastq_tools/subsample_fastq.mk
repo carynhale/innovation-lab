@@ -7,7 +7,7 @@ READS = 1000000 2000000 3000000 4000000 5000000 7000000 10000000 15000000 200000
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
-		  	$(foreach reads,$(READS),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(reads).fastq.gz))
+		  	$(foreach read,$(READS),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(read).fastq.gz))
 
 define copy-fastq
 FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz : $3
@@ -30,8 +30,8 @@ FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.g
 
 endef
 $(foreach sample,$(SAMPLES), \
-	$(foreach reads,$(READS), \
-		$(eval $(call sample-fastq,$(sample),$(reads)))))
+	$(foreach read,$(READS), \
+		$(eval $(call sample-fastq,$(sample),$(read)))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
