@@ -1,7 +1,8 @@
 ---
-# sample_order: [A0P1, A0P2, A0M1, A0M2, A0M3, A0M4, A0M5]
-# gene_blacklist: [TTN, CACNA1A]
-# sample_rename:
-#    A0P1: A0-P1
-#    A0P2: A0-P2
+# READS:
+#    1: 1000000
+#    2: 2000000
+#    3: 3000000
+#    4: 4000000
+#    5: 5000000
 ...
