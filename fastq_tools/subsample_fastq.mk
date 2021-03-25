@@ -3,9 +3,13 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
 SEED = 1
-N = 0 1 2 3 4
-READS = 1000000 2000000 3000000 4000000 5000000
-
+N = 1 2 3 4 5
+READS:
+	1: 1000000
+	2: 2000000
+	3: 3000000
+	4: 4000000
+	5: 5000000
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
@@ -27,7 +31,7 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 define sample-fastq
 FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz
 	$$(call RUN, -c -s 12G -m 24G -v $(SEQTK_ENV),"set -o pipefail && \
-						       $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz $${READS[$2]} > FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz")
+						       $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz '$${READS.$2}' > FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz")
 
 endef
 $(foreach sample,$(SAMPLES), \
