@@ -24,7 +24,7 @@ subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$
 define copy-fastq
 FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p FASTQ_DOWNSAMPLE/$1 && \
+					 mkdir -p FASTQ_DOWNSAMPLE/fastq/$1 && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
 					 --sample_name $1 \
 					 --directory_name 'FASTQ_DOWNSAMPLE/fastq' \
