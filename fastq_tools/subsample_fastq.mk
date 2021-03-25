@@ -3,8 +3,8 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
 SEED = 1
-N = 1 2 3 4 5
-declare -A READS=( ["1000000"]=1 ["2000000"]=2 ["3000000"]=3 ["4000000"]=4 ["5000000"]=5 )
+N = 0 1 2 3 4
+READS = 1000000 2000000 3000000 4000000 5000000
 
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1.fastq.gz) \
