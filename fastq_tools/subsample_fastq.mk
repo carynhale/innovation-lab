@@ -19,7 +19,7 @@ TARGET_READS = 1000000 \
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
-		  	$(foreach target,$(TARGETS),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1--$(target).fastq.gz))
+		  	$(foreach targetreads,$(TARGET_READS),FASTQ_DOWNSAMPLE/$(sample)/$(sample)_R1--$(targetreads).fastq.gz))
 
 define copy-fastq
 FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz : $3
