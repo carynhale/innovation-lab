@@ -4,10 +4,11 @@ LOGDIR ?= log/subsample_fastq.$(NOW)
 
 SEED = 1
 READS = 1000000 2000000 3000000 4000000 5000000 7000000 10000000 15000000 20000000 25000000 30000000 40000000 50000000
+N = 0 1 2 3 4 5 6 7 8 9 10 11 12
 
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
-		  	$(foreach read,$(READS),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(read).fastq.gz))
+		  	$(foreach n,$(N),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(n).fastq.gz))
 
 define copy-fastq
 FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz : $3
@@ -30,8 +31,8 @@ FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.g
 
 endef
 $(foreach sample,$(SAMPLES), \
-	$(foreach read,$(READS), \
-		$(eval $(call sample-fastq,$(sample),$(read)))))
+	$(foreach n,$(N), \
+		$(eval $(call sample-fastq,$(sample),$(n)))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
