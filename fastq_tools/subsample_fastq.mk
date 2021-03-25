@@ -24,7 +24,7 @@ $(foreach ss,$(SPLIT_SAMPLES),\
 	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
 
 define sample-fastq
-FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/$1/$1_R1.fastq.gz
+FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz
 	$$(call RUN, -c -s 12G -m 24G -v $(SEQTK_ENV),"set -o pipefail && \
 						       $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz $2 > FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz && \
 						       $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1/$1_R2.fastq.gz $2 > FASTQ_DOWNSAMPLE/fastq/$1/$1_R2--$2.fastq.gz")
