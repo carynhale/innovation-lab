@@ -192,8 +192,5 @@ TARGETS += sum_reads
 sum_reads :
 	$(call RUN_MAKE,innovation-lab/rna_seq/sum_reads.mk)
 	
-TARGETS += sub_reads
-sub_reads :
-	$(call RUN_MAKE,innovation-lab/rna_seq/sub_reads.mk)
 
 .PHONY : $(TARGETS)
