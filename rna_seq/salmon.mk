@@ -33,6 +33,10 @@ salmon/$1/quant.sf : salmon/$1/$1.1.fastq.gz
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call fastq-to-salmon,$(sample))))
+		
+salmon/tpm_bygene.txt : $(foreach sample,$(SAMPLES),salmon/$(sample)/quant.sf)
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_salmon.R --samples '$(SAMPLES)'")
 	
 
 ..DUMMY := $(shell mkdir -p version; \
