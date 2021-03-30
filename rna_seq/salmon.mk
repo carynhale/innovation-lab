@@ -3,7 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR = log/salmon.$(NOW)
 
 salmon : $(foreach sample,$(SAMPLES),salmon/$(sample)/$(sample).1.fastq.gz) \
-	 $(foreach sample,$(SAMPLES),kallisto/$(sample)/quant.sf)
+	 $(foreach sample,$(SAMPLES),salmon/$(sample)/quant.sf)
 
 define bam-to-fastq
 salmon/$1/$1.1.fastq.gz : bam/$1.bam
