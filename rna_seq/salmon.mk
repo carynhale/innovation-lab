@@ -28,7 +28,7 @@ salmon/$1/quant.sf : salmon/$1/$1.1.fastq.gz
 							   -2 salmon/$1/$1.2.fastq.gz \
 							   -p 12 \
 							   --validateMappings \
-							   -o salmon/$1/quant.sf")
+							   -o salmon/$1")
 
 endef
 $(foreach sample,$(SAMPLES),\
