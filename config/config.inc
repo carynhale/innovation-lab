@@ -21,6 +21,7 @@ KALLISTO_ENV ?= $(HOME)/share/usr/env/kallisto-0.46.2
 ARRIBA_ENV ?= $(HOME)/share/usr/env/arriba-2.0.0
 FASTQC_ENV ?= $(HOME)/share/usr/env/cutadapt-3.2
 SEQTK_ENV ?= $(HOME)/share/usr/env/seqtk-1.3
+SALMON_ENV ?= $(HOME)/share/usr/env/salmon-1.4.0
 
 # aliases
 PYTHON ?= python
