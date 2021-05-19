@@ -6,7 +6,9 @@ LOGDIR ?= log/cnv_kit.$(NOW)
 cnv_kit : $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnn/tumor/$(sample).targetcoverage.cnn) \
 	  $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnn/tumor/$(sample).antitargetcoverage.cnn) \
 	  $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).targetcoverage.cnn) \
-	  $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).antitargetcoverage.cnn)
+	  $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).antitargetcoverage.cnn) \
+	  cnvkit/reference/combined_reference.cnr \
+	  $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnr/$(sample).cnr)
 	  
 ONTARGET_FILE = $(HOME)/share/lib/bed_files/MSK-IMPACT-v3_cnvkit_ontarget.bed
 OFFTARGET_FILE = $(HOME)/share/lib/bed_files/MSK-IMPACT-v3_cnvkit_offtarget.bed
@@ -35,15 +37,15 @@ endef
  $(foreach sample,$(NORMAL_SAMPLES),\
 		$(eval $(call cnvkit-normal-cnn,$(sample))))
 
-cnvkit/reference/combined_reference.cnr : $(wildcard cnvkit/cnn/normal/$(NORMAL_SAMPLES).targetcoverage.cnn) $(wildcard cnvkit/cnn/normal/$(NORMAL_SAMPLES).antitargetcoverage.cnn)
-	$(call RUN,-n 1 -s 24G -m 32G,"set -o pipefail && \
-				       sleep 30 && \
-				       cnvkit.py reference cnvkit/cnn/normal/*.cnn -f $(REF_FASTA) --no-edge -o cnvkit/reference/combined_reference.cnr")
+cnvkit/reference/combined_reference.cnr : $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).targetcoverage.cnn) $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).antitargetcoverage.cnn)
+	$(call RUN,-n 1 -s 24G -m 32G -v $(CNVKIT_ENV),"set -o pipefail && \
+							sleep 30 && \
+							cnvkit.py reference cnvkit/cnn/normal/*.cnn -f $(REF_FASTA) --no-edge -o cnvkit/reference/combined_reference.cnr")
 
-define cnvkit-cnr
-cnvkit/cnr/%.cnr : cnvkit/cnn/tumor/%.targetcoverage.cnn cnvkit/cnn/tumor/%.antitargetcoverage.cnn cnvkit/reference/combined_reference.cnr
-	$$(call RUN,-c -s 6G -m 8G,"set -o pipefail && \
-				    cnvkit.py fix $$(<) $$(<<) cnvkit/reference/combined_reference.cnr -o cnvkit/cnr/$$(*).cnr")
+define cnvkit-tumor-cnr
+cnvkit/cnr/$1.cnr : cnvkit/cnn/tumor/$1.targetcoverage.cnn cnvkit/cnn/tumor/$1.antitargetcoverage.cnn cnvkit/reference/combined_reference.cnr
+	$$(call RUN,-c -s 6G -m 8G -v $(CNVKIT_ENV),"set -o pipefail && \
+						     cnvkit.py fix $$(<) $$(<<) $$(<<<) -o cnvkit/cnr/$1.cnr")
 	
 endef
  $(foreach sample,$(TUMOR_SAMPLES),\
@@ -61,29 +63,6 @@ cnvkit/log2/%.offtarget.pdf : cnvkit/cnr/%.cnr
 endef
  $(foreach sample,$(TUMOR_SAMPLES),\
 		$(eval $(call cnvkit-plot,$(sample))))
-		
-define cnvkit-totalcopy
-cnvkit/segmented/%.pdf cnvkit/totalcopy/%.RData : cnvkit/cnr/%.cnr
-	$$(call RUN,-c -v $(ASCAT_ENV) -s 6G -m 12G,"set -o pipefail && \
-						     mkdir -p cnvkit/segmented && \
-						     mkdir -p cnvkit/totalcopy && \
-						     $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '3' --sample_name $$(*)")
-												 
-cnvkit/called/%.RData : cnvkit/totalcopy/%.RData
-	$$(call RUN,-c -v $(ASCAT_ENV) -s 6G -m 12G,"set -o pipefail && \
-						     mkdir -p cnvkit/called && \
-						     $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '4' --sample_name $$(*)")
-
-endef
- $(foreach sample,$(TUMOR_SAMPLES),\
-		$(eval $(call cnvkit-totalcopy,$(sample))))
-		
-
-cnvkit/summary/bygene.txt : $(foreach sample,$(TUMOR_SAMPLES),cnvkit/called/$(sample).RData)
-	$(call RUN,-c -s 24G -m 48G,"set -o pipefail && \
-				     mkdir -p cnvkit/summary && \
-				     $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '5' --sample_name '$(TUMOR_SAMPLES)'")
-		
 		
 ..DUMMY := $(shell mkdir -p version; \
 	     python $(CNVKIT_ENV)/bin/cnvkit.py version &> version/cnvkit.txt)
