@@ -2,41 +2,32 @@ include modules/Makefile.inc
 include modules/genome_inc/b37.inc
 
 LOGDIR ?= log/cnvkit.$(NOW)
-PHONY += cnvkit cnvkit/cnn cnvkit/cnn/tumor cnvkit/cnn/normal cnvkit/reference cnvkit/cnr cnvkit/log2 cnvkit/segmented cnvkit/called cnvkit/summary
 
 cnvkit : $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnn/tumor/$(sample).targetcoverage.cnn) \
-		 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnn/tumor/$(sample).antitargetcoverage.cnn) \
-		 $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).targetcoverage.cnn) \
-		 $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).antitargetcoverage.cnn) \
-		 cnvkit/reference/combined_reference.cnr \
-		 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnr/$(sample).cnr) \
-		 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/log2/$(sample).ontarget.pdf) \
-		 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/log2/$(sample).offtarget.pdf) \
-		 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/totalcopy/$(sample).RData) \
-		 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/segmented/$(sample).pdf) \
-		 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/called/$(sample).RData) \
-		 cnvkit/summary/bygene.txt
+	 $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnn/tumor/$(sample).antitargetcoverage.cnn) \
+	 $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).targetcoverage.cnn) \
+	 $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).antitargetcoverage.cnn)
 
 define cnvkit-tumor-cnn
-cnvkit/cnn/tumor/%.targetcoverage.cnn : bam/%.bam
+cnvkit/cnn/tumor/$1.targetcoverage.cnn : bam/$1.bam
 	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-									 cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/tumor/$$(*).targetcoverage.cnn")
+					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/tumor/$1.targetcoverage.cnn")
 
-cnvkit/cnn/tumor/%.antitargetcoverage.cnn : bam/%.bam
+cnvkit/cnn/tumor/$1.antitargetcoverage.cnn : bam/$1.bam
 	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-									 cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/tumor/$$(*).antitargetcoverage.cnn")
+					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/tumor/$1.antitargetcoverage.cnn")
 endef
  $(foreach sample,$(TUMOR_SAMPLES),\
 		$(eval $(call cnvkit-tumor-cnn,$(sample))))
 		
 define cnvkit-normal-cnn
-cnvkit/cnn/normal/%.targetcoverage.cnn : bam/%.bam
+cnvkit/cnn/normal/$1.targetcoverage.cnn : bam/$1.bam
 	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-									 cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/normal/$$(*).targetcoverage.cnn")
+					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/normal/$1.targetcoverage.cnn")
 
-cnvkit/cnn/normal/%.antitargetcoverage.cnn : bam/%.bam
+cnvkit/cnn/normal/$1.antitargetcoverage.cnn : bam/$1.bam
 	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-									 cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/normal/$$(*).antitargetcoverage.cnn")
+					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/normal/$1.antitargetcoverage.cnn")
 endef
  $(foreach sample,$(NORMAL_SAMPLES),\
 		$(eval $(call cnvkit-normal-cnn,$(sample))))
