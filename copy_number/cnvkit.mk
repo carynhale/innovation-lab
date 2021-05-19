@@ -13,24 +13,24 @@ OFFTARGET_FILE = $(HOME)/share/lib/bed_files/MSK-IMPACT-v3_cnvkit_offtarget.bed
 
 define cnvkit-tumor-cnn
 cnvkit/cnn/tumor/$1.targetcoverage.cnn : bam/$1.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/tumor/$1.targetcoverage.cnn")
+	$$(call RUN,-c -n 4 -s 6G -m 8G -v $(CNVKIT_ENV),"set -o pipefail && \
+							  cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/tumor/$1.targetcoverage.cnn")
 
 cnvkit/cnn/tumor/$1.antitargetcoverage.cnn : bam/$1.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/tumor/$1.antitargetcoverage.cnn")
+	$$(call RUN,-c -n 4 -s 6G -m 8Gv $(CNVKIT_ENV),"set -o pipefail && \
+							cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/tumor/$1.antitargetcoverage.cnn")
 endef
  $(foreach sample,$(TUMOR_SAMPLES),\
 		$(eval $(call cnvkit-tumor-cnn,$(sample))))
 		
 define cnvkit-normal-cnn
 cnvkit/cnn/normal/$1.targetcoverage.cnn : bam/$1.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/normal/$1.targetcoverage.cnn")
+	$$(call RUN,-c -n 4 -s 6G -m 8G -v $(CNVKIT_ENV),"set -o pipefail && \
+							  cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/normal/$1.targetcoverage.cnn")
 
 cnvkit/cnn/normal/$1.antitargetcoverage.cnn : bam/$1.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8G,"set -o pipefail && \
-					 cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/normal/$1.antitargetcoverage.cnn")
+	$$(call RUN,-c -n 4 -s 6G -m 8G -v $(CNVKIT_ENV),"set -o pipefail && \
+							  cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/normal/$1.antitargetcoverage.cnn")
 endef
  $(foreach sample,$(NORMAL_SAMPLES),\
 		$(eval $(call cnvkit-normal-cnn,$(sample))))
