@@ -19,8 +19,8 @@ cnvkit/cnn/tumor/$1.targetcoverage.cnn : bam/$1.bam
 							  cnvkit.py coverage -p 4 -q 0 $$(<) $$(ONTARGET_FILE) -o cnvkit/cnn/tumor/$1.targetcoverage.cnn")
 
 cnvkit/cnn/tumor/$1.antitargetcoverage.cnn : bam/$1.bam
-	$$(call RUN,-c -n 4 -s 6G -m 8Gv $(CNVKIT_ENV),"set -o pipefail && \
-							cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/tumor/$1.antitargetcoverage.cnn")
+	$$(call RUN,-c -n 4 -s 6G -m 8G -v $(CNVKIT_ENV),"set -o pipefail && \
+							  cnvkit.py coverage -p 4 -q 0 $$(<) $$(OFFTARGET_FILE) -o cnvkit/cnn/tumor/$1.antitargetcoverage.cnn")
 endef
  $(foreach sample,$(TUMOR_SAMPLES),\
 		$(eval $(call cnvkit-tumor-cnn,$(sample))))
