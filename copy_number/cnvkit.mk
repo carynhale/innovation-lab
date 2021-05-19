@@ -7,6 +7,9 @@ cnv_kit : $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnn/tumor/$(sample).targetcov
 	  $(foreach sample,$(TUMOR_SAMPLES),cnvkit/cnn/tumor/$(sample).antitargetcoverage.cnn) \
 	  $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).targetcoverage.cnn) \
 	  $(foreach sample,$(NORMAL_SAMPLES),cnvkit/cnn/normal/$(sample).antitargetcoverage.cnn)
+	  
+ONTARGET_FILE = $(HOME)/share/lib/bed_files/MSK-IMPACT-v3_cnvkit_ontarget.bed
+OFFTARGET_FILE = $(HOME)/share/lib/bed_files/MSK-IMPACT-v3_cnvkit_offtarget.bed
 
 define cnvkit-tumor-cnn
 cnvkit/cnn/tumor/$1.targetcoverage.cnn : bam/$1.bam
