@@ -49,7 +49,7 @@ cnvkit/cnr/$1.cnr : cnvkit/cnn/tumor/$1.targetcoverage.cnn cnvkit/cnn/tumor/$1.a
 	
 endef
  $(foreach sample,$(TUMOR_SAMPLES),\
-		$(eval $(call cnvkit-cnr,$(sample))))
+		$(eval $(call cnvkit-tumor-cnr,$(sample))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
