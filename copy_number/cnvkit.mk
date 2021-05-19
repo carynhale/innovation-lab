@@ -51,19 +51,7 @@ endef
  $(foreach sample,$(TUMOR_SAMPLES),\
 		$(eval $(call cnvkit-cnr,$(sample))))
 
-define cnvkit-plot
-cnvkit/log2/%.ontarget.pdf : cnvkit/cnr/%.cnr
-	$$(call RUN,-c -v $(ASCAT_ENV) -s 4G -m 6G,"set -o pipefail && \
-						    $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '1' --sample_name $$(*)")
-	
-cnvkit/log2/%.offtarget.pdf : cnvkit/cnr/%.cnr
-	$$(call RUN,-c -v $(ASCAT_ENV) -s 4G -m 6G,"set -o pipefail && \
-						    $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/cnvkit.R --type '2' --sample_name $$(*)")
-	
-endef
- $(foreach sample,$(TUMOR_SAMPLES),\
-		$(eval $(call cnvkit-plot,$(sample))))
-		
+
 ..DUMMY := $(shell mkdir -p version; \
 	     python $(CNVKIT_ENV)/bin/cnvkit.py version &> version/cnvkit.txt)
 .DELETE_ON_ERROR:
