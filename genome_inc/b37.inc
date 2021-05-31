@@ -17,6 +17,7 @@ STAR_REF = $(REF_DIR)/STAR_b37
 KALLISTO_INDEX = $(REF_DIR)/b37/ensembl_v75-0.43.0_kallisto_index
 BISMARK_GENOME = $(REF_DIR)/b37/bismark_bt2/
 SALMON_INDEX = $(REF_DIR)/b37/salmon_idx
+REF_MSI = $(REF_DIR)/b37/human_g1k_v37.msi
 
 endif
 B37_INC = true
