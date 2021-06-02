@@ -5,7 +5,8 @@ LOGDIR ?= log/msi_sensor.$(NOW)
 
 MSISENSOR_OPTS ?= -d $(REF_MSI) $(if $(TARGETS_FILE),-e $(TARGETS_FILE))
 
-msi_sensor : $(foreach pair,$(SAMPLE_PAIRS),msisensor/$(pair).msi)
+msi_sensor : $(foreach pair,$(SAMPLE_PAIRS),msisensor/$(pair).msi) \
+	     summary/msi_metrics.txt
 	     
 define msisensor-tumor-normal
 msisensor/$1_$2.msi : bam/$1.bam bam/$2.bam
