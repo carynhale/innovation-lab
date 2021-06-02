@@ -13,6 +13,10 @@ msisensor/$1_$2.msi : bam/$1.bam bam/$2.bam
 endef
 $(foreach pair,$(SAMPLE_PAIRS),\
 	$(eval $(call msisensor-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)))))
+	
+summary/msi_metrics.txt : $(foreach pair,$(SAMPLE_PAIRS),msisensor/$(pair).msi)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/msi_sensor.R --option 1 --sample_pairs '$(SAMPLE_PAIRS)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
