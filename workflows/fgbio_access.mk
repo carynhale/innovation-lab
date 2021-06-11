@@ -204,7 +204,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_a
 					  CollectDuplexSeqMetrics \
 					  --input $$(<) \
 					  --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC \
-					  --duplex-umi-counts true")
+					  --duplex-umi-counts true \
+					  --intervals $$(TARGETS_LIST)")
 
 endef
 $(foreach sample,$(SAMPLES),\
