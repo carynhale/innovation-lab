@@ -24,6 +24,7 @@ SEQTK_ENV ?= $(HOME)/share/usr/env/seqtk-1.3
 SALMON_ENV ?= $(HOME)/share/usr/env/salmon-1.4.0
 CNVKIT_ENV ?= $(HOME)/share/usr/env/cnvkit-0.9.8
 MSISENSOR_ENV ?= $(HOME)/share/usr/env/msisensor-pro-1.1.a
+GATK_ENV ?= $(HOME)/share/usr/env/gatk-3.8-10
 
 # aliases
 PYTHON ?= python
@@ -37,7 +38,7 @@ BGZIP ?= bgzip
 UNZIP ?= unzip
 TABIX ?= tabix
 PICARD ?= picard
-GATK ?= gatk3
+GATK ?= gatk
 BAM2FASTX ?= bam2fastx
 GENOTYPE_VARIANTS ?= genotype_variants
 VCF2MAF ?= vcf2maf.pl
