@@ -292,7 +292,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_I
 					    cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bai")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GAT_ENV),"set -o pipefail && \
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										     $$(call GATK_CMD,16G) \
 										     -T RealignerTargetCreator \
 										     -I $$(^) \
