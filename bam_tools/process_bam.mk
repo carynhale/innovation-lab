@@ -111,11 +111,11 @@ endif
 ifeq ($(SPLIT_CHR),true)
 define chr-target-realn
 %.$1.chr_split.intervals : %.bam %.bam.bai
-	$$(call RUN,-n 4 -s 4G -m 4G,"$$(call GATK_CMD,5G) \
-				      -T RealignerTargetCreator \
-				      -I $$(<) \
-				      -L $1 \
-				      -nt 4 -R $$(REF_FASTA)  -o $$@ $$(BAM_REALN_TARGET_OPTS)")
+	$$(call RUN,-n 4 -s 4G -m 4G -v $(GATK_ENV),"$$(call GATK_CMD,5G) \
+						     -T RealignerTargetCreator \
+						     -I $$(<) \
+						     -L $1 \
+						     -nt 4 -R $$(REF_FASTA)  -o $$@ $$(BAM_REALN_TARGET_OPTS)")
 endef
 $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-target-realn,$(chr))))
 
@@ -149,15 +149,15 @@ else
 				  $(RM) $<")
 
 %.realn.bam : %.bam %.intervals %.bam.bai
-	if [[ -s $(word 2,$^) ]]; then $(call RUN,-s 16G -m 16G,"$(call GATK_CMD,7G) -T IndelRealigner \
-								 -I $< -R $(REF_FASTA) -targetIntervals $(<<) \
-								 -o $@ $(BAM_REALN_OPTS) && $(RM) $<") ; \
-								 else mv $< $@ ; fi
+	if [[ -s $(word 2,$^) ]]; then $(call RUN,-s 16G -m 16G -v $(GATK_ENV),"$(call GATK_CMD,7G) -T IndelRealigner \
+										-I $< -R $(REF_FASTA) -targetIntervals $(<<) \
+										-o $@ $(BAM_REALN_OPTS) && $(RM) $<") ; \
+										else mv $< $@ ; fi
 
 %.intervals : %.bam %.bam.bai
-	$(call RUN,-n 4 -s 3G -m 3.5G,"$(call GATK_CMD,6G) -T RealignerTargetCreator \
-				       -I $< \
-				       -nt 4 -R $(REF_FASTA) -o $@ $(BAM_REALN_TARGET_OPTS)")
+	$(call RUN,-n 4 -s 3G -m 3.5G -v $(GATK_ENV),"$(call GATK_CMD,6G) -T RealignerTargetCreator \
+						      -I $< \
+						      -nt 4 -R $(REF_FASTA) -o $@ $(BAM_REALN_TARGET_OPTS)")
 endif
 
 endif
