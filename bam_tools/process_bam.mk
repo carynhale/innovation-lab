@@ -81,7 +81,7 @@ endif
 				  $(RM) $<")
 
 %.markdup.bam : %.bam
-	$(call RUN,-s 22G -m 22G,"$(MKDIR) metrics && \
+	$(call RUN,-s 24G -m 36G,"$(MKDIR) metrics && \
 				  $(MARK_DUP) \
 				  INPUT=$< \
 				  OUTPUT=$@ \
