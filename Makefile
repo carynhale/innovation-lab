@@ -179,6 +179,10 @@ fast_qc :
 TARGETS += cluster_samples
 cluster_samples :
 	$(call RUN_MAKE,innovation-lab/qc/cluster_samples.mk)
+	
+TARGETS += library_complexity
+library_complexity :
+	$(call RUN_MAKE,innovation-lab/qc/library_complexity.mk)
 
 #==================================================
 # RNA sequencing
