@@ -3,8 +3,8 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/library_complexity.$(NOW)
 
 picard_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexity.txt) \
-		 summary/complexity_summary.txt \
-		 summary/library_complexity.txt
+		 summary/complexity_summary.txt
+		 #summary/library_complexity.txt
 
 define library-complexity
 metrics/$1_library_complexity.txt : bam/$1.bam
@@ -23,9 +23,9 @@ summary/complexity_summary.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_l
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/complexity_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 					 
-summary/library_complexity.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexity.txt)
-	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
-					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/complexity_metrics.R --option 2 --sample_names '$(SAMPLES)'")
+#summary/library_complexity.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexity.txt)
+#	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+#					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/complexity_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
