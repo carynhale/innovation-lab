@@ -2,7 +2,9 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/library_complexity.$(NOW)
 
-picard_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexity.txt)
+picard_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexity.txt) \
+		 summary/complexity_summary.txt \
+		 summary/library_complexity.txt
 
 define library-complexity
 metrics/$1_library_complexity.txt : bam/$1.bam
@@ -17,9 +19,14 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call library-complexity,$(sample))))
 		
-#summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_hs_metrics.txt)
-#	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
-#					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
+summary/complexity_summary.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexity.txt)
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/complexity_metrics.R --option 1 --sample_names '$(SAMPLES)'")
+					 
+summary/library_complexity.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexity.txt)
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/complexity_metrics.R --option 2 --sample_names '$(SAMPLES)'")
+
 
 ..DUMMY := $(shell mkdir -p version; \
 	     echo "picard" >> version/library_complexity.txt; \
