@@ -3,7 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/get_basecount.$(NOW)
 
 GBC = $(HOME)/share/usr/GetBaseCounts
-MAPQ := 10
+MAPQ := 15
 BAQ := 15
 
 getbasecount : $(foreach sample,$(SAMPLES),gbc/$(sample).txt)
