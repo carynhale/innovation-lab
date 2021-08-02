@@ -44,6 +44,10 @@ TARGETS += pileup_metrics
 pileup_metrics :
 	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
 	
+TARGETS += get_basecount
+get_basecount :
+	$(call RUN_MAKE,innovation-lab/workflows/get_basecount.mk)
+	
 TARGETS += msi_sensor
 msi_sensor :
 	$(call RUN_MAKE,innovation-lab/workflows/msi_sensor.mk)
