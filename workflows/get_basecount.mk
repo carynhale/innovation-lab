@@ -4,7 +4,7 @@ LOGDIR ?= log/get_basecount.$(NOW)
 
 GBC = $(HOME)/share/usr/GetBaseCounts
 MAPQ := 15
-BAQ := 15
+BAQ := 20
 
 getbasecount : $(foreach sample,$(SAMPLES),gbc/$(sample).txt)
 
