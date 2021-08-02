@@ -17,8 +17,8 @@ BWA_BAMS = $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 bwa_mem : $(BWA_BAMS) \
 	  $(addsuffix .bai,$(BWA_BAMS)) \
-	  summary/markduplicates_summary.txt
-#	  summary/markduplicates_metrics.txt
+	  summary/markduplicates_summary.txt \
+	  summary/markduplicates_metrics.txt
 
 bam/%.bam : bwamem/bam/%.bwamem.$(BAM_SUFFIX)
 	$(call RUN,,"ln -f $(<) $(@)")
@@ -43,6 +43,10 @@ fastq/%.fastq.gz : fastq/%.fastq
 summary/markduplicates_summary.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).dup_metrics.txt)
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/markduplicates_metrics.R --option 1 --sample_names '$(SAMPLES)'")
+
+summary/markduplicates_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).dup_metrics.txt)
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/markduplicates_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
