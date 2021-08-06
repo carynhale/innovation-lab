@@ -176,6 +176,11 @@ TARGETS += rnaseq_metrics
 rnaseq_metrics :
 	$(call RUN_MAKE,innovation-lab/qc/rnaseq_metrics.mk)
 
+TARGETS += bam_metrics
+bam_metrics :
+	$(call RUN_MAKE,innovation-lab/qc/bam_metrics.mk)
+
+
 TARGETS += fast_qc
 fast_qc :
 	$(call RUN_MAKE,innovation-lab/qc/fast_qc.mk)
