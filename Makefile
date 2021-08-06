@@ -180,7 +180,6 @@ TARGETS += bam_metrics
 bam_metrics :
 	$(call RUN_MAKE,innovation-lab/qc/bam_metrics.mk)
 
-
 TARGETS += fast_qc
 fast_qc :
 	$(call RUN_MAKE,innovation-lab/qc/fast_qc.mk)
