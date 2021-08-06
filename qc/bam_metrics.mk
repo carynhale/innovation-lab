@@ -6,7 +6,8 @@ bam_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metrics.txt) 
+	      $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metrics.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics.txt)
 #	      summary/idx_metrics.txt \
 #	      summary/aln_metrics.txt \
 #	      summary/insert_metrics.txt \
@@ -77,12 +78,28 @@ endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call hs-metrics,$(sample))))
 
+define gc-metrics
+metrics/$1.gc_metrics.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					   $$(COLLECT_GC_BIAS) \
+					   INPUT=$$(<) \
+					   OUTPUT=metrics/$1.gc_bias.txt \
+					   CHART_OUTPUT=metrics/$1.gc_metrics.pdf \
+					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					   SUMMARY_OUTPUT=$$(@)")
+					   
+endef
+$(foreach sample,$(SAMPLES),\
+ 		$(eval $(call gc-metrics,$(sample))))
+
+
 ..DUMMY := $(shell mkdir -p version; \
 	     echo "picard" >> version/bam_metrics.txt; \
 	     $(PICARD) CollectAlignmentSummaryMetrics --version &>> version/bam_metrics.txt; \
 	     $(PICARD) CollectInsertSizeMetrics --version &>> version/bam_metrics.txt; \
 	     $(PICARD) CollectOxoGMetrics --version &>> version/bam_metrics.txt; \
 	     $(PICARD) CollectHsMetrics --version &>> version/bam_metrics.txt; \
+	     $(PICARD) CollectGcBiasMetrics --version &>> version/bam_metrics.txt; \
              R --version >> version/bam_metrics.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
