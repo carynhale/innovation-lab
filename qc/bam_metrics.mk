@@ -12,9 +12,10 @@ bam_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
 #	      summary/aln_metrics.txt \
 #	      summary/insert_metrics.txt \
 #	      summary/oxog_metrics.txt \
-#	      summary/hs_metrics.txt
+#	      summary/hs_metrics.txt \
+#	      summary/gc_metrics.txt
 	      
-TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
+TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-IMPACT-v4.sorted.list
 	      
 define idx-metrics
 metrics/$1.idx_stats.txt : bam/$1.bam
