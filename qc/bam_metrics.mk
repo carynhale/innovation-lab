@@ -18,7 +18,7 @@ TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.
 	      
 define idx-metrics
 metrics/$1.idx_stats.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					    $$(BAM_INDEX) \
 					    INPUT=$$(<) \
 					    > $$(@)")
@@ -29,7 +29,7 @@ $(foreach sample,$(SAMPLES),\
 					    
 define aln-metrics
 metrics/$1.aln_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					    $$(COLLECT_ALIGNMENT_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
@@ -41,7 +41,7 @@ $(foreach sample,$(SAMPLES),\
 
 define insert-metrics
 metrics/$1.insert_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					    $$(COLLECT_INSERT_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
@@ -54,7 +54,7 @@ $(foreach sample,$(SAMPLES),\
 
 define oxog-metrics
 metrics/$1.oxog_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					    $$(COLLECT_OXOG_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
@@ -66,13 +66,13 @@ $(foreach sample,$(SAMPLES),\
 
 define hs-metrics
 metrics/$1.hs_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(CALC_HS_METRICS) \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   BAIT_INTERVALS=$$(TARGETS_LIST) \
-					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					    $$(CALC_HS_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    BAIT_INTERVALS=$$(TARGETS_LIST) \
+					    TARGET_INTERVALS=$$(TARGETS_LIST)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -80,13 +80,13 @@ $(foreach sample,$(SAMPLES),\
 
 define gc-metrics
 metrics/$1.gc_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(COLLECT_GC_BIAS) \
-					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1.gc_bias.txt \
-					   CHART_OUTPUT=metrics/$1.gc_metrics.pdf \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   SUMMARY_OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					    $$(COLLECT_GC_BIAS) \
+					    INPUT=$$(<) \
+					    OUTPUT=metrics/$1.gc_bias.txt \
+					    CHART_OUTPUT=metrics/$1.gc_metrics.pdf \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    SUMMARY_OUTPUT=$$(@)")
 					   
 endef
 $(foreach sample,$(SAMPLES),\
