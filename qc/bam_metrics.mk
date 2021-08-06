@@ -86,4 +86,4 @@ $(foreach sample,$(SAMPLES),\
              R --version >> version/bam_metrics.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
-.PHONY: rnaseq_metrics
+.PHONY: bam_metrics
