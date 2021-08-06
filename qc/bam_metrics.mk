@@ -7,11 +7,11 @@ bam_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metrics.txt) 
-	      #summary/idx_metrics.txt \
-	      #summary/aln_metrics.txt \
-	      #summary/insert_metrics.txt \
-	      #summary/oxog_metrics.txt \
-	      #summary/hs_metrics.txt
+#	      summary/idx_metrics.txt \
+#	      summary/aln_metrics.txt \
+#	      summary/insert_metrics.txt \
+#	      summary/oxog_metrics.txt \
+#	      summary/hs_metrics.txt
 	      
 TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
 	      
