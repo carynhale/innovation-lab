@@ -92,6 +92,30 @@ metrics/$1.gc_metrics.txt : bam/$1.bam
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call gc-metrics,$(sample))))
+		
+summary/idx_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 1 --sample_names '$(SAMPLES)'")
+
+summary/aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 2 --sample_names '$(SAMPLES)'")
+
+summary/insert_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 3 --sample_names '$(SAMPLES)'")
+
+summary/oxog_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 4 --sample_names '$(SAMPLES)'")
+
+summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 5 --sample_names '$(SAMPLES)'")
+
+summary/gc_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 6 --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
