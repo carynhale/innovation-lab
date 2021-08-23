@@ -17,9 +17,9 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR.rrbs_summary_metrics) \
 	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR__F1R2.rrbs_summary_metrics) \
 	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR__F2R1.rrbs_summary_metrics) \
-	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR.txt) \
-	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR__F1R2.txt) \
-	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR__F2R1.txt)
+	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR.aln_metrics) \
+	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR__F1R2.aln_metrics) \
+	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_FX_BR__F2R1.aln_metrics)
 	 #summary/rrbs_metrics.txt \
 	 #summary/alignment_metrics.txt
 
@@ -165,7 +165,7 @@ metrics/$1_aln_srt_IR_FX_BR.rrbs_summary_metrics : bam/$1_aln_srt_IR_FX_BR.bam
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_IR_FX_BR")
 								  
-metrics/$1_aln_srt_IR_FX_BR.txt : bam/$1_aln_srt_IR_FX_BR.bam
+metrics/$1_aln_srt_IR_FX_BR.aln_metrics : bam/$1_aln_srt_IR_FX_BR.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
@@ -179,7 +179,7 @@ metrics/$1_aln_srt_IR_FX_BR__F1R2.rrbs_summary_metrics : bam/$1_aln_srt_IR_FX_BR
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_IR_FX_BR__F1R2")
 
-metrics/$1_aln_srt_fx__F1R2.txt : bam/$1_aln_srt_IR_FX_BR__F1R2.bam
+metrics/$1_aln_srt_fx__F1R2.aln_metrics : bam/$1_aln_srt_IR_FX_BR__F1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
@@ -193,7 +193,7 @@ metrics/$1_aln_srt_IR_FX_BR__F2R1.rrbs_summary_metrics : bam/$1_aln_srt_IR_FX_BR
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_IR_FX_BR__F2R1")
 
-metrics/$1_aln_srt_IR_FX_BR__F2R1.txt : bam/$1_aln_srt_IR_FX_BR__F2R1.bam
+metrics/$1_aln_srt_IR_FX_BR__F2R1.aln_metrics : bam/$1_aln_srt_IR_FX_BR__F2R1.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
