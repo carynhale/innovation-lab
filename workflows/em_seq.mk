@@ -20,10 +20,9 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F2R1.rrbs_summary_metrics) \
 	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR.aln_metrics) \
 	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F1R2.aln_metrics) \
-	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F2R1.aln_metrics)
-	 
-#summary/rrbs_metrics.txt \
-#summary/alignment_metrics.txt
+	 $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F2R1.aln_metrics) \
+	 summary/rrbs_metrics.txt \
+	 summary/alignment_metrics.txt
 
 REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
 GENOME_FOLDER = $(REF_DIR)/IDT_oligo/
@@ -206,15 +205,15 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
 		
-#summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz)
-#	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
-#					   mkdir -p summary && \
-#					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
-#
-#summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F1R2-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_aln_srt_fx__F2R1-pileup.txt.gz)
-#	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
-#					   mkdir -p summary && \
-#					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
+summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F1R2.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F2R1.rrbs_summary_metrics)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+					   mkdir -p summary && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
+
+summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR.aln_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F1R2.aln_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_IR_FX_BR__F2R1.aln_metrics)
+	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
+					   mkdir -p summary && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 									   
 ..DUMMY := $(shell mkdir -p version; \
 	     $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
