@@ -33,25 +33,21 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt) \
-	       
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) \
-	       
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) \
-	       
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
-	       
 	       summary/idx_metrics.txt \
 	       summary/aln_metrics.txt \
 	       summary/insert_metrics.txt \
