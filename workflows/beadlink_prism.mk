@@ -27,10 +27,10 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam) \
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals) \
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam) \
-		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam)
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR.bam) \
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam)
 
-#		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2.bam) \
-#		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam) \
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
 #		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.idx_stats.txt) \
@@ -350,17 +350,17 @@ $(foreach sample,$(SAMPLES),\
 	
 	
 define copy-to-bam
-bam/$1_cl_aln_srt_MD_IR_FX2.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.bam
+bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
 				     cp $$(<) $$(@) && \
 				     $$(SAMTOOLS) index $$(@) && \
-				     cp bam/$1_cl_aln_srt_MD_IR_FX2.bam.bai bam/$1_cl_aln_srt_MD_IR_FX2.bai")
+				     cp bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam.bai bam/$1_cl_aln_srt_MD_IR_FX2_BR.bai")
 			 
-bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
 				     cp $$(<) $$(@) && \
 				     $$(SAMTOOLS) index $$(@) && \
-				     cp bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bai")
+				     cp bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
