@@ -23,12 +23,12 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam) \
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt)
-		 
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.intervals) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam)
+
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2.bam) \
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam) \
 #		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
@@ -283,7 +283,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call create-consensus,$(sample))))
 	
 define align-consensus
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 									       $$(SAM_TO_FASTQ) \
 									       INPUT=$$(<) \
@@ -298,7 +298,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_F
 									       MAX_GAPS=-1 \
 									       ORIENTATIONS=FR")
 
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(ADD_RG) \
 					    INPUT=$$(<) \
@@ -311,9 +311,9 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_I
 					    SORT_ORDER=coordinate \
 					    COMPRESSION_LEVEL=0 && \
 					    $$(SAMTOOLS) index $$(@) && \
-					    cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bai")
+					    cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bai")
 
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										     $$(call GATK_CMD,16G) \
 										     -T RealignerTargetCreator \
@@ -324,7 +324,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_sr
 										     -known $$(KNOWN_INDELS) \
 										     --allow_potentially_misencoded_quality_scores")
 
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.intervals
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
 										      -T IndelRealigner \
@@ -335,7 +335,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_M
 										      -known $$(KNOWN_INDELS) \
 										      --allow_potentially_misencoded_quality_scores")
    							   
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					   $$(FIX_MATE) \
 					   INPUT=$$(<) \
