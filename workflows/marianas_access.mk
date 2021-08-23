@@ -170,24 +170,24 @@ marianas/$1/$1_cl_aln_srt_MD.bam : marianas/$1/$1_cl_aln_srt.bam
 					    cp marianas/$1/$1_cl_aln_srt_MD.bam.bai marianas/$1/$1_cl_aln_srt_MD.bai")
 										
 marianas/$1/$1_cl_aln_srt_MD.intervals : marianas/$1/$1_cl_aln_srt_MD.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
-								       $$(call GATK_CMD,16G) \
-								       -T RealignerTargetCreator \
-								       -I $$(^) \
-								       -nt $$(GATK_THREADS) \
-								       -R $$(REF_FASTA) \
-								       -o $$(@) \
-								       -known $$(KNOWN_INDELS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
+										      $$(call GATK_CMD,16G) \
+										      -T RealignerTargetCreator \
+										      -I $$(^) \
+										      -nt $$(GATK_THREADS) \
+										      -R $$(REF_FASTA) \
+										      -o $$(@) \
+										      -known $$(KNOWN_INDELS)")
 
 marianas/$1/$1_cl_aln_srt_MD_IR.bam : marianas/$1/$1_cl_aln_srt_MD.bam marianas/$1/$1_cl_aln_srt_MD.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
-								       $$(call GATK_CMD,16G) \
-								       -T IndelRealigner \
-								       -I $$(<) \
-								       -R $$(REF_FASTA) \
-								       -targetIntervals $$(<<) \
-								       -o $$(@) \
-								       -known $$(KNOWN_INDELS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
+										      $$(call GATK_CMD,16G) \
+										      -T IndelRealigner \
+										      -I $$(<) \
+										      -R $$(REF_FASTA) \
+										      -targetIntervals $$(<<) \
+										      -o $$(@) \
+										      -known $$(KNOWN_INDELS)")
 
 marianas/$1/$1_cl_aln_srt_MD_IR_FX.bam : marianas/$1/$1_cl_aln_srt_MD_IR.bam
 	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
@@ -290,26 +290,26 @@ marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam : marianas/$1/$1_cl_aln_srt_M
 									       cp marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam.bai marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bai")
 								  									   		   
 marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.intervals : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
-								       $$(call GATK_CMD,1G,12G)	\
-								       -allowPotentiallyMisencodedQuals \
-								       -T RealignerTargetCreator \
-								       -I $$(^) \
-								       -nt 8 \
-								       -R $$(REF_FASTA) \
-								       -o $$(@) \
-								       -known $$(KNOWN_INDELS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
+										      $$(call GATK_CMD,1G,12G)	\
+										      -allowPotentiallyMisencodedQuals \
+										      -T RealignerTargetCreator \
+										      -I $$(^) \
+										      -nt 8 \
+										      -R $$(REF_FASTA) \
+										      -o $$(@) \
+										      -known $$(KNOWN_INDELS)")
 
 marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.bam marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
-								       $$(call GATK_CMD,1G,12G)	\
-								       -allowPotentiallyMisencodedQuals \
-								       -T IndelRealigner \
-								       -I $$(<) \
-								       -R $$(REF_FASTA) \
-								       -targetIntervals $$(<<) \
-								       -o $$(@) \
-								       -known $$(KNOWN_INDELS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
+										      $$(call GATK_CMD,1G,12G)	\
+										      -allowPotentiallyMisencodedQuals \
+										      -T IndelRealigner \
+										      -I $$(<) \
+										      -R $$(REF_FASTA) \
+										      -targetIntervals $$(<<) \
+										      -o $$(@) \
+										      -known $$(KNOWN_INDELS)")
 									  		   
 marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam : marianas/$1/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR.bam
 	$$(call RUN,-c -n 1 -s 12G -m 18G,"set -o pipefail && \
