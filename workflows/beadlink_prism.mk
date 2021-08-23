@@ -15,14 +15,15 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam) \
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
 		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.grp) \
-		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam)
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC.bam) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX__grp_DC.duplex_umi_counts.txt) \
-#		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC.duplex_umi_counts.txt) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
+		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt) \
+		 
 #		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA.bam) \
 #		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.bam) \
 #		 $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG.intervals) \
@@ -211,18 +212,6 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call merge-bams,$(sample))))
 	
 define create-consensus
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,8G) \
-					  CorrectUmis \
-					  --input=$$(<) \
-					  --output=$$(@) \
-					  --rejects=fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__REJECTED_.bam \
-					  --metrics=fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__cu.txt \
-					  --max-mismatches=5 \
-					  --min-distance=1 \
-					  --umi-files=$$(UMI_LIST)")
-
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(call FGBIO_CMD,2G,8G) \
@@ -231,8 +220,20 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR
 					  --input=$$(<) \
 					  --output=$$(@) \
 					  --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.txt")
-									  
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.bam
+
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+					  $$(call FGBIO_CMD,2G,8G) \
+					  CorrectUmis \
+					  --input=$$(<) \
+					  --output=$$(@) \
+					  --rejects=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__REJECTED_.bam \
+					  --metrics=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__cu.txt \
+					  --max-mismatches=5 \
+					  --min-distance=1 \
+					  --umi-files=$$(UMI_LIST)")
+
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(call FGBIO_CMD,2G,8G) \
 					  GroupReadsByUmi \
@@ -241,7 +242,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2.
 					  --output=$$(@) \
 					  --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.txt")
 									  
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX__grp.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
 								       $$(call FGBIO_CMD,2G,16G) \
 								       CallDuplexConsensusReads \
