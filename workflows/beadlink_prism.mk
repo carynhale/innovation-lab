@@ -430,8 +430,8 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(COLLECT_GC_BIAS) \
 					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics.pdf \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 
