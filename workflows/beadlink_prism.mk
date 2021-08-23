@@ -31,32 +31,32 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam) \
 		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
-		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam)
+		 $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR.idx_stats.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR.aln_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR.insert_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR.oxog_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR.hs_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR.gc_metrics_summary.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt)
 
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.idx_stats.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.aln_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.insert_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.oxog_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.hs_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.hs_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2.gc_metrics_summary.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) \
-#		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt) \
 #		 summary/umi_counts.txt \
 #		 summary/umi_duplex_counts.txt \
 #		 summary/umi_fixed_counts.txt \
@@ -390,35 +390,35 @@ $(foreach sample,$(SAMPLES),\
 	
 
 define picard-metrics-standard
-metrics/$1_cl_aln_srt_MD_IR_FX2.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(BAM_INDEX) \
 					    INPUT=$$(<) \
 					    > $$(@)")
 			   
-metrics/$1_cl_aln_srt_MD_IR_FX2.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
 					    $$(COLLECT_ALIGNMENT_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 			   
-metrics/$1_cl_aln_srt_MD_IR_FX2.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
 					    $$(COLLECT_INSERT_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
-					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX.insert_metrics.pdf \
+					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2_BR.insert_metrics.pdf \
 					    MINIMUM_PCT=0.5")
 
-metrics/$1_cl_aln_srt_MD_IR_FX2.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_OXOG_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 										
-metrics/$1_cl_aln_srt_MD_IR_FX2.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(CALC_HS_METRICS) \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -427,12 +427,12 @@ metrics/$1_cl_aln_srt_MD_IR_FX2.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
-metrics/$1_cl_aln_srt_MD_IR_FX2.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(COLLECT_GC_BIAS) \
 					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2.gc_metrics.pdf \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 
@@ -441,35 +441,35 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
 		
 define picard-metrics-collapsed
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(BAM_INDEX) \
 					    INPUT=$$(<) \
 					    > $$(@)")
 									   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_ALIGNMENT_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 									   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_INSERT_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
-					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.insert_metrics.pdf \
+					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.insert_metrics.pdf \
 					    MINIMUM_PCT=0.5")
 			   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_OXOG_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 				
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(CALC_HS_METRICS) \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -478,12 +478,12 @@ metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.hs_metrics.txt : bam/$1_cl_a
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(COLLECT_GC_BIAS) \
 					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX.gc_metrics.pdf \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 
@@ -492,35 +492,35 @@ $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-collapsed,$(sample))))
 		
 define picard-metrics-simplex
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(BAM_INDEX) \
 					    INPUT=$$(<) \
 					    > $$(@)")
 									   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_ALIGNMENT_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 			   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_INSERT_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
-					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.pdf \
+					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.pdf \
 					    MINIMUM_PCT=0.5")
 									   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_OXOG_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 										
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(CALC_HS_METRICS) \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -529,12 +529,12 @@ metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt : bam
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(COLLECT_GC_BIAS) \
 					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.pdf \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 
@@ -544,35 +544,35 @@ $(foreach sample,$(SAMPLES),\
 		
 
 define picard-metrics-duplex
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(BAM_INDEX) \
 					    INPUT=$$(<) \
 					    > $$(@)")
 									   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_ALIGNMENT_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 									   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_INSERT_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
-					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.pdf \
+					    HISTOGRAM_FILE=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.pdf \
 					    MINIMUM_PCT=0.5")
 									   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_OXOG_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 										
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(CALC_HS_METRICS) \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
@@ -581,12 +581,12 @@ metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : bam/
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
-metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(COLLECT_GC_BIAS) \
 					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.pdf \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 
