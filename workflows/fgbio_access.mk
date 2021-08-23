@@ -329,7 +329,7 @@ bam/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_M
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
 				     cp $$(<) $$(@) && \
 				     $$(SAMTOOLS) index $$(@) && \
-				     cp bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX__grp_DC_MA_RG_IR_FX.bai")
+				     cp bam/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.bai")
 												
 bam/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
@@ -385,12 +385,12 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
-metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR.bam
+metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(COLLECT_GC_BIAS) \
 					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR.gc_metrics.pdf \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 
@@ -436,6 +436,15 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt : fgbio/$1/
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
 
+metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					   $$(COLLECT_GC_BIAS) \
+					   INPUT=$$(<) \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.gc_metrics.pdf \
+					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					   SUMMARY_OUTPUT=$$(@)")
+
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-collapsed,$(sample))))
@@ -478,6 +487,15 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt : f
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
 
+metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					   $$(COLLECT_GC_BIAS) \
+					   INPUT=$$(<) \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.pdf \
+					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					   SUMMARY_OUTPUT=$$(@)")
+
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-simplex,$(sample))))
@@ -519,6 +537,15 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : fg
 					   OUTPUT=$$(@) \
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+
+metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					   $$(COLLECT_GC_BIAS) \
+					   INPUT=$$(<) \
+					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.pdf \
+					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					   SUMMARY_OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
