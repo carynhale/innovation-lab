@@ -180,7 +180,7 @@ metrics/$1_aln_srt_IR_FX_BR__F1R2.rrbs_summary_metrics : bam/$1_aln_srt_IR_FX_BR
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_IR_FX_BR__F1R2")
 
-metrics/$1_aln_srt_fx__F1R2.aln_metrics : bam/$1_aln_srt_IR_FX_BR__F1R2.bam
+metrics/$1_aln_srt_IR_FX_BR__F1R2.aln_metrics : bam/$1_aln_srt_IR_FX_BR__F1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
