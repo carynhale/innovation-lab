@@ -33,26 +33,31 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt) \
+	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) \
+	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) \
+	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
+	       $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt) \
 	       summary/idx_metrics.txt \
 	       summary/aln_metrics.txt \
 	       summary/insert_metrics.txt \
 	       summary/oxog_metrics.txt \
 	       summary/hs_metrics.txt \
+	       summary/gc_metrics.txt \
 	       summary/umi_counts.txt \
 	       summary/umi_duplex_counts.txt \
 	       summary/duplex_family_sizes.txt \
@@ -590,6 +595,11 @@ summary/duplex_family_sizes.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(
 summary/duplex_yield_metrics.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/fgbio_access.R --option 10 --sample_names '$(SAMPLES)'")
+
+summary/gc_metrics.txt :
+$(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/fgbio_access.R --option 11 --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
