@@ -100,7 +100,7 @@ bismark/$1/$1_aln_srt_RG_IR.bam : bismark/$1/$1_aln_srt_RG.bam bismark/$1/$1_aln
 										      -o $$(@)")
 
 bismark/$1/$1_aln_srt_RG_IR_FX.bam : bismark/$1/$1_aln_srt_RG_IR.bam
-	$$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					   $$(FIX_MATE) \
 					   INPUT=$$(<) \
 					   OUTPUT=$$(@) \
