@@ -191,7 +191,7 @@ metrics/$1_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics : bam/$1_aln_srt_RG_IR_FX
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
-				      M=metrics/$1_aln_srt_IR_FX__F2R1")
+				      M=metrics/$1_aln_srt_RG_IR_FX__F2R1")
 
 metrics/$1_aln_srt_RG_IR_FX__F2R1.aln_metrics : bam/$1_aln_srt_RG_IR_FX__F2R1.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
