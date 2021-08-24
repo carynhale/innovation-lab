@@ -66,19 +66,19 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 									       cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 									       
 bismark/$1/$1_aln_srt_RG.bam : bismark/$1/$1_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					    $$(ADD_RG) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    RGID=$1 \
-					    RGLB=$1 \
-					    RGPL=illumina \
-					    RGPU=NA \
-					    RGSM=$1 \
-					    SORT_ORDER=coordinate \
-					    COMPRESSION_LEVEL=0 && \
-					    $$(SAMTOOLS) index $$(@) && \
-					    cp bismark/$1/$1_aln_srt_RG.bam.bai bismark/$1/$1_aln_srt_RG.bai")
+	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $$(ADD_RG) \
+					   INPUT=$$(<) \
+					   OUTPUT=$$(@) \
+					   RGID=$1 \
+					   RGLB=$1 \
+					   RGPL=illumina \
+					   RGPU=NA \
+					   RGSM=$1 \
+					   SORT_ORDER=coordinate \
+					   COMPRESSION_LEVEL=0 && \
+					   $$(SAMTOOLS) index $$(@) && \
+					   cp bismark/$1/$1_aln_srt_RG.bam.bai bismark/$1/$1_aln_srt_RG.bai")
 									       
 bismark/$1/$1_aln_srt_RG.intervals : bismark/$1/$1_aln_srt_RG.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
@@ -159,42 +159,42 @@ $(foreach sample,$(SAMPLES),\
 		
 define picard-metrics
 metrics/$1_aln_srt_RG_IR_FX.rrbs_summary_metrics : bam/$1_aln_srt_RG_IR_FX.bam
-	$$(call RUN, -c -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_RG_IR_FX")
 								  
 metrics/$1_aln_srt_RG_IR_FX.aln_metrics : bam/$1_aln_srt_RG_IR_FX.bam
-	$$(call RUN, -c -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      O=$$(@)")
 
 metrics/$1_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics : bam/$1_aln_srt_RG_IR_FX__F1R2.bam
-	$$(call RUN, -c -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_RG_IR_FX__F1R2")
 
 metrics/$1_aln_srt_RG_IR_FX__F1R2.aln_metrics : bam/$1_aln_srt_RG_IR_FX__F1R2.bam
-	$$(call RUN, -c -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      O=$$(@)")
 								  
 metrics/$1_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics : bam/$1_aln_srt_RG_IR_FX__F2R1.bam
-	$$(call RUN, -c -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_IR_FX__F2R1")
 
 metrics/$1_aln_srt_RG_IR_FX__F2R1.aln_metrics : bam/$1_aln_srt_RG_IR_FX__F2R1.bam
-	$$(call RUN, -c -s 12G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
@@ -205,14 +205,14 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call picard-metrics,$(sample))))
 		
 summary/rrbs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics)
-	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
-					   mkdir -p summary && \
-					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
+	$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+					  mkdir -p summary && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
 
 summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.aln_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.aln_metrics) $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.aln_metrics)
-	$(call RUN, -c -n 1 -s 12G -m 16G,"set -o pipefail && \
-					   mkdir -p summary && \
-					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
+	$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+					  mkdir -p summary && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/emseq_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 									   
 ..DUMMY := $(shell mkdir -p version; \
 	     $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/em_seq.txt; \
