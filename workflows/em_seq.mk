@@ -117,7 +117,7 @@ bismark/$1/$1_aln_srt_RG_IR_FX.grp : bismark/$1/$1_aln_srt_RG_IR_FX.bam
 										      -I $$(<) \
 										      -o $$(@)")
 
-bismark/$1/$1_aln_srt_RG_IR_FX_BR.bam : bismark/$1/$1_aln_srt_IR_FX.bam bismark/$1/$1_aln_srt_RG_IR_FX.grp
+bismark/$1/$1_aln_srt_RG_IR_FX_BR.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam bismark/$1/$1_aln_srt_RG_IR_FX.grp
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
 										      -T PrintReads \
