@@ -55,20 +55,20 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
-		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt)
-#		 summary/umi_counts.txt \
-#		 summary/umi_duplex_counts.txt \
-##		 summary/umi_fixed_counts.txt \
+		 $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt) \
+		 summary/umi_counts.txt \
+		 summary/umi_duplex_counts.txt \
+#		 summary/umi_fixed_counts.txt \
 #		 summary/umi_fixed_duplex_counts.txt \
-#		 summary/idx_metrics.txt \
-#		 summary/aln_metrics.txt \
-#		 summary/insert_metrics.txt \
-#		 summary/oxog_metrics.txt \
-#		 summary/hs_metrics.txt \
-#		 summary/gc_metrics.txt
-##		 summary/all_family_sizes.txt \
-##		 summary/duplex_family_sizes.txt \
-##		 summary/duplex_yield_metrics.txt
+		 summary/idx_metrics.txt \
+		 summary/aln_metrics.txt \
+		 summary/insert_metrics.txt \
+		 summary/oxog_metrics.txt \
+		 summary/hs_metrics.txt \
+		 summary/gc_metrics.txt
+#		 summary/all_family_sizes.txt \
+#		 summary/duplex_family_sizes.txt \
+#		 summary/duplex_yield_metrics.txt
 				 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
