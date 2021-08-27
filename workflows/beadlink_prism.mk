@@ -61,7 +61,7 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 summary/insert_metrics.txt \
 		 summary/oxog_metrics.txt \
 		 summary/hs_metrics.txt \
-		 summary/gc_metrics.txt
+		 summary/gc_metrics.txt \
 #		 summary/umi_counts.txt \
 #		 summary/umi_duplex_counts.txt \
 #		 summary/umi_fixed_counts.txt \
