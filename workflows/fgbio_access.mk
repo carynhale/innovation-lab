@@ -223,7 +223,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
 					 cp $$(<) $$(@) && \
 					 $$(SAMTOOLS) index $$(@)")
 					  
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam #fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam
 	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
 					 cp $$(<) $$(@)")
 									  
@@ -236,7 +236,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX
 								       --output $$(@) \
 								       --threads $$(GATK_THREADS)")
 								       
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam #fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam
 	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
 					 cp $$(<) $$(@)")
 
@@ -249,7 +249,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_c
 					  --duplex-umi-counts true \
 					  --intervals $$(TARGETS_LIST)")
 
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt #fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam
 	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
 					 cp $$(<) $$(@)")
 
