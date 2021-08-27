@@ -65,10 +65,10 @@ beadlink_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.
 		 summary/umi_counts.txt \
 		 summary/umi_duplex_counts.txt \
 		 summary/umi_fixed_counts.txt \
-		 summary/umi_fixed_duplex_counts.txt
-#		 summary/all_family_sizes.txt \
-#		 summary/duplex_family_sizes.txt \
-#		 summary/duplex_yield_metrics.txt
+		 summary/umi_fixed_duplex_counts.txt \
+		 summary/all_family_sizes.txt \
+		 summary/duplex_family_sizes.txt \
+		 summary/duplex_yield_metrics.txt
 				 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G

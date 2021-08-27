@@ -23,6 +23,9 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.umi_counts.txt) \
+	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.family_sizes.txt) \
+	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_family_sizes.txt) \
+	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_yield_metrics.txt) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals) \
@@ -246,7 +249,18 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt
 	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
 					 cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.umi_counts.txt $$(@)")
+					 
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.family_sizes.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt
+	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
+					 cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.family_sizes.txt $$(@)")
 
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_family_sizes.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt
+	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
+					 cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_family_sizes.txt $$(@)")
+					 
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_yield_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt
+	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
+					 cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_yield_metrics.txt $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
