@@ -9,6 +9,7 @@ em_seq : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
 	 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
 	 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
+	 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
 	 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
 	 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX.bam) \
 	 $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
