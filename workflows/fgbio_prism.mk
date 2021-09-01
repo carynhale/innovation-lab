@@ -83,9 +83,6 @@ GATK_MEM_THREAD = 2G
 UMI_LIST = $(HOME)/share/lib/resource_files/NEB_Prism_UMIs.txt
 TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
 
-MIN_MAPQ ?= 20
-TARGETS_BED ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
-
 define copy-fastq
 fgbio/$1/$1_R1.fastq.gz : $3
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
@@ -438,21 +435,6 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 					   
-waltz/$1_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
-					 mkdir -p waltz && \
-					 cd waltz && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX_BR.bam $1_cl_aln_srt_MD_IR_FX_BR.bam && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX_BR.bai $1_cl_aln_srt_MD_IR_FX_BR.bai && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX_BR.bam $$(REF_FASTA) $$(TARGETS_BED) && \
-					 gzip $1_cl_aln_srt_MD_IR_FX_BR-pileup.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX_BR-pileup-without-duplicates.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX_BR-intervals.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX_BR-intervals-without-duplicates.txt && \
-					 unlink $1_cl_aln_srt_MD_IR_FX_BR.bam && \
-					 unlink $1_cl_aln_srt_MD_IR_FX_BR.bai && \
-					 cd ..")
-
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-standard,$(sample))))
@@ -504,21 +486,6 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt : 
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 					   
-waltz/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
-					 mkdir -p waltz && \
-					 cd waltz && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam $1$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam $$(REF_FASTA) $$(TARGETS_BED) && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup-without-duplicates.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-intervals.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-intervals-without-duplicates.txt && \
-					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam && \
-					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai && \
-					 cd ..")
-
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-collapsed,$(sample))))
@@ -570,21 +537,6 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summar
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 					   
-waltz/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
-	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
-					 mkdir -p waltz && \
-					 cd waltz && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $1$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bai $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bai && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $$(REF_FASTA) $$(TARGETS_BED) && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup-without-duplicates.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals-without-duplicates.txt && \
-					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam && \
-					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bai && \
-					 cd ..")
-
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-simplex,$(sample))))
@@ -637,21 +589,6 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
 					   
-waltz/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
-					 mkdir -p waltz && \
-					 cd waltz && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam $1$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam && \
-					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
-					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam $$(REF_FASTA) $$(TARGETS_BED) && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup-without-duplicates.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-intervals.txt && \
-					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-intervals-without-duplicates.txt && \
-					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam && \
-					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
-					 cd ..")
-
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-duplex,$(sample))))
