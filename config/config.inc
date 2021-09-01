@@ -87,8 +87,8 @@ GATK_MEM = 18G
 GATK_OPTS = -S LENIENT
 ANALYZE_COV = $(GATK) -Xmx$(GATK_MEM) -T AnalyzeCovariates $(GATK_OPT)
 
-# marianas command line
-MARIANAS ?= $(HOME)/share/usr/marianas-1.8.1/Marianas-1.8.1.jar
+# gbc command line
+GBC ?= $(HOME)/share/usr/GetBaseCounts/GetBaseCounts
 
 # waltz command line
 WALTZ ?= $(HOME)/share/usr/marianas-1.8.1/Waltz-3.0.jar
