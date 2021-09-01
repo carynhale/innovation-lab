@@ -49,7 +49,7 @@ msi_sensor :
 #==================================================
 
 TARGETS += fgbio_prism
-beadlink_prism :
+fgbio_prism :
 	$(call RUN_MAKE,innovation-lab/workflows/fgbio_prism.mk)
 	
 TARGETS += fgbio_access
