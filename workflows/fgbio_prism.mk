@@ -46,18 +46,21 @@ fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz)
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt) \
+	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz) \
 	      summary/umi_counts.txt \
 	      summary/umi_duplex_counts.txt \
 	      summary/umi_fixed_counts.txt \
@@ -504,6 +507,21 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt : 
 					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
+					   
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+					 mkdir -p metrics && \
+					 cd metrics && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam $1$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam $$(REF_FASTA) $$(TARGETS_BED) && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup-without-duplicates.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-intervals.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai && \
+					 cd ..")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -555,6 +573,21 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summar
 					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
+					   
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+					 mkdir -p metrics && \
+					 cd metrics && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $1$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bai $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bai && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam $$(REF_FASTA) $$(TARGETS_BED) && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup-without-duplicates.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bai && \
+					 cd ..")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -607,6 +640,21 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary
 					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
+					   
+metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+					 mkdir -p metrics && \
+					 cd metrics && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam $1$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam $$(REF_FASTA) $$(TARGETS_BED) && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup-without-duplicates.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-intervals.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
+					 cd ..")
 
 endef
 $(foreach sample,$(SAMPLES),\
