@@ -2,6 +2,7 @@ include innovation-lab/Makefile.inc
 include innovation-lab/config/fgbio.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
+include innovation-lab/config/waltz.inc
 
 LOGDIR ?= log/fgbio_prism.$(NOW)
 
@@ -38,6 +39,7 @@ fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz)
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.oxog_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt) \
+	      $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
@@ -80,8 +82,10 @@ GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
 UMI_LIST = $(HOME)/share/lib/resource_files/NEB_Prism_UMIs.txt
-
 TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
+
+MIN_MAPQ ?= 30
+TARGETS_BED ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 
 define copy-fastq
 fgbio/$1/$1_R1.fastq.gz : $3
@@ -434,6 +438,21 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_
 					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.pdf \
 					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					   SUMMARY_OUTPUT=$$(@)")
+					   
+waltz/$1_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
+	$$(call RUN,-c -n 4 -s 4G -m 6G,"set -o pipefail && \
+					 mkdir -p waltz && \
+					 cd waltz && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX_BR.bam $1_cl_aln_srt_MD_IR_FX_BR.bam && \
+					 ln -sf ../bam/$1_cl_aln_srt_MD_IR_FX_BR.bai $1_cl_aln_srt_MD_IR_FX_BR.bai && \
+					 $$(call WALTZ_CMD,2G,8G) org.mskcc.juber.waltz.Waltz PileupMetrics $$(MIN_MAPQ) $1_cl_aln_srt_MD_IR_FX_BR.bam $$(REF_FASTA) $$(TARGETS_BED) && \
+					 gzip $1_cl_aln_srt_MD_IR_FX_BR-pileup.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX_BR-pileup-without-duplicates.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX_BR-intervals.txt && \
+					 gzip $1_cl_aln_srt_MD_IR_FX_BR-intervals-without-duplicates.txt && \
+					 unlink $1_cl_aln_srt_MD_IR_FX_BR.bam && \
+					 unlink $1_cl_aln_srt_MD_IR_FX_BR.bai && \
+					 cd ..")
 
 endef
 $(foreach sample,$(SAMPLES),\
