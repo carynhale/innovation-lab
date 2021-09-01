@@ -4,7 +4,7 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/pileup_metrics.$(NOW)
 
-PRISM ?= true
+PRISM ?= false
 WALTZ_MIN_MAPQ ?= 30
 WALTZ_BED_FILE ?= $(HOME)/share/lib/bed_files/MSK-ACCESS-v1_0-probe-A.sorted.bed
 
