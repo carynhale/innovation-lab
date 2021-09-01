@@ -56,6 +56,10 @@ TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
 	
+TARGETS += marianas_access
+marianas_access :
+	$(call RUN_MAKE,innovation-lab/workflows/marianas_access.mk)
+	
 TARGETS += genotype_access
 genotype_access :
 	$(call RUN_MAKE,innovation-lab/workflows/genotype_access.mk)
