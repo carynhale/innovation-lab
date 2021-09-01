@@ -32,14 +32,6 @@ TARGETS += em_seq
 em_seq :
 	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
 	
-TARGETS += beadlink_prism
-beadlink_prism :
-	$(call RUN_MAKE,innovation-lab/workflows/beadlink_prism.mk)
-	
-TARGETS += fgbio_access
-fgbio_access :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
-	
 TARGETS += pileup_metrics
 pileup_metrics :
 	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
@@ -56,9 +48,13 @@ msi_sensor :
 # MSK-ACCESS workflows
 #==================================================
 
-TARGETS += marianas_access
-marianas_access :
-	$(call RUN_MAKE,innovation-lab/workflows/marianas_access.mk)
+TARGETS += fgbio_prism
+fgbio_prism :
+	$(call RUN_MAKE,innovation-lab/workflows/fgbio_prism.mk)
+	
+TARGETS += fgbio_access
+fgbio_access :
+	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
 	
 TARGETS += genotype_access
 genotype_access :
