@@ -76,14 +76,12 @@ waltz/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz : bam/
 					 unlink $1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
 					 cd ..")
 					 
-summary/intervals_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz)
-	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
-					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --library 'PRISM' --option 1 --sample_names '$(SAMPLES)'")
-
-
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
+summary/intervals_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
+					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --library 'PRISM' --option 1 --sample_names '$(SAMPLES)'")
 else
 pileup_metrics : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz) \
 		 $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz) \
@@ -152,13 +150,12 @@ waltz/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz : bam/$
 					 unlink $1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bai && \
 					 cd ..")
 					 
-summary/intervals_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz)
-	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
-					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --library 'ACCESS' --option 1 --sample_names '$(SAMPLES)'")
-
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call waltz-genotype,$(sample))))
+summary/intervals_summary.txt : $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX-pileup.txt.gz) $(foreach sample,$(SAMPLES),waltz/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX-pileup.txt.gz)
+	$(call RUN, -c -n 1 -s 64G -m 128G,"set -o pipefail && \
+					    $(RSCRIPT) $(SCRIPTS_DIR)/qc/pileup_metrics.R --library 'ACCESS' --option 1 --sample_names '$(SAMPLES)'")
 endif
 		
 ..DUMMY := $(shell mkdir -p version; \
