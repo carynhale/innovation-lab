@@ -1,17 +1,27 @@
 include innovation-lab/Makefile.inc
+include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
-bismark : $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX__F1R2.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_MD_IR_FX__F2R1.bam) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F1R2.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F2R1.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX.txt) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F1R2.txt) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_IR_FX__F2R1.txt) \
+bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.rrbs_summary_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.aln_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.aln_metrics) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.aln_metrics) \
 	  summary/rrbs_metrics.txt \
 	  summary/alignment_metrics.txt
 
@@ -50,18 +60,39 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
 								    					   --output_dir . && \
 								    					   mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
 								    					   mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
-								    					   cd ../.. && \
-													   $$(RM) bismark/$1/$1_R1.fastq.gz && \
-													   $$(RM) bismark/$1/$1_R2.fastq.gz")
+								    					   cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 12:00:00,"set -o pipefail && \
 											   $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
 											   $$(SAMTOOLS) index $$(@) && \
-											   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai && \
-											   $$(RM) $$(^)")
+											   cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 
-bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
+bismark/$1/$1_aln_srt_RG.bam : bismark/$1/$1_aln_srt.bam
+	$$(call RUN,-c -n 1 -s 36G -m 48G,"set -o pipefail && \
+					   $$(ADD_RG) \
+					   INPUT=$$(<) \
+					   OUTPUT=$$(@) \
+					   RGID=$1 \
+					   RGLB=$1 \
+					   RGPL=illumina \
+					   RGPU=NA \
+					   RGSM=$1 \
+					   SORT_ORDER=coordinate \
+					   COMPRESSION_LEVEL=0 && \
+					   $$(SAMTOOLS) index $$(@) && \
+					   cp bismark/$1/$1_aln_srt_RG.bam.bai bismark/$1/$1_aln_srt_RG.bai")
+
+bismark/$1/$1_aln_srt_RG.intervals : bismark/$1/$1_aln_srt_RG.bam
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
+										      $$(call GATK_CMD,16G) \
+										      -T RealignerTargetCreator \
+										      -I $$(^) \
+										      -nt $$(GATK_THREADS) \
+										      -R $$(REF_FASTA) \
+										      -o $$(@)")
+
+bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt_RG.bam
 	$$(call RUN, -c -n 1 -s 36G -m 48G -w 12:00:00,"set -o pipefail && \
 							$$(MARK_DUP) \
 						       	INPUT=$$(<) \

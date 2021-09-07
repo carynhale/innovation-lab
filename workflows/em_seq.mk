@@ -1,7 +1,6 @@
 include innovation-lab/Makefile.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/genome_inc/b37.inc
-include innovation-lab/config/waltz.inc
 
 LOGDIR ?= log/em_seq.$(NOW)
 
