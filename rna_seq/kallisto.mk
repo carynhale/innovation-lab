@@ -25,7 +25,7 @@ kallisto/$1/abundance.tsv : kallisto/$1/$1.1.fastq
 							     kallisto quant \
 							     -i $$(KALLISTO_INDEX) \
 							     -o kallisto/$1 \
-							     --bias -b 100 -t 12 -rf-stranded \
+							     --bias -b 100 -t 12\
 							     --fusion kallisto/$1/$1.1.fastq kallisto/$1/$1.2.fastq")
 
 endef
