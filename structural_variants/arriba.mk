@@ -3,9 +3,25 @@ include innovation-lab/config/arriba.inc
 
 LOGDIR ?= log/arriba.$(NOW)
 
+SEQ_PLATFROM = illumina
+STAR_OPTS = --genomeDir $(STAR_INDEX_DIR) \
+            --outSAMtype BAM SortedByCoordinate \
+	    --twopassMode Basic \
+            --outReadsUnmapped None \
+            --outSAMunmapped Within \
+            --chimSegmentMin 12 \
+            --chimJunctionOverhangMin 12 \
+            --alignSJDBoverhangMin 10 \
+            --alignMatesGapMax 200000 \
+            --alignIntronMax 200000 \
+            --chimSegmentReadGapMax parameter 3 \
+            --alignSJstitchMismatchNmax 5 -1 5 5 \
+            --chimOutType WithinBAM \
+	    --quantMode GeneCounts
+
 arriba : $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).1.fastq.gz) \
 	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).2.fastq.gz) \
-	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).Aligned.out.bam) \
+	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).Aligned.sortedByCoord.out.bam) \
 	 $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.tsv) \
 	 arriba/summary.txt
 
@@ -26,38 +42,25 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 define star-align
-arriba/$1/$1.Aligned.out.bam : arriba/$1/$1.1.fastq.gz arriba/$1/$1.2.fastq.gz
+arriba/$1/$1.Aligned.sortedByCoord.out.bam : arriba/$1/$1.1.fastq.gz arriba/$1/$1.2.fastq.gz
 	$$(call RUN,-c -n $(STAR_THREADS) -s 1G -m 2G -v $(ARRIBA_ENV),"set -o pipefail && \
-									STAR \
+									STAR $$(STAR_OPTS) \
+									--outFileNamePrefix arriba/$1/$1. \
 									--runThreadN $$(STAR_THREADS) \
-									--genomeDir $$(STAR_INDEX_DIR) \
-									--genomeLoad NoSharedMemory \
+									--outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
 									--readFilesIn $$(<) $$(<<) \
-									--readFilesCommand zcat \
-									--outStd BAM_Unsorted \
-									--outSAMtype BAM Unsorted \
-									--outSAMunmapped Within \
-									--outBAMcompression 0 \
-									--outFilterMultimapNmax 50 \
-									--peOverlapNbasesMin 10 \
-									--alignSplicedMateMapLminOverLmate 0.5 \
-									--alignSJstitchMismatchNmax 5 -1 5 5 \
-									--chimSegmentMin 10 \
-									--chimOutType WithinBAM HardClip \
-									--chimJunctionOverhangMin 10 \
-									--chimScoreDropMax 30 \
-									--chimScoreJunctionNonGTAG 0 \
-									--chimScoreSeparation 1 \
-									--chimSegmentReadGapMax 3 \
-									--chimMultimapNmax 50 \
-									--outFileNamePrefix arriba/$1/$1. > $$(*)")
+									--readFilesCommand zcat")
+
+arriba/$1/$1.Aligned.sortedByCoord.out.bam.bai : arriba/$1/$1.Aligned.sortedByCoord.out.bam
+	$$(call RUN,-n 1 -s 2G -m 4G,"set -o pipefail && \
+				      $$(SAMTOOLS) index $$(<)")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call star-align,$(sample))))
 		
 define run-arriba
-arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
+arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.sortedByCoord.out.bam arriba/$1/$1.Aligned.sortedByCoord.out.bam.bai
 	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(ARRIBA_ENV),"set -o pipefail && \
 							    $$(ARRIBA_EXE) -x $$(<) \
 							    -o arriba/$1/fusions.tsv -O arriba/$1/discarded.tsv \
@@ -67,7 +70,7 @@ arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 							    -k $$(KNOWN_FUSIONS_TSV) \
 							    -t $$(KNOWN_FUSIONS_TSV) \
 							    -p $$(PROTEIN_DOMAINS_GFF3)")
-
+							    
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call run-arriba,$(sample))))
