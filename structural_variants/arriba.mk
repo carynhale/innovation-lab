@@ -13,30 +13,30 @@ arriba/$1/$1.1.fastq.gz : bam/$1.bam
 				      bedtools bamtofastq -i - -fq >(gzip -c > arriba/$1/$1.1.fastq.gz) -fq2 >(gzip -c > arriba/$1/$1.2.fastq.gz)")
 
 arriba/$1/$1.Aligned.out.bam : arriba/$1/$1.1.fastq.gz
-	$$(call RUN,-c -n $(THREADS) -s 3G -m 4G -v $(ARRIBA_ENV) -w 72:00:00,"set -o pipefail && \
-									       STAR \
-									       --runThreadN $$(THREADS) \
-									       --genomeDir $$(STAR_INDEX_DIR) \
-									       --genomeLoad NoSharedMemory \
-									       --readFilesIn arriba/$1/$1.1.fastq.gz arriba/$1/$1.2.fastq.gz \
-									       --readFilesCommand zcat \
-									       --outStd BAM_Unsorted \
-									       --outSAMtype BAM Unsorted \
-									       --outSAMunmapped Within \
-									       --outBAMcompression 0 \
-									       --outFilterMultimapNmax 50 \
-									       --peOverlapNbasesMin 10 \
-									       --alignSplicedMateMapLminOverLmate 0.5 \
-									       --alignSJstitchMismatchNmax 5 -1 5 5 \
-									       --chimSegmentMin 10 \
-									       --chimOutType WithinBAM HardClip \
-									       --chimJunctionOverhangMin 10 \
-									       --chimScoreDropMax 30 \
-									       --chimScoreJunctionNonGTAG 0 \
-									       --chimScoreSeparation 1 \
-									       --chimSegmentReadGapMax 3 \
-									       --chimMultimapNmax 50 \
-									       --outFileNamePrefix arriba/$1/$1. > arriba/$1/$1.Aligned.out.bam")
+	$$(call RUN,-c -n $(STAR_THREADS) -s 3G -m 4G -v $(ARRIBA_ENV) -w 72:00:00,"set -o pipefail && \
+										    STAR \
+										    --runThreadN $$(STAR_THREADS) \
+										    --genomeDir $$(STAR_INDEX_DIR) \
+										    --genomeLoad NoSharedMemory \
+										    --readFilesIn arriba/$1/$1.1.fastq.gz arriba/$1/$1.2.fastq.gz \
+										    --readFilesCommand zcat \
+										    --outStd BAM_Unsorted \
+										    --outSAMtype BAM Unsorted \
+										    --outSAMunmapped Within \
+										    --outBAMcompression 0 \
+										    --outFilterMultimapNmax 50 \
+										    --peOverlapNbasesMin 10 \
+										    --alignSplicedMateMapLminOverLmate 0.5 \
+										    --alignSJstitchMismatchNmax 5 -1 5 5 \
+										    --chimSegmentMin 10 \
+										    --chimOutType WithinBAM HardClip \
+										    --chimJunctionOverhangMin 10 \
+										    --chimScoreDropMax 30 \
+										    --chimScoreJunctionNonGTAG 0 \
+										    --chimScoreSeparation 1 \
+										    --chimSegmentReadGapMax 3 \
+										    --chimMultimapNmax 50 \
+										    --outFileNamePrefix arriba/$1/$1. > arriba/$1/$1.Aligned.out.bam")
 
 
 arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
