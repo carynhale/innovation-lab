@@ -13,7 +13,7 @@ arriba/$1/$1.1.fastq.gz : bam/$1.bam
 				      bedtools bamtofastq -i - -fq >(gzip -c > arriba/$1/$1.1.fastq.gz) -fq2 >(gzip -c > arriba/$1/$1.2.fastq.gz)")
 
 arriba/$1/$1.Aligned.out.bam : arriba/$1/$1.1.fastq.gz
-	$$(call RUN,-c -n $(THREADS) -s 1G -m 2G -v $(ARRIBA_ENV) -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n $(THREADS) -s 3G -m 4G -v $(ARRIBA_ENV) -w 72:00:00,"set -o pipefail && \
 									       STAR \
 									       --runThreadN $$(THREADS) \
 									       --genomeDir $$(STAR_INDEX_DIR) \
