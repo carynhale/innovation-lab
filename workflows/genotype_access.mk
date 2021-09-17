@@ -5,7 +5,7 @@ LOGDIR ?= log/genotype_access.$(NOW)
 
 genotype_access : $(foreach sample,$(SAMPLES),genotype_variants/$(sample).taskcomplete)
 
-REF_FASTA = /depot/resources/dmp/data/pubdata/hg-fasta/VERSIONS/hg19/Homo_sapiens_assembly19.fasta
+REF_FASTA = /juno/depot/resources/dmp/data/pubdata/hg-fasta/VERSIONS/hg19/Homo_sapiens_assembly19.fasta
 GBCMS_PATH ?= $(HOME)/share/usr/bin/GetBaseCountsMultiSample
 FILTER_DUPLICATES ?= 0
 FRAGMENT_COUNT ?= 1
