@@ -15,7 +15,7 @@ VERBOSITY ?= INFO
 
 define genotype-access
 genotype_variants/$1.taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
-	$$(call RUN,-c -n 10 -s 1G -m 2G -v $(GENOTYPE_VARIANTS_ENV),"set -o pipefail && \
+	$$(call RUN,-c -n 10 -s 2G -m 3G -v $(GENOTYPE_VARIANTS_ENV),"set -o pipefail && \
 								      mkdir -p genotype_variants && \
 								      cd genotype_variants && \
 								      $$(GENOTYPE_VARIANTS) small_variants all \
