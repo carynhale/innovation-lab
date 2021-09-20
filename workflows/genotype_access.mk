@@ -46,7 +46,7 @@ summary/summary_genotype.txt : $(foreach sample,$(SAMPLES),genotype_variants/$(s
 	     $(GBCMS_PATH) --help &> version/genotype_access.txt; \
 	     echo 'genotype_variants' >> version/genotype_access.txt; \
 	     $(GENOTYPE_VARIANTS_ENV)/bin/$(GENOTYPE_VARIANTS) --version >> version/genotype_access.txt; \
-	     R --version > version/msi_sensor.txt)
+	     R --version > version/genotype_access.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: genotype_access
