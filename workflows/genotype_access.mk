@@ -3,7 +3,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/genotype_access.$(NOW)
 
-genotype_access : $(foreach sample,$(SAMPLES),genotype_variants/$(sample).taskcomplete)
+genotype_access : $(foreach sample,$(SAMPLES),genotype_variants/$(sample).taskcomplete) \
+		  summary/summary_genotype.txt
 
 REF_FASTA = /juno/depot/resources/dmp/data/pubdata/hg-fasta/VERSIONS/hg19/Homo_sapiens_assembly19.fasta
 GBCMS_PATH ?= $(HOME)/share/usr/bin/GetBaseCountsMultiSample
@@ -36,10 +37,16 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call genotype-access,$(sample))))
 		
+summary/summary_genotype.txt : $(foreach sample,$(SAMPLES),genotype_variants/$(sample).taskcomplete)
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/genotype_access.R --sample_names '$(SAMPLES)'")
+
+		
 ..DUMMY := $(shell mkdir -p version; \
 	     $(GBCMS_PATH) --help &> version/genotype_access.txt; \
 	     echo 'genotype_variants' >> version/genotype_access.txt; \
-	     $(GENOTYPE_VARIANTS_ENV)/bin/$(GENOTYPE_VARIANTS) --version >> version/genotype_access.txt)
+	     $(GENOTYPE_VARIANTS_ENV)/bin/$(GENOTYPE_VARIANTS) --version >> version/genotype_access.txt; \
+	     R --version > version/msi_sensor.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: genotype_access
