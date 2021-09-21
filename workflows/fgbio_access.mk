@@ -6,6 +6,7 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/fgbio_access.$(NOW)
 
 fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz) \
+	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R2.fastq.gz) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 	       $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
@@ -74,25 +75,21 @@ GATK_MEM_THREAD = 2G
 
 TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-ACCESS-v1_0-probe-A.sorted.list
 
-define copy-fastq
-fgbio/$1/$1_R1.fastq.gz : $3
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p fgbio/$1 && \
-					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
-					 --sample_name $1 \
-					 --directory_name fgbio \
-					 --fastq_files '$$^'")
-
+define merge-fastq
+fgbio/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
+fgbio/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
 endef
-$(foreach ss,$(SPLIT_SAMPLES),\
-	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 
 define fastq-2-bam
-fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz
+fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(call FGBIO_CMD,2G,8G) \
 					  FastqToBam \
-					  --input fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz \
+					  --input $$(<) $$(<<) \
 					  --read-structures 3M2S+T 3M2S+T \
 					  --output $$(@) \
 					  --sample $1 \
