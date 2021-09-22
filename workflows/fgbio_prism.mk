@@ -368,8 +368,8 @@ $(foreach sample,$(SAMPLES),\
 	
 define clean-up
 fgbio/$1/taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-	$$(call RUN,-c -n 1 -s 1G -m 2G,"$$(RM) fgbio/$1/*.bam && \
-					 $$(RM) fgbio/$1/*.bai && \
+	$$(call RUN,-c -n 1 -s 1G -m 2G,"$$(RM) fgbio/$1/.bam && \
+					 $$(RM) fgbio/$1/.bai && \
 					 echo $1 > fgbio/$1/tascomplete")
 
 endef
