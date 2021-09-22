@@ -11,6 +11,7 @@ fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_M
 	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam) \
 	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
 	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
+	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/taskcomplete) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.idx_stats.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.aln_metrics.txt) \
 	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.insert_metrics.txt) \
