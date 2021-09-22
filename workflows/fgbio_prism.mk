@@ -5,9 +5,7 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/fgbio_prism.$(NOW)
 
-fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R2.fastq.gz) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
+fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
 	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
 	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
