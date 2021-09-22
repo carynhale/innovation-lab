@@ -5,10 +5,7 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/fgbio_prism.$(NOW)
 
-fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
+fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
 	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.bam) \
 	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.intervals) \
 	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam) \
@@ -104,7 +101,9 @@ fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz
 					  --sample $1 \
 					  --library $1 \
 					  --platform illumina \
-					  --platform-unit NA")
+					  --platform-unit NA && \
+					  $$(RM) $$(<) && \
+					  $$(RM) $$(<<)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -116,7 +115,8 @@ fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 					   $$(SORT_SAM) \
 					   INPUT=$$(<) \
 					   OUTPUT=$$(@) \
-					   SORT_ORDER=queryname")
+					   SORT_ORDER=queryname && \
+					   $$(RM) $$(<)")
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
@@ -142,7 +142,9 @@ fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 									       REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									       SORT_ORDER=coordinate \
 									       MAX_GAPS=-1 \
-									       ORIENTATIONS=FR")
+									       ORIENTATIONS=FR && \
+									       $$(RM) $$(<) && \
+									       $$(RM) $$(<<)")
 
 fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
