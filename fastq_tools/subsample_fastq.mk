@@ -6,28 +6,31 @@ SEED = 1
 N = 1 2 3 4 5
     
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1.fastq.gz) \
+		  $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R2.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(N),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(n).fastq.gz))
+		  	$(foreach n,$(N),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(n).fastq.gz)) \
+		  $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(N),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R2--$(n).fastq.gz))
 
-define copy-fastq
-FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz : $3
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p FASTQ_DOWNSAMPLE/fastq/$1 && \
-					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
-					 --sample_name $1 \
-					 --directory_name 'FASTQ_DOWNSAMPLE/fastq' \
-					 --fastq_files '$$^'")
-
+define merge-fastq
+FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
+	
+FASTQ_DOWNSAMPLE/fastq/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
 endef
-$(foreach ss,$(SPLIT_SAMPLES),\
-	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 
 define sample-fastq
 FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq.gz : FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz
 	$$(call RUN, -c -s 12G -m 24G -v $(SEQTK_ENV),"set -o pipefail && \
-						       $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz '$${READS.$2}' > FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq && \
-						       $$(SEQTK) sample -s $(SEED) FASTQ_DOWNSAMPLE/fastq/$1/$1_R2.fastq.gz '$${READS.$2}' > FASTQ_DOWNSAMPLE/fastq/$1/$1_R2--$2.fastq && \
-						       gzip FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq && \
+						       $$(SEQTK) sample -s $(SEED) $$(<) '$${READS.$2}' > FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq && \
+						       gzip FASTQ_DOWNSAMPLE/fastq/$1/$1_R1--$2.fastq")
+
+FASTQ_DOWNSAMPLE/fastq/$1/$1_R2--$2.fastq.gz : FASTQ_DOWNSAMPLE/fastq/$1/$1_R2.fastq.gz
+	$$(call RUN, -c -s 12G -m 24G -v $(SEQTK_ENV),"set -o pipefail && \
+						       $$(SEQTK) sample -s $(SEED) $$(<) '$${READS.$2}' > FASTQ_DOWNSAMPLE/fastq/$1/$1_R2--$2.fastq && \
 						       gzip FASTQ_DOWNSAMPLE/fastq/$1/$1_R2--$2.fastq")
 
 endef
