@@ -5,14 +5,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/fgbio_prism.$(NOW)
 
-fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
+fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
 	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam) \
 	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
 	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam) \
 	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
@@ -104,8 +98,7 @@ fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 					   $$(SORT_SAM) \
 					   INPUT=$$(<) \
 					   OUTPUT=$$(@) \
-					   SORT_ORDER=queryname && \
-					   $$(RM) $$(<)")
+					   SORT_ORDER=queryname")
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
@@ -131,9 +124,7 @@ fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 									       REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									       SORT_ORDER=coordinate \
 									       MAX_GAPS=-1 \
-									       ORIENTATIONS=FR && \
-									       $$(RM) $$(<) && \
-									       $$(RM) $$(<<)")
+									       ORIENTATIONS=FR")
 
 fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
@@ -144,8 +135,7 @@ fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 					    REMOVE_DUPLICATES=false \
 					    ASSUME_SORTED=true && \
 					    $$(SAMTOOLS) index $$(@) && \
-					    cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai && \
-					    $$(RM) $$(<)")
+					    cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai")
 									  	
 fgbio/$1/$1_cl_aln_srt_MD.intervals : fgbio/$1/$1_cl_aln_srt_MD.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
@@ -165,9 +155,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_
 										      -R $$(REF_FASTA) \
 										      -targetIntervals $$(<<) \
 										      -o $$(@) \
-										      -known $$(KNOWN_INDELS) && \
-										      $$(RM) $$(<) && \
-										      $$(RM) $$(<<)")
+										      -known $$(KNOWN_INDELS)")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
@@ -176,8 +164,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
 					   OUTPUT=$$(@) \
 					   SORT_ORDER=coordinate \
 					   COMPRESSION_LEVEL=0 \
-					   CREATE_INDEX=true && \
-					   $$(RM) $$(<)")
+					   CREATE_INDEX=true")
 					   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.grp : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
@@ -196,9 +183,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam fgb
 										      -R $$(REF_FASTA) \
 										      -I $$(<) \
 										      -BQSR $$(<<) \
-										      -o $$(@) && \
-										      $$(RM) $$(<) && \
-										      $$(RM) $$(<<)")
+										      -o $$(@)")
 				   
 endef
 $(foreach sample,$(SAMPLES),\
@@ -233,8 +218,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_
 					  --strategy=paired \
 					  --input=$$(<) \
 					  --output=$$(@) \
-					  --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.txt && \
-					  $$(RM) $$(<)")
+					  --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.txt")
 									  
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
@@ -305,8 +289,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_M
 					    SORT_ORDER=coordinate \
 					    COMPRESSION_LEVEL=0 && \
 					    $$(SAMTOOLS) index $$(@) && \
-					    cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bai && \
-					    $$(RM) $$(<)")
+					    cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bai")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
@@ -328,9 +311,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_sr
 										      -targetIntervals $$(<<) \
 										      -o $$(@) \
 										      -known $$(KNOWN_INDELS) \
-										      --allow_potentially_misencoded_quality_scores && \
-										      $$(RM) $$(<) && \
-										      $$(RM) $$(<<)")
+										      --allow_potentially_misencoded_quality_scores")
    							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
@@ -339,8 +320,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln
 					   OUTPUT=$$(@) \
 					   SORT_ORDER=coordinate \
 					   COMPRESSION_LEVEL=0 \
-					   CREATE_INDEX=true && \
-					   $$(RM) $$(<)")
+					   CREATE_INDEX=true")
 				   
 endef
 $(foreach sample,$(SAMPLES),\
@@ -385,6 +365,16 @@ bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam : bam/$1_cl_aln_sr
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call filter-consensus,$(sample))))
+	
+define clean-up
+fgbio/$1/taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
+	$$(call RUN,-c -n 1 -s 1G -m 2G,"$$(RM) fgbio/$1/*.bam && \
+					 $$(RM) fgbio/$1/*.bai && \
+					 echo $1 > fgbio/$1/tascomplete")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call clean-up,$(sample))))
 	
 
 define picard-metrics-standard
