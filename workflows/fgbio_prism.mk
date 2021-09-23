@@ -241,23 +241,26 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_F
 										   --output $$(@) \
 										   --threads $$(GATK_THREADS)")
 
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam
 	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
 						       $$(call FGBIO_CMD,2G,16G) \
 						       CollectDuplexSeqMetrics \
 						       --input $$(<) \
 						       --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC \
 						       --duplex-umi-counts true \
-						       --intervals $$(TARGETS_LIST)")
+						       --intervals $$(TARGETS_LIST) && \
+						       $$(RM) $$(<) && \
+						       $$(RM) $$(<<)")
 									  
-fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam
+fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam
 	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
 						       $$(call FGBIO_CMD,2G,16G) \
 						       CollectDuplexSeqMetrics \
 						       --input $$(<) \
 						       --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC \
 						       --duplex-umi-counts true \
-						       --intervals $$(TARGETS_LIST)")
+						       --intervals $$(TARGETS_LIST) && \
+						       $$(RM) $$(<)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD) -w 72:00:00,"set -o pipefail && \
@@ -272,7 +275,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_I
 											   OUTPUT=$$(@) \
 											   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 											   MAX_GAPS=-1 \
-											   ORIENTATIONS=FR")
+											   ORIENTATIONS=FR && \
+											   $$(RM) $$(<)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
@@ -287,7 +291,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_M
 							SORT_ORDER=coordinate \
 							COMPRESSION_LEVEL=0 && \
 							$$(SAMTOOLS) index $$(@) && \
-							cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bai")
+							cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bai && \
+							$$(RM) $$(<)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
@@ -309,7 +314,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_sr
 												  -targetIntervals $$(<<) \
 												  -o $$(@) \
 												  -known $$(KNOWN_INDELS) \
-												  --allow_potentially_misencoded_quality_scores")
+												  --allow_potentially_misencoded_quality_scores && \
+												  $$(RM) $$(<)")
    							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
@@ -318,7 +324,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln
 						       OUTPUT=$$(@) \
 						       SORT_ORDER=coordinate \
 						       COMPRESSION_LEVEL=0 \
-						       CREATE_INDEX=true")
+						       CREATE_INDEX=true && \
+						       $$(RM) $$(<)")
 				   
 bam/$1_cl_aln_srt_MD_IR_FX_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
