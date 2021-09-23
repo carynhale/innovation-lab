@@ -95,7 +95,7 @@ $(foreach sample,$(SAMPLES),\
 	
 define collapse-bam
 fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 12G -m 24G -w 72:00:00,"set -o pipefail && \
 						       $$(SORT_SAM) \
 						       INPUT=$$(<) \
 						       OUTPUT=$$(@) \
@@ -103,7 +103,7 @@ fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 						       $$(RM) $$(<)")
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 12G -m 24G -w 72:00:00,"set -o pipefail && \
 						       $$(MARK_ADAPTERS) \
 						       INPUT=$$(<) \
 						       OUTPUT=/dev/stdout \
