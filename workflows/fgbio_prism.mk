@@ -5,50 +5,51 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/fgbio_prism.$(NOW)
 
-fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt) \
-	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
-	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam) \
-	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
-	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
-	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/taskcomplete) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.idx_stats.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.aln_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.insert_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.oxog_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
-	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt) \
-	      summary/idx_metrics.txt \
-	      summary/aln_metrics.txt \
-	      summary/insert_metrics.txt \
-	      summary/oxog_metrics.txt \
-	      summary/hs_metrics.txt \
-	      summary/gc_metrics.txt \
-	      summary/umi_counts.txt \
-	      summary/umi_duplex_counts.txt \
-	      summary/umi_fixed_counts.txt \
-	      summary/umi_fixed_duplex_counts.txt \
-	      summary/all_family_sizes.txt \
-	      summary/duplex_family_sizes.txt \
-	      summary/duplex_yield_metrics.txt
+fgbio_prism : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam)
+#	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
+#	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt) \
+#	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
+#	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam) \
+#	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
+#	      $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
+#	      $(foreach sample,$(SAMPLES),fgbio/$(sample)/taskcomplete) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.idx_stats.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.aln_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.insert_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.oxog_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt) \
+#	      $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt) \
+#	      summary/idx_metrics.txt \
+#	      summary/aln_metrics.txt \
+#	      summary/insert_metrics.txt \
+#	      summary/oxog_metrics.txt \
+#	      summary/hs_metrics.txt \
+#	      summary/gc_metrics.txt \
+#	      summary/umi_counts.txt \
+#	      summary/umi_duplex_counts.txt \
+#	      summary/umi_fixed_counts.txt \
+#	      summary/umi_fixed_duplex_counts.txt \
+#	      summary/all_family_sizes.txt \
+#	      summary/duplex_family_sizes.txt \
+#	      summary/duplex_yield_metrics.txt
 				 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -76,18 +77,18 @@ $(foreach sample,$(SAMPLES),\
 
 define fastq-2-bam
 fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,8G) \
-					  FastqToBam \
-					  --input $$(<) $$(<<) \
-					  --read-structures 8M+T 8M+T \
-					  --output $$(@) \
-					  --sample $1 \
-					  --library $1 \
-					  --platform illumina \
-					  --platform-unit NA && \
-					  $$(RM) $$(<) && \
-					  $$(RM) $$(<<)")
+	$$(call RUN,-c -n 1 -s 8G -m 16G -w 72:00:00,"set -o pipefail && \
+						      $$(call FGBIO_CMD,2G,8G) \
+						      FastqToBam \
+						      --input $$(<) $$(<<) \
+						      --read-structures 8M+T 8M+T \
+						      --output $$(@) \
+						      --sample $1 \
+						      --library $1 \
+						      --platform illumina \
+						      --platform-unit NA && \
+						      $$(RM) $$(<) && \
+						      $$(RM) $$(<<)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -102,89 +103,89 @@ fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 					   SORT_ORDER=queryname")
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(MARK_ADAPTERS) \
-					   INPUT=$$(<) \
-					   OUTPUT=/dev/stdout \
-					   METRICS=fgbio/$1/$1_adapter-metrics.txt | \
-					   $$(SAM_TO_FASTQ) \
-					   INPUT=/dev/stdin \
-					   FASTQ=$$(@) \
-					   INTERLEAVE=true \
-					   CLIPPING_ATTRIBUTE=XT \
-					   CLIPPING_ACTION=X \
-					   CLIPPING_MIN_LENGTH=25")
+	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+						       $$(MARK_ADAPTERS) \
+						       INPUT=$$(<) \
+						       OUTPUT=/dev/stdout \
+						       METRICS=fgbio/$1/$1_adapter-metrics.txt | \
+						       $$(SAM_TO_FASTQ) \
+						       INPUT=/dev/stdin \
+						       FASTQ=$$(@) \
+						       INTERLEAVE=true \
+						       CLIPPING_ATTRIBUTE=XT \
+						       CLIPPING_ACTION=X \
+						       CLIPPING_MIN_LENGTH=25")
 
 fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
-	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-									       $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
-									       $$(MERGE_ALIGNMENTS) \
-									       UNMAPPED=$$(<<) \
-									       ALIGNED=/dev/stdin \
-									       OUTPUT=$$(@) \
-									       REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									       SORT_ORDER=coordinate \
-									       MAX_GAPS=-1 \
-									       ORIENTATIONS=FR")
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD) -w 72:00:00,"set -o pipefail && \
+											   $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
+											   $$(MERGE_ALIGNMENTS) \
+											   UNMAPPED=$$(<<) \
+											   ALIGNED=/dev/stdin \
+											   OUTPUT=$$(@) \
+											   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+											   SORT_ORDER=coordinate \
+											   MAX_GAPS=-1 \
+											   ORIENTATIONS=FR")
 
 fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					    $$(MARK_DUP) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    METRICS_FILE=fgbio/$1/$1_cl_aln_srt.txt \
-					    REMOVE_DUPLICATES=false \
-					    ASSUME_SORTED=true && \
-					    $$(SAMTOOLS) index $$(@) && \
-					    cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai")
+	$$(call RUN, -c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+							$$(MARK_DUP) \
+					    		INPUT=$$(<) \
+					    		OUTPUT=$$(@) \
+							METRICS_FILE=fgbio/$1/$1_cl_aln_srt.txt \
+					    		REMOVE_DUPLICATES=false \
+					    		ASSUME_SORTED=true && \
+					    		$$(SAMTOOLS) index $$(@) && \
+					    		cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai")
 									  	
 fgbio/$1/$1_cl_aln_srt_MD.intervals : fgbio/$1/$1_cl_aln_srt_MD.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T RealignerTargetCreator \
-										      -I $$(^) \
-										      -nt $$(GATK_THREADS) \
-										      -R $$(REF_FASTA) \
-										      -o $$(@) \
-										      -known $$(KNOWN_INDELS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
+												  $$(call GATK_CMD,16G) \
+												  -T RealignerTargetCreator \
+												  -I $$(^) \
+												  -nt $$(GATK_THREADS) \
+												  -R $$(REF_FASTA) \
+												  -o $$(@) \
+												  -known $$(KNOWN_INDELS)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_aln_srt_MD.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T IndelRealigner \
-										      -I $$(<) \
-										      -R $$(REF_FASTA) \
-										      -targetIntervals $$(<<) \
-										      -o $$(@) \
-										      -known $$(KNOWN_INDELS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
+												  $$(call GATK_CMD,16G) \
+												  -T IndelRealigner \
+												  -I $$(<) \
+												  -R $$(REF_FASTA) \
+												  -targetIntervals $$(<<) \
+												  -o $$(@) \
+												  -known $$(KNOWN_INDELS)")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(FIX_MATE) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   SORT_ORDER=coordinate \
-					   COMPRESSION_LEVEL=0 \
-					   CREATE_INDEX=true")
+	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+						       $$(FIX_MATE) \
+						       INPUT=$$(<) \
+						       OUTPUT=$$(@) \
+						       SORT_ORDER=coordinate \
+						       COMPRESSION_LEVEL=0 \
+						       CREATE_INDEX=true")
 					   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.grp : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(SAMTOOLS) index $$(<) && \
-										      $$(call GATK_CMD,16G) \
-										      -T BaseRecalibrator \
-										      -R $$(REF_FASTA) \
-										      -knownSites $$(DBSNP) \
-										      -I $$(<) \
-										      -o $$(@)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
+												  $$(SAMTOOLS) index $$(<) && \
+												  $$(call GATK_CMD,16G) \
+												  -T BaseRecalibrator \
+												  -R $$(REF_FASTA) \
+												  -knownSites $$(DBSNP) \
+												  -I $$(<) \
+												  -o $$(@)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX.grp
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T PrintReads \
-										      -R $$(REF_FASTA) \
-										      -I $$(<) \
-										      -BQSR $$(<<) \
-										      -o $$(@)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
+												  $$(call GATK_CMD,16G) \
+												  -T PrintReads \
+												  -R $$(REF_FASTA) \
+												  -I $$(<) \
+												  -BQSR $$(<<) \
+												  -o $$(@)")
 				   
 endef
 $(foreach sample,$(SAMPLES),\
