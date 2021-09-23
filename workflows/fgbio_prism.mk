@@ -99,7 +99,8 @@ fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 						       $$(SORT_SAM) \
 						       INPUT=$$(<) \
 						       OUTPUT=$$(@) \
-						       SORT_ORDER=queryname")
+						       SORT_ORDER=queryname && \
+						       $$(RM) $$(<)")
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
@@ -125,7 +126,9 @@ fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
 											   REFERENCE_SEQUENCE=$$(REF_FASTA) \
 											   SORT_ORDER=coordinate \
 											   MAX_GAPS=-1 \
-											   ORIENTATIONS=FR")
+											   ORIENTATIONS=FR && \
+											   $$(RM) $$(<) && \
+											   $$(RM) $$(<<)")
 
 fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
@@ -136,7 +139,8 @@ fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 					    		REMOVE_DUPLICATES=false \
 					    		ASSUME_SORTED=true && \
 					    		$$(SAMTOOLS) index $$(@) && \
-					    		cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai")
+					    		cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai && \
+							$$(RM) $$(<)")
 									  	
 fgbio/$1/$1_cl_aln_srt_MD.intervals : fgbio/$1/$1_cl_aln_srt_MD.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
@@ -156,7 +160,9 @@ fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_
 												  -R $$(REF_FASTA) \
 												  -targetIntervals $$(<<) \
 												  -o $$(@) \
-												  -known $$(KNOWN_INDELS)")
+												  -known $$(KNOWN_INDELS) && \
+												  $$(RM) $$(<) && \
+												  $$(RM) $$(<<)")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
@@ -165,7 +171,8 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
 						       OUTPUT=$$(@) \
 						       SORT_ORDER=coordinate \
 						       COMPRESSION_LEVEL=0 \
-						       CREATE_INDEX=true")
+						       CREATE_INDEX=true && \
+						       $$(RM) $$(<)")
 					   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.grp : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
@@ -184,7 +191,9 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam fgb
 												  -R $$(REF_FASTA) \
 												  -I $$(<) \
 												  -BQSR $$(<<) \
-												  -o $$(@)")
+												  -o $$(@) && \
+												  $$(RM) $$(<) && \
+												  $$(RM) $$(<<)")
 				   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
