@@ -95,11 +95,11 @@ $(foreach sample,$(SAMPLES),\
 	
 define merge-bams
 fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(SORT_SAM) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   SORT_ORDER=queryname")
+	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+						       $$(SORT_SAM) \
+						       INPUT=$$(<) \
+						       OUTPUT=$$(@) \
+						       SORT_ORDER=queryname")
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
@@ -192,70 +192,70 @@ $(foreach sample,$(SAMPLES),\
 	
 define create-consensus
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,8G) \
-					  GroupReadsByUmi \
-					  --strategy=paired \
-					  --input=$$(<) \
-					  --output=$$(@) \
-					  --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.txt")
+	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
+						       $$(call FGBIO_CMD,2G,8G) \
+						       GroupReadsByUmi \
+						       --strategy=paired \
+						       --input=$$(<) \
+						       --output=$$(@) \
+						       --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.txt")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,8G) \
-					  CorrectUmis \
-					  --input=$$(<) \
-					  --output=$$(@) \
-					  --rejects=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__REJECTED_.bam \
-					  --metrics=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__cu.txt \
-					  --max-mismatches=5 \
-					  --min-distance=1 \
-					  --umi-files=$$(UMI_LIST)")
+	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
+						       $$(call FGBIO_CMD,2G,8G) \
+						       CorrectUmis \
+						       --input=$$(<) \
+						       --output=$$(@) \
+						       --rejects=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__REJECTED_.bam \
+						       --metrics=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__cu.txt \
+						       --max-mismatches=5 \
+						       --min-distance=1 \
+						       --umi-files=$$(UMI_LIST)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,8G) \
-					  GroupReadsByUmi \
-					  --strategy=paired \
-					  --input=$$(<) \
-					  --output=$$(@) \
-					  --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.txt")
+	$$(call RUN,-c -n 1 -s 12G -m 24G -w 72:00:00,"set -o pipefail && \
+						       $$(call FGBIO_CMD,2G,8G) \
+						       GroupReadsByUmi \
+						       --strategy=paired \
+						       --input=$$(<) \
+						       --output=$$(@) \
+						       --family-size-histogram=fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.txt")
 									  
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
-								       $$(call FGBIO_CMD,2G,16G) \
-								       CallDuplexConsensusReads \
-								       --min-reads 1 1 0 \
-								       --input $$(<) \
-								       --output $$(@) \
-								       --threads $$(GATK_THREADS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
+										   $$(call FGBIO_CMD,2G,16G) \
+										   CallDuplexConsensusReads \
+										   --min-reads 1 1 0 \
+										   --input $$(<) \
+										   --output $$(@) \
+										   --threads $$(GATK_THREADS)")
 																   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD),"set -o pipefail && \
-								       $$(call FGBIO_CMD,2G,16G) \
-								       CallDuplexConsensusReads \
-								       --min-reads 1 1 0 \
-								       --input $$(<) \
-								       --output $$(@) \
-								       --threads $$(GATK_THREADS)")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
+										   $$(call FGBIO_CMD,2G,16G) \
+										   CallDuplexConsensusReads \
+										   --min-reads 1 1 0 \
+										   --input $$(<) \
+										   --output $$(@) \
+										   --threads $$(GATK_THREADS)")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,16G) \
-					  CollectDuplexSeqMetrics \
-					  --input $$(<) \
-					  --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC \
-					  --duplex-umi-counts true \
-					  --intervals $$(TARGETS_LIST)")
+	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
+						       $$(call FGBIO_CMD,2G,16G) \
+						       CollectDuplexSeqMetrics \
+						       --input $$(<) \
+						       --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC \
+						       --duplex-umi-counts true \
+						       --intervals $$(TARGETS_LIST)")
 									  
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,16G) \
-					  CollectDuplexSeqMetrics \
-					  --input $$(<) \
-					  --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC \
-					  --duplex-umi-counts true \
-					  --intervals $$(TARGETS_LIST)")
+	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
+						       $$(call FGBIO_CMD,2G,16G) \
+						       CollectDuplexSeqMetrics \
+						       --input $$(<) \
+						       --output fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC \
+						       --duplex-umi-counts true \
+						       --intervals $$(TARGETS_LIST)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -263,65 +263,65 @@ $(foreach sample,$(SAMPLES),\
 	
 define align-consensus
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam
-	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-									       $$(SAM_TO_FASTQ) \
-									       INPUT=$$(<) \
-									       FASTQ=/dev/stdout \
-									       INTERLEAVE=true | \
-									       $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) /dev/stdin | \
-									       $$(MERGE_ALIGNMENTS) \
-									       UNMAPPED=$$(<) \
-									       ALIGNED=/dev/stdin \
-									       OUTPUT=$$(@) \
-									       REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									       MAX_GAPS=-1 \
-									       ORIENTATIONS=FR")
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD) -w 72:00:00,"set -o pipefail && \
+											   $$(SAM_TO_FASTQ) \
+											   INPUT=$$(<) \
+											   FASTQ=/dev/stdout \
+											   INTERLEAVE=true | \
+											   $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) /dev/stdin | \
+											   $$(MERGE_ALIGNMENTS) \
+											   UNMAPPED=$$(<) \
+											   ALIGNED=/dev/stdin \
+											   OUTPUT=$$(@) \
+											   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+											   MAX_GAPS=-1 \
+											   ORIENTATIONS=FR")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					    $$(ADD_RG) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    RGID=$1 \
-					    RGLB=$1 \
-					    RGPL=illumina \
-					    RGPU=NA \
-					    RGSM=$1 \
-					    SORT_ORDER=coordinate \
-					    COMPRESSION_LEVEL=0 && \
-					    $$(SAMTOOLS) index $$(@) && \
-					    cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bai")
+	$$(call RUN, -c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+							$$(ADD_RG) \
+							INPUT=$$(<) \
+							OUTPUT=$$(@) \
+							RGID=$1 \
+							RGLB=$1 \
+							RGPL=illumina \
+							RGPU=NA \
+							RGSM=$1 \
+							SORT_ORDER=coordinate \
+							COMPRESSION_LEVEL=0 && \
+							$$(SAMTOOLS) index $$(@) && \
+							cp fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam.bai fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bai")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										     $$(call GATK_CMD,16G) \
-										     -T RealignerTargetCreator \
-										     -I $$(^) \
-										     -nt $$(GATK_THREADS) \
-										     -R $$(REF_FASTA) \
-										     -o $$(@) \
-										     -known $$(KNOWN_INDELS) \
-										     --allow_potentially_misencoded_quality_scores")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
+												  $$(call GATK_CMD,16G) \
+												  -T RealignerTargetCreator \
+												  -I $$(^) \
+												  -nt $$(GATK_THREADS) \
+												  -R $$(REF_FASTA) \
+												  -o $$(@) \
+												  -known $$(KNOWN_INDELS) \
+												  --allow_potentially_misencoded_quality_scores")
 
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.bam fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T IndelRealigner \
-										      -I $$(<) \
-										      -R $$(REF_FASTA) \
-										      -targetIntervals $$(<<) \
-										      -o $$(@) \
-										      -known $$(KNOWN_INDELS) \
-										      --allow_potentially_misencoded_quality_scores")
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV) -w 72:00:00,"set -o pipefail && \
+												  $$(call GATK_CMD,16G) \
+												  -T IndelRealigner \
+												  -I $$(<) \
+												  -R $$(REF_FASTA) \
+												  -targetIntervals $$(<<) \
+												  -o $$(@) \
+												  -known $$(KNOWN_INDELS) \
+												  --allow_potentially_misencoded_quality_scores")
    							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(FIX_MATE) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   SORT_ORDER=coordinate \
-					   COMPRESSION_LEVEL=0 \
-					   CREATE_INDEX=true")
+	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+						       $$(FIX_MATE) \
+						       INPUT=$$(<) \
+						       OUTPUT=$$(@) \
+						       SORT_ORDER=coordinate \
+						       COMPRESSION_LEVEL=0 \
+						       CREATE_INDEX=true")
 				   
 endef
 $(foreach sample,$(SAMPLES),\
@@ -347,21 +347,21 @@ $(foreach sample,$(SAMPLES),\
 		
 define filter-consensus
 bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(PYTHON) $$(SCRIPTS_DIR)/bam_tools/create_simplex_bam_from_consensus.py \
-					  $$(<) \
-					  $$(@)")
+	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
+						       $$(PYTHON) $$(SCRIPTS_DIR)/bam_tools/create_simplex_bam_from_consensus.py \
+						       $$(<) \
+						       $$(@)")
 
 bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,16G) \
-					  FilterConsensusReads \
-					  --input $$(<) \
-					  --output $$(@) \
-					  --ref $$(REF_FASTA) \
-					  --min-reads=2 1 1 \
-					  --min-base-quality=30 \
-					  --reverse-per-base-tags=true")
+	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
+						       $$(call FGBIO_CMD,2G,16G) \
+						       FilterConsensusReads \
+						       --input $$(<) \
+						       --output $$(@) \
+						       --ref $$(REF_FASTA) \
+						       --min-reads=2 1 1 \
+						       --min-base-quality=30 \
+						       --reverse-per-base-tags=true")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -386,14 +386,14 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.
 					    > $$(@)")
 			   
 metrics/$1_cl_aln_srt_MD_IR_FX_BR.aln_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_ALIGNMENT_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 			   
 metrics/$1_cl_aln_srt_MD_IR_FX_BR.insert_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN, -c -n 1 -s 24G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(COLLECT_INSERT_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
@@ -408,22 +408,22 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR.oxog_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_
 					    OUTPUT=$$(@)")
 										
 metrics/$1_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(CALC_HS_METRICS) \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   BAIT_INTERVALS=$$(TARGETS_LIST) \
-					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(CALC_HS_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    BAIT_INTERVALS=$$(TARGETS_LIST) \
+					    TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
 metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(COLLECT_GC_BIAS) \
-					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.pdf \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   SUMMARY_OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_GC_BIAS) \
+					    INPUT=$$(<) \
+					    OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.txt \
+					    CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX_BR.gc_metrics.pdf \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    SUMMARY_OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -459,22 +459,22 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt : bam/$1
 					    OUTPUT=$$(@)")
 				
 metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(CALC_HS_METRICS) \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   BAIT_INTERVALS=$$(TARGETS_LIST) \
-					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(CALC_HS_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    BAIT_INTERVALS=$$(TARGETS_LIST) \
+					    TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
 metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(COLLECT_GC_BIAS) \
-					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics.pdf \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   SUMMARY_OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_GC_BIAS) \
+					    INPUT=$$(<) \
+					    OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics.txt \
+					    CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics.pdf \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    SUMMARY_OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -510,22 +510,22 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt 
 					    OUTPUT=$$(@)")
 										
 metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(CALC_HS_METRICS) \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   BAIT_INTERVALS=$$(TARGETS_LIST) \
-					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(CALC_HS_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    BAIT_INTERVALS=$$(TARGETS_LIST) \
+					    TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
 metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(COLLECT_GC_BIAS) \
-					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.pdf \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   SUMMARY_OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_GC_BIAS) \
+					    INPUT=$$(<) \
+					    OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.txt \
+					    CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics.pdf \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    SUMMARY_OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -562,78 +562,78 @@ metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt :
 					    OUTPUT=$$(@)")
 										
 metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(CALC_HS_METRICS) \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   BAIT_INTERVALS=$$(TARGETS_LIST) \
-					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(CALC_HS_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    BAIT_INTERVALS=$$(TARGETS_LIST) \
+					    TARGET_INTERVALS=$$(TARGETS_LIST)")
 					   
 metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
-	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(COLLECT_GC_BIAS) \
-					   INPUT=$$(<) \
-					   OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.txt \
-					   CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.pdf \
-					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					   SUMMARY_OUTPUT=$$(@)")
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_GC_BIAS) \
+					    INPUT=$$(<) \
+					    OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.txt \
+					    CHART_OUTPUT=metrics/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics.pdf \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    SUMMARY_OUTPUT=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
  		$(eval $(call picard-metrics-duplex,$(sample))))
 		
 summary/idx_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.idx_stats.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.idx_stats.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 1 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 1 --sample_names '$(SAMPLES)'")
 									  
 summary/aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.aln_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.aln_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.aln_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.aln_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 2 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 2 --sample_names '$(SAMPLES)'")
 									  
 summary/insert_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.insert_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.insert_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.insert_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.insert_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 3 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 3 --sample_names '$(SAMPLES)'")
 
 summary/oxog_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.oxog_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.oxog_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.oxog_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.oxog_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 4 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 4 --sample_names '$(SAMPLES)'")
 									  
 summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 5 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 5 --sample_names '$(SAMPLES)'")
 
 summary/umi_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 6 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 6 --sample_names '$(SAMPLES)'")
 									  
 summary/umi_fixed_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 7 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 7 --sample_names '$(SAMPLES)'")
 									  
 summary/umi_duplex_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 8 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 8 --sample_names '$(SAMPLES)'")
 									  
 summary/umi_fixed_duplex_counts.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 9 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 9 --sample_names '$(SAMPLES)'")
 
 summary/all_family_sizes.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 10 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 10 --sample_names '$(SAMPLES)'")
 									  
 summary/duplex_family_sizes.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 11 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 11 --sample_names '$(SAMPLES)'")
 
 summary/duplex_yield_metrics.txt : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 12 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 12 --sample_names '$(SAMPLES)'")
 					  
 summary/gc_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.gc_metrics_summary.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.gc_metrics_summary.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.gc_metrics_summary.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 13 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/beadlink_prism.R --option 13 --sample_names '$(SAMPLES)'")
 									  
 
 ..DUMMY := $(shell mkdir -p version; \
