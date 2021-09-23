@@ -74,7 +74,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 
-define fastq-2-bam
+define fastq-bam
 fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -w 72:00:00,"set -o pipefail && \
 						      $$(call FGBIO_CMD,2G,8G) \
@@ -91,9 +91,9 @@ fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz
 
 endef
 $(foreach sample,$(SAMPLES),\
-	$(eval $(call fastq-2-bam,$(sample))))
+	$(eval $(call fastq-bam,$(sample))))
 	
-define merge-bams
+define collapse-bam
 fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
 						       $$(SORT_SAM) \
@@ -186,11 +186,6 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam fgb
 												  -BQSR $$(<<) \
 												  -o $$(@)")
 				   
-endef
-$(foreach sample,$(SAMPLES),\
-	$(eval $(call merge-bams,$(sample))))
-	
-define create-consensus
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
 						       $$(call FGBIO_CMD,2G,8G) \
@@ -257,11 +252,6 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.duplex_umi_counts.txt : fgbio/$1/$1_
 						       --duplex-umi-counts true \
 						       --intervals $$(TARGETS_LIST)")
 
-endef
-$(foreach sample,$(SAMPLES),\
-	$(eval $(call create-consensus,$(sample))))
-	
-define align-consensus
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC.bam
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD) -w 72:00:00,"set -o pipefail && \
 											   $$(SAM_TO_FASTQ) \
@@ -323,12 +313,6 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln
 						       COMPRESSION_LEVEL=0 \
 						       CREATE_INDEX=true")
 				   
-endef
-$(foreach sample,$(SAMPLES),\
-	$(eval $(call align-consensus,$(sample))))
-	
-	
-define copy-to-bam
 bam/$1_cl_aln_srt_MD_IR_FX_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -s 2G -m 4G,"set -o pipefail && \
 				     cp $$(<) $$(@) && \
@@ -341,11 +325,6 @@ bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_
 				     $$(SAMTOOLS) index $$(@) && \
 				     cp bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam.bai bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bai")
 
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call copy-to-bam,$(sample))))
-		
-define filter-consensus
 bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam : bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam
 	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
 						       $$(PYTHON) $$(SCRIPTS_DIR)/bam_tools/create_simplex_bam_from_consensus.py \
@@ -365,7 +344,7 @@ bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam : bam/$1_cl_aln_sr
 
 endef
 $(foreach sample,$(SAMPLES),\
-	$(eval $(call filter-consensus,$(sample))))
+	$(eval $(call collapse-bam,$(sample))))	
 	
 define clean-up
 fgbio/$1/taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam bam/$1_cl_aln_srt_MD_IR_FX2_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
@@ -377,7 +356,6 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call clean-up,$(sample))))
 	
-
 define picard-metrics-standard
 metrics/$1_cl_aln_srt_MD_IR_FX_BR.idx_stats.txt : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
