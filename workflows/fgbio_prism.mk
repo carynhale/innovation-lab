@@ -161,8 +161,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR.bam : fgbio/$1/$1_cl_aln_srt_MD.bam fgbio/$1/$1_cl_
 												  -targetIntervals $$(<<) \
 												  -o $$(@) \
 												  -known $$(KNOWN_INDELS) && \
-												  $$(RM) $$(<) && \
-												  $$(RM) $$(<<)")
+												  $$(RM) $$(<)")
 									   							   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam : fgbio/$1/$1_cl_aln_srt_MD_IR.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
@@ -192,8 +191,7 @@ fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX.bam fgb
 												  -I $$(<) \
 												  -BQSR $$(<<) \
 												  -o $$(@) && \
-												  $$(RM) $$(<) && \
-												  $$(RM) $$(<<)")
+												  $$(RM) $$(<)")
 				   
 fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp.bam : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR.bam
 	$$(call RUN,-c -n 1 -s 16G -m 24G -w 72:00:00,"set -o pipefail && \
