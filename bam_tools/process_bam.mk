@@ -121,10 +121,10 @@ $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-target-realn,$(chr))))
 
 define chr-realn
 %.$(1).chr_realn.bam : %.bam %.$(1).chr_split.intervals %.bam.bai
-	$$(call RUN,-s 16G -m 16G,"if [[ -s $$(word 2,$$^) ]]; then $$(call GATK_CMD,4G) -T IndelRealigner \
-				   -I $$(<) -R $$(REF_FASTA) -L $1 -targetIntervals $$(word 2,$$^) \
-				   -o $$(@) $$(BAM_REALN_OPTS); \
-				   else $$(call GATK_CMD,8G) -T PrintReads -R $$(REF_FASTA) -I $$< -L $1 -o $$@ ; fi")
+	$$(call RUN,-s 16G -m 16G  -v $(GATK_ENV),"if [[ -s $$(word 2,$$^) ]]; then $$(call GATK_CMD,4G) -T IndelRealigner \
+						   -I $$(<) -R $$(REF_FASTA) -L $1 -targetIntervals $$(word 2,$$^) \
+						   -o $$(@) $$(BAM_REALN_OPTS); \
+						   else $$(call GATK_CMD,8G) -T PrintReads -R $$(REF_FASTA) -I $$< -L $1 -o $$@ ; fi")
 endef
 $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-realn,$(chr))))
 
@@ -138,15 +138,15 @@ $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-realn,$(chr))))
 
 define chr-recal
 %.$1.chr_recal.bam : %.bam %.recal_report.grp
-	$$(call RUN,-s 11G -m 15G,"$$(call GATK_CMD,6G) -T PrintReads -L $1 -R $$(REF_FASTA) -I $$< -BQSR $$(<<) -o $$@")
+	$$(call RUN,-s 11G -m 15G  -v $(GATK_ENV),"$$(call GATK_CMD,6G) -T PrintReads -L $1 -R $$(REF_FASTA) -I $$< -BQSR $$(<<) -o $$@")
 endef
 $(foreach chr,$(CHROMOSOMES),$(eval $(call chr-recal,$(chr))))
 
 else
 
 %.recal.bam : %.bam %.recal_report.grp
-	$(call RUN,-s 14G -m 15G,"$(call GATK_CMD,7G) -T PrintReads -R $(REF_FASTA) -I $< -BQSR $(word 2,$^) -o $@ && \
-				  $(RM) $<")
+	$(call RUN,-s 14G -m 15G  -v $(GATK_ENV),"$(call GATK_CMD,7G) -T PrintReads -R $(REF_FASTA) -I $< -BQSR $(word 2,$^) -o $@ && \
+						  $(RM) $<")
 
 %.realn.bam : %.bam %.intervals %.bam.bai
 	if [[ -s $(word 2,$^) ]]; then $(call RUN,-s 16G -m 16G -v $(GATK_ENV),"$(call GATK_CMD,7G) -T IndelRealigner \
