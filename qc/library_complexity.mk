@@ -8,7 +8,7 @@ picard_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_library_complexit
 
 define library-complexity
 metrics/$1_library_complexity.txt : bam/$1.bam
-	$$(call RUN,-c -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN,-c -s 24G -m 36G,"set -o pipefail && \
 				     $$(CALC_LIBRARY_COMPLEXITY) \
 				     INPUT=$$(<) \
 				     OUTPUT=$$(@) \
