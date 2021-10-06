@@ -13,7 +13,8 @@ bam_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
 	      summary/insert_metrics.txt \
 	      summary/oxog_metrics.txt \
 	      summary/hs_metrics.txt \
-	      summary/gc_metrics.txt
+	      summary/gc_metrics.txt \
+	      summary/gc_summary.txt
 	      
 TARGETS_LIST ?= $(HOME)/share/lib/resource_files/MSK-IMPACT-v4.sorted.list
 	      
