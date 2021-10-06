@@ -116,6 +116,10 @@ summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).hs_metric
 summary/gc_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 6 --sample_names '$(SAMPLES)'")
+					  
+summary/gc_summary.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics.txt)
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bam_metrics.R --option 7 --sample_names '$(SAMPLES)'")
 
 
 ..DUMMY := $(shell mkdir -p version; \
