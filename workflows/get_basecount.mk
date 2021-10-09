@@ -8,11 +8,11 @@ BAQ := 20
 getbasecount : $(foreach sample,$(SAMPLES),gbc/$(sample).txt)
 
 define get-basecount
-gbc/$1.txt : bam/$1.bam
+gbc/$1.txt : bam/$1.bam vcf/$1.vcf
 	$$(call RUN,-n 6 -s 3G -m 6G,"set -o pipefail && \
 				      $(GBC) --fasta $(REF_FASTA) \
 				      --bam $$(<) \
-				      --vcf vcf/$1.vcf \
+				      --vcf $$(<<) \
 				      --output $$(@) \
 				      --maq $(MAPQ) \
 				      --baq $(BAQ) \
