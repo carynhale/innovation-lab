@@ -95,7 +95,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 
 define fastq-2-bam
-fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz gbio/$1/$1_R2.fastq.gz
+fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(call FGBIO_CMD,2G,8G) \
 					  FastqToBam \
