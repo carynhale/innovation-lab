@@ -21,6 +21,7 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 	    --quantMode GeneCounts
 			
 umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.gz) \
+	    $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R2.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1_cl.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam) \
 	    $(foreach sample,$(SAMPLES),star/$(sample).Aligned.sortedByCoord.out.bam.bai) \
@@ -29,21 +30,18 @@ umi_tools : $(foreach sample,$(SAMPLES),umi_tools/$(sample)/$(sample)_R1.fastq.g
 	    summary/umi_summary.txt \
 	    summary/umi_per_position_summary.txt
 
-define copy-fastq
-umi_tools/$1/$1_R1.fastq.gz : $3
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p umi_tools/$1 && \
-					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
-					 --sample_name $1 \
-					 --directory_name umi_tools \
-					 --fastq_files '$$^'")
-
-endef
-$(foreach ss,$(SPLIT_SAMPLES),\
-	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+define merge-fastq
+umi_tools/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
 	
+umi_tools/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
+endef
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
+
 define clip-fastq
-umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz
+umi_tools/$1/$1_R1_cl.fastq.gz : umi_tools/$1/$1_R1.fastq.gz umi_tools/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(UMITOOLS_ENV),"set -o pipefail && \
 							     umi_tools extract \
 							     -p $$(UMI_PATTERN) \
