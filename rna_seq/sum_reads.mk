@@ -5,6 +5,8 @@ LOGDIR = log/sum_reads.$(NOW)
 SUM_READS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads.R
 SUM_EXONS_RSCRIPT = $(SCRIPTS_DIR)/rna_seq/summarize_rnaseqreads_byexon.R
 
+TARGETS_FILE = $(HOME)/share/lib/resource_files/IDT_exome_research_targets.txt
+
 sum_reads : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_bygene.txt) \
 	    sumreads/rpkm_bygene.txt \
 	    sumreads/counts_bygene.txt \
