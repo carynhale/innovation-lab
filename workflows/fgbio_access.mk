@@ -540,7 +540,9 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : fg
 					   INPUT=$$(<) \
 					   OUTPUT=$$(@) \
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
-					   TARGET_INTERVALS=$$(TARGETS_LIST)")
+					   TARGET_INTERVALS=$$(TARGETS_LIST) \
+					   PER_TARGET_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics_target.txt \
+					   PER_BASE_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics_base.txt")
 
 metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.gc_metrics_summary.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam
 	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
