@@ -388,6 +388,7 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt : fgbio/$1/$1_cl_aln_srt_MD_IR_
 					   OUTPUT=$$(@) \
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST) \
+					   MINIMUM_MAPPING_QUALITY=0 \
 					   PER_TARGET_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR.hs_metrics_target.txt \
 					   PER_BASE_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR.hs_metrics_base.txt")
 					   
@@ -441,6 +442,7 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt : fgbio/$1/
 					   OUTPUT=$$(@) \
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST) \
+					   MINIMUM_MAPPING_QUALITY=0 \
 					   PER_TARGET_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.hs_metrics_target.txt \
 					   PER_BASE_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.hs_metrics_base.txt")
 
@@ -494,6 +496,7 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt : f
 					   OUTPUT=$$(@) \
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST) \
+					   MINIMUM_MAPPING_QUALITY=0 \
 					   PER_TARGET_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics_target.txt \
 					   PER_BASE_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics_base.txt")
 
@@ -547,6 +550,7 @@ metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt : fg
 					   OUTPUT=$$(@) \
 					   BAIT_INTERVALS=$$(TARGETS_LIST) \
 					   TARGET_INTERVALS=$$(TARGETS_LIST) \
+					   MINIMUM_MAPPING_QUALITY=0 \
 					   PER_TARGET_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics_target.txt \
 					   PER_BASE_COVERAGE=metrics/$1_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics_base.txt")
 
