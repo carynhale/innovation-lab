@@ -14,6 +14,7 @@ rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_rnaseq_metrics.tx
 		 summary/rnaseq_metrics.txt \
 		 summary/alignment_metrics.txt \
 		 summary/insert_metrics.txt \
+		 summary/insert_distribution_metrics.txt \
 		 summary/hs_metrics.txt
 
 define rnaseq-metrics
@@ -83,9 +84,13 @@ summary/insert_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_inser
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 3 --sample_names '$(SAMPLES)'")
 
+summary/insert_distribution_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_insert_metrics.txt)
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
+
 summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_hs_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
-					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
+					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 5 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 	     echo "picard" >> version/rnaseq_metrics.txt; \
