@@ -4,8 +4,8 @@ LOGDIR = log/sum_reads.$(NOW)
 
 sum_reads : $(foreach sample,$(SAMPLES),sumreads/$(sample)_bygene.txt) \
 	    sumreads/rpkm_bygene.txt \
-	    sumreads/counts_bygene.txt
-#	    $(foreach sample,$(SAMPLES),sumreads/$(sample)_byexon.txt)
+	    sumreads/counts_bygene.txt \
+	    $(foreach sample,$(SAMPLES),sumreads/$(sample)_byexon.txt)
 #	    sumreads/rpkm_byexon.txt \
 #           sumreads/counts_byexon.txt
 
@@ -16,11 +16,11 @@ sumreads/$1_bygene.txt : bam/$1.bam bam/$1.bam.bai
 							   --in_file $$(<) \
 							   --out_file $$(@)")
 
-#sumreads/$1_byexon.txt : bam/$1.bam bam/$1.bam.bai
-#	$$(call RUN,-n 1 -s 24G -m 48G -v $(SUMREADS_ENV),"$$(RSCRIPT) $$(SCRIPTS_DIR)/rna_seq/summarize_sumreads.R \
-#							   --option 2 \
-#							   --in_file $$(<) \
-#							   --out_file $$(@)")
+sumreads/$1_byexon.txt : bam/$1.bam bam/$1.bam.bai
+	$$(call RUN,-n 1 -s 24G -m 48G -v $(SUMREADS_ENV),"$$(RSCRIPT) $$(SCRIPTS_DIR)/rna_seq/summarize_sumreads.R \
+							   --option 2 \
+							   --in_file $$(<) \
+							   --out_file $$(@)")
 							  
 endef
 $(foreach sample,$(SAMPLES),\
