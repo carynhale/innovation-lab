@@ -3,11 +3,11 @@ include innovation-lab/Makefile.inc
 LOGDIR = log/sum_reads.$(NOW)
 
 sum_reads : $(foreach sample,$(SAMPLES),sumreads/$(sample)_bygene.txt) \
+	    $(foreach sample,$(SAMPLES),sumreads/$(sample)_byexon.txt) \
 	    sumreads/rpkm_bygene.txt \
 	    sumreads/counts_bygene.txt \
-	    $(foreach sample,$(SAMPLES),sumreads/$(sample)_byexon.txt)
-#	    sumreads/rpkm_byexon.txt \
-#           sumreads/counts_byexon.txt
+	    sumreads/rpkm_byexon.txt \
+	    sumreads/counts_byexon.txt
 
 define sum-reads
 sumreads/$1_bygene.txt : bam/$1.bam bam/$1.bam.bai
@@ -35,14 +35,13 @@ sumreads/counts_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_byge
 	cut -f 1-2 $< > $@; \
 	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 3 $$x | sed "s/counts_by_gene/$$sample/" | sed "s/_bygene//" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
-#sumreads/rpkm_byexon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt)
-#	cut -f 1-2 $< > $@; \
-#	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 6 $$x | sed "s/exonRPKM/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
+sumreads/rpkm_byexon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_byexon.txt)
+	cut -f 1-2 $< > $@; \
+	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 6 $$x | sed "s/rpkm_by_exon/$$sample/" | sed "s/_byexon//" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
-
-#sumreads/counts_byexon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt)
-#	cut -f 1-2 $< > $@; \
-#	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 4 $$x | sed "s/exonCount/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
+sumreads/counts_byexon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_byexon.txt)
+	cut -f 1-2 $< > $@; \
+	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 4 $$x | sed "s/count_by_exon/$$sample/" | sed "s/_byexon//" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
 
 ..DUMMY := $(shell mkdir -p version; \
