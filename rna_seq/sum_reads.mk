@@ -46,7 +46,7 @@ sumreads/counts_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_byge
 
 
 ..DUMMY := $(shell mkdir -p version; \
-	     R --version >> version/sum_reads.txt)
+	     $(SUMREADS_ENV)/bin/R --version >> version/sum_reads.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: sum_reads
