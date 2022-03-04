@@ -29,7 +29,7 @@ $(foreach sample,$(SAMPLES),\
 
 sumreads/rpkm_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_bygene.txt)
 	cut -f 1-2 $< > $@; \
-	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 7 $$x | sed "s/rpkm_by_exon/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
+	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 7 $$x | sed "s/rpkm_by_exon/$$sample/" | sed "s/_bygene//" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
 sumreads/counts_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_bygene.txt)
 	cut -f 1-2 $< > $@; \
