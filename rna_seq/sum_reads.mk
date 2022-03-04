@@ -28,12 +28,12 @@ $(foreach sample,$(SAMPLES),\
 
 
 sumreads/rpkm_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_bygene.txt)
-	cut -f 2 $< > $@; \
-	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 7 $$x | sed "s/rpkm_by_exon/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
+	cut -f 1-2 $< > $@; \
+	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 7 $$x | sed "s/_bygene/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
 sumreads/counts_bygene.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample)_bygene.txt)
-	cut -f 2 $< > $@; \
-	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 3 $$x | sed "s/counts_by_gene/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
+	cut -f 1-2 $< > $@; \
+	for x in $^; do sample=`echo $$x | sed 's/.*\///; s/\..*//'`; cut -f 3 $$x | sed "s/_bygene/$$sample/" | paste $@ - > $@.tmp; mv $@.tmp $@; done
 
 #sumreads/rpkm_byexon.txt : $(foreach sample,$(SAMPLES),sumreads/$(sample).sumreads_byexon.txt)
 #	cut -f 1-2 $< > $@; \
