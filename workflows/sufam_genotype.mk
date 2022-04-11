@@ -3,8 +3,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/sufam_genotype.$(NOW)
 
-sufam_genotype : $(foreach sample,$(SAMPLES),sufam_genotype/$(sample).txt)
-#		 summary/summary_genotype.txt
+sufam_genotype : $(foreach sample,$(SAMPLES),sufam_genotype/$(sample).txt) \
+		 summary/summary_genotype.txt
 
 MPILEUP_PARAMETERS = '--count-orphans \
 		     --ignore-RG \
@@ -32,7 +32,7 @@ $(foreach sample,$(SAMPLES),\
 		
 summary/summary_genotype.txt : $(foreach sample,$(SAMPLES),sufam_genotype/$(sample).txt)
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/sufam_summary.R --sample_names '$(SAMPLES)'")
+					   $(RSCRIPT) $(SCRIPTS_DIR)/summary/sufam_summary.R --sample_names '$(SAMPLES)'")
 
 		
 ..DUMMY := $(shell mkdir -p version; \
