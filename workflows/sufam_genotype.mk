@@ -6,11 +6,11 @@ LOGDIR ?= log/sufam_genotype.$(NOW)
 sufam_genotype : $(foreach sample,$(SAMPLES),sufam_genotype/$(sample).txt)
 #		 summary/summary_genotype.txt
 
-MPILEUP_PARAMETERS = "--count-orphans \
+MPILEUP_PARAMETERS = '--count-orphans \
 		     --ignore-RG \
 		     --min-MQ 1 \
 		     --max-depth 250000 \
-		     --max-idepth 250000"
+		     --max-idepth 250000'
 
 define sufam-genotype
 sufam_genotype/$1.txt : bam/$1.bam vcf/$1.vcf
