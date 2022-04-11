@@ -11,6 +11,7 @@ MPILEUP_PARAMETERS = --count-orphans \
 		     --min-MQ 1 \
 		     --max-depth 250000 \
 		     --max-idepth 250000
+REF_FASTA = human_g1k_v37_chr17.fa
 
 define sufam-genotype
 sufam_genotype/$1.txt : bam/$1.bam vcf/$1.vcf
