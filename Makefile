@@ -43,7 +43,11 @@ get_basecount :
 TARGETS += msi_sensor
 msi_sensor :
 	$(call RUN_MAKE,innovation-lab/workflows/msi_sensor.mk)
-
+	
+TARGETS += sufam_genotype
+sufam_genotype :
+	$(call RUN_MAKE,innovation-lab/workflows/sufam_genotype.mk)
+	
 #==================================================
 # MSK-ACCESS workflows
 #==================================================
