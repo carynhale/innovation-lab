@@ -1,23 +1,21 @@
 include innovation-lab/Makefile.inc
 include innovation-lab/genome_inc/b37.inc
 
-LOGDIR ?= log/genotype_access.$(NOW)
+LOGDIR ?= log/sufam_genotype.$(NOW)
 
-genotype_access : $(foreach sample,$(SAMPLES),genotype_variants/$(sample).taskcomplete) \
-		  summary/summary_genotype.txt
+sufam_genotype : $(foreach sample,$(SAMPLES),sufam_genotype/$(sample).txt) \
+		 summary/summary_genotype.txt
 
-REF_FASTA = /juno/depot/resources/dmp/data/pubdata/hg-fasta/VERSIONS/hg19/Homo_sapiens_assembly19.fasta
-GBCMS_PATH ?= $(HOME)/share/usr/bin/GetBaseCountsMultiSample
-FILTER_DUPLICATES ?= 0
-FRAGMENT_COUNT ?= 1
-MAPPING_QUALITY ?= 20
-THREADS ?= 10
-VERBOSITY ?= INFO
+MPILEUP_PARAMETERS = --count-orphans \
+		     --ignore-RG \
+		     --min-MQ 1 \
+		     --max-depth 250000 \
+		     --max-idepth 250000
 
-define genotype-access
-genotype_variants/$1.taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-simplex.bam bam/$1_cl_aln_srt_MD_IR_FX_BR__aln_srt_IR_FX-duplex.bam
-	$$(call RUN,-c -n 10 -s 3G -m 4G -v $(GENOTYPE_VARIANTS_ENV),"set -o pipefail && \
-								      mkdir -p genotype_variants && \
+define sufam-genotype
+sufam_genotype/$1.txt : bam/
+	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(SUFAM_ENV),"set -o pipefail && \
+							 mkdir -p sufam_genotype && \
 								      cd genotype_variants && \
 								      $$(GENOTYPE_VARIANTS) small_variants all \
 								      -i ../maf/$1.maf \
@@ -35,7 +33,7 @@ genotype_variants/$1.taskcomplete : bam/$1_cl_aln_srt_MD_IR_FX_BR.bam bam/$1_cl_
 									 
 endef
 $(foreach sample,$(SAMPLES),\
-		$(eval $(call genotype-access,$(sample))))
+		$(eval $(call sufam-genotype,$(sample))))
 		
 summary/summary_genotype.txt : $(foreach sample,$(SAMPLES),genotype_variants/$(sample).taskcomplete)
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
@@ -43,10 +41,9 @@ summary/summary_genotype.txt : $(foreach sample,$(SAMPLES),genotype_variants/$(s
 
 		
 ..DUMMY := $(shell mkdir -p version; \
-	     $(GBCMS_PATH) --help &> version/genotype_access.txt; \
-	     echo 'genotype_variants' >> version/genotype_access.txt; \
-	     $(GENOTYPE_VARIANTS_ENV)/bin/$(GENOTYPE_VARIANTS) --version >> version/genotype_access.txt; \
-	     R --version > version/genotype_access.txt)
+	     $(SUFAM_ENV)/bin/$(SAMTOOLS) --version > version/sufam_genotype.txt; \
+	     $(SUFAM_ENV)/bin/sufam --version &>> version/sufam_genotype.txt; \
+	     R --version >> version/sufam_genotype.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
-.PHONY: genotype_access
+.PHONY: sufam_genotype
