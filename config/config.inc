@@ -25,6 +25,7 @@ SALMON_ENV ?= $(HOME)/share/usr/env/salmon-1.4.0
 CNVKIT_ENV ?= $(HOME)/share/usr/env/cnvkit-0.9.8
 MSISENSOR_ENV ?= $(HOME)/share/usr/env/msisensor-pro-1.1.a
 GATK_ENV ?= $(HOME)/share/usr/env/gatk-3.8-10
+SUFAM_ENV ?= $(HOME)/share/usr/env/sufam-v0.4.2
 
 # aliases
 PYTHON ?= python
