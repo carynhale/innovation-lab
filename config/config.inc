@@ -48,6 +48,7 @@ STAR_FUSION ?= STAR-Fusion
 FASTQC ?= fastqc
 CUTADAPT ?= cutadapt
 SEQTK ?= seqtk
+SUFAM ?= sufam
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
