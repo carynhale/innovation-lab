@@ -131,6 +131,11 @@ annotate_vcf_context :
 TARGETS += annotate_vcf_maf
 annotate_vcf_maf :
 	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_vcf_maf.mk)
+	
+TARGETS += annotate_maf_vcf
+annotate_vcf_maf :
+	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_maf_vcf.mk)
+
 
 #==================================================
 # Copy number aberration callers

@@ -43,6 +43,7 @@ GATK ?= gatk
 BAM2FASTX ?= bam2fastx
 GENOTYPE_VARIANTS ?= genotype_variants
 VCF2MAF ?= vcf2maf.pl
+MAF2VCF ?= maf2vcf.pl
 DEFUSE ?= defuse_run.pl
 STAR_FUSION ?= STAR-Fusion
 FASTQC ?= fastqc
