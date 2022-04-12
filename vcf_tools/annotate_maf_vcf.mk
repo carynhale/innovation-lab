@@ -11,7 +11,7 @@ vcf/%.vcf : vcf/%.maf
 							   $$(MAF2VCF) \
 							   --input-maf $$(<) \
 							   --output-dir vcf \
-							   --output-vcf vcf/$1.vcf \
+							   --output-vcf $$(@) \
 							   --ref-fasta $$(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz")
 
 endef
