@@ -7,7 +7,7 @@ annotate_maf_vcf : $(foreach sample,$(SAMPLES),vcf/$(sample).vcf)
 
 define annotate-maf-vcf
 vcf/%.vcf : vcf/%.maf
-	$$(call RUN,-c -n 2 -s 2G -m 3G -v $(VCF2MAF_ENV),"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(VCF2MAF_ENV),"set -o pipefail && \
 							   $$(MAF2VCF) \
 							   --input-maf $$(<) \
 							   --output-dir vcf \
