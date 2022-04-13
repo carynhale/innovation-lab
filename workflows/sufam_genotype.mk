@@ -3,8 +3,8 @@ include innovation-lab/genome_inc/b37.inc
 
 LOGDIR ?= log/sufam_genotype.$(NOW)
 
-sufam_genotype : $(foreach sample,$(SAMPLES),sufam_genotype/$(sample).txt) \
-		 summary/summary_genotype.txt
+sufam_genotype : $(foreach sample,$(SAMPLES),sufam/$(sample).txt) \
+		 summary/sufam_summary.txt
 
 MPILEUP_PARAMETERS = '--count-orphans \
 		      --no-BAQ \
@@ -14,9 +14,8 @@ MPILEUP_PARAMETERS = '--count-orphans \
 		      --max-idepth 250000'
 
 define sufam-genotype
-sufam_genotype/$1.txt : bam/$1.bam vcf/$1.vcf
+sufam/$1.txt : bam/$1.bam vcf/$1.vcf
 	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(SUFAM_ENV),"set -o pipefail && \
-							 mkdir -p sufam_genotype && \
 							 $$(SUFAM) \
 							 --sample_name $1 \
 							 --format sufam \
@@ -24,14 +23,14 @@ sufam_genotype/$1.txt : bam/$1.bam vcf/$1.vcf
 							 $$(REF_FASTA) \
 							 vcf/$1.vcf \
 							 bam/$1.bam \
-							 2> sufam_genotype/$1.log \
-							 > sufam_genotype/$1.txt")
+							 2> sufam/$1.log \
+							 > sufam/$1.txt")
 									 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call sufam-genotype,$(sample))))
 		
-summary/summary_genotype.txt : $(foreach sample,$(SAMPLES),sufam_genotype/$(sample).txt)
+summary/sufam_summary.txt : $(foreach sample,$(SAMPLES),sufam/$(sample).txt)
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $(RSCRIPT) $(SCRIPTS_DIR)/summary/sufam_summary.R --sample_names '$(SAMPLES)'")
 
