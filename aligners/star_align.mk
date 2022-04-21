@@ -20,8 +20,8 @@ STAR_OPTS = --genomeDir $(STAR_REF) \
 	    --chimOutType WithinBAM \
 	    --quantMode GeneCounts
 
-star : $(foreach sample,$(SAMPLES),bam/$(sample).bam \
-                                   bam/$(sample).bam.bai)
+star : $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+       $(foreach sample,$(SAMPLES),bam/$(sample).bam.bai)
 
 define align-split-fastq
 star/$1.Aligned.sortedByCoord.out.bam : $3
@@ -30,7 +30,7 @@ star/$1.Aligned.sortedByCoord.out.bam : $3
                                        --outFileNamePrefix star/$1. \
                                        --runThreadN 12 \
                                        --outSAMattrRGline \"ID:$1\" \"LB:$1\" \"SM:$1\" \"PL:$${SEQ_PLATFORM}\" \
-                                       --readFilesIn $$^ \
+                                       --readFilesIn $$(^) \
                                        --readFilesCommand zcat")
                                    
 star/$1.Aligned.sortedByCoord.out.bam.bai : star/$1.Aligned.sortedByCoord.out.bam
