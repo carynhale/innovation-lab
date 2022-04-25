@@ -90,7 +90,7 @@ bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 					   $$(SAMTOOLS) index $$(@) && \
 					   cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
 					   
-bismark/$1/$1_aln_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
+bismark/$1/$1_aln_srt_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(ADD_RG) \
 					  INPUT=$$(<) \
