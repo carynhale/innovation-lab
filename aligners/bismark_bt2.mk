@@ -13,8 +13,8 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG.intervals) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG_IR.bam) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG_IR_FX.bam) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG_IR_FX__F1R2.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG_IR_FX__F2R1.bam)
 #	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX.bam) \
 #	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
 #	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
@@ -137,7 +137,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-to-bam,$(sample))))
 
 define filter-bam
-bismark/$1/$1_aln_srt_RG_IR_FX__F1R2.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam
+bismark/$1/$1_aln_srt_MD_RG_IR_FX__F1R2.bam : bismark/$1/$1_aln_srt_MD_RG_IR_FX.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									       $$(SAMTOOLS) view -b -f 144 $$(<) > bismark/$1/$1_aln_srt__F1R2.bam && \
 									       $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F1R2.bam && \
@@ -146,7 +146,7 @@ bismark/$1/$1_aln_srt_RG_IR_FX__F1R2.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam
 									       $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F1R2.bam bismark/$1/$1_aln_srt__F1F2.bam && \
 									       $$(SAMTOOLS) index $$(@)")
 
-bismark/$1/$1_aln_srt_RG_IR_FX__F2R1.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam
+bismark/$1/$1_aln_srt_MD_RG_IR_FX__F2R1.bam : bismark/$1/$1_aln_srt_MD_RG_IR_FX.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									       $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > bismark/$1/$1_aln_srt__F2R1.bam && \
 									       $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2R1.bam && \
