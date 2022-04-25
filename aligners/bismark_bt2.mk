@@ -36,6 +36,9 @@ BISMARK_MEM_THREAD = 4G
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
+REF_FASTA = $(REF_DIR)/IDT_oligo/idt_oligo.fasta
+BISMARK_GENOME = $(REF_DIR)/IDT_oligo/
+
 define merge-fastq
 bismark/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
 	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
