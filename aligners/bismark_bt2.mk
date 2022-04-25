@@ -5,8 +5,8 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
@@ -29,8 +29,8 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 5G
 
-BISMARK_PARALLEL = 8
-BISMARK_THREADS = 40
+BISMARK_PARALLEL = 4
+BISMARK_THREADS = 4
 BISMARK_MEM_THREAD = 4G
 
 GATK_THREADS = 8
@@ -51,18 +51,18 @@ $(foreach sample,$(SAMPLES),\
 
 define fastq-to-bam
 bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
-	$$(call RUN,-c -n $(BISMARK_THREADS) -s 1G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV) -w 72:00:00,"set -o pipefail && \
-								    					   cd bismark/$1 && \
-								    					   bismark \
-								    					   --fastq \
-								    					   --parallel $$(BISMARK_PARALLEL) \
-								    					   --genome_folder $$(BISMARK_GENOME) \
-								    					   -1 $1_R1.fastq.gz \
-								    					   -2 $1_R2.fastq.gz \
-								    					   --output_dir . && \
-								    					   mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
-								    					   mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
-								    					   cd ../..")
+	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
+											       cd bismark/$1 && \
+								    			       bismark \
+								    			       --fastq \
+								    			       --parallel $$(BISMARK_PARALLEL) \
+								    			       --genome_folder $$(BISMARK_GENOME) \
+											       -1 $1_R1.fastq.gz \
+											       -2 $1_R2.fastq.gz \
+											       --output_dir . && \
+											       mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
+											       mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
+											       cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
