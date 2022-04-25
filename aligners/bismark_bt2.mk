@@ -5,25 +5,26 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
-	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.aln_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.aln_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.aln_metrics) \
-	  summary/rrbs_metrics.txt \
-	  summary/alignment_metrics.txt
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
+#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX.bam) \
+#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
+#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.aln_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.aln_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.aln_metrics) \
+#	  summary/rrbs_metrics.txt \
+#	  summary/alignment_metrics.txt
 
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 5G
@@ -35,20 +36,21 @@ BISMARK_MEM_THREAD = 4G
 GATK_THREADS = 8
 GATK_MEM_THREAD = 2G
 
-define copy-fastq
-bismark/$1/$1_R1.fastq.gz : $3
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 $(RSCRIPT) $(SCRIPTS_DIR)/fastq_tools/copy_fastq.R \
-					 --sample_name $1 \
-					 --directory_name bismark \
-					 --fastq_files '$$^'")
-
+define merge-fastq
+bismark/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
+					 zcat $$(^) | gzip -c > $$(@)")
+	
+bismark/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
+					 zcat $$(^) | gzip -c > $$(@)")
 endef
-$(foreach ss,$(SPLIT_SAMPLES),\
-	$(if $(fq.$(ss)),$(eval $(call copy-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+$(foreach sample,$(SAMPLES),\
+		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
+
 
 define fastq-to-bam
-bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz
+bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n $(BISMARK_THREADS) -s 1G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV) -w 72:00:00,"set -o pipefail && \
 								    					   cd bismark/$1 && \
 								    					   bismark \
