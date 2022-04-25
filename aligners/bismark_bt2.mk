@@ -9,10 +9,10 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.intervals) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_IR.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_IR_FX.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_IR_FX_RG.bam)
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG.intervals) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG_IR.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG_IR_FX.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
 #	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX.bam) \
@@ -78,7 +78,7 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 									       -T $$(TMPDIR) && \
 									       $$(SAMTOOLS) index $$(@) && \
 									       cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
-
+									       
 bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 	$$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					   $$(MARK_DUP) \
@@ -89,35 +89,8 @@ bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 					   ASSUME_SORTED=true && \
 					   $$(SAMTOOLS) index $$(@) && \
 					   cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
-
-bismark/$1/$1_aln_srt_MD.intervals : bismark/$1/$1_aln_srt_MD.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T RealignerTargetCreator \
-										      -I $$(^) \
-										      -nt $$(GATK_THREADS) \
-										      -R $$(REF_FASTA) \
-										      -o $$(@)")
-
-bismark/$1/$1_aln_srt_MD_IR.bam : bismark/$1/$1_aln_srt_MD.bam bismark/$1/$1_aln_srt_MD.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T IndelRealigner \
-										      -I $$(<) \
-										      -R $$(REF_FASTA) \
-										      -targetIntervals $$(<<) \
-										      -o $$(@)")
-
-bismark/$1/$1_aln_srt_MD_IR_FX.bam : bismark/$1/$1_aln_srt_MD_IR.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(FIX_MATE) \
-					  INPUT=$$(<) \
-					  OUTPUT=$$(@) \
-					  SORT_ORDER=coordinate \
-					  COMPRESSION_LEVEL=0 \
-					  CREATE_INDEX=true")
-
-bismark/$1/$1_aln_srt_MD_IR_FX_RG.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
+					   
+bismark/$1/$1_aln_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(ADD_RG) \
 					  INPUT=$$(<) \
@@ -130,7 +103,35 @@ bismark/$1/$1_aln_srt_MD_IR_FX_RG.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 					  SORT_ORDER=coordinate \
 					  COMPRESSION_LEVEL=0 && \
 					  $$(SAMTOOLS) index $$(@) && \
-					  cp bismark/$1/$1_aln_srt_MD_IR_FX_RG.bam.bai bismark/$1/$1_aln_srt_MD_IR_FX_RG.bai")
+					  cp bismark/$1/$1_aln_MD_RG.bam.bai bismark/$1/$1_aln_MD_RG.bai")
+
+bismark/$1/$1_aln_srt_MD_RG.intervals : bismark/$1/$1_aln_srt_MD_RG.bam
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
+										      $$(call GATK_CMD,16G) \
+										      -T RealignerTargetCreator \
+										      -I $$(^) \
+										      -nt $$(GATK_THREADS) \
+										      -R $$(REF_FASTA) \
+										      -o $$(@)")
+
+bismark/$1/$1_aln_srt_MD_RG_IR.bam : bismark/$1/$1_aln_srt_MD_RG.bam bismark/$1/$1_aln_srt_MD_RG.intervals
+	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
+										      $$(call GATK_CMD,16G) \
+										      -T IndelRealigner \
+										      -I $$(<) \
+										      -R $$(REF_FASTA) \
+										      -targetIntervals $$(<<) \
+										      -o $$(@)")
+
+bismark/$1/$1_aln_srt_MD_RG_IR_FX.bam : bismark/$1/$1_aln_srt_MD_RG_IR.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+					  $$(FIX_MATE) \
+					  INPUT=$$(<) \
+					  OUTPUT=$$(@) \
+					  SORT_ORDER=coordinate \
+					  COMPRESSION_LEVEL=0 \
+					  CREATE_INDEX=true")
+
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-to-bam,$(sample))))
