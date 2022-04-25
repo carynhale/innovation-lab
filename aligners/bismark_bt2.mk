@@ -44,14 +44,13 @@ define merge-fastq
 bismark/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
 	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 zcat $$(^) | gzip -c > $$(@)")
-	
+
 bismark/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
 	$$(call RUN,-c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 zcat $$(^) | gzip -c > $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
-
 
 define fastq-to-bam
 bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
@@ -90,7 +89,7 @@ bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 					   ASSUME_SORTED=true && \
 					   $$(SAMTOOLS) index $$(@) && \
 					   cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
-					   
+
 bismark/$1/$1_aln_srt_MD.intervals : bismark/$1/$1_aln_srt_MD.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
@@ -108,7 +107,7 @@ bismark/$1/$1_aln_srt_MD_IR.bam : bismark/$1/$1_aln_srt_MD.bam bismark/$1/$1_aln
 										      -R $$(REF_FASTA) \
 										      -targetIntervals $$(<<) \
 										      -o $$(@)")
-										      
+
 bismark/$1/$1_aln_srt_MD_IR_FX.bam : bismark/$1/$1_aln_srt_MD_IR.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(FIX_MATE) \
@@ -117,7 +116,7 @@ bismark/$1/$1_aln_srt_MD_IR_FX.bam : bismark/$1/$1_aln_srt_MD_IR.bam
 					  SORT_ORDER=coordinate \
 					  COMPRESSION_LEVEL=0 \
 					  CREATE_INDEX=true")
-									       
+
 bismark/$1/$1_aln_srt_MD_IR_FX_RG.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(ADD_RG) \
@@ -132,7 +131,6 @@ bismark/$1/$1_aln_srt_MD_IR_FX_RG.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 					  COMPRESSION_LEVEL=0 && \
 					  $$(SAMTOOLS) index $$(@) && \
 					  cp bismark/$1/$1_aln_srt_MD_IR_FX_RG.bam.bai bismark/$1/$1_aln_srt_MD_IR_FX_RG.bai")
-									       
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-to-bam,$(sample))))
@@ -155,7 +153,6 @@ bismark/$1/$1_aln_srt_RG_IR_FX__F2R1.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam
 									       $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2F1.bam && \
 									       $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F2R1.bam bismark/$1/$1_aln_srt__F2F1.bam && \
 									       $$(SAMTOOLS) index $$(@)")
-
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call filter-bam,$(sample))))
