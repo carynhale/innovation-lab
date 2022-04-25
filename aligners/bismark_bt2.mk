@@ -5,7 +5,7 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
