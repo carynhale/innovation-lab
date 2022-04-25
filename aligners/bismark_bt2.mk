@@ -6,8 +6,9 @@ LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
@@ -26,8 +27,8 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 #	  summary/rrbs_metrics.txt \
 #	  summary/alignment_metrics.txt
 
-SAMTOOLS_THREADS = 8
-SAMTOOLS_MEM_THREAD = 5G
+SAMTOOLS_THREADS = 4
+SAMTOOLS_MEM_THREAD = 4G
 
 BISMARK_PARALLEL = 4
 BISMARK_THREADS = 4
@@ -68,10 +69,27 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
 											       cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
-									       $$(SAMTOOLS) sort -@ $$(SAMTOOLS_THREADS) -m $$(SAMTOOLS_MEM_THREAD) $$(^) -o $$(@) -T $$(TMPDIR) && \
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 2G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
+									       $$(SAMTOOLS) \
+									       sort \
+									       -@ $$(SAMTOOLS_THREADS) \
+									       -m $$(SAMTOOLS_MEM_THREAD) \
+									       $$(^) \
+									       -o $$(@) \
+									       -T $$(TMPDIR) && \
 									       $$(SAMTOOLS) index $$(@) && \
 									       cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
+
+bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(MARK_DUP) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    METRICS_FILE=bismark/$1/$1_aln_srt.txt \
+					    REMOVE_DUPLICATES=false \
+					    ASSUME_SORTED=true && \
+					    $$(SAMTOOLS) index $$(@) && \
+					    cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
 									       
 bismark/$1/$1_aln_srt_RG.bam : bismark/$1/$1_aln_srt.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
