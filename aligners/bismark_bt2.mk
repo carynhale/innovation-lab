@@ -9,8 +9,8 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD_RG.intervals)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
@@ -106,7 +106,7 @@ bismark/$1/$1_aln_srt_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
 					  $$(SAMTOOLS) index $$(@) && \
 					  cp bismark/$1/$1_aln_srt_MD_RG.bam.bai bismark/$1/$1_aln_srt_MD_RG.bai")
 									       
-bismark/$1/$1_aln_srt_RG.intervals : bismark/$1/$1_aln_srt_RG.bam
+bismark/$1/$1_aln_srt_MD_RG.intervals : bismark/$1/$1_aln_srt_MD_RG.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
 										      -T RealignerTargetCreator \
