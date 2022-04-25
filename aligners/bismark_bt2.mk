@@ -81,30 +81,30 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 									       cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 
 bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					    $$(MARK_DUP) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    METRICS_FILE=bismark/$1/$1_aln_srt.txt \
-					    REMOVE_DUPLICATES=false \
-					    ASSUME_SORTED=true && \
-					    $$(SAMTOOLS) index $$(@) && \
-					    cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
-									       
-bismark/$1/$1_aln_srt_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(ADD_RG) \
+	$$(call RUN, -c -n 1 -s 8G -m 16G,"set -o pipefail && \
+					   $$(MARK_DUP) \
 					   INPUT=$$(<) \
 					   OUTPUT=$$(@) \
-					   RGID=$1 \
-					   RGLB=$1 \
-					   RGPL=illumina \
-					   RGPU=NA \
-					   RGSM=$1 \
-					   SORT_ORDER=coordinate \
-					   COMPRESSION_LEVEL=0 && \
+					   METRICS_FILE=bismark/$1/$1_aln_srt.txt \
+					   REMOVE_DUPLICATES=false \
+					   ASSUME_SORTED=true && \
 					   $$(SAMTOOLS) index $$(@) && \
-					   cp bismark/$1/$1_aln_srt_MD_RG.bam.bai bismark/$1/$1_aln_srt_MD_RG.bai")
+					   cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
+									       
+bismark/$1/$1_aln_srt_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+					  $$(ADD_RG) \
+					  INPUT=$$(<) \
+					  OUTPUT=$$(@) \
+					  RGID=$1 \
+					  RGLB=$1 \
+					  RGPL=illumina \
+					  RGPU=NA \
+					  RGSM=$1 \
+					  SORT_ORDER=coordinate \
+					  COMPRESSION_LEVEL=0 && \
+					  $$(SAMTOOLS) index $$(@) && \
+					  cp bismark/$1/$1_aln_srt_MD_RG.bam.bai bismark/$1/$1_aln_srt_MD_RG.bai")
 									       
 bismark/$1/$1_aln_srt_RG.intervals : bismark/$1/$1_aln_srt_RG.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
