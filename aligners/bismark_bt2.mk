@@ -110,13 +110,13 @@ bismark/$1/$1_aln_srt_MD_IR.bam : bismark/$1/$1_aln_srt_MD.bam bismark/$1/$1_aln
 										      -o $$(@)")
 										      
 bismark/$1/$1_aln_srt_MD_IR_FX.bam : bismark/$1/$1_aln_srt_MD_IR.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(FIX_MATE) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   SORT_ORDER=coordinate \
-					   COMPRESSION_LEVEL=0 \
-					   CREATE_INDEX=true")
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+					  $$(FIX_MATE) \
+					  INPUT=$$(<) \
+					  OUTPUT=$$(@) \
+					  SORT_ORDER=coordinate \
+					  COMPRESSION_LEVEL=0 \
+					  CREATE_INDEX=true")
 									       
 bismark/$1/$1_aln_srt_MD_IR_FX_RG.bam : bismark/$1/$1_aln_srt_MD_IR_FX.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
