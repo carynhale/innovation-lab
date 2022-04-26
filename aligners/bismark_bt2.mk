@@ -25,7 +25,8 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_RG_IR_FX__F1R2.aln_metrics) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD_RG_IR_FX__F2R1.aln_metrics) \
 	  summary/rrbs_metrics.txt \
-	  summary/alignment_metrics.txt
+	  summary/alignment_metrics.txt \
+	  summary/mark_duplicates.txt
 
 SAMTOOLS_THREADS = 4
 SAMTOOLS_MEM_THREAD = 4G
