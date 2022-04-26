@@ -238,7 +238,7 @@ summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_al
 					  mkdir -p summary && \
 					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bismark_metrics.R --option 2 --sample_names '$(SAMPLES)'")
 
-summary/mark_duplicates.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD.bam)
+summary/mark_duplicates.txt : $(foreach sample,$(SAMPLES),bismark/$(sample)_aln_srt_MD.bam)
 	$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
 					  mkdir -p summary && \
 					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bismark_metrics.R --option 3 --sample_names '$(SAMPLES)'")
