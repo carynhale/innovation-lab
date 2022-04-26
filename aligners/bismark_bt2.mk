@@ -237,7 +237,12 @@ summary/alignment_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_al
 	$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
 					  mkdir -p summary && \
 					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bismark_metrics.R --option 2 --sample_names '$(SAMPLES)'")
-									   
+
+summary/mark_duplicates.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_MD.bam)
+	$(call RUN,-c -n 1 -s 12G -m 16G,"set -o pipefail && \
+					  mkdir -p summary && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bismark_metrics.R --option 3 --sample_names '$(SAMPLES)'")
+
 ..DUMMY := $(shell mkdir -p version; \
 	     $(HOME)/share/usr/env/bismark-0.22.1/bin/bismark --version > version/bismark_bt2.txt; \
 	     $(SAMTOOLS) --version >> version/bismark_bt2.txt; \
