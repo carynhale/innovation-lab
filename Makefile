@@ -84,6 +84,10 @@ TARGETS += star_align
 star_align :
 	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
 
+TARGETS += bwa_meth
+bwa_meth :
+	$(call RUN_MAKE,innovation-lab/aligners/bwa_meth.mk)
+
 #==================================================
 # BAM file utilities
 #==================================================
