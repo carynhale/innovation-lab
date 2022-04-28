@@ -5,8 +5,8 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/bwa_meth.$(NOW)
 
 bwa_meth : $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R1.fastq.gz) \
-	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R2.fastq.gz)
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq.bam) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R2.fastq.gz) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln.bam)
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
@@ -28,8 +28,8 @@ bwa_meth : $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R1.fastq.gz) 
 #	   $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam)
 
 
-BWAMEM_THREADS = 12
-BWAMEM_MEM_PER_THREAD = 2G
+BWAMETH_THREADS = 12
+BWAMETH_MEM_PER_THREAD = 2G
 
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
@@ -48,22 +48,19 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 
 define fastq-2-bam
-fgbio/$1/$1_fq.bam : fgbio/$1/$1_R1.fastq.gz fgbio/$1/$1_R2.fastq.gz
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(call FGBIO_CMD,2G,8G) \
-					  FastqToBam \
-					  --input $$(<) $$(<<) \
-					  --read-structures 3M2S+T 3M2S+T \
-					  --output $$(@) \
-					  --sample $1 \
-					  --library $1 \
-					  --platform illumina \
-					  --platform-unit NA")
+bwameth/$1/$1_aln.bam : bwameth/$1/$1_R1.fastq.gz bwameth/$1/$1_R2.fastq.gz
+	$$(call RUN,-c -n $(BWAMETH_THREADS) -s 1G -m $(BWAMETH_MEM_PER_THREAD),"set -o pipefail && \
+										 $$(BWAMETH) \
+										 --threads $$(BWAMETH_THREADS) \
+										 --reference $$(BWAMETH_GENOME) \
+										 $$(<) \
+										 $$(<<) | \
+										 $$(SAMTOOLS) view -Sb -q 10 - > $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-2-bam,$(sample))))
-	
+
 define merge-bams
 fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
