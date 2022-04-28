@@ -572,11 +572,11 @@ summary/gc_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_sr
 
 
 ..DUMMY := $(shell mkdir -p version; \
-	     $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
-	     echo "picard" >> version/fgbio_access.txt; \
-	     $(PICARD) SortSam --version &>> version/fgbio_access.txt; \
-	     $(PICARD) MarkIlluminaAdapters --version &>> version/fgbio_access.txt; \
-	     $(PICARD) SamToFastq --version &>> version/fgbio_access.txt)
+	     $(JAVA8) -jar $(FGBIO) --help &> version/bwa_meth.txt; \
+	     echo "picard" >> version/bwa_meth.txt; \
+	     $(PICARD) SortSam --version &>> version/bwa_meth.txt; \
+	     $(PICARD) MarkIlluminaAdapters --version &>> version/bwa_meth.txt; \
+	     $(PICARD) SamToFastq --version &>> version/bwa_meth.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
-.PHONY: fgbio_access
+.PHONY: bwa_meth
