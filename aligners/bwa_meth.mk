@@ -53,9 +53,8 @@ bwameth/$1/$1_aln.bam : bwameth/$1/$1_R1.fastq.gz bwameth/$1/$1_R2.fastq.gz
 										 $$(BWAMETH) \
 										 --threads $$(BWAMETH_THREADS) \
 										 --reference $$(BWAMETH_GENOME) \
-										 $$(<) \
-										 $$(<<) | \
-										 $$(SAMTOOLS) view -Sb -q 10 - > $$(@)")
+										 $$(<) $$(<<) | \
+										 $$(SAMTOOLS) view -bhS - > $$@")
 
 endef
 $(foreach sample,$(SAMPLES),\
