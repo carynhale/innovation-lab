@@ -3,21 +3,22 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
 SEED = 1
-N = 1 2 3 4 5
+FASTQ_SAMPLE = 10
+FASTQ_SEQ = $(shell seq 1 $(FASTQ_SAMPLE))
     
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1.fastq.gz) \
 		  $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R2.fastq.gz) \
 		  $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(N),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(n).fastq.gz)) \
+		  	$(foreach n,$(FASTQ_SEQ),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R1--$(n).fastq.gz)) \
 		  $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(N),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R2--$(n).fastq.gz))
+		  	$(foreach n,$(FASTQ_SEQ),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)_R2--$(n).fastq.gz))
 
 define merge-fastq
 FASTQ_DOWNSAMPLE/fastq/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
+	$$(call RUN,-c -n 1 -s 4G -m 6G,"zcat $$(^) | gzip -c > $$(@)")
 	
 FASTQ_DOWNSAMPLE/fastq/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
+	$$(call RUN,-c -n 1 -s 4G -m 6G,"zcat $$(^) | gzip -c > $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
@@ -35,7 +36,7 @@ FASTQ_DOWNSAMPLE/fastq/$1/$1_R2--$2.fastq.gz : FASTQ_DOWNSAMPLE/fastq/$1/$1_R2.f
 
 endef
 $(foreach sample,$(SAMPLES), \
-	$(foreach n,$(N), \
+	$(foreach n,$(FASTQ_SEQ), \
 		$(eval $(call sample-fastq,$(sample),$(n)))))
 
 
