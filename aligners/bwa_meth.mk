@@ -8,22 +8,11 @@ bwa_meth : $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R1.fastq.gz) 
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R2.fastq.gz) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln.bam) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt.bam) \
-	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD.bam)
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.intervals) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC.duplex_umi_counts.txt) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG.intervals) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.bam) \
-#	   $(foreach sample,$(SAMPLES),bam/$(sample)_cl_aln_srt_MD_IR_FX_BR.bam)
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD.bam) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD_RG.bam) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD_RG.intervals) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD_RG_IR.bam) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD_RG_IR_FX.bam)
 
 BWAMETH_GENOME = $(REF_DIR)/IDT_oligo/bwa_meth/idt_oligo.fasta
 
