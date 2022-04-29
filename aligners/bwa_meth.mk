@@ -57,7 +57,7 @@ bwameth/$1/$1_aln.bam : bwameth/$1/$1_R1.fastq.gz bwameth/$1/$1_R2.fastq.gz
 										 $$(<) $$(<<) | \
 										 $$(SAMTOOLS) view -bhS - > $$@")
 
-fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
+bwameth/$1/$1_aln_srt.bam : bwameth/$1/$1_aln.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(SORT_SAM) \
 					  INPUT=$$(<) \
