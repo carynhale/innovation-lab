@@ -6,7 +6,8 @@ LOGDIR ?= log/bwa_meth.$(NOW)
 
 bwa_meth : $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R1.fastq.gz) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R2.fastq.gz) \
-	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln.bam)
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln.bam) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt.bam)
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
@@ -56,17 +57,20 @@ bwameth/$1/$1_aln.bam : bwameth/$1/$1_R1.fastq.gz bwameth/$1/$1_R2.fastq.gz
 										 $$(<) $$(<<) | \
 										 $$(SAMTOOLS) view -bhS - > $$@")
 
-endef
-$(foreach sample,$(SAMPLES),\
-	$(eval $(call fastq-2-bam,$(sample))))
-
-define merge-bams
 fgbio/$1/$1_fq_srt.bam : fgbio/$1/$1_fq.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(SORT_SAM) \
 					  INPUT=$$(<) \
 					  OUTPUT=$$(@) \
-					  SORT_ORDER=queryname")
+					  SORT_ORDER=coordinate")
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call fastq-2-bam,$(sample))))
+	
+
+
+define merge-bams
+
 
 fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
@@ -82,17 +86,7 @@ fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 					  CLIPPING_ACTION=X \
 					  CLIPPING_MIN_LENGTH=25")
 
-fgbio/$1/$1_cl_aln_srt.bam : fgbio/$1/$1_cl.fastq.gz fgbio/$1/$1_fq_srt.bam
-	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-									       $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
-									       $$(MERGE_ALIGNMENTS) \
-									       UNMAPPED=$$(<<) \
-									       ALIGNED=/dev/stdin \
-									       OUTPUT=$$(@) \
-									       REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									       SORT_ORDER=coordinate \
-									       MAX_GAPS=-1 \
-									       ORIENTATIONS=FR")
+
 
 fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
