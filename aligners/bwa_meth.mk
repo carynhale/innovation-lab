@@ -50,12 +50,12 @@ $(foreach sample,$(SAMPLES),\
 
 define fastq-2-bam
 bwameth/$1/$1_aln.bam : bwameth/$1/$1_R1.fastq.gz bwameth/$1/$1_R2.fastq.gz
-	$$(call RUN,-c -n $(BWAMETH_THREADS) -s 1G -m $(BWAMETH_MEM_PER_THREAD),"set -o pipefail && \
-										 $$(BWAMETH) \
-										 --threads $$(BWAMETH_THREADS) \
-										 --reference $$(BWAMETH_GENOME) \
-										 $$(<) $$(<<) | \
-										 $$(SAMTOOLS) view -bhS - > $$@")
+	$$(call RUN,-c -n $(BWAMETH_THREADS) -s 1G -m $(BWAMETH_MEM_PER_THREAD) -v $(BWAMETH_ENV),"set -o pipefail && \
+												   $$(BWAMETH) \
+												   --threads $$(BWAMETH_THREADS) \
+												   --reference $$(BWAMETH_GENOME) \
+												   $$(<) $$(<<) | \
+												   $$(SAMTOOLS) view -bhS - > $$@")
 
 bwameth/$1/$1_aln_srt.bam : bwameth/$1/$1_aln.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
