@@ -67,7 +67,7 @@ bwameth/$1/$1_aln_srt.bam : bwameth/$1/$1_aln.bam
 					  cp bwameth/$1/$1_aln_srt.bam.bai bwameth/$1/$1_aln_srt.bai")
 					 
 bwameth/$1/$1_aln_srt_MD.bam : bwameth/$1/$1_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					    $$(MARK_DUP) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
