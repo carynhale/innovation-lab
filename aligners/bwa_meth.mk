@@ -7,7 +7,8 @@ LOGDIR ?= log/bwa_meth.$(NOW)
 bwa_meth : $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R1.fastq.gz) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R2.fastq.gz) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln.bam) \
-	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt.bam)
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt.bam) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt.bam.bai)
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
@@ -64,6 +65,14 @@ bwameth/$1/$1_aln_srt.bam : bwameth/$1/$1_aln.bam
 					  INPUT=$$(<) \
 					  OUTPUT=$$(@) \
 					  SORT_ORDER=coordinate")
+					  
+bwameth/$1/$1_aln_srt.bam.bai : bwameth/$1/$1_aln_srt.bam
+	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
+					 $$(SAMTOOLS) \
+					 index \
+					 $$(<) && \
+					 cp $$(@) bwameth/$1/$1_aln_srt.bai")
+
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-2-bam,$(sample))))
