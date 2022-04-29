@@ -114,8 +114,10 @@ $(foreach sample,$(SAMPLES),\
 
 
 ..DUMMY := $(shell mkdir -p version; \
-	     echo "picard" >> version/bwa_meth.txt; \
-	     $(PICARD) SortSam --version &>> version/bwa_meth.txt)
+	     $(HOME)/share/usr/env/bwameth-0.2.4/bin/bwameth.py --version > version/bwa_meth.txt; \
+	     $(SAMTOOLS) --version >> version/bwa_meth.txt; \
+	     R --version >> version/bwa_meth.txt; \
+	     $(JAVA8) -version &> version/bwa_meth.txt)
 .DELETE_ON_ERROR:
 .SECONDARY:
 .PHONY: bwa_meth
