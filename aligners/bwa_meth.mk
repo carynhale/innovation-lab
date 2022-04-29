@@ -8,11 +8,7 @@ bwa_meth : $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R1.fastq.gz) 
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R2.fastq.gz) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln.bam) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt.bam) \
-	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt.bam.bai)
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_fq_srt.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl.fastq.gz) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt.bam) \
-#	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.bam) \
+	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD.bam)
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD.intervals) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR.bam) \
 #	   $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_cl_aln_srt_MD_IR_FX.bam) \
@@ -64,14 +60,22 @@ bwameth/$1/$1_aln_srt.bam : bwameth/$1/$1_aln.bam
 					  $$(SORT_SAM) \
 					  INPUT=$$(<) \
 					  OUTPUT=$$(@) \
-					  SORT_ORDER=coordinate")
-					  
-bwameth/$1/$1_aln_srt.bam.bai : bwameth/$1/$1_aln_srt.bam
-	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
-					 $$(SAMTOOLS) \
-					 index \
-					 $$(<) && \
-					 cp $$(@) bwameth/$1/$1_aln_srt.bai")
+					  SORT_ORDER=coordinate \
+					  $$(SAMTOOLS) \
+					  index \
+					  $$(@) && \
+					  cp bwameth/$1/$1_aln_srt.bam.bai bwameth/$1/$1_aln_srt.bai")
+					 
+bwameth/$1/$1_aln_srt_MD.bam : bwameth/$1/$1_aln_srt.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(MARK_DUP) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    METRICS_FILE=bwameth/$1/$1_aln_srt.txt \
+					    REMOVE_DUPLICATES=false \
+					    ASSUME_SORTED=true && \
+					    $$(SAMTOOLS) index $$(@) && \
+					    cp bwameth/$1/$1_aln_srt_MD.bam.bai bwameth/$1/$1_aln_srt_MD.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -98,17 +102,6 @@ fgbio/$1/$1_cl.fastq.gz : fgbio/$1/$1_fq_srt.bam
 
 
 
-fgbio/$1/$1_cl_aln_srt_MD.bam : fgbio/$1/$1_cl_aln_srt.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					    $$(MARK_DUP) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    METRICS_FILE=fgbio/$1/$1_cl_aln_srt.txt \
-					    REMOVE_DUPLICATES=false \
-					    ASSUME_SORTED=true && \
-					    $$(SAMTOOLS) index $$(@) && \
-					    cp fgbio/$1/$1_cl_aln_srt_MD.bam.bai fgbio/$1/$1_cl_aln_srt_MD.bai")
-									  	
 fgbio/$1/$1_cl_aln_srt_MD.intervals : fgbio/$1/$1_cl_aln_srt_MD.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
