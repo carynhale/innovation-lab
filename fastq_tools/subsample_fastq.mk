@@ -3,7 +3,7 @@ include innovation-lab/Makefile.inc
 LOGDIR ?= log/subsample_fastq.$(NOW)
 
 SEED = 1
-FASTQ_SAMPLE = 10
+FASTQ_SAMPLE = 1
 FASTQ_SEQ = $(shell seq 1 $(FASTQ_SAMPLE))
     
 subsample_fastq : $(foreach sample,$(SAMPLES),FASTQ_DOWNSAMPLE/fastq/$(sample)/$(sample)--0_R1.fastq.gz) \
