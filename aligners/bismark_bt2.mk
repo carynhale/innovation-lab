@@ -78,10 +78,11 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 									       
 bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
 	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
+											       cd bismark/$1 && \
 											       deduplicate_bismark \
 											       --paired \
 											       --outfile $1_aln_srt_MD \
-											       --output_dir bismark/$1/ \
+											       --output_dir . && \
 											       $$(SAMTOOLS) index $$(@) && \
 											       cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
 									       
