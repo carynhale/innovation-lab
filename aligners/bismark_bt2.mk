@@ -6,8 +6,9 @@ LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam)
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
@@ -75,7 +76,16 @@ bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 									       $$(SAMTOOLS) index $$(@) && \
 									       cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
 									       
-bismark/$1/$1_aln_srt_RG.bam : bismark/$1/$1_aln_srt.bam
+bismark/$1/$1_aln_srt_MD.bam : bismark/$1/$1_aln_srt.bam
+	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
+											       deduplicate_bismark \
+											       --paired \
+											       --outfile $1_aln_srt_MD \
+											       --output_dir bismark/$1/ \
+											       $$(SAMTOOLS) index $$(@) && \
+											       cp bismark/$1/$1_aln_srt_MD.bam.bai bismark/$1/$1_aln_srt_MD.bai")
+									       
+bismark/$1/$1_aln_srt_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(ADD_RG) \
 					  INPUT=$$(<) \
