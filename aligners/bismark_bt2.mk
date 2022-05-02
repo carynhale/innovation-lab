@@ -6,8 +6,8 @@ LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
@@ -31,7 +31,7 @@ SAMTOOLS_THREADS = 4
 SAMTOOLS_MEM_THREAD = 4G
 
 BISMARK_PARALLEL = 4
-BISMARK_THREADS = 4
+BISMARK_THREADS = 8
 BISMARK_MEM_THREAD = 4G
 
 GATK_THREADS = 8
