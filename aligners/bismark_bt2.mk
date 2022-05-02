@@ -66,18 +66,17 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
 											       cd ../..")
 
 bismark/$1/$1_aln_MD.bam : bismark/$1/$1_aln.bam
-	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
-											       cd bismark/$1 && \
-											       deduplicate_bismark \
-											       $1_aln.bam \
-											       --paired \
-											       --bam \
-											       --outfile $1_aln_MD \
-											       --output_dir . && \
-											       mv $1_aln_MD.deduplicated.bam $1_aln_MD.bam && \
-											       mv $1_aln.deduplication_report.txt $1_aln_MD.txt && \
-											       cd ../..")
-
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 2G -m $(SAMTOOLS_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
+												 cd bismark/$1 && \
+											         deduplicate_bismark \
+											         $1_aln.bam \
+											         --paired \
+											         --bam \
+											         --outfile $1_aln_MD \
+											         --output_dir . && \
+											         mv $1_aln_MD.deduplicated.bam $1_aln_MD.bam && \
+											         mv $1_aln.deduplication_report.txt $1_aln_MD.txt && \
+											         cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 2G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
