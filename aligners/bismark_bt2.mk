@@ -7,24 +7,21 @@ LOGDIR ?= log/bismark_bt2.$(NOW)
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.bam) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.intervals) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR.bam) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX.bam) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
-#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX.bam) \
-#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F1R2.bam) \
-#	  $(foreach sample,$(SAMPLES),bam/$(sample)_aln_srt_RG_IR_FX__F2R1.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.bam) \
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation extractor
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation report
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.sorted.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_bismark_bt2_pe_deduplicated_sorted.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_bismark_bt2_pe_deduplicated_sorted__F1R2.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.bam)
+
 #	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.rrbs_summary_metrics) \
 #	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics) \
 #	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics) \
 #	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.aln_metrics) \
 #	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.aln_metrics) \
 #	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.aln_metrics) \
+
 #	  summary/rrbs_metrics.txt \
 #	  summary/alignment_metrics.txt
 
@@ -80,106 +77,73 @@ bismark/$1/$1_bismark_bt2_pe.deduplicated.bam : bismark/$1/$1_bismark_bt2_pe.bam
 											         --output_dir . && \
 											         cd ../..")
 
-bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
+#bismark/$1/$1_bismark_bt2_pe??? : bismark/$1/$1_bismark_bt2_pe.deduplicated.bam
+#	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
+#											       cd bismark/$1 && \
+#											       bismark_methylation_extractor \
+#											       --gzip \
+#											       --bedGraph \
+#											       --buffer_size 10G \
+#											       --cytosine_report \
+#											       --genome_folder $$(BISMARK_GENOME) \
+#											       $1_bismark_bt2_pe.deduplicated.bam && \
+#											       cd ../..")
+
+bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted.bam : bismark/$1/$1_bismark_bt2_pe.deduplicated.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 2G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									       $$(SAMTOOLS) \
 									       sort \
 									       -@ $$(SAMTOOLS_THREADS) \
 									       -m $$(SAMTOOLS_MEM_THREAD) \
-									       $$(^) \
+									       $$(<) \
 									       -o $$(@) \
 									       -T $$(TMPDIR) && \
 									       $$(SAMTOOLS) index $$(@) && \
-									       cp bismark/$1/$1_aln_srt.bam.bai bismark/$1/$1_aln_srt.bai")
-									       
-
-									       
-bismark/$1/$1_aln_srt_MD_RG.bam : bismark/$1/$1_aln_srt_MD.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(ADD_RG) \
-					  INPUT=$$(<) \
-					  OUTPUT=$$(@) \
-					  RGID=$1 \
-					  RGLB=$1 \
-					  RGPL=illumina \
-					  RGPU=NA \
-					  RGSM=$1 \
-					  SORT_ORDER=coordinate \
-					  COMPRESSION_LEVEL=0 && \
-					  $$(SAMTOOLS) index $$(@) && \
-					  cp bismark/$1/$1_aln_srt_RG.bam.bai bismark/$1/$1_aln_srt_RG.bai")
-
-bismark/$1/$1_aln_srt_RG.intervals : bismark/$1/$1_aln_srt_RG.bam
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T RealignerTargetCreator \
-										      -I $$(^) \
-										      -nt $$(GATK_THREADS) \
-										      -R $$(REF_FASTA) \
-										      -o $$(@)")
-
-bismark/$1/$1_aln_srt_RG_IR.bam : bismark/$1/$1_aln_srt_RG.bam bismark/$1/$1_aln_srt_RG.intervals
-	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
-										      -T IndelRealigner \
-										      -I $$(<) \
-										      -R $$(REF_FASTA) \
-										      -targetIntervals $$(<<) \
-										      -o $$(@)")
-
-bismark/$1/$1_aln_srt_RG_IR_FX.bam : bismark/$1/$1_aln_srt_RG_IR.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
-					  $$(FIX_MATE) \
-					  INPUT=$$(<) \
-					  OUTPUT=$$(@) \
-					  SORT_ORDER=coordinate \
-					  COMPRESSION_LEVEL=0 \
-					  CREATE_INDEX=true")
-
+									       cp bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted.bam.bai bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted.bai")
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call fastq-to-bam,$(sample))))
 
 define filter-bam
-bismark/$1/$1_aln_srt_RG_IR_FX__F1R2.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam
+bismark/$1/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.bam : bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
-									       $$(SAMTOOLS) view -b -f 144 $$(<) > bismark/$1/$1_aln_srt__F1R2.bam && \
-									       $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F1R2.bam && \
-									       $$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > bismark/$1/$1_aln_srt__F1F2.bam && \
-									       $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F1F2.bam && \
-									       $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F1R2.bam bismark/$1/$1_aln_srt__F1F2.bam && \
+									       $$(SAMTOOLS) view -b -f 144 $$(<) > bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F1R2.bam && \
+									       $$(SAMTOOLS) index bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F1R2.bam && \
+									       $$(SAMTOOLS) view -b -f 64 -F 16 $$(<) > bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F1F2.bam && \
+									       $$(SAMTOOLS) index bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F1F2.bam && \
+									       $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F1R2.bam bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F1F2.bam && \
 									       $$(SAMTOOLS) index $$(@)")
 
-bismark/$1/$1_aln_srt_RG_IR_FX__F2R1.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam
+bismark/$1/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.bam : bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
-									       $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > bismark/$1/$1_aln_srt__F2R1.bam && \
-									       $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2R1.bam && \
-									       $$(SAMTOOLS) view -b -f 80 $$(<) > bismark/$1/$1_aln_srt__F2F1.bam && \
-									       $$(SAMTOOLS) index bismark/$1/$1_aln_srt__F2F1.bam && \
-									       $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_aln_srt__F2R1.bam bismark/$1/$1_aln_srt__F2F1.bam && \
+									       $$(SAMTOOLS) view -b -f 128 -F 16 $$(<) > bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F2R1.bam && \
+									       $$(SAMTOOLS) index bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F2R1.bam && \
+									       $$(SAMTOOLS) view -b -f 80 $$(<) > bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F2F1.bam && \
+									       $$(SAMTOOLS) index bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F2F1.bam && \
+									       $$(SAMTOOLS) merge -f $$(@) bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F2R1.bam bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted__F2F1.bam && \
 									       $$(SAMTOOLS) index $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call filter-bam,$(sample))))
 		
 define copy-bam
-bam/$1_aln_srt_RG_IR_FX.bam : bismark/$1/$1_aln_srt_RG_IR_FX.bam
+bam/$1_bismark_bt2_pe_deduplicated_sorted.bam : bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted.bam
 	$$(call RUN,-c -s 1G -m 2G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_RG_IR_FX.bam.bai bam/$1_aln_srt_RG_IR_FX.bai")
+				    cp bam/$1_bismark_bt2_pe_deduplicated_sorted.bam.bai bam/$1_bismark_bt2_pe_deduplicated_sorted.bai")
 
-bam/$1_aln_srt_RG_IR_FX__F1R2.bam : bismark/$1/$1_aln_srt_RG_IR_FX__F1R2.bam
+bam/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.bam : bismark/$1/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.bam
 	$$(call RUN,-c -s 1G -m 2G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_RG_IR_FX__F1R2.bam.bai bam/$1_aln_srt_RG_IR_FX__F1R2.bai")
+				    cp bam/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.bam.bai bam/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.bai")
 
-bam/$1_aln_srt_RG_IR_FX__F2R1.bam : bismark/$1/$1_aln_srt_RG_IR_FX__F2R1.bam
+bam/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.bam : bismark/$1/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.bam
 	$$(call RUN,-c -s 1G -m 2G,"set -o pipefail && \
 				    cp $$(<) $$(@) && \
 				    $$(SAMTOOLS) index $$(@) && \
-				    cp bam/$1_aln_srt_RG_IR_FX__F2R1.bam.bai bam/$1_aln_srt_RG_IR_FX__F2R1.bai")
+				    cp bam/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.bam.bai bam/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
