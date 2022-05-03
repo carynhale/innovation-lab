@@ -14,12 +14,12 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bam/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation extractor
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation report
-#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.rrbs_summary_metrics) \
-#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics) \
-#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics) \
-#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX.aln_metrics) \
-#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F1R2.aln_metrics) \
-#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_aln_srt_RG_IR_FX__F2R1.aln_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F1R2.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.rrbs_summary_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted.aln_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F1R2.aln_metrics) \
+#	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.aln_metrics) \
 #	  summary/rrbs_metrics.txt \
 #	  summary/alignment_metrics.txt
 
