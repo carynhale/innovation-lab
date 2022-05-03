@@ -64,8 +64,9 @@ bismark/$1/$1_bismark_bt2_pe.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fa
 											       --rg_id $1 \
 											       --rg_sample $1 \
 											       --gzip \
-											       --output_dir . \
-											       --basename $1 && \
+											       --output_dir . && \
+											       mv $1_R1_bismark_bt2_pe.bam $1_bismark_bt2_pe.bam && \
+											       mv $1_R1_bismark_bt2_PE_report.txt $1_bismark_bt2_PE_report.txt && \
 											       cd ../..")
 
 bismark/$1/$1_aln_MD.bam : bismark/$1/$1_aln.bam
