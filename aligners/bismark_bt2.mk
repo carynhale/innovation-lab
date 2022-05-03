@@ -6,8 +6,8 @@ LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.bam)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_MD.bam)
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_RG.bam) \
@@ -69,17 +69,15 @@ bismark/$1/$1_bismark_bt2_pe.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fa
 											       mv $1_R1_bismark_bt2_PE_report.txt $1_bismark_bt2_PE_report.txt && \
 											       cd ../..")
 
-bismark/$1/$1_aln_MD.bam : bismark/$1/$1_aln.bam
+bismark/$1/$1_bismark_bt2_pe.deduplicated.bam : bismark/$1/$1_bismark_bt2_pe.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 2G -m $(SAMTOOLS_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
 												 cd bismark/$1 && \
 											         deduplicate_bismark \
-											         $1_aln.bam \
+											         $1_bismark_bt2_pe.bam \
 											         --paired \
 											         --bam \
-											         --outfile $1_aln_MD \
+											         --outfile $1_bismark_bt2_pe \
 											         --output_dir . && \
-											         mv $1_aln_MD.deduplicated.bam $1_aln_MD.bam && \
-											         mv $1_aln.deduplication_report.txt $1_aln_MD.txt && \
 											         cd ../..")
 
 bismark/$1/$1_aln_srt.bam : bismark/$1/$1_aln.bam
