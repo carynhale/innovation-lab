@@ -87,6 +87,13 @@ bismark/$1/$1_bismark_bt2_pe.deduplicated.bam : bismark/$1/$1_bismark_bt2_pe.bam
 #											       $1_bismark_bt2_pe.deduplicated.bam && \
 #											       cd ../..")
 
+#bismark/$1/$1_bismark_bt2_pe??? : bismark/$1/$1_bismark_bt2_pe???
+#	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
+#											       cd bismark/$1 && \
+#											       bismark2report \
+#											       --alignment_report && \
+#											       cd ../..")
+
 bismark/$1/$1_bismark_bt2_pe.deduplicated.sorted.bam : bismark/$1/$1_bismark_bt2_pe.deduplicated.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 2G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									       $$(SAMTOOLS) \
@@ -148,42 +155,42 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call copy-bam,$(sample))))
 		
 define picard-metrics
-metrics/$1_aln_srt_RG_IR_FX.rrbs_summary_metrics : bam/$1_aln_srt_RG_IR_FX.bam
+metrics/$1_bismark_bt2_pe_deduplicated_sorted.rrbs_summary_metrics : bam/$1_bismark_bt2_pe_deduplicated_sorted.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_RG_IR_FX")
 								  
-metrics/$1_aln_srt_RG_IR_FX.aln_metrics : bam/$1_aln_srt_RG_IR_FX.bam
+metrics/$1_bismark_bt2_pe_deduplicated_sorted.aln_metrics : bam/$1_bismark_bt2_pe_deduplicated_sorted.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      O=$$(@)")
 
-metrics/$1_aln_srt_RG_IR_FX__F1R2.rrbs_summary_metrics : bam/$1_aln_srt_RG_IR_FX__F1R2.bam
+metrics/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.rrbs_summary_metrics : bam/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_RG_IR_FX__F1R2")
 
-metrics/$1_aln_srt_RG_IR_FX__F1R2.aln_metrics : bam/$1_aln_srt_RG_IR_FX__F1R2.bam
+metrics/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.aln_metrics : bam/$1_bismark_bt2_pe_deduplicated_sorted__F1R2.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      O=$$(@)")
 								  
-metrics/$1_aln_srt_RG_IR_FX__F2R1.rrbs_summary_metrics : bam/$1_aln_srt_RG_IR_FX__F2R1.bam
+metrics/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.rrbs_summary_metrics : bam/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_RRBS_METRICS) \
 				      R=$$(REF_FASTA) \
 				      I=$$(<) \
 				      M=metrics/$1_aln_srt_RG_IR_FX__F2R1")
 
-metrics/$1_aln_srt_RG_IR_FX__F2R1.aln_metrics : bam/$1_aln_srt_RG_IR_FX__F2R1.bam
+metrics/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.aln_metrics : bam/$1_bismark_bt2_pe_deduplicated_sorted__F2R1.bam
 	$$(call RUN,-c -s 12G -m 16G,"set -o pipefail && \
 				      $$(COLLECT_ALIGNMENT_METRICS) \
 				      R=$$(REF_FASTA) \
