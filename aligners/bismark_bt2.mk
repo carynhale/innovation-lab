@@ -51,7 +51,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 
 define fastq-to-bam
-bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
+bismark/$1/$1_bismark_bt2_pe.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
 											       cd bismark/$1 && \
 								    			       bismark \
