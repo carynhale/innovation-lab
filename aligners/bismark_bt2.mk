@@ -17,11 +17,11 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.rrbs_summary_metrics) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted.aln_metrics) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F1R2.aln_metrics) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.aln_metrics)
+	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.aln_metrics) \
+	  summary/rrbs_metrics.txt \
+	  summary/alignment_metrics.txt
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation extractor
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation report
-#	  summary/rrbs_metrics.txt \
-#	  summary/alignment_metrics.txt
 
 SAMTOOLS_THREADS = 4
 SAMTOOLS_MEM_THREAD = 4G
