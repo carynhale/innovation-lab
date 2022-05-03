@@ -5,8 +5,8 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/bismark_bt2.$(NOW)
 
 bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
-	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz)
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln.bam)
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_MD.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt.bam)
 #	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_aln_srt_MD.bam) \
@@ -60,9 +60,12 @@ bismark/$1/$1_aln.bam : bismark/$1/$1_R1.fastq.gz bismark/$1/$1_R2.fastq.gz
 								    			       --genome_folder $$(BISMARK_GENOME) \
 											       -1 $1_R1.fastq.gz \
 											       -2 $1_R2.fastq.gz \
-											       --output_dir . && \
-											       mv $1_R1_bismark_bt2_pe.bam $1_aln.bam && \
-											       mv $1_R1_bismark_bt2_PE_report.txt $1_aln.txt && \
+											       --rg_tag \
+											       --rg_id $1 \
+											       --rg_sample $1 \
+											       --gzip \
+											       --output_dir . \
+											       --basename $1 && \
 											       cd ../..")
 
 bismark/$1/$1_aln_MD.bam : bismark/$1/$1_aln.bam
