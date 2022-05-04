@@ -14,8 +14,6 @@ bwa_meth : $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_R1.fastq.gz) 
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD_RG_IR.bam) \
 	   $(foreach sample,$(SAMPLES),bwameth/$(sample)/$(sample)_aln_srt_MD_RG_IR_FX.bam)
 
-BWAMETH_GENOME = $(REF_DIR)/IDT_oligo/bwa_meth/idt_oligo.fasta
-
 BWAMETH_THREADS = 12
 BWAMETH_MEM_PER_THREAD = 2G
 
