@@ -8,6 +8,7 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R2.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.bam) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.bam) \
+	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.M-bias.txt) \
 	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.sorted.bam) \
 	  $(foreach sample,$(SAMPLES),bam/$(sample)_bismark_bt2_pe_deduplicated_sorted.bam) \
 	  $(foreach sample,$(SAMPLES),bam/$(sample)_bismark_bt2_pe_deduplicated_sorted__F1R2.bam) \
@@ -20,8 +21,7 @@ bismark : $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample)_bismark_bt2_pe_deduplicated_sorted__F2R1.aln_metrics) \
 	  summary/rrbs_metrics.txt \
 	  summary/alignment_metrics.txt
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation extractor
-#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.) \ methylation report
+#	  $(foreach sample,$(SAMPLES),bismark/$(sample)/$(sample)_bismark_bt2_pe.deduplicated.)
 
 SAMTOOLS_THREADS = 4
 SAMTOOLS_MEM_THREAD = 4G
@@ -75,17 +75,17 @@ bismark/$1/$1_bismark_bt2_pe.deduplicated.bam : bismark/$1/$1_bismark_bt2_pe.bam
 											         --output_dir . && \
 											         cd ../..")
 
-#bismark/$1/$1_bismark_bt2_pe??? : bismark/$1/$1_bismark_bt2_pe.deduplicated.bam
-#	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
-#											       cd bismark/$1 && \
-#											       bismark_methylation_extractor \
-#											       --gzip \
-#											       --bedGraph \
-#											       --buffer_size 10G \
-#											       --cytosine_report \
-#											       --genome_folder $$(BISMARK_GENOME) \
-#											       $1_bismark_bt2_pe.deduplicated.bam && \
-#											       cd ../..")
+bismark/$1/$1_bismark_bt2_pe.deduplicated.M-bias.txt : bismark/$1/$1_bismark_bt2_pe.deduplicated.bam
+	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
+											       cd bismark/$1 && \
+											       bismark_methylation_extractor \
+											       --gzip \
+											       --bedGraph \
+											       --buffer_size 10G \
+											       --cytosine_report \
+											       --genome_folder $$(BISMARK_GENOME) \
+											       $1_bismark_bt2_pe.deduplicated.bam && \
+											       cd ../..")
 
 #bismark/$1/$1_bismark_bt2_pe??? : bismark/$1/$1_bismark_bt2_pe???
 #	$$(call RUN,-c -n $(BISMARK_THREADS) -s 2G -m $(BISMARK_MEM_THREAD) -v $(BISMARK_ENV),"set -o pipefail && \
