@@ -75,7 +75,7 @@ cluster_access :
 TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
-
+	
 TARGETS += bismark_bt2
 bismark_bt2 :
 	$(call RUN_MAKE,innovation-lab/aligners/bismark_bt2.mk)
@@ -87,6 +87,10 @@ star_align :
 TARGETS += bwa_meth
 bwa_meth :
 	$(call RUN_MAKE,innovation-lab/aligners/bwa_meth.mk)
+	
+TARGETS += bwa_scatter
+bwa_scatter :
+	$(call RUN_MAKE,innovation-lab/aligners/bwa_scatter.mk)
 
 #==================================================
 # BAM file utilities
