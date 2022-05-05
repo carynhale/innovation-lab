@@ -5,7 +5,8 @@ include innovation-lab/genome_inc/b37.inc
 LOGDIR ?= log/bwa_scatter.$(NOW)
 
 bwa_scatter : $(foreach sample,$(SAMPLES),bwa_scatter/$(sample)/$(sample)_R1.fastq.gz) \
-	      $(foreach sample,$(SAMPLES),bwa_scatter/$(sample)/$(sample)_R2.fastq.gz)
+	      $(foreach sample,$(SAMPLES),bwa_scatter/$(sample)/$(sample)_R2.fastq.gz) \
+	      $(foreach sample,$(SAMPLES),bwa_scatter/$(sample)/$(sample)_R1.taskcomplete)
 	       
 CHUNKS = 10
 FASTQ_CHUNKS = $(shell seq 1 $(CHUNKS))
@@ -27,6 +28,7 @@ bwa_scatter/$1/$1_R1.taskcomplete : bwa_scatter/$1/$1_R1.fastq.gz
 									  ALL_CHUNKS=() && \
 									  for chunk in ${FASTQ_CHUNKS[@]}; do ALL_CHUNKS+=" -o "SRS505928.1.$c.fastq.gz; done; && \
 									  fastqsplitter -i $1_R1.fastq.gz ${ALL_CHUNKS[@]} && \
+									  touch $1_R1.taskcomplete && \
 									  cd ../..")
 endef
 $(foreach sample,$(SAMPLES),\
