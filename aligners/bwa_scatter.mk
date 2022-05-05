@@ -24,7 +24,7 @@ define split-fastq
 bwa_scatter/$1/$1_R1.taskcomplete : bwa_scatter/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(CHUNKS) -s 1G -m 2G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 									  cd bwa_scatter/$1 && \
-									  FASTQ_CHUNKS=$(seq 1 $(CHUNKS)) && \
+									  FASTQ_CHUNKS=($(shell seq 1 $(CHUNKS))) && \
 									  ALL_CHUNKS=() && \
 									  for chunk in ${FASTQ_CHUNKS[@]}; do ALL_CHUNKS+=" -o "$1.1.$(chunk).fastq.gz; done; && \
 									  fastqsplitter -i $1_R1.fastq.gz $${ALL_CHUNKS[@]} && \
