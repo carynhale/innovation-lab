@@ -26,8 +26,8 @@ bwa_scatter/$1/$1_R1.taskcomplete : bwa_scatter/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(CHUNKS) -s 1G -m 2G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 									  cd bwa_scatter/$1 && \
 									  ALL_CHUNKS=() && \
-									  for chunk in ${FASTQ_CHUNKS[@]}; do ALL_CHUNKS+=" -o "SRS505928.1.$c.fastq.gz; done; && \
-									  fastqsplitter -i $1_R1.fastq.gz ${ALL_CHUNKS[@]} && \
+									  for chunk in $${FASTQ_CHUNKS[@]}; do ALL_CHUNKS+=" -o "SRS505928.1.$c.fastq.gz; done; && \
+									  fastqsplitter -i $1_R1.fastq.gz $${ALL_CHUNKS[@]} && \
 									  touch $1_R1.taskcomplete && \
 									  cd ../..")
 endef
