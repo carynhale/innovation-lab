@@ -27,7 +27,8 @@ bwa_scatter/$1/$1_R1.taskcomplete : bwa_scatter/$1/$1_R1.fastq.gz
 									  FASTQ_CHUNKS=($(shell seq 1 $(CHUNKS))) && \
 									  ALL_CHUNKS=() && \
 									  $(foreach chunk,$(FASTQ_CHUNKS[@]), ALL_CHUNKS+=" -o "$1.1.$(chunk).fastq.gz) && \
-									  fastqsplitter -i $1_R1.fastq.gz $(ALL_CHUNKS[@]) && \
+
+fastqsplitter -i $1_R1.fastq.gz $(ALL_CHUNKS[@]) && \
 									  touch $1_R1.taskcomplete && \
 									  cd ../..")
 endef
