@@ -27,6 +27,7 @@ MSISENSOR_ENV ?= $(HOME)/share/usr/env/msisensor-pro-1.1.a
 GATK_ENV ?= $(HOME)/share/usr/env/gatk-3.8-10
 SUFAM_ENV ?= $(HOME)/share/usr/env/sufam-v0.4.2
 FASTQ_SPLITTER_ENV ?= $(HOME)/share/usr/env/fastqsplitter-1.2.0
+FACETS_ENV ?= $(HOME)/share/usr/env/r-facets-0.6.2
 
 # aliases
 PYTHON ?= python
