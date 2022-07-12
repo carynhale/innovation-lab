@@ -14,7 +14,7 @@ MAKELOG = log/$(@).$(NOW).log
 
 USE_CLUSTER ?= true
 QMAKE = innovation-lab/dodo-cloning-kit/runtime/qmake.pl -n $@.$(NOW) $(if $(SLACK_CHANNEL),-c $(SLACK_CHANNEL)) -r $(NUM_ATTEMPTS) -m -s -- make
-NUM_JOBS ?= 150
+NUM_JOBS ?= 500
 
 define RUN_QMAKE
 $(QMAKE) -e -f $1 -j $2 $(TARGET) && \
@@ -28,10 +28,6 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 # BETA testing
 #==================================================
 
-TARGETS += em_seq
-em_seq :
-	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
-	
 TARGETS += pileup_metrics
 pileup_metrics :
 	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
@@ -83,14 +79,6 @@ bismark_bt2 :
 TARGETS += star_align
 star_align :
 	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
-
-TARGETS += bwa_meth
-bwa_meth :
-	$(call RUN_MAKE,innovation-lab/aligners/bwa_meth.mk)
-	
-TARGETS += bwa_scatter
-bwa_scatter :
-	$(call RUN_MAKE,innovation-lab/aligners/bwa_scatter.mk)
 
 #==================================================
 # BAM file utilities
@@ -201,10 +189,6 @@ TARGETS += cluster_samples
 cluster_samples :
 	$(call RUN_MAKE,innovation-lab/qc/cluster_samples.mk)
 	
-TARGETS += library_complexity
-library_complexity :
-	$(call RUN_MAKE,innovation-lab/qc/library_complexity.mk)
-
 #==================================================
 # RNA sequencing
 #==================================================
