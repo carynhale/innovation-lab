@@ -64,7 +64,7 @@ define fastq-2bam
 bwamem/$1/$1_aln--$2.bam : bwamem/$1/$1_R1--$(FASTQ_SPLIT).fastq.gz bwamem/$1/$1_R2--$(FASTQ_SPLIT).fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) \
-									       bwamem/$1/$2_R1.fastq.gz bwamem/$1/$2_R2.fastq.gz | \
+									       bwamem/$1/$1_R1--$2.fastq.gz bwamem/$1/$1_R2--$2.fastq.gz | \
 									       $$(SAMTOOLS) view -bhS - > $$(@)")
 									       
 bwamem/$1/$1_aln_srt--$2.bam : bwamem/$1/$1_aln--$2.bam
