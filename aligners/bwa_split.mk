@@ -37,6 +37,7 @@ bwamem/$1/taskcomplete_r1.txt : bwamem/$1/$1_R1.fastq.gz
 								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 								   $$(FASTQ_SPLIT) \
 								   $$(<) \
+								   bwamem/$1/ \
 								   R1 \
 								   -t 12 && \
 								   touch $$(@)")
@@ -46,6 +47,7 @@ bwamem/$1/taskcomplete_r2.txt : bwamem/$1/$1_R2.fastq.gz
 								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 								   $$(FASTQ_SPLIT) \
 								   $$(<) \
+								   bwamem/$1/ \
 								   R2 \
 								   -t 12 && \
 								   touch $$(@)")
