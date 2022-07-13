@@ -6,7 +6,8 @@ LOGDIR ?= log/bwa_split.$(NOW)
 
 bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete.txt)
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r1.txt) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r2.txt)
 
 FASTQ_SPLIT = 500
 
@@ -31,16 +32,24 @@ $(foreach sample,$(SAMPLES),\
 		
 
 define split-fastq
-bwamem/$1/taskcomplete.txt : bwamem/$1/$1_R1.fastq.gz
+bwamem/$1/taskcomplete_r1.txt : bwamem/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
-								   cd bwamem/$1/ && \
-								   ../../innovation-lab/dodo-cloning-kit/fastq_tools/split_fastq.sh $$(FASTQ_SPLIT) $1_R1.fastq.gz && \
-								   touch taskcomplete.txt")
+								   ../../$(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
+								   $$(FASTQ_SPLIT) \
+								   $$(<) \
+								   R1 && \
+								   touch $$(@)")
 
+bwamem/$1/taskcomplete_r2.txt : bwamem/$1/$1_R2.fastq.gz
+	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
+								   ../../$(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
+								   $$(FASTQ_SPLIT) \
+								   $$(<) \
+								   R2 && \
+								   touch $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call split-fastq,$(sample))))
-
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
