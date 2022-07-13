@@ -6,7 +6,8 @@ LOGDIR ?= log/bwa_split.$(NOW)
 
 
 bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz)
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete.txt)
 
 N = 100
 OUTPUT = ""
