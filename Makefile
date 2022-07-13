@@ -72,6 +72,10 @@ TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
 	
+TARGETS += bwa_split
+bwa_split :
+	$(call RUN_MAKE,innovation-lab/aligners/bwa_split.mk)
+	
 TARGETS += bismark_bt2
 bismark_bt2 :
 	$(call RUN_MAKE,innovation-lab/aligners/bismark_bt2.mk)
