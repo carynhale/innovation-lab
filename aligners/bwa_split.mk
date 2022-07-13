@@ -9,11 +9,7 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete.txt)
 
-N = 100
-OUTPUT = ""
-for i in $(seq 1 $N); do \
-OUTPUT = $OUTPUT" -o $i.fastq.gz"; \
-done
+FASTQ_SPLIT = 10
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -36,11 +32,10 @@ $(foreach sample,$(SAMPLES),\
 		
 
 define split-fastq
-bwamem/$1/taskcomplete.txt : bwamem/$1/$1_R1.fastq.gz bwamem/$1/$1_R2.fastq.gz
+bwamem/$1/taskcomplete.txt : bwamem/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 1 -s 8G -m 16G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
-								   fastqsplitter \
-								   -i $1_R1.fastq.gz \
-								   $(OUTPUT) && \
+								   cd bwamem/$1/ && \
+								   ../../innovation-lab/dodo-cloning-kit/fastq_tools/split_fastq.sh $$(FASTQ_SPLIT) $1_R1.fastq.gz && \
 								   touch taskcomplete.txt")
 
 endef
