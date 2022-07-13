@@ -12,7 +12,9 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r1.txt) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r2.txt) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)_aln--$(n).bam))
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)_aln--$(n).bam)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)_aln_srt--$(n).bam))
 	    
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
@@ -66,6 +68,11 @@ bwamem/$1/$1_aln--$2.bam : bwamem/$1/taskcomplete_r1.txt bwamem/$1/taskcomplete_
 									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) \
 									       bwamem/$1/$2_R1.fastq.gz bwamem/$1/$2_R2.fastq.gz | \
 									       $$(SAMTOOLS) view -bhS - > $$(@)")
+									       
+bwamem/$1/$1_aln_srt--$2.bam : bwamem/$1/$1_aln--$2.bam
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
+									       $$(SAMTOOLS) sort $$(<) -o $$(@)")
+
 endef
 $(foreach sample,$(SAMPLES), \
 	$(foreach n,$(FASTQ_SEQ), \
