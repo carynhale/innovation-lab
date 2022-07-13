@@ -8,7 +8,7 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete.txt)
 
-FASTQ_SPLIT = 10
+FASTQ_SPLIT = 500
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
