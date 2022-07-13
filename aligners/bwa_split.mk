@@ -5,8 +5,8 @@ include innovation-lab/config/align.inc
 LOGDIR ?= log/bwa_split.$(NOW)
 
 bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz)
-#	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete.txt)
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete.txt)
 
 FASTQ_SPLIT = 10
 
