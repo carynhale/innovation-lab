@@ -4,15 +4,18 @@ include innovation-lab/config/align.inc
 
 LOGDIR ?= log/bwa_split.$(NOW)
 
+FASTQ_SPLIT = 500
+
 bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r1.txt) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r2.txt)
-
-FASTQ_SPLIT = 500
-
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r2.txt) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SPLIT),bwamem/$(sample)/$(sample)_aln--$(n).bam))
+	    
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
+BWA_ALN_OPTS ?= -M
 
 SAMTOOLS_THREADS = 8
 SAMTOOLS_MEM_THREAD = 2G
@@ -56,19 +59,16 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call split-fastq,$(sample))))
 
-#define fastq-2bam
-#bwamem/$1/$1_aln.bam : bwamem/$1/taskcomplete_r1.txt bwamem/$1/taskcomplete_r2.txt
-#	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-#									       $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<)
-#									       ")
-#
-#$(BWA) mem -t $(BWAMEM_THREADS) $(BWA_ALN_OPTS) -R \"@RG\tID:$*\tLB:$${LBID}\tPL:${SEQ_PLATFORM}\tSM:$${LBID}\" $(BWAMEM_REF_FASTA) $^ | $(SAMTOOLS) view -bhS - > $@")
-#
-#
-#endef
-#$(foreach sample,$(SAMPLES), \
-#	$(foreach n,$(FASTQ_SPLIT), \
-#		$(eval $(call fastq-2bam,$(sample),$(n)))))
+define fastq-2bam
+bwamem/$1/$1_aln--$2.bam : bwamem/$1/taskcomplete_r1.txt bwamem/$1/taskcomplete_r2.txt
+	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
+									       $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) $$(REF_FASTA) \
+									       bwamem/$1/$2_R1.fastq.gz bwamem/$1/$2_R2.fastq.gz | \
+									       $$(SAMTOOLS) view -bhS - > $$(@)")
+endef
+$(foreach sample,$(SAMPLES), \
+	$(foreach n,$(FASTQ_SPLIT), \
+		$(eval $(call fastq-2bam,$(sample),$(n)))))
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
