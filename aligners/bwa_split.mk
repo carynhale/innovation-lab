@@ -40,7 +40,7 @@ bwamem/$1/taskcomplete_r1.txt : bwamem/$1/$1_R1.fastq.gz
 								   bwamem/$1/ \
 								   R1 \
 								   -t 12 && \
-								   touch $$(@)")
+								   echo 'taskcomplete!' > $$(@)")
 
 bwamem/$1/taskcomplete_r2.txt : bwamem/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 12 -s 1G -m 2G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
@@ -50,10 +50,25 @@ bwamem/$1/taskcomplete_r2.txt : bwamem/$1/$1_R2.fastq.gz
 								   bwamem/$1/ \
 								   R2 \
 								   -t 12 && \
-								   touch $$(@)")
+								   echo 'taskcomplete!' > $$(@)")
+								   
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call split-fastq,$(sample))))
+
+#define fastq-2bam
+#bwamem/$1/$1_aln.bam : bwamem/$1/taskcomplete_r1.txt bwamem/$1/taskcomplete_r2.txt
+#	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
+#									       $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<)
+#									       ")
+#
+#$(BWA) mem -t $(BWAMEM_THREADS) $(BWA_ALN_OPTS) -R \"@RG\tID:$*\tLB:$${LBID}\tPL:${SEQ_PLATFORM}\tSM:$${LBID}\" $(BWAMEM_REF_FASTA) $^ | $(SAMTOOLS) view -bhS - > $@")
+#
+#
+#endef
+#$(foreach sample,$(SAMPLES), \
+#	$(foreach n,$(FASTQ_SPLIT), \
+#		$(eval $(call fastq-2bam,$(sample),$(n)))))
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
