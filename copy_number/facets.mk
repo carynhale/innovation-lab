@@ -5,8 +5,8 @@ LOGDIR ?= log/facets.$(NOW)
 
 facets : facets/targets/targets.vcf \
 	 $(foreach pair,$(SAMPLE_PAIRS),facets/pileup/$(pair).txt.gz) \
-	 $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).RData)
-#	 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf)
+	 $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).RData) \
+	 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf)
 
 facets/targets/targets.vcf : $(TARGETS_FILE)
 	$(call RUN,-c -s 8G -m 16G,"set -o pipefail && \
