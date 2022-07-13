@@ -9,8 +9,8 @@ FASTQ_SEQ = $(shell seq 1 $(FASTQ_SPLIT))
 
 bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r1.txt) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/taskcomplete_r2.txt) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1--$(FASTQ_SPLIT).fastq.gz) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2--$(FASTQ_SPLIT).fastq.gz) \
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)_aln--$(n).bam)) \
 	    $(foreach sample,$(SAMPLES), \
@@ -38,32 +38,30 @@ $(foreach sample,$(SAMPLES),\
 		
 
 define split-fastq
-bwamem/$1/taskcomplete_r1.txt : bwamem/$1/$1_R1.fastq.gz
+bwamem/$1/$1_R1--$(FASTQ_SPLIT).fastq.gz : bwamem/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n 12 -s 1G -m 2G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 								   $$(FASTQ_SPLIT) \
 								   $$(<) \
 								   bwamem/$1/ \
 								   R1 \
-								   -t 12 && \
-								   echo 'taskcomplete!' > $$(@)")
+								   -t 12")
 
-bwamem/$1/taskcomplete_r2.txt : bwamem/$1/$1_R2.fastq.gz
+bwamem/$1/$1_R2--$(FASTQ_SPLIT).fastq.gz : bwamem/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n 12 -s 1G -m 2G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 								   $$(FASTQ_SPLIT) \
 								   $$(<) \
 								   bwamem/$1/ \
 								   R2 \
-								   -t 12 && \
-								   echo 'taskcomplete!' > $$(@)")
+								   -t 12")
 								   
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call split-fastq,$(sample))))
 
 define fastq-2bam
-bwamem/$1/$1_aln--$2.bam : bwamem/$1/taskcomplete_r1.txt bwamem/$1/taskcomplete_r2.txt
+bwamem/$1/$1_aln--$2.bam : bwamem/$1/$1_R1--$(FASTQ_SPLIT).fastq.gz bwamem/$1/$1_R2--$(FASTQ_SPLIT).fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) \
 									       bwamem/$1/$2_R1.fastq.gz bwamem/$1/$2_R2.fastq.gz | \
