@@ -9,7 +9,8 @@ facets : facets/targets/targets.vcf \
 	 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf)
 
 facets/targets/targets.vcf : $(TARGETS_FILE)
-	$(INIT) $(BEDTOOLS) intersect -header -u -a $(DBSNP) -b $< > $@
+	$$(call RUN,-c -s 8G -m 16G,"set -o pipefail && \
+				     $(BEDTOOLS) intersect -header -u -a $(DBSNP) -b $$(<) > $$(@)")
 	
 define snp-pileup-tumor-normal
 facets/pileup/$1_$2.txt.gz : bam/$1.bam bam/$2.bam facets/targets/targets.vcf
@@ -25,7 +26,7 @@ facets/pileup/$1_$2.txt.gz : bam/$1.bam bam/$2.bam facets/targets/targets.vcf
 						      $$@ \
 						      $$(<<) \
 						      $$(<)")
-													
+
 endef
 $(foreach pair,$(SAMPLE_PAIRS),\
 	       $(eval $(call snp-pileup-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)))))
