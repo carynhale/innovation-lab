@@ -11,7 +11,9 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 
 N = 100
 OUTPUT = ""
-for i in $(seq 1 $N); do cmdline = $OUTPUT" -o $i.fastq.gz"; done
+for i in $(seq 1 $N); do \
+OUTPUT = $OUTPUT" -o $i.fastq.gz"; \
+done
 
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
