@@ -43,7 +43,7 @@ bwamem/$1/$1_R1--$(FASTQ_SPLIT).fastq.gz : bwamem/$1/$1_R1.fastq.gz
 								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 								   $$(FASTQ_SPLIT) \
 								   $$(<) \
-								   bwamem/$1/ \
+								   bwamem/$1/$1 \
 								   R1 \
 								   -t 12")
 
@@ -52,7 +52,7 @@ bwamem/$1/$1_R2--$(FASTQ_SPLIT).fastq.gz : bwamem/$1/$1_R2.fastq.gz
 								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 								   $$(FASTQ_SPLIT) \
 								   $$(<) \
-								   bwamem/$1/ \
+								   bwamem/$1/$1 \
 								   R2 \
 								   -t 12")
 								   
