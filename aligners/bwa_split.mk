@@ -60,7 +60,7 @@ endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call split-fastq,$(sample))))
 
-define fastq-2bam
+define fastq-2-bam
 bwamem/$1/$1_aln--$2.bam : bwamem/$1/$1_R1--$(FASTQ_SPLIT).fastq.gz bwamem/$1/$1_R2--$(FASTQ_SPLIT).fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) \
@@ -74,7 +74,7 @@ bwamem/$1/$1_aln_srt--$2.bam : bwamem/$1/$1_aln--$2.bam
 endef
 $(foreach sample,$(SAMPLES), \
 	$(foreach n,$(FASTQ_SEQ), \
-		$(eval $(call fastq-2bam,$(sample),$(n)))))
+		$(eval $(call fastq-2-bam,$(sample),$(n)))))
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
