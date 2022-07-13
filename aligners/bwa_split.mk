@@ -63,7 +63,7 @@ $(foreach sample,$(SAMPLES),\
 define fastq-2bam
 bwamem/$1/$1_aln--$2.bam : bwamem/$1/taskcomplete_r1.txt bwamem/$1/taskcomplete_r2.txt
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-									       $$(BWA) mem -p -t $$(BWAMEM_THREADS) $$(BWA_ALN_OPTS) $$(REF_FASTA) \
+									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) \
 									       bwamem/$1/$2_R1.fastq.gz bwamem/$1/$2_R2.fastq.gz | \
 									       $$(SAMTOOLS) view -bhS - > $$(@)")
 endef
