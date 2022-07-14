@@ -18,8 +18,6 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.bam)) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.bai)) \
-	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.intervals)) \
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR.bam)) \
@@ -112,12 +110,9 @@ bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl.fastq.gz bwamem/$1/$1--$2_
 									       REFERENCE_SEQUENCE=$$(REF_FASTA) \
 									       SORT_ORDER=coordinate \
 									       MAX_GAPS=-1 \
-									       ORIENTATIONS=FR")
-									       
-bwamem/$1/$1--$2_cl_aln_srt.bai : bwamem/$1/$1--$2_cl_aln_srt.bam
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
-									       $$(SAMTOOLS) index $$(<) && \
-									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai $$(@)")
+									       ORIENTATIONS=FR && \
+									       $$(SAMTOOLS) index $$(@) && \
+									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai")
 									       
 bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
