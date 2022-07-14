@@ -12,7 +12,7 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R1.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R2.fastq.gz) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n).bam)) \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_aln.bam)) \
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl.fastq.gz)) \
 	    $(foreach sample,$(SAMPLES), \
@@ -72,7 +72,7 @@ $(foreach sample,$(SAMPLES),\
 	$(eval $(call split-fastq,$(sample))))
 
 define fastq-2-bam
-bwamem/$1/$1--$2.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz
+bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $$(FASTQ_TO_SAM) \
 					   FASTQ=$$(<) \
