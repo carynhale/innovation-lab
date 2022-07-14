@@ -27,7 +27,10 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.grp)) \
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam))
-	    
+
+SPLIT_THREADS = 12
+SPLIT_MEM_THREAD = 2G
+
 BWAMEM_THREADS = 12
 BWAMEM_MEM_PER_THREAD = 2G
 BWA_ALN_OPTS ?= -M
@@ -40,32 +43,32 @@ GATK_MEM_THREAD = 2G
 
 define merge-fastq
 bwamem/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 24:00:00,"zcat $$(^) | gzip -c > $$(@)")
 	
 bwamem/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 4G -m 6G -w 72:00:00,"zcat $$(^) | gzip -c > $$(@)")
+	$$(call RUN,-c -n 1 -s 4G -m 6G -w 24:00:00,"zcat $$(^) | gzip -c > $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 		
 define split-fastq
 bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz : bwamem/$1/$1_R1.fastq.gz
-	$$(call RUN,-c -n 12 -s 1G -m 2G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
-								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
-								   $$(FASTQ_SPLIT) \
-								   $$(<) \
-								   bwamem/$1/$1 \
-								   R1 \
-								   -t 12")
+	$$(call RUN,-c -n $(SPLIT_THREADS) -s 1G -m $(SPLIT_MEM_THREAD) -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
+												  $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
+												  $$(FASTQ_SPLIT) \
+								   				  $$(<) \
+												  bwamem/$1/$1 \
+												  R1 \
+												  -t $$(SPLIT_THREADS)")
 
 bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz : bwamem/$1/$1_R2.fastq.gz
-	$$(call RUN,-c -n 12 -s 1G -m 2G -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
-								   $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
-								   $$(FASTQ_SPLIT) \
-								   $$(<) \
-								   bwamem/$1/$1 \
-								   R2 \
-								   -t 12")
+	$$(call RUN,-c -n $(SPLIT_THREADS) -s 1G -m $(SPLIT_MEM_THREAD) -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
+								   				  $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
+												  $$(FASTQ_SPLIT) \
+												  $$(<) \
+												  bwamem/$1/$1 \
+												  R2 \
+												  -t $$(SPLIT_THREADS)")
 								   
 endef
 $(foreach sample,$(SAMPLES),\
@@ -73,7 +76,7 @@ $(foreach sample,$(SAMPLES),\
 
 define fastq-2-bam
 bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz
-	$$(call RUN,-c -n 1 -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					   $$(FASTQ_TO_SAM) \
 					   FASTQ=bwamem/$1/$1--$2_R1.fastq.gz \
 					   FASTQ2=bwamem/$1/$1--$2_R2.fastq.gz \
@@ -84,7 +87,7 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 					   PL=illumina")
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
-	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
 					  $$(MARK_ADAPTERS) \
 					  INPUT=$$(<) \
 					  OUTPUT=/dev/stdout \
@@ -109,6 +112,11 @@ bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl.fastq.gz bwamem/$1/$1--$2_
 									       MAX_GAPS=-1 \
 									       ORIENTATIONS=FR")
 									       
+bwamem/$1/$1--$2_cl_aln_srt.bai : bwamem/$1/$1--$2_cl_aln_srt.bam
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
+									       $$(SAMTOOLS) index $$(<) && \
+									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai $$(@)")
+									       
 bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
@@ -130,7 +138,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$
 										      -known $$(KNOWN_INDELS)")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $$(FIX_MATE) \
 					   INPUT=$$(<) \
 					   OUTPUT=$$(@) \
