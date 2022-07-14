@@ -103,7 +103,7 @@ bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
-									       $$(SAMTOOLS) view -bhS - > $$(@) \
+									       $$(SAMTOOLS) view -bhS - > $$(@) && \
 									       $$(SAMTOOLS) index $$(@) && \
 									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai")
 									       
