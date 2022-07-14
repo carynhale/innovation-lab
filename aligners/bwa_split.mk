@@ -77,7 +77,7 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 					   $$(FASTQ_TO_SAM) \
 					   FASTQ=bwamem/$1/$1--$2_R1.fastq.gz \
 					   FASTQ2=bwamem/$1/$1--$2_R2.fastq.gz \
-					   OUTPUT=$(@) \
+					   OUTPUT=$$(@) \
 					   SM=$1 \
 					   LB=$1 \
 					   PU=NA \
