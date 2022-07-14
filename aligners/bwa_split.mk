@@ -33,7 +33,7 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 SPLIT_THREADS = 8
 SPLIT_MEM_THREAD = 2G
 
-BWAMEM_THREADS = 8
+BWAMEM_THREADS = 4
 BWAMEM_MEM_PER_THREAD = 2G
 
 SAMTOOLS_THREADS = 4
@@ -103,9 +103,11 @@ bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 									       
 bwamem/$1/$1--$2_cl_aln.bam : bwamem/$1/$1--$2_cl.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-									       $$(BWA) mem -p -M -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
+									       $$(BWA) mem -p -M \
+									       -R \"@RG\tID:$1\tLB:$1\tPL:illumina\tSM:$1\" \
+									       -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
 									       $$(SAMTOOLS) view -bhS - > $$(@)")
-									       
+
 bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SPLIT_MEM_THREAD),"set -o pipefail && \
 									    $$(SAMTOOLS) sort $$(<) -o $$(@) && \
