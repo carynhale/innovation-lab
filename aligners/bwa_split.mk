@@ -30,10 +30,10 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 #	    $(foreach sample,$(SAMPLES), \
 #		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam))
 
-SPLIT_THREADS = 12
+SPLIT_THREADS = 8
 SPLIT_MEM_THREAD = 2G
 
-BWAMEM_THREADS = 12
+BWAMEM_THREADS = 8
 BWAMEM_MEM_PER_THREAD = 2G
 BWA_ALN_OPTS ?= -M
 
