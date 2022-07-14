@@ -18,9 +18,9 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln.bam)) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.bam))
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.intervals)) \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.bam)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.intervals))
 #	    $(foreach sample,$(SAMPLES), \
 #		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR.bam)) \
 #	    $(foreach sample,$(SAMPLES), \
