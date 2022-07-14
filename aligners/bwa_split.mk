@@ -22,9 +22,11 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR.bam)) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR.grp)) \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.bam)) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_BR.bam))
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.grp)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam))
 
 SPLIT_THREADS = 12
 SPLIT_MEM_THREAD = 2G
@@ -98,17 +100,10 @@ bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 					  CLIPPING_ACTION=X \
 					  CLIPPING_MIN_LENGTH=25")
 									       
-bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl.fastq.gz bwamem/$1/$1--$2_aln.bam
+bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
-									       $$(MERGE_ALIGNMENTS) \
-									       UNMAPPED=$$(<<) \
-									       ALIGNED=/dev/stdin \
-									       OUTPUT=$$(@) \
-									       REFERENCE_SEQUENCE=$$(REF_FASTA) \
-									       SORT_ORDER=coordinate \
-									       MAX_GAPS=-1 \
-									       ORIENTATIONS=FR && \
+									       $$(SAMTOOLS) view -bhS - > $$(@) \
 									       $$(SAMTOOLS) index $$(@) && \
 									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai")
 									       
@@ -132,7 +127,16 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$
 										      -o $$(@) \
 										      -known $$(KNOWN_INDELS)")
 										      
-bwamem/$1/$1--$2_cl_aln_srt_IR.grp : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
+bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
+	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					   $$(FIX_MATE) \
+					   INPUT=$$(<) \
+					   OUTPUT=$$(@) \
+					   SORT_ORDER=coordinate \
+					   COMPRESSION_LEVEL=0 \
+					   CREATE_INDEX=true")
+										      
+bwamem/$1/$1--$2_cl_aln_srt_IR_FX.grp : bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(SAMTOOLS) index $$(<) && \
 										      $$(call GATK_CMD,16G) \
@@ -142,7 +146,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.grp : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
 										      -I $$(<) \
 										      -o $$(@)")
 
-bwamem/$1/$1--$2_cl_aln_srt_IR_BR.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam bwamem/$1/$1--$2_cl_aln_srt_IR.grp
+bwamem/$1/$1--$2_cl_aln_srt_IR_FX_BR.bam : bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam bwamem/$1/$1--$2_cl_aln_srt_IR_FX.grp
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
 										      -T PrintReads \
