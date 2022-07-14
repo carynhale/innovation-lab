@@ -108,10 +108,10 @@ bwamem/$1/$1--$2_cl_aln.bam : bwamem/$1/$1--$2_cl.fastq.gz
 									       $$(SAMTOOLS) view -bhS - > $$(@)")
 									       
 bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl_aln.bam
-	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-									       $$(SAMTOOLS) sort $$(<) -o $$(@) && \
-									       $$(SAMTOOLS) index $$(<) && \
-									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai")
+	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SPLIT_MEM_THREAD),"set -o pipefail && \
+									    $$(SAMTOOLS) sort $$(<) -o $$(@) && \
+									    $$(SAMTOOLS) index $$(<) && \
+									    cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai")
 
 bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
