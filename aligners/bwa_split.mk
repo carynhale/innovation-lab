@@ -110,7 +110,7 @@ bwamem/$1/$1--$2_cl_aln.bam : bwamem/$1/$1--$2_cl.fastq.gz
 bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SPLIT_MEM_THREAD),"set -o pipefail && \
 									    $$(SAMTOOLS) sort $$(<) -o $$(@) && \
-									    $$(SAMTOOLS) index $$(<) && \
+									    $$(SAMTOOLS) index $$(@) && \
 									    cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai")
 
 bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
