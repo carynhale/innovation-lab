@@ -173,7 +173,7 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$
 
 endef
 $(foreach sample,$(SAMPLES),\
-	$(eval $(call split-fastq,$(sample))))
+	$(eval $(call merge-bam,$(sample))))
 
 
 ..DUMMY := $(shell mkdir -p version; \
