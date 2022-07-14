@@ -75,8 +75,8 @@ define fastq-2-bam
 bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz
 	$$(call RUN,-c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $$(FASTQ_TO_SAM) \
-					   FASTQ=$$(<) \
-					   FASTQ2=$$(<<) \
+					   FASTQ=bwamem/$1/$1--$2_R1.fastq.gz \
+					   FASTQ2=bwamem/$1/$1--$2_R2.fastq.gz \
 					   OUTPUT=$(@) \
 					   SAMPLE_NAME=$1 \
 					   LIBRARY_NAME=$1 \
