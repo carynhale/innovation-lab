@@ -119,7 +119,7 @@ bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
 										      -o $$(@) \
 										      -known $$(KNOWN_INDELS)")
 										      
-bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1_aln_srt--$2.bam bwamem/$1/$1--$2_cl_aln_srt.intervals
+bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$1--$2_cl_aln_srt.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(call GATK_CMD,16G) \
 										      -T IndelRealigner \
