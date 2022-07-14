@@ -35,12 +35,11 @@ SPLIT_MEM_THREAD = 2G
 
 BWAMEM_THREADS = 8
 BWAMEM_MEM_PER_THREAD = 2G
-BWA_ALN_OPTS ?= -M
 
-SAMTOOLS_THREADS = 8
+SAMTOOLS_THREADS = 4
 SAMTOOLS_MEM_THREAD = 2G
 
-GATK_THREADS = 8
+GATK_THREADS = 4
 GATK_MEM_THREAD = 2G
 
 define merge-fastq
@@ -104,7 +103,7 @@ bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 									       
 bwamem/$1/$1--$2_cl_aln.bam : bwamem/$1/$1--$2_cl.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
-									       $$(BWA) mem -p $$(BWA_ALN_OPTS) -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
+									       $$(BWA) mem -p -M -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
 									       $$(SAMTOOLS) view -bhS - > $$(@)")
 									       
 bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl_aln.bam
