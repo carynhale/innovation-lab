@@ -78,10 +78,10 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 					   FASTQ=bwamem/$1/$1--$2_R1.fastq.gz \
 					   FASTQ2=bwamem/$1/$1--$2_R2.fastq.gz \
 					   OUTPUT=$(@) \
-					   SAMPLE_NAME=$1 \
-					   LIBRARY_NAME=$1 \
-					   PLATFORM_UNIT=NA \
-					   PLATFORM=illumina")
+					   SM=$1 \
+					   LB=$1 \
+					   PU=NA \
+					   PL=illumina")
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
@@ -161,6 +161,20 @@ endef
 $(foreach sample,$(SAMPLES), \
 	$(foreach n,$(FASTQ_SEQ), \
 		$(eval $(call fastq-2-bam,$(sample),$(n)))))
+		
+define merge-bam
+bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam))
+	$$(call RUN,-c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					   $$(SAMTOOLS) \
+					   merge \
+					   -b $$(^) \
+					   -f \
+					   -o $$(@)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call split-fastq,$(sample))))
+
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
