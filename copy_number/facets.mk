@@ -6,7 +6,9 @@ LOGDIR ?= log/facets.$(NOW)
 facets : facets/targets/targets.vcf \
 	 $(foreach pair,$(SAMPLE_PAIRS),facets/pileup/$(pair).txt.gz) \
 	 $(foreach pair,$(SAMPLE_PAIRS),facets/cncf/$(pair).RData) \
-	 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf)
+	 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/log2/$(pair).pdf) \
+	 $(foreach pair,$(SAMPLE_PAIRS),facets/plots/cncf/$(pair).pdf)
+	 
 
 facets/targets/targets.vcf : $(TARGETS_FILE)
 	$(call RUN,-c -s 8G -m 16G,"set -o pipefail && \
@@ -43,6 +45,12 @@ facets/plots/log2/$1_$2.pdf : facets/cncf/$1_$2.RData
 	$$(call RUN,-c -s 8G -m 16G -v $(FACETS_ENV),"set -o pipefail && \
 						      $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R \
 						      --option 2 \
+						      --sample_name $1_$2")
+						      
+facets/plots/cncf/$1_$2.pdf : facets/cncf/$1_$2.RData
+	$$(call RUN,-c -s 8G -m 16G -v $(FACETS_ENV),"set -o pipefail && \
+						      $(RSCRIPT) $(SCRIPTS_DIR)/copy_number/facets.R \
+						      --option 3 \
 						      --sample_name $1_$2")
 
 endef
