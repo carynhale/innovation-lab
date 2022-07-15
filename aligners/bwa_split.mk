@@ -175,7 +175,7 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$
 									       merge \
 									       -c -p \
 									       --threads $$(SAMTOOLS_THREADS) \
-									       -o $$(@) \
+									       $$(@) \
 									       $$(^)")
 
 endef
