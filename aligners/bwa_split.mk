@@ -32,7 +32,7 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam)
 
 SPLIT_THREADS = 8
-SPLIT_MEM_THREAD = 2G
+SPLIT_MEM_THREAD = 1G
 
 BWAMEM_THREADS = 4
 BWAMEM_MEM_PER_THREAD = 2G
@@ -78,18 +78,18 @@ $(foreach sample,$(SAMPLES),\
 
 define fastq-2-bam
 bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz
-	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					   $$(FASTQ_TO_SAM) \
-					   FASTQ=bwamem/$1/$1--$2_R1.fastq.gz \
-					   FASTQ2=bwamem/$1/$1--$2_R2.fastq.gz \
-					   OUTPUT=$$(@) \
-					   SM=$1 \
-					   LB=$1 \
-					   PU=NA \
-					   PL=illumina")
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+					 $$(FASTQ_TO_SAM) \
+					 FASTQ=bwamem/$1/$1--$2_R1.fastq.gz \
+					 FASTQ2=bwamem/$1/$1--$2_R2.fastq.gz \
+					 OUTPUT=$$(@) \
+					 SM=$1 \
+					 LB=$1 \
+					 PU=NA \
+					 PL=illumina")
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
-	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
 					  $$(MARK_ADAPTERS) \
 					  INPUT=$$(<) \
 					  OUTPUT=/dev/stdout \
@@ -117,7 +117,7 @@ bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl_aln.bam
 
 bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
+										      $$(call GATK_CMD,8G) \
 										      -T RealignerTargetCreator \
 										      -I $$(^) \
 										      -nt $$(GATK_THREADS) \
@@ -127,7 +127,7 @@ bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$1--$2_cl_aln_srt.intervals
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
+										      $$(call GATK_CMD,8G) \
 										      -T IndelRealigner \
 										      -I $$(<) \
 										      -R $$(REF_FASTA) \
@@ -136,18 +136,18 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$
 										      -known $$(KNOWN_INDELS)")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					   $$(FIX_MATE) \
-					   INPUT=$$(<) \
-					   OUTPUT=$$(@) \
-					   SORT_ORDER=coordinate \
-					   COMPRESSION_LEVEL=0 \
-					   CREATE_INDEX=true")
+	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					  $$(FIX_MATE) \
+					  INPUT=$$(<) \
+					  OUTPUT=$$(@) \
+					  SORT_ORDER=coordinate \
+					  COMPRESSION_LEVEL=0 \
+					  CREATE_INDEX=true")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.grp : bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
 										      $$(SAMTOOLS) index $$(<) && \
-										      $$(call GATK_CMD,16G) \
+										      $$(call GATK_CMD,8G) \
 										      -T BaseRecalibrator \
 										      -R $$(REF_FASTA) \
 										      -knownSites $$(DBSNP) \
@@ -156,7 +156,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR_FX.grp : bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam
 
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX_BR.bam : bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam bwamem/$1/$1--$2_cl_aln_srt_IR_FX.grp
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
-										      $$(call GATK_CMD,16G) \
+										      $$(call GATK_CMD,8G) \
 										      -T PrintReads \
 										      -R $$(REF_FASTA) \
 										      -I $$(<) \
