@@ -170,11 +170,11 @@ $(foreach sample,$(SAMPLES), \
 		
 define collect-bam
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam))
-	$$(call RUN,-c -n 12 -s 2G -m 4G -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n 8 -s 2G -m 4G -w 72:00:00,"set -o pipefail && \
 						      $$(SAMTOOLS) \
 						      merge \
 						      -c -p \
-						      --threads 12 \
+						      --threads 8 \
 						      $$(@) \
 						      $$(^)")
 
