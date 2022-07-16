@@ -29,7 +29,8 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.grp)) \
 	    $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam)) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam)
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR_MD.bam)
 
 SPLIT_THREADS = 8
 SPLIT_MEM_THREAD = 1G
@@ -168,7 +169,7 @@ $(foreach sample,$(SAMPLES), \
 	$(foreach n,$(FASTQ_SEQ), \
 		$(eval $(call fastq-2-bam,$(sample),$(n)))))
 		
-define collect-bam
+define collect-and-dedup
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam))
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
 									       		   $$(SAMTOOLS) \
@@ -177,10 +178,20 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$
 											   --threads $$(SAMTOOLS_THREADS) \
 											   $$(@) \
 											   $$(^)")
+bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(MARK_DUP) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    METRICS_FILE=bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.txt \
+					    REMOVE_DUPLICATES=false \
+					    ASSUME_SORTED=true && \
+					    $$(SAMTOOLS) index $$(@) && \
+					    cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
-	$(eval $(call collect-bam,$(sample))))
+	$(eval $(call collect-and-dedup,$(sample))))
 
 		
 ..DUMMY := $(shell mkdir -p version; \
