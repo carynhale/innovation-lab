@@ -182,15 +182,15 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(
 											   cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bai")
 
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
-	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
-					    $$(MARK_DUP) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    METRICS_FILE=bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.txt \
-					    REMOVE_DUPLICATES=false \
-					    ASSUME_SORTED=true && \
-					    $$(SAMTOOLS) index $$(@) && \
-					    cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bai")
+	$$(call RUN, -c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
+							$$(MARK_DUP) \
+							INPUT=$$(<) \
+							OUTPUT=$$(@) \
+							METRICS_FILE=bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.txt \
+							REMOVE_DUPLICATES=false \
+							ASSUME_SORTED=true && \
+							$$(SAMTOOLS) index $$(@) && \
+							cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
