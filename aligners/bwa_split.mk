@@ -170,7 +170,7 @@ $(foreach sample,$(SAMPLES), \
 		$(eval $(call fastq-2-bam,$(sample),$(n)))))
 		
 define collect-and-dedup
-bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam))
+bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach n,$(FASTQ_SEQ),bwamem/$1/$2--$(n)_cl_aln_srt_IR_FX_BR.bam)
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
 									       		   $$(SAMTOOLS) \
 											   merge \
