@@ -31,7 +31,7 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam)) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR_MD.bam) \
-	    $(foreach sample,$(SAMPLES),bwa/$(sample).bam)
+	    $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 SPLIT_THREADS = 8
 SPLIT_MEM_THREAD = 1G
