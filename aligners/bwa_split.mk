@@ -177,7 +177,10 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach sample,$(SAMPLES),$(foreach n,$
 											   -c -p \
 											   --threads $$(SAMTOOLS_THREADS) \
 											   $$(@) \
-											   $$(^)")
+											   $$(^) && \
+											   $$(SAMTOOLS) index $$(@) && \
+											   cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bai")
+
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
 					    $$(MARK_DUP) \
