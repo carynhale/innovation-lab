@@ -191,6 +191,12 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
 							ASSUME_SORTED=true && \
 							$$(SAMTOOLS) index $$(@) && \
 							cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bai")
+							
+bam/$1.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam
+	$$(call RUN, -c -n 1 -s 1G -m 2G,"set -o pipefail && \
+					  cp $$(<) $$(@) && \
+					  cp $$(<).bai $$(@).bai && \
+					  cp $$(<).bai bam/$1.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
