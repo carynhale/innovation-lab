@@ -616,8 +616,6 @@ summary/hs_metrics_per_target.txt : $(foreach sample,$(SAMPLES),metrics/$(sample
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/fgbio_access.R --option 12 --sample_names '$(SAMPLES)'")
 
-
-
 ..DUMMY := $(shell mkdir -p version; \
 	     $(JAVA8) -jar $(FGBIO) --help &> version/fgbio_access.txt; \
 	     echo "picard" >> version/fgbio_access.txt; \
