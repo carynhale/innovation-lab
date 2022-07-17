@@ -185,7 +185,7 @@ $(foreach sample,$(SAMPLES), \
 	$(foreach n,$(FASTQ_SEQ), \
 		$(eval $(call fastq-2-bam,$(sample),$(n)))))
 		
-define collect-and-dedup
+define collect-dedup
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_cl_aln_srt_IR_FX_BR.bam)
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
 									       		   $$(SAMTOOLS) \
@@ -222,7 +222,7 @@ bam/$1.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam
 
 endef
 $(foreach sample,$(SAMPLES),\
-	$(eval $(call collect-and-dedup,$(sample))))
+	$(eval $(call collect-dedup,$(sample))))
 
 		
 ..DUMMY := $(shell mkdir -p version; \
