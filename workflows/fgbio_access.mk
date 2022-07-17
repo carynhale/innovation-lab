@@ -64,7 +64,8 @@ fgbio_access : $(foreach sample,$(SAMPLES),fgbio/$(sample)/$(sample)_R1.fastq.gz
 	       summary/umi_duplex_counts.txt \
 	       summary/duplex_family_sizes.txt \
 	       summary/duplex_yield_metrics.txt \
-	       summary/all_family_sizes.txt
+	       summary/all_family_sizes.txt \
+	       summary/hs_metrics_per_target.txt
 
 
 BWAMEM_THREADS = 12
