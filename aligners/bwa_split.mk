@@ -91,7 +91,8 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 					 LB=$1 \
 					 PU=NA \
 					 PL=illumina && \
-					 rm $$(<)")
+					 rm bwamem/$1/$1--$2_R1.fastq.gz && \
+					 rm bwamem/$1/$1--$2_R2.fastq.gz")
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
