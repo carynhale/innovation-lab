@@ -48,10 +48,6 @@ sufam_genotype :
 # MSK-ACCESS workflows
 #==================================================
 
-TARGETS += fgbio_prism
-fgbio_prism :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_prism.mk)
-	
 TARGETS += fgbio_access
 fgbio_access :
 	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
