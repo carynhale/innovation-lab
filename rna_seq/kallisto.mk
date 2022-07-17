@@ -10,7 +10,7 @@ SLEUTH_ANNOT ?= $(HOME)/share/lib/resource_files/Hugo_ENST_ensembl75_fixed.txt
 
 define bam-to-fastq
 kallisto/$1/$1.1.fastq : bam/$1.bam
-	$$(call RUN,-n 4 -s 4G -m 9G,"set -o pipefail && \
+	$$(call RUN,-n 4 -s 2G -m 4G,"set -o pipefail && \
 				      mkdir -p kallisto/$1 && \
 				      $$(SAMTOOLS) sort -T kallisto/$1/$1 -O bam -n -@ 4 -m 6G $$(<) | \
 				      bedtools bamtofastq -i - -fq kallisto/$1/$1.1.fastq -fq2 kallisto/$1/$1.2.fastq")
