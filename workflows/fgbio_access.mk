@@ -613,8 +613,8 @@ summary/gc_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_sr
 					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/fgbio_access.R --option 11 --sample_names '$(SAMPLES)'")
 					  
 summary/hs_metrics_per_target.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_SIMPLEX.hs_metrics.txt) $(foreach sample,$(SAMPLES),metrics/$(sample)_cl_aln_srt_MD_IR_FX_BR__grp_DC_MA_RG_IR_FX_DUPLEX.hs_metrics.txt)
-	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/fgbio_access.R --option 12 --sample_names '$(SAMPLES)'")
+	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/fgbio_access.R --option 12 --sample_names '$(SAMPLES)'")
 
 
 
