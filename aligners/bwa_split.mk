@@ -37,10 +37,10 @@ SPLIT_THREADS = 8
 SPLIT_MEM_THREAD = 1G
 
 BWAMEM_THREADS = 4
-BWAMEM_MEM_PER_THREAD = 2G
+BWAMEM_MEM_PER_THREAD = 1G
 
 SAMTOOLS_THREADS = 4
-SAMTOOLS_MEM_THREAD = 2G
+SAMTOOLS_MEM_THREAD = 1G
 
 GATK_THREADS = 4
 GATK_MEM_THREAD = 2G
@@ -91,7 +91,7 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 					 PL=illumina")
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
 					  $$(MARK_ADAPTERS) \
 					  INPUT=$$(<) \
 					  OUTPUT=/dev/stdout \
@@ -138,7 +138,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$
 										      -known $$(KNOWN_INDELS)")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
-	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 3G -m 6G,"set -o pipefail && \
 					  $$(FIX_MATE) \
 					  INPUT=$$(<) \
 					  OUTPUT=$$(@) \
@@ -171,15 +171,15 @@ $(foreach sample,$(SAMPLES), \
 		
 define collect-dedup
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_cl_aln_srt_IR_FX_BR.bam)
-	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD) -w 72:00:00,"set -o pipefail && \
-									       		   $$(SAMTOOLS) \
-											   merge \
-											   -c -p \
-											   --threads $$(SAMTOOLS_THREADS) \
-											   $$(@) \
-											   $$(^) && \
-											   $$(SAMTOOLS) index $$(@) && \
-											   cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bai")
+	$$(call RUN,-c -n 4 -s 2G -m 4G -w 72:00:00,"set -o pipefail && \
+						     $$(SAMTOOLS) \
+						     merge \
+						     -c -p \
+						     --threads 4 \
+						     $$(@) \
+						     $$(^) && \
+						     $$(SAMTOOLS) index $$(@) && \
+						     cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bai")
 
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
 	$$(call RUN, -c -n 1 -s 24G -m 36G -w 72:00:00,"set -o pipefail && \
