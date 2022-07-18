@@ -63,8 +63,7 @@ bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz : bwamem/$1/$1_R1.fastq.gz
 								   				  $$(<) \
 												  bwamem/$1/$1 \
 												  R1 \
-												  -t $$(SPLIT_THREADS) && \
-												  rm $$(<)")
+												  -t $$(SPLIT_THREADS)")
 
 bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz : bwamem/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n $(SPLIT_THREADS) -s 1G -m $(SPLIT_MEM_THREAD) -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
@@ -73,8 +72,7 @@ bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz : bwamem/$1/$1_R2.fastq.gz
 												  $$(<) \
 												  bwamem/$1/$1 \
 												  R2 \
-												  -t $$(SPLIT_THREADS) && \
-												  rm $$(<)")
+												  -t $$(SPLIT_THREADS)")
 								   
 endef
 $(foreach sample,$(SAMPLES),\
@@ -90,9 +88,7 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 					 SM=$1 \
 					 LB=$1 \
 					 PU=NA \
-					 PL=illumina && \
-					 rm bwamem/$1/$1--$2_R1.fastq.gz && \
-					 rm bwamem/$1/$1--$2_R2.fastq.gz")
+					 PL=illumina")
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
@@ -106,23 +102,20 @@ bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 					  INTERLEAVE=true \
 					  CLIPPING_ATTRIBUTE=XT \
 					  CLIPPING_ACTION=X \
-					  CLIPPING_MIN_LENGTH=25 && \
-					  rm $$(<)")
+					  CLIPPING_MIN_LENGTH=25")
 									       
 bwamem/$1/$1--$2_cl_aln.bam : bwamem/$1/$1--$2_cl.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
 									       $$(BWA) mem -p -M \
 									       -R \"@RG\tID:$1\tLB:$1\tPL:illumina\tSM:$1\" \
 									       -t $$(BWAMEM_THREADS) $$(REF_FASTA) $$(<) | \
-									       $$(SAMTOOLS) view -bhS - > $$(@) && \
-									       rm $$(<)")
+									       $$(SAMTOOLS) view -bhS - > $$(@)")
 
 bwamem/$1/$1--$2_cl_aln_srt.bam : bwamem/$1/$1--$2_cl_aln.bam
 	$$(call RUN,-c -n $(SAMTOOLS_THREADS) -s 1G -m $(SAMTOOLS_MEM_THREAD),"set -o pipefail && \
 									       $$(SAMTOOLS) sort $$(<) -o $$(@) && \
 									       $$(SAMTOOLS) index $$(@) && \
-									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai && \
-									       rm $$(<)")
+									       cp bwamem/$1/$1--$2_cl_aln_srt.bam.bai bwamem/$1/$1--$2_cl_aln_srt.bai")
 
 bwamem/$1/$1--$2_cl_aln_srt.intervals : bwamem/$1/$1--$2_cl_aln_srt.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
@@ -142,11 +135,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$
 										      -R $$(REF_FASTA) \
 										      -targetIntervals $$(<<) \
 										      -o $$(@) \
-										      -known $$(KNOWN_INDELS) && \
-										      rm $$(<) && \
-										      rm bwamem/$1/$1--$2_cl_aln_srt.bam.bai && \
-										      rm bwamem/$1/$1--$2_cl_aln_srt.bai && \
-										      rm $$(<<)")
+										      -known $$(KNOWN_INDELS)")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
 	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
@@ -155,9 +144,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
 					  OUTPUT=$$(@) \
 					  SORT_ORDER=coordinate \
 					  COMPRESSION_LEVEL=0 \
-					  CREATE_INDEX=true && \
-					  rm $$(<) && \
-					  rm bwamem/$1/$1--$2_cl_aln_srt_IR.bai")
+					  CREATE_INDEX=true")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.grp : bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam
 	$$(call RUN,-c -n $(GATK_THREADS) -s 1G -m $(GATK_MEM_THREAD) -v $(GATK_ENV),"set -o pipefail && \
@@ -175,10 +162,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR_FX_BR.bam : bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam
 										      -R $$(REF_FASTA) \
 										      -I $$(<) \
 										      -BQSR $$(<<) \
-										      -o $$(@) && \
-										      rm $$(<) && \
-										      rm bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bai && \
-										      rm $$(<<)")
+										      -o $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES), \
@@ -206,19 +190,13 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
 							REMOVE_DUPLICATES=false \
 							ASSUME_SORTED=true && \
 							$$(SAMTOOLS) index $$(@) && \
-							cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bai && \
-							rm $$(<) && \
-							rm bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam.bai && \
-							rm bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bai")
+							cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bai")
 							
 bam/$1.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam
 	$$(call RUN, -c -n 1 -s 1G -m 2G,"set -o pipefail && \
 					  cp $$(<) $$(@) && \
 					  cp $$(<).bai $$(@).bai && \
-					  cp $$(<).bai bam/$1.bai && \
-					  rm $$(<) && \
-					  rm bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam.bai && \
-					  rm bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bai")
+					  cp $$(<).bai bam/$1.bai")
 
 endef
 $(foreach sample,$(SAMPLES),\
