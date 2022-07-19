@@ -92,17 +92,17 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
 	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
-					  $$(MARK_ADAPTERS) \
-					  INPUT=$$(<) \
-					  OUTPUT=/dev/stdout \
-					  METRICS=bwamem/$1/$1--$2_adapter-metrics.txt | \
-					  $$(SAM_TO_FASTQ) \
-					  INPUT=/dev/stdin \
-					  FASTQ=$$(@) \
-					  INTERLEAVE=true \
-					  CLIPPING_ATTRIBUTE=XT \
-					  CLIPPING_ACTION=X \
-					  CLIPPING_MIN_LENGTH=25")
+					 $$(MARK_ADAPTERS) \
+					 INPUT=$$(<) \
+					 OUTPUT=/dev/stdout \
+					 METRICS=bwamem/$1/$1--$2_adapter-metrics.txt | \
+					 $$(SAM_TO_FASTQ) \
+					 INPUT=/dev/stdin \
+					 FASTQ=$$(@) \
+					 INTERLEAVE=true \
+					 CLIPPING_ATTRIBUTE=XT \
+					 CLIPPING_ACTION=X \
+					 CLIPPING_MIN_LENGTH=25")
 									       
 bwamem/$1/$1--$2_cl_aln.bam : bwamem/$1/$1--$2_cl.fastq.gz
 	$$(call RUN,-c -n $(BWAMEM_THREADS) -s 1G -m $(BWAMEM_MEM_PER_THREAD),"set -o pipefail && \
@@ -138,7 +138,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$
 										      -known $$(KNOWN_INDELS)")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
-	$$(call RUN,-c -n 1 -s 3G -m 6G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 8G -m 16G,"set -o pipefail && \
 					  $$(FIX_MATE) \
 					  INPUT=$$(<) \
 					  OUTPUT=$$(@) \
