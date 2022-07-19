@@ -60,7 +60,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 		
 define split-fastq
-$(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R1.fastq.gz) : bwamem/$1/$1_R1.fastq.gz
+$(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R1.fastq.gz) &: bwamem/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(SPLIT_THREADS) -s 1G -m $(SPLIT_MEM_THREAD) -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 												  $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 												  $$(FASTQ_SPLIT) \
@@ -69,7 +69,7 @@ $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R1.fastq.gz) : bwamem/$1/$1_R1.fastq
 												  R1 \
 												  -t $$(SPLIT_THREADS)")
 
-$(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R2.fastq.gz) : bwamem/$1/$1_R2.fastq.gz
+$(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R2.fastq.gz) &: bwamem/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n $(SPLIT_THREADS) -s 1G -m $(SPLIT_MEM_THREAD) -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 								   				  $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 												  $$(FASTQ_SPLIT) \
