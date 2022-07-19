@@ -9,33 +9,29 @@ FASTQ_SEQ = $(shell seq 1 $(FASTQ_SPLIT))
 
 bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R1.fastq.gz) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R2.fastq.gz) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_R1.fastq.gz)) \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_aln.bam)) \
 	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_R2.fastq.gz))
-#	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R1.fastq.gz) \
-#	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R2.fastq.gz) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_aln.bam)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl.fastq.gz)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln.bam)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.bam)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.intervals)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR.bam)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.bam)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.grp)) \
-#	    $(foreach sample,$(SAMPLES), \
-#		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam)) \
-#	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam) \
-#	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR_MD.bam) \
-#	    $(foreach sample,$(SAMPLES),bam/$(sample).bam)
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl.fastq.gz)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln.bam)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.bam)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.intervals)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR.bam)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.bam)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.grp)) \
+	    $(foreach sample,$(SAMPLES), \
+		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam)) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam) \
+	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR_MD.bam) \
+	    $(foreach sample,$(SAMPLES),bam/$(sample).bam)
 
 SPLIT_THREADS = 8
 SPLIT_MEM_THREAD = 1G
@@ -60,7 +56,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
 		
 define split-fastq
-$(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R1.fastq.gz) &: bwamem/$1/$1_R1.fastq.gz
+bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz : bwamem/$1/$1_R1.fastq.gz
 	$$(call RUN,-c -n $(SPLIT_THREADS) -s 1G -m $(SPLIT_MEM_THREAD) -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 												  $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 												  $$(FASTQ_SPLIT) \
@@ -69,7 +65,7 @@ $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R1.fastq.gz) &: bwamem/$1/$1_R1.fast
 												  R1 \
 												  -t $$(SPLIT_THREADS)")
 
-$(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_R2.fastq.gz) &: bwamem/$1/$1_R2.fastq.gz
+bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz &: bwamem/$1/$1_R2.fastq.gz
 	$$(call RUN,-c -n $(SPLIT_THREADS) -s 1G -m $(SPLIT_MEM_THREAD) -v $(FASTQ_SPLITTER_ENV),"set -o pipefail && \
 								   				  $(SCRIPTS_DIR)/fastq_tools/split_fastq.sh \
 												  $$(FASTQ_SPLIT) \
