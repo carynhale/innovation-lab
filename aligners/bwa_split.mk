@@ -138,7 +138,7 @@ bwamem/$1/$1--$2_cl_aln_srt_IR.bam : bwamem/$1/$1--$2_cl_aln_srt.bam bwamem/$1/$
 										      -known $$(KNOWN_INDELS)")
 										      
 bwamem/$1/$1--$2_cl_aln_srt_IR_FX.bam : bwamem/$1/$1--$2_cl_aln_srt_IR.bam
-	$$(call RUN,-c -n 1 -s 3G -m 6G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 4G -m 12G,"set -o pipefail && \
 					  $$(FIX_MATE) \
 					  INPUT=$$(<) \
 					  OUTPUT=$$(@) \
