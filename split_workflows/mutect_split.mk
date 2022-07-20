@@ -54,8 +54,8 @@ mutect/$1_$2/$1_$2--$3.vcf : bam/$1.bam bam/$2.bam mutect/bed/taskcomplete
 				    
 mutect/$1_$2/$1_$2--$3.ft.vcf : mutect/$1_$2/$1_$2--$3.vcf
 	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
-					 grep '^#' $$(<) > $$(@) && \
-					 grep 'PASS' $$(<) | grep -v '^#' >> $$(@)")
+					 grep '^##' $$(<) > $$(@) && \
+					 grep 'PASS\|#' $$(<) | grep -v '^##' >> $$(@)")
 					 
 mutect/$1_$2/$1_$2--$3.ft.maf : mutect/$1_$2/$1_$2--$3.ft.vcf
 	$$(call RUN,-c -n 12 -s 2G -m 3G -v $(VCF2MAF_ENV) -w 72:00:00,"set -o pipefail && \
