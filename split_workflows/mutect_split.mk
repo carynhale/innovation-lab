@@ -28,9 +28,9 @@ mutect : mutect/bed/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
 		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.vcf)) \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
-		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf))
-#	 $(foreach pair,$(SAMPLE_PAIRS), \
-#		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).tsv)) \
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf)) \
+	 $(foreach pair,$(SAMPLE_PAIRS), \
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.tsv))
 #	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).txt)
 
 
@@ -74,6 +74,12 @@ mutect/$1_$2/$1_$2--$3.ft.maf : mutect/$1_$2/$1_$2--$3.ft.vcf
 									--ncbi-build GRCh37 \
 									--maf-center MSKCC && \
 									$$(RM) $$(TMPDIR)/$1_$2--$3.ft.vep.vcf")
+
+mutect/$1_$2/$1_$2--$3.ft.tsv : mutect/$1_$2/$1_$2--$3.ft.vcf
+	$$(call RUN,-c -n 4 -s 1G -m 2G -v $(CRAVAT_ENV) -w 72:00:00,"set -o pipefail && \
+								      ")
+									
+cravat cravat/$$(*).cravat.vcf -n $$(*) -d cravat -a clinvar cosmic dbsnp gnomad hgvs -v -l hg19 -t text")
 
 endef
 $(foreach chunk,$(BED_CHUNKS), \

@@ -29,6 +29,7 @@ SUFAM_ENV ?= $(HOME)/share/usr/env/sufam-v0.4.2
 FASTQ_SPLITTER_ENV ?= $(HOME)/share/usr/env/fastqsplitter-1.2.0
 FACETS_ENV ?= $(HOME)/share/usr/env/r-facets-0.6.2
 SAMBAMBA_ENV ?= $(HOME)/share/usr/env/sambamba-0.8.2
+CRAVAT_ENV ?= $(HOME)/share/usr/env/open-cravat-2.2.7
 
 # aliases
 PYTHON ?= python
