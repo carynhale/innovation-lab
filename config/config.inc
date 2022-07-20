@@ -105,7 +105,7 @@ FGBIO ?= $(HOME)/share/usr/fgbio-1.1.0/fgbio-1.1.0.jar
 
 # mutect command line
 MUTECT_EXE = $(HOME)/share/usr/mutect-1.1.7/muTect-1.1.7.jar
-MUTECT ?= MUTECT = $(JAVA7) -Xmx11G -jar $(MUTECT_EXE) --analysis_type MuTect
+MUTECT ?= $(JAVA7) -Xmx11G -jar $(MUTECT_EXE) --analysis_type MuTect
 
 # paths
 SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
