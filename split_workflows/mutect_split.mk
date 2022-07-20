@@ -85,14 +85,14 @@ mutect/$1_$2/$1_$2.ft.vcf : $(foreach n,$(BED_CHUNKS),mutect/$1_$2/$1_$2--$(n).f
 	$$(call RUN,-c -s 12G -m 18G,"set -o pipefail && \
 				      grep '^#' mutect/$1_$2/$1_$2--1.ft.vcf > $$(@) && \
 				      $(RSCRIPT) $(SCRIPTS_DIR)/vcf_tools/concat_vcf.R \
-				      --vcf_in $$(^)\
+				      --vcf_in $$(^) \
 				      --vcf_out $$(@)")
 				      
 mutect/$1_$2/$1_$2.ft.maf : $(foreach n,$(BED_CHUNKS),mutect/$1_$2/$1_$2--$(n).ft.maf)
 	$$(call RUN,-c -s 12G -m 18G,"set -o pipefail && \
 				      grep '^#' mutect/$1_$2/$1_$2--1.ft.maf > $$(@) && \
 				      $(RSCRIPT) $(SCRIPTS_DIR)/maf_tools/concat_maf.R \
-				      --maf_in $$(^)\
+				      --maf_in $$(^) \
 				      --maf_out $$(@)")
 
 endef
