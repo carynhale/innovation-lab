@@ -73,7 +73,7 @@ mutect/$1_$2/$1_$2--$3.ft.maf : mutect/$1_$2/$1_$2--$3.ft.vcf
 									--species homo_sapiens \
 									--ncbi-build GRCh37 \
 									--maf-center MSKCC && \
-									$$(RM) $$(TMPDIR)/$$(*).vep.vcf")
+									$$(RM) $$(TMPDIR)/$1_$2--$3.vep.vcf")
 
 endef
 $(foreach chunk,$(BED_CHUNKS), \
