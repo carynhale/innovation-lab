@@ -55,7 +55,7 @@ $(foreach chunk,$(BED_CHUNKS), \
 			$(eval $(call mutect-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)),$(chunk)))))
 
 ..DUMMY := $(shell mkdir -p version; \
-	     echo "$(MUTECT) &> version/mutect.txt")
+	     echo "$(MUTECT) &> version/mutect_split.txt")
 .SECONDARY:
 .DELETE_ON_ERROR:
 .PHONY: mutect
