@@ -66,11 +66,11 @@ cluster_access :
 
 TARGETS += bwa_split
 bwa_split :
-	$(call RUN_MAKE,innovation-lab/split_workflow/bwa_split.mk)
+	$(call RUN_MAKE,innovation-lab/split_workflows/bwa_split.mk)
 
 TARGETS += mutect_split
 mutect_split :
-	$(call RUN_MAKE,innovation-lab/split_workflow/mutect_split.mk)
+	$(call RUN_MAKE,innovation-lab/split_workflows/mutect_split.mk)
 	
 #==================================================
 # FASTQ / BAM file aligners
