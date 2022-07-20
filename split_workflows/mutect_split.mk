@@ -28,8 +28,9 @@ mutect : mutect/bed/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
 		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.vcf)) \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
-		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf))
-#	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).txt)
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf)) \
+	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).ft.vcf)
+#	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).ft.maf)
 
 
 mutect/bed/taskcomplete : $(TARGETS_FILE)
@@ -79,7 +80,18 @@ $(foreach chunk,$(BED_CHUNKS), \
 			$(eval $(call mutect-tumor-normal,$(tumor.$(pair)),$(normal.$(pair)),$(chunk)))))
 			
 			
+define merge-splits
+mutect/$1_$2/$1_$2.ft.vcf : $(foreach n,$(BED_CHUNKS),mutect/$1_$2/$1_$2--$(n).ft.vcf)
+	$$(call RUN,-c -s 12G -m 18G,"set -o pipefail && \
+				      grep '^#' mutect/$1_$2/$1_$2--1.ft.vcf > $$(@) && \
+				      $(RSCRIPT) $(SCRIPTS_DIR)/vct_tools/concat_vcf.R \
+				      --vcf_in $$(^)\
+				      --vcf_out $$(@)")
 
+endef
+$(foreach pair,$(SAMPLE_PAIRS),\
+	       $(eval $(call merge-splits,$(tumor.$(pair)),$(normal.$(pair)))))
+	       
 ..DUMMY := $(shell mkdir -p version; \
 	     echo "$(MUTECT) &> version/mutect_split.txt")
 .SECONDARY:
