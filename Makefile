@@ -44,6 +44,10 @@ TARGETS += sufam_genotype
 sufam_genotype :
 	$(call RUN_MAKE,innovation-lab/workflows/sufam_genotype.mk)
 	
+TARGETS += mutect
+mutect :
+	$(call RUN_MAKE,innovation-lab/somatic_variants/mutect.mk)
+	
 #==================================================
 # MSK-ACCESS workflows
 #==================================================
