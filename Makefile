@@ -43,31 +43,35 @@ msi_sensor :
 TARGETS += sufam_genotype
 sufam_genotype :
 	$(call RUN_MAKE,innovation-lab/??/sufam_genotype.mk)
-	
+
+#==================================================
+# MSK-ACCESS
+#==================================================
+
 TARGETS += fgbio_access
 fgbio_access :
-	$(call RUN_MAKE,innovation-lab/??/fgbio_access.mk)
+	$(call RUN_MAKE,innovation-lab/msk_access/fgbio_access.mk)
 
 TARGETS += genotype_access
 genotype_access :
-	$(call RUN_MAKE,innovation-lab/??/genotype_access.mk)
+	$(call RUN_MAKE,innovation-lab/msk_access/genotype_access.mk)
 	
 TARGETS += cluster_access
 cluster_access :
-	$(call RUN_MAKE,innovation-lab/??/cluster_access.mk)
+	$(call RUN_MAKE,innovation-lab/msk_access/cluster_access.mk)
 
 #==================================================
 # Split workflows
 #==================================================
 
-TARGETS += mutect_split
-mutect_split :
-	$(call RUN_MAKE,innovation-lab/split_workflow/mutect_split.mk)
-	
 TARGETS += bwa_split
 bwa_split :
 	$(call RUN_MAKE,innovation-lab/split_workflow/bwa_split.mk)
 
+TARGETS += mutect_split
+mutect_split :
+	$(call RUN_MAKE,innovation-lab/split_workflow/mutect_split.mk)
+	
 #==================================================
 # FASTQ / BAM file aligners
 #==================================================
