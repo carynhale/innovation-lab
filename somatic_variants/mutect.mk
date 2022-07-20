@@ -40,6 +40,7 @@ define mutect-tumor-normal
 mutect/$1_$2/$1_$2--$3.vcf : bam/$1.bam bam/$2.bam mutect/bed/taskcomplete
 	$$(call RUN,-c -s 6G -m 9G,"set -o pipefail && \
 				    $$(MUTECT) \
+				    $$(MUTECT_OPTS) \
 				    --tumor_sample_name $1\
 				    --normal_sample_name $2 \
 				    --intervals mutect/bed/$3.bed \
