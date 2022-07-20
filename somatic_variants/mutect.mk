@@ -22,14 +22,14 @@ MUTECT_OPTS = --enable_extended_output \
 BED_SPLIT = 500
 BED_CHUNKS = $(shell seq 1 $(BED_SPLIT))
 
-mutect : mutect/bed/taskcomplete
+mutect : mutect/bed/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
-		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).vcf)) \
-	 $(foreach pair,$(SAMPLE_PAIRS), \
-		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).maf)) \ 		
-	 $(foreach pair,$(SAMPLE_PAIRS), \
-		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).tsv)) \
-	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).txt)
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).vcf))
+#	 $(foreach pair,$(SAMPLE_PAIRS), \
+#		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).maf)) \ 		
+#	 $(foreach pair,$(SAMPLE_PAIRS), \
+#		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).tsv)) \
+#	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).txt)
 
 
 mutect/bed/taskcomplete : $(TARGETS_FILE)
