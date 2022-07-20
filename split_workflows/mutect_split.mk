@@ -28,7 +28,7 @@ mutect : mutect/bed/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
 		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.vcf))
 #	 $(foreach pair,$(SAMPLE_PAIRS), \
-#		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).maf)) \ 		
+#		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf))
 #	 $(foreach pair,$(SAMPLE_PAIRS), \
 #		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).tsv)) \
 #	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).txt)
@@ -55,8 +55,26 @@ mutect/$1_$2/$1_$2--$3.vcf : bam/$1.bam bam/$2.bam mutect/bed/taskcomplete
 mutect/$1_$2/$1_$2--$3.ft.vcf : mutect/$1_$2/$1_$2--$3.vcf
 	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
 					 grep '^#' $$(<) > $$(@) && \
-					 grep 'PASS' $$(<) >> $$(@)")
-				    
+					 grep 'PASS' $$(<) | grep -v '^#' >> $$(@)")
+					 
+mutect/$1_$2/$1_$2--$3.ft.maf : mutect/$1_$2/$1_$2--$3.ft.vcf
+	$$(call RUN,-c -n 12 -s 2G -m 3G -v $(VCF2MAF_ENV) -w 72:00:00,"set -o pipefail && \
+									$$(VCF2MAF) \
+									--input-vcf $$(<) \
+									--output-maf $$(@) \
+									--tmp-dir $$(TMPDIR) \
+									--tumor-id $1 \
+									--normal-id $2 \
+									--vep-path $$(VCF2MAF_ENV)/bin \
+									--vep-data $$(HOME)/share/lib/resource_files/VEP/GRCh37/ \
+									--vep-forks 12 \
+									--ref-fasta $$(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz \
+									--filter-vcf $$(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz \
+									--species homo_sapiens \
+									--ncbi-build GRCh37 \
+									--maf-center MSKCC && \
+									$$(RM) $$(TMPDIR)/$$(*).vep.vcf")
+
 endef
 $(foreach chunk,$(BED_CHUNKS), \
 	$(foreach pair,$(SAMPLE_PAIRS), \
