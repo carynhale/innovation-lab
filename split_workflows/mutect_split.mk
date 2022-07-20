@@ -26,9 +26,9 @@ mutect : mutect/bed/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
 		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).vcf)) \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
-		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.vcf))
-#	 $(foreach pair,$(SAMPLE_PAIRS), \
-#		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf))
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.vcf)) \
+	 $(foreach pair,$(SAMPLE_PAIRS), \
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf))
 #	 $(foreach pair,$(SAMPLE_PAIRS), \
 #		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).tsv)) \
 #	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).txt)
@@ -58,7 +58,7 @@ mutect/$1_$2/$1_$2--$3.ft.vcf : mutect/$1_$2/$1_$2--$3.vcf
 					 grep 'PASS\|#' $$(<) | grep -v '^##' >> $$(@)")
 					 
 mutect/$1_$2/$1_$2--$3.ft.maf : mutect/$1_$2/$1_$2--$3.ft.vcf
-	$$(call RUN,-c -n 12 -s 2G -m 3G -v $(VCF2MAF_ENV) -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n 12 -s 1G -m 2G -v $(VCF2MAF_ENV) -w 72:00:00,"set -o pipefail && \
 									$$(VCF2MAF) \
 									--input-vcf $$(<) \
 									--output-maf $$(@) \
