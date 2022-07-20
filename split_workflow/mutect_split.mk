@@ -19,7 +19,7 @@ MUTECT_OPTS = --enable_extended_output \
 	      --dbsnp $(DBSNP) \
 	      $(foreach ft,$(MUTECT_FILTERS),-rf $(ft))
 	       
-BED_SPLIT = 500
+BED_SPLIT ?= $(MUTECT_SPLITS)
 BED_CHUNKS = $(shell seq 1 $(BED_SPLIT))
 
 mutect : mutect/bed/taskcomplete \

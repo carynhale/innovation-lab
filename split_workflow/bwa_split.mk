@@ -4,7 +4,7 @@ include innovation-lab/config/align.inc
 
 LOGDIR ?= log/bwa_split.$(NOW)
 
-FASTQ_SPLIT = 500
+FASTQ_SPLIT ?= $(BWA_SPLITS)
 FASTQ_SEQ = $(shell seq 1 $(FASTQ_SPLIT))
 
 bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \

@@ -30,39 +30,44 @@ RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+
 
 TARGETS += pileup_metrics
 pileup_metrics :
-	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
+	$(call RUN_MAKE,innovation-lab/??/pileup_metrics.mk)
 	
 TARGETS += get_basecount
 get_basecount :
-	$(call RUN_MAKE,innovation-lab/workflows/get_basecount.mk)
+	$(call RUN_MAKE,innovation-lab/??/get_basecount.mk)
 	
 TARGETS += msi_sensor
 msi_sensor :
-	$(call RUN_MAKE,innovation-lab/workflows/msi_sensor.mk)
+	$(call RUN_MAKE,innovation-lab/??/msi_sensor.mk)
 	
 TARGETS += sufam_genotype
 sufam_genotype :
-	$(call RUN_MAKE,innovation-lab/workflows/sufam_genotype.mk)
+	$(call RUN_MAKE,innovation-lab/??/sufam_genotype.mk)
 	
-TARGETS += mutect
-mutect :
-	$(call RUN_MAKE,innovation-lab/somatic_variants/mutect.mk)
-	
-#==================================================
-# MSK-ACCESS workflows
-#==================================================
-
 TARGETS += fgbio_access
 fgbio_access :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
+	$(call RUN_MAKE,innovation-lab/??/fgbio_access.mk)
 
 TARGETS += genotype_access
 genotype_access :
-	$(call RUN_MAKE,innovation-lab/workflows/genotype_access.mk)
+	$(call RUN_MAKE,innovation-lab/??/genotype_access.mk)
 	
 TARGETS += cluster_access
 cluster_access :
-	$(call RUN_MAKE,innovation-lab/workflows/cluster_access.mk)
+	$(call RUN_MAKE,innovation-lab/??/cluster_access.mk)
+
+#==================================================
+# Split workflows
+#==================================================
+
+TARGETS += mutect_split
+mutect_split :
+	$(call RUN_MAKE,innovation-lab/split_workflow/mutect_split.mk)
+	
+TARGETS += bwa_split
+bwa_split :
+	$(call RUN_MAKE,innovation-lab/split_workflow/bwa_split.mk)
+
 
 #==================================================
 # FASTQ / BAM file aligners
@@ -71,10 +76,6 @@ cluster_access :
 TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
-	
-TARGETS += bwa_split
-bwa_split :
-	$(call RUN_MAKE,innovation-lab/aligners/bwa_split.mk)
 	
 TARGETS += bismark_bt2
 bismark_bt2 :
