@@ -1,7 +1,7 @@
 include innovation-lab/Makefile.inc
 include innovation-lab/config/gatk.inc
 
-LOGDIR ?= log/mutect.$(NOW)
+LOGDIR ?= log/mutect_split.$(NOW)
 
 MUTECT_MAX_ALT_IN_NORMAL ?= 500
 MUTECT_MAX_ALT_IN_NORMAL_FRACTION ?= 0.05
@@ -24,7 +24,9 @@ BED_CHUNKS = $(shell seq 1 $(BED_SPLIT))
 
 mutect : mutect/bed/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
-		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).vcf))
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).vcf)) \
+	 $(foreach pair,$(SAMPLE_PAIRS), \
+		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.vcf))
 #	 $(foreach pair,$(SAMPLE_PAIRS), \
 #		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).maf)) \ 		
 #	 $(foreach pair,$(SAMPLE_PAIRS), \
@@ -49,6 +51,12 @@ mutect/$1_$2/$1_$2--$3.vcf : bam/$1.bam bam/$2.bam mutect/bed/taskcomplete
 				    --out mutect/$1_$2/$1_$2--$3.txt \
 				    -vcf $$(@) \
 				    --coverage_file mutect/$1_$2/$1_$2--$3.wig")
+				    
+mutect/$1_$2/$1_$2--$3.ft.vcf : mutect/$1_$2/$1_$2--$3.vcf
+	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
+					 head -102 $$(<) > $$(@) && \
+					 sed -e '1,102d' < $$(<) | grep 'PASS' >> $$(@)")
+				    
 endef
 $(foreach chunk,$(BED_CHUNKS), \
 	$(foreach pair,$(SAMPLE_PAIRS), \
