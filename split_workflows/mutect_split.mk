@@ -54,8 +54,8 @@ mutect/$1_$2/$1_$2--$3.vcf : bam/$1.bam bam/$2.bam mutect/bed/taskcomplete
 				    
 mutect/$1_$2/$1_$2--$3.ft.vcf : mutect/$1_$2/$1_$2--$3.vcf
 	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
-					 head -102 $$(<) > $$(@) && \
-					 sed -e '1,102d' < $$(<) | grep 'PASS' >> $$(@)")
+					 grep '^#' $$(<) > $$(@) && \
+					 grep 'PASS' $$(<) >> $$(@)")
 				    
 endef
 $(foreach chunk,$(BED_CHUNKS), \
