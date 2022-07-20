@@ -29,8 +29,8 @@ mutect : mutect/bed/taskcomplete \
 		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.vcf)) \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
 		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).ft.maf)) \
-	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).ft.vcf)
-#	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).ft.maf)
+	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).ft.vcf) \
+	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).ft.maf)
 
 
 mutect/bed/taskcomplete : $(TARGETS_FILE)
@@ -87,6 +87,13 @@ mutect/$1_$2/$1_$2.ft.vcf : $(foreach n,$(BED_CHUNKS),mutect/$1_$2/$1_$2--$(n).f
 				      $(RSCRIPT) $(SCRIPTS_DIR)/vcf_tools/concat_vcf.R \
 				      --vcf_in $$(^)\
 				      --vcf_out $$(@)")
+				      
+mutect/$1_$2/$1_$2.ft.maf : $(foreach n,$(BED_CHUNKS),mutect/$1_$2/$1_$2--$(n).ft.maf)
+	$$(call RUN,-c -s 12G -m 18G,"set -o pipefail && \
+				      grep '^#' mutect/$1_$2/$1_$2--1.ft.maf > $$(@) && \
+				      $(RSCRIPT) $(SCRIPTS_DIR)/maf_tools/concat_maf.R \
+				      --maf_in $$(^)\
+				      --maf_out $$(@)")
 
 endef
 $(foreach pair,$(SAMPLE_PAIRS),\
