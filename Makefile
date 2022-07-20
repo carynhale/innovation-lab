@@ -68,7 +68,6 @@ TARGETS += bwa_split
 bwa_split :
 	$(call RUN_MAKE,innovation-lab/split_workflow/bwa_split.mk)
 
-
 #==================================================
 # FASTQ / BAM file aligners
 #==================================================
@@ -136,7 +135,6 @@ annotate_vcf_maf :
 TARGETS += annotate_maf_vcf
 annotate_maf_vcf :
 	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_maf_vcf.mk)
-
 
 #==================================================
 # Copy number aberration callers
