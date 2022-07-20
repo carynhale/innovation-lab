@@ -84,7 +84,7 @@ define merge-splits
 mutect/$1_$2/$1_$2.ft.vcf : $(foreach n,$(BED_CHUNKS),mutect/$1_$2/$1_$2--$(n).ft.vcf)
 	$$(call RUN,-c -s 12G -m 18G,"set -o pipefail && \
 				      grep '^#' mutect/$1_$2/$1_$2--1.ft.vcf > $$(@) && \
-				      $(RSCRIPT) $(SCRIPTS_DIR)/vct_tools/concat_vcf.R \
+				      $(RSCRIPT) $(SCRIPTS_DIR)/vcf_tools/concat_vcf.R \
 				      --vcf_in $$(^)\
 				      --vcf_out $$(@)")
 
