@@ -58,7 +58,7 @@ mutect/$1_$2/$1_$2--$3.ft.vcf : mutect/$1_$2/$1_$2--$3.vcf
 					 grep 'PASS\|#' $$(<) | grep -v '^##' >> $$(@)")
 					 
 mutect/$1_$2/$1_$2--$3.ft.maf : mutect/$1_$2/$1_$2--$3.ft.vcf
-	$$(call RUN,-c -n 12 -s 1G -m 2G -v $(VCF2MAF_ENV) -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n 4 -s 1G -m 2G -v $(VCF2MAF_ENV) -w 72:00:00,"set -o pipefail && \
 									$$(VCF2MAF) \
 									--input-vcf $$(<) \
 									--output-maf $$(@) \
@@ -67,7 +67,7 @@ mutect/$1_$2/$1_$2--$3.ft.maf : mutect/$1_$2/$1_$2--$3.ft.vcf
 									--normal-id $2 \
 									--vep-path $$(VCF2MAF_ENV)/bin \
 									--vep-data $$(HOME)/share/lib/resource_files/VEP/GRCh37/ \
-									--vep-forks 12 \
+									--vep-forks 4 \
 									--ref-fasta $$(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz \
 									--filter-vcf $$(HOME)/share/lib/resource_files/VEP/GRCh37/homo_sapiens/99_GRCh37/ExAC_nonTCGA.r0.3.1.sites.vep.vcf.gz \
 									--species homo_sapiens \
