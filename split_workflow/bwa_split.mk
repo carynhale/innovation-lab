@@ -182,12 +182,14 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(
 						     cp bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam.bai bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bai")
 
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
-	$$(call RUN, -c -n 12 -s 2G -m 4G -v $(SAMBAMBA_ENV) -w 72:00:00,"set -o pipefail && \
-									   sambamba markdup \
-									   -t 12 \
-									   $$(<) \
-									   $$(@)")
-							
+	$$(call RUN, -c -n 12 -s 4G -m 6G -v $(SAMBAMBA_ENV) -w 72:00:00,"set -o pipefail && \
+									  sambamba markdup \
+									  -t 12 \
+									  -l 0 \
+									  --tmpdir $$(TMPDIR) \
+									  $$(<) \
+									  $$(@)")
+						
 bam/$1.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam
 	$$(call RUN, -c -n 1 -s 1G -m 2G,"set -o pipefail && \
 					  cp $$(<) $$(@) && \
