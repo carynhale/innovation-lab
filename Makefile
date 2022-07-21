@@ -25,26 +25,6 @@ endef
 RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+$(MAKE) -f $1,$(call RUN_QMAKE,$1,$(NUM_JOBS)))
 
 #==================================================
-# BETA testing
-#==================================================
-
-TARGETS += pileup_metrics
-pileup_metrics :
-	$(call RUN_MAKE,innovation-lab/??/pileup_metrics.mk)
-	
-TARGETS += get_basecount
-get_basecount :
-	$(call RUN_MAKE,innovation-lab/??/get_basecount.mk)
-	
-TARGETS += msi_sensor
-msi_sensor :
-	$(call RUN_MAKE,innovation-lab/??/msi_sensor.mk)
-	
-TARGETS += sufam_genotype
-sufam_genotype :
-	$(call RUN_MAKE,innovation-lab/??/sufam_genotype.mk)
-
-#==================================================
 # MSK-ACCESS
 #==================================================
 
@@ -78,15 +58,15 @@ mutect_split :
 
 TARGETS += bwa_mem
 bwa_mem :
-	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/bwa_mem.mk)
 	
 TARGETS += bismark_bt2
 bismark_bt2 :
-	$(call RUN_MAKE,innovation-lab/aligners/bismark_bt2.mk)
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/bismark_bt2.mk)
 
 TARGETS += star_align
 star_align :
-	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/star_align.mk)
 
 #==================================================
 # BAM file utilities
@@ -211,6 +191,26 @@ kallisto :
 TARGETS += sum_reads
 sum_reads :
 	$(call RUN_MAKE,innovation-lab/rna_seq/sum_reads.mk)
+	
+#==================================================
+# BETA testing
+#==================================================
+
+TARGETS += pileup_metrics
+pileup_metrics :
+	$(call RUN_MAKE,innovation-lab/??/pileup_metrics.mk)
+	
+TARGETS += get_basecount
+get_basecount :
+	$(call RUN_MAKE,innovation-lab/??/get_basecount.mk)
+	
+TARGETS += msi_sensor
+msi_sensor :
+	$(call RUN_MAKE,innovation-lab/??/msi_sensor.mk)
+	
+TARGETS += sufam_genotype
+sufam_genotype :
+	$(call RUN_MAKE,innovation-lab/??/sufam_genotype.mk)
 	
 
 .PHONY : $(TARGETS)
