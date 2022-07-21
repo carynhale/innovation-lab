@@ -99,6 +99,15 @@ endef
 $(foreach pair,$(SAMPLE_PAIRS),\
 	       $(eval $(call merge-splits,$(tumor.$(pair)),$(normal.$(pair)))))
 	       
+define annotate-variants
+mutect/$1_$2/$1_$2.ft.txt : mutect/$1_$2/$1_$2.ft.vcf
+	$$(call RUN,-c -s 12G -m 18G,"set -o pipefail && \
+				      ")
+				      
+endef
+$(foreach pair,$(SAMPLE_PAIRS),\
+	       $(eval $(call merge-splits,$(tumor.$(pair)),$(normal.$(pair)))))
+	       
 ..DUMMY := $(shell mkdir -p version; \
 	     echo "$(MUTECT) &> version/mutect_split.txt")
 .SECONDARY:
