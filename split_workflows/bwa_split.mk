@@ -171,11 +171,11 @@ $(foreach sample,$(SAMPLES), \
 		
 define collect-dedup
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(n)_cl_aln_srt_IR_FX_BR.bam)
-	$$(call RUN,-c -n 4 -s 2G -m 4G -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n 12 -s 4G -m 6G -w 72:00:00,"set -o pipefail && \
 						     $$(SAMTOOLS) \
 						     merge \
 						     -c -p \
-						     --threads 4 \
+						     --threads 12 \
 						     $$(@) \
 						     $$(^) && \
 						     $$(SAMTOOLS) index $$(@) && \
@@ -183,9 +183,10 @@ bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam : $(foreach n,$(FASTQ_SEQ),bwamem/$1/$1--$(
 
 bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR.bam
 	$$(call RUN, -c -n 12 -s 4G -m 6G -v $(SAMBAMBA_ENV) -w 72:00:00,"set -o pipefail && \
-									  sambamba markdup \
+									  $$(SAMBAMBA) \
+									  markdup \
 									  -t 12 \
-									  -l 0 \
+									  -l 6 \
 									  --tmpdir $$(TMPDIR) \
 									  $$(<) \
 									  $$(@)")

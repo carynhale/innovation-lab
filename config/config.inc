@@ -38,6 +38,7 @@ RSCRIPT ?= Rscript
 R ?= R
 BWA ?= bwa
 SAMTOOLS ?= samtools
+SAMBAMBA ?= sambamba
 BEDTOOLS ?= bedtools
 BGZIP ?= bgzip
 UNZIP ?= unzip
@@ -54,7 +55,7 @@ FASTQC ?= fastqc
 CUTADAPT ?= cutadapt
 SEQTK ?= seqtk
 SUFAM ?= sufam
-BWAMETH ?= bwameth.py
+
 
 # java command lines
 JAVA6 ?= $(HOME)/share/usr/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$(TMPDIR)
