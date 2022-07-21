@@ -22,7 +22,7 @@ MUTECT_OPTS = --enable_extended_output \
 BED_SPLIT ?= $(MUTECT_SPLITS)
 BED_CHUNKS = $(shell seq 1 $(BED_SPLIT))
 
-mutect : mutect/bed/taskcomplete \
+mutect : mutect/bed_chunks/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
 		  	$(foreach n,$(BED_CHUNKS),mutect/$(pair)/$(pair)--$(n).vcf)) \
 	 $(foreach pair,$(SAMPLE_PAIRS), \
@@ -33,7 +33,7 @@ mutect : mutect/bed/taskcomplete \
 	 $(foreach pair,$(SAMPLE_PAIRS),mutect/$(pair)/$(pair).ft.maf)
 
 
-mutect/bed/taskcomplete : $(TARGETS_FILE)
+mutect/bed_chunks/$(BED_SPLIT).bed : $(TARGETS_FILE)
 	$(call RUN, -c -n 1 -s 2G -m 4G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/bed_tools/split_bed.R --n_splits $(BED_SPLIT) --bed_file $(TARGETS_FILE)")
 
@@ -95,15 +95,6 @@ mutect/$1_$2/$1_$2.ft.maf : $(foreach n,$(BED_CHUNKS),mutect/$1_$2/$1_$2--$(n).f
 				      --maf_in '$$(^)' \
 				      --maf_out $$(@)")
 
-endef
-$(foreach pair,$(SAMPLE_PAIRS),\
-	       $(eval $(call merge-splits,$(tumor.$(pair)),$(normal.$(pair)))))
-	       
-define annotate-variants
-mutect/$1_$2/$1_$2.ft.txt : mutect/$1_$2/$1_$2.ft.vcf
-	$$(call RUN,-c -s 12G -m 18G,"set -o pipefail && \
-				      ")
-				      
 endef
 $(foreach pair,$(SAMPLE_PAIRS),\
 	       $(eval $(call merge-splits,$(tumor.$(pair)),$(normal.$(pair)))))
