@@ -38,13 +38,13 @@ mutect/bed_intervals/$(BED_SPLIT).bed : $(TARGETS_FILE)
 					 $(RSCRIPT) $(SCRIPTS_DIR)/bed_tools/split_bed.R --n_splits $(BED_SPLIT) --bed_file $(TARGETS_FILE)")
 
 define mutect-tumor-normal
-mutect/$1_$2/$1_$2--$3.vcf : bam/$1.bam bam/$2.bam mutect/bed_intervals/$3.bed
+mutect/$1_$2/$1_$2--$3.vcf : bam/$1.bam bam/$2.bam mutect/bed_intervals/$(BED_SPLIT).bed
 	$$(call RUN,-c -s 6G -m 9G,"set -o pipefail && \
 				    $$(MUTECT) \
 				    $$(MUTECT_OPTS) \
 				    --tumor_sample_name $1\
 				    --normal_sample_name $2 \
-				    --intervals $$(<<<) \
+				    --intervals mutect/bed_intervals/$3.bed \
 				    -I:tumor $$(<) \
 				    -I:normal $$(<<) \
 				    --out mutect/$1_$2/$1_$2--$3.txt \
