@@ -30,6 +30,7 @@ FASTQ_SPLITTER_ENV ?= $(HOME)/share/usr/env/fastqsplitter-1.2.0
 FACETS_ENV ?= $(HOME)/share/usr/env/r-facets-0.6.2
 SAMBAMBA_ENV ?= $(HOME)/share/usr/env/sambamba-0.8.2
 CRAVAT_ENV ?= $(HOME)/share/usr/env/open-cravat-2.2.7
+PIGZ_ENV ?= $(HOME)/share/usr/env/pigz-2.6
 
 # aliases
 PYTHON ?= python
@@ -55,6 +56,7 @@ FASTQC ?= fastqc
 CUTADAPT ?= cutadapt
 SEQTK ?= seqtk
 SUFAM ?= sufam
+PIGZ ?= pigz
 
 
 # java command lines
