@@ -31,7 +31,14 @@ bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) 
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam)) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam) \
 	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR_MD.bam) \
-	    $(foreach sample,$(SAMPLES),bam/$(sample).bam)
+	    $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+	    $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
+	    $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
+	    $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
+	    $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt) \
+	    $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics_summary.txt) \
+	    $(foreach sample,$(SAMPLES),metrics/$(sample).wgs_metrics.txt)
+	    
 
 SPLIT_THREADS = 8
 SPLIT_MEM_THREAD = 1G
@@ -200,7 +207,56 @@ bam/$1.bam : bwamem/$1/$1_cl_aln_srt_IR_FX_BR_MD.bam
 endef
 $(foreach sample,$(SAMPLES),\
 	$(eval $(call collect-dedup,$(sample))))
+	
 
+define picard-metrics
+metrics/$1.idx_stats.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(BAM_INDEX) \
+					    INPUT=$$(<) \
+					    > $$(@)")
+									   
+metrics/$1.aln_metrics.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_ALIGNMENT_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@)")
+									   
+metrics/$1.insert_metrics.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_INSERT_METRICS) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@) \
+					    HISTOGRAM_FILE=metrics/$1.insert_metrics.pdf \
+					    MINIMUM_PCT=0.5")
+									   
+metrics/$1.oxog_metrics.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 24G -m 36G,"set -o pipefail && \
+					    $$(COLLECT_OXOG_METRICS) \
+					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					    INPUT=$$(<) \
+					    OUTPUT=$$(@)")
+					    
+metrics/$1.gc_metrics_summary.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					   $$(COLLECT_GC_BIAS) \
+					   INPUT=$$(<) \
+					   OUTPUT=metrics/$1.gc_metrics.txt \
+					   CHART_OUTPUT=metrics/$1.gc_metrics.pdf \
+					   REFERENCE_SEQUENCE=$$(REF_FASTA) \
+					   SUMMARY_OUTPUT=$$(@)")
+					   
+metrics/$1.wgs_metrics.txt : bam/$1.bam
+	$$(call RUN, -c -n 1 -s 6G -m 12G,"set -o pipefail && \
+					   $$(COLLECT_WGS_METRICS) \
+					   INPUT=$$(<) \
+					   OUTPUT=$$(@) \
+					   REFERENCE_SEQUENCE=$$(REF_FASTA)")
+
+endef
+$(foreach sample,$(SAMPLES),\
+	$(eval $(call picard-metrics,$(sample))))
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
