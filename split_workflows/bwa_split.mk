@@ -54,10 +54,10 @@ GATK_MEM_THREAD = 2G
 
 define merge-fastq
 bwamem/$1/$1_R1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 4G -m 6G -w 24:00:00,"zcat $$(^) | gzip -c > $$(@)")
+	$$(call RUN,-c -n 12 -s 1G -m 2G -w 72:00:00 -v $(PIGZ_ENV),"$$(PIGZ) -cd -p 12 $$(^) | $$(PIGZ) -c -p 12 > $$(@)")
 	
 bwamem/$1/$1_R2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 4G -m 6G -w 24:00:00,"zcat $$(^) | gzip -c > $$(@)")
+	$$(call RUN,-c -n 12 -s 1G -m 2G -w 72:00:00 -v $(PIGZ_ENV),"$$(PIGZ) -cd -p 12 $$(^) | $$(PIGZ) -c -p 12 > $$(@)")
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merge-fastq,$(sample),$(split.$(sample)))))
