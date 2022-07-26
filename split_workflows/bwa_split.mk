@@ -211,20 +211,20 @@ $(foreach sample,$(SAMPLES),\
 
 define picard-metrics
 metrics/$1.idx_stats.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
 					    $$(BAM_INDEX) \
 					    INPUT=$$(<) \
 					    > $$(@)")
 									   
 metrics/$1.aln_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
 					    $$(COLLECT_ALIGNMENT_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 									   
 metrics/$1.insert_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
 					    $$(COLLECT_INSERT_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
@@ -232,14 +232,14 @@ metrics/$1.insert_metrics.txt : bam/$1.bam
 					    MINIMUM_PCT=0.5")
 									   
 metrics/$1.oxog_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
 					    $$(COLLECT_OXOG_METRICS) \
 					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@)")
 					    
 metrics/$1.gc_metrics_summary.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
 					    $$(COLLECT_GC_BIAS) \
 					    INPUT=$$(<) \
 					    OUTPUT=metrics/$1.gc_metrics.txt \
@@ -248,7 +248,7 @@ metrics/$1.gc_metrics_summary.txt : bam/$1.bam
 					    SUMMARY_OUTPUT=$$(@)")
 					   
 metrics/$1.wgs_metrics.txt : bam/$1.bam
-	$$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
+	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
 					    $$(COLLECT_WGS_METRICS) \
 					    INPUT=$$(<) \
 					    OUTPUT=$$(@) \
