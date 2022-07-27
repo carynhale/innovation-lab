@@ -276,19 +276,19 @@ summary/aln_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metr
 
 summary/insert_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bwa_parallel.R --option 3 --sample_names '$(SAMPLES)'")
+					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/bwa_parallel.R --option 3 --sample_names '$(SAMPLES)'")
 					  
 summary/oxog_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bwa_parallel.R --option 4 --sample_names '$(SAMPLES)'")
+					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/bwa_parallel.R --option 4 --sample_names '$(SAMPLES)'")
 					  
 summary/gc_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics_summary.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bwa_parallel.R --option 5 --sample_names '$(SAMPLES)'")
+					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/bwa_parallel.R --option 5 --sample_names '$(SAMPLES)'")
 					  
 summary/wgs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).wgs_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
-					  $(RSCRIPT) $(SCRIPTS_DIR)/qc/bwa_parallel.R --option 6 --sample_names '$(SAMPLES)'")
+					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/bwa_parallel.R --option 6 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
