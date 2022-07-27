@@ -20,7 +20,6 @@ bam_reprocess: false
 
 # splitting options
 bwa_splits: 250
-mutect_splits: 250
 
 # target bed file
 targets_file: ~/share/lib/bed_files/MSK-IMPACT-v3.bed
