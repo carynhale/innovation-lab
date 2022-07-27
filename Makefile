@@ -41,24 +41,16 @@ cluster_access :
 	$(call RUN_MAKE,innovation-lab/msk_access/cluster_access.mk)
 
 #==================================================
-# Split workflows
-#==================================================
-
-TARGETS += bwa_split
-bwa_split :
-	$(call RUN_MAKE,innovation-lab/split_workflows/bwa_split.mk)
-
-TARGETS += mutect_split
-mutect_split :
-	$(call RUN_MAKE,innovation-lab/split_workflows/mutect_split.mk)
-	
-#==================================================
 # FASTQ / BAM file aligners
 #==================================================
 
 TARGETS += bwa_mem
 bwa_mem :
 	$(call RUN_MAKE,innovation-lab/fastq_aligners/bwa_mem.mk)
+	
+TARGETS += bwa_par
+bwa_par :
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/bwa_parallel.mk)
 	
 TARGETS += bismark_bt2
 bismark_bt2 :

@@ -2,42 +2,42 @@ include innovation-lab/Makefile.inc
 include innovation-lab/config/gatk.inc
 include innovation-lab/config/align.inc
 
-LOGDIR ?= log/bwa_split.$(NOW)
+LOGDIR ?= log/bwa_par.$(NOW)
 
 FASTQ_SPLIT ?= $(BWA_SPLITS)
 FASTQ_SEQ = $(shell seq 1 $(FASTQ_SPLIT))
 
-bwa_split : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R1.fastq.gz) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R2.fastq.gz) \
-	    $(foreach sample,$(SAMPLES), \
-		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_aln.bam)) \
-	    $(foreach sample,$(SAMPLES), \
+bwa_par : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
+	  $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R2.fastq.gz) \
+	  $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R1.fastq.gz) \
+	  $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)--$(FASTQ_SPLIT)_R2.fastq.gz) \
+	  $(foreach sample,$(SAMPLES), \
+	  		$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_aln.bam)) \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl.fastq.gz)) \
-	    $(foreach sample,$(SAMPLES), \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln.bam)) \
-	    $(foreach sample,$(SAMPLES), \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.bam)) \
-	    $(foreach sample,$(SAMPLES), \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt.intervals)) \
-	    $(foreach sample,$(SAMPLES), \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR.bam)) \
-	    $(foreach sample,$(SAMPLES), \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.bam)) \
-	    $(foreach sample,$(SAMPLES), \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX.grp)) \
-	    $(foreach sample,$(SAMPLES), \
+	  $(foreach sample,$(SAMPLES), \
 		  	$(foreach n,$(FASTQ_SEQ),bwamem/$(sample)/$(sample)--$(n)_cl_aln_srt_IR_FX_BR.bam)) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam) \
-	    $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR_MD.bam) \
-	    $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
-	    $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
-	    $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
-	    $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
-	    $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt) \
-	    $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics_summary.txt) \
-	    $(foreach sample,$(SAMPLES),metrics/$(sample).wgs_metrics.txt)
+	  $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR.bam) \
+	  $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_cl_aln_srt_IR_FX_BR_MD.bam) \
+	  $(foreach sample,$(SAMPLES),bam/$(sample).bam) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample).idx_stats.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample).aln_metrics.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample).insert_metrics.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics_summary.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample).wgs_metrics.txt)
 	    
 
 SPLIT_THREADS = 8
@@ -212,47 +212,47 @@ $(foreach sample,$(SAMPLES),\
 define picard-metrics
 metrics/$1.idx_stats.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
-					    $$(BAM_INDEX) \
-					    INPUT=$$(<) \
-					    > $$(@)")
+							$$(BAM_INDEX) \
+							INPUT=$$(<) \
+							> $$(@)")
 									   
 metrics/$1.aln_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
-					    $$(COLLECT_ALIGNMENT_METRICS) \
-					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@)")
+							$$(COLLECT_ALIGNMENT_METRICS) \
+							REFERENCE_SEQUENCE=$$(REF_FASTA) \
+							INPUT=$$(<) \
+							OUTPUT=$$(@)")
 									   
 metrics/$1.insert_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
-					    $$(COLLECT_INSERT_METRICS) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    HISTOGRAM_FILE=metrics/$1.insert_metrics.pdf \
-					    MINIMUM_PCT=0.5")
+							$$(COLLECT_INSERT_METRICS) \
+							INPUT=$$(<) \
+							OUTPUT=$$(@) \
+							HISTOGRAM_FILE=metrics/$1.insert_metrics.pdf \
+							MINIMUM_PCT=0.5")
 									   
 metrics/$1.oxog_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
-					    $$(COLLECT_OXOG_METRICS) \
-					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@)")
+							$$(COLLECT_OXOG_METRICS) \
+							REFERENCE_SEQUENCE=$$(REF_FASTA) \
+							INPUT=$$(<) \
+							OUTPUT=$$(@)")
 					    
 metrics/$1.gc_metrics_summary.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
-					    $$(COLLECT_GC_BIAS) \
-					    INPUT=$$(<) \
-					    OUTPUT=metrics/$1.gc_metrics.txt \
-					    CHART_OUTPUT=metrics/$1.gc_metrics.pdf \
-					    REFERENCE_SEQUENCE=$$(REF_FASTA) \
-					    SUMMARY_OUTPUT=$$(@)")
+							$$(COLLECT_GC_BIAS) \
+							INPUT=$$(<) \
+							OUTPUT=metrics/$1.gc_metrics.txt \
+							CHART_OUTPUT=metrics/$1.gc_metrics.pdf \
+							REFERENCE_SEQUENCE=$$(REF_FASTA) \
+							SUMMARY_OUTPUT=$$(@)")
 					   
 metrics/$1.wgs_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
-					    $$(COLLECT_WGS_METRICS) \
-					    INPUT=$$(<) \
-					    OUTPUT=$$(@) \
-					    REFERENCE_SEQUENCE=$$(REF_FASTA)")
+							$$(COLLECT_WGS_METRICS) \
+							INPUT=$$(<) \
+							OUTPUT=$$(@) \
+							REFERENCE_SEQUENCE=$$(REF_FASTA)")
 
 endef
 $(foreach sample,$(SAMPLES),\
@@ -260,13 +260,13 @@ $(foreach sample,$(SAMPLES),\
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
-	     head -3 version/tmp.txt | tail -2 > version/bwa_split.txt; \
+	     head -3 version/tmp.txt | tail -2 > version/bwa_par.txt; \
 	     rm version/tmp.txt; \
-	     $(SAMTOOLS) --version >> version/bwa_split.txt; \
-	     echo "gatk3" >> version/bwa_split.txt; \
-	     $(GATK) --version >> version/bwa_split.txt; \
-	     echo "picard" >> version/bwa_split.txt; \
-	     $(PICARD) MarkDuplicates --version &>> version/bwa_split.txt)
+	     $(SAMTOOLS) --version >> version/bwa_par.txt; \
+	     echo "gatk3" >> version/bwa_par.txt; \
+	     $(GATK) --version >> version/bwa_par.txt; \
+	     echo "picard" >> version/bwa_par.txt; \
+	     $(PICARD) MarkIlluminaAdapters --version &>> version/bwa_par.txt)
 .SECONDARY:
 .DELETE_ON_ERROR:
-.PHONY: bwa_split
+.PHONY: bwa_par

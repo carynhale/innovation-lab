@@ -46,9 +46,8 @@ bam/$1.bam.bai : star/$1.Aligned.sortedByCoord.out.bam.bai
                                       cp $$(<) $$(@)")
                                    
 endef
-$(foreach ss,$(SPLIT_SAMPLES), \
-	$(if $(fq.$(ss)), \
-	$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
+$(foreach ss,$(SPLIT_SAMPLES),\
+	$(if $(fq.$(ss)),$(eval $(call align-split-fastq,$(split.$(ss)),$(ss),$(fq.$(ss))))))
     
 ..DUMMY := $(shell mkdir -p version; \
              echo "STAR" > version/star_align.txt; \
