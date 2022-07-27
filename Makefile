@@ -190,19 +190,18 @@ sum_reads :
 
 TARGETS += pileup_metrics
 pileup_metrics :
-	$(call RUN_MAKE,innovation-lab/??/pileup_metrics.mk)
+	$(call RUN_MAKE,innovation-lab/beta_test/pileup_metrics.mk)
 	
 TARGETS += get_basecount
 get_basecount :
-	$(call RUN_MAKE,innovation-lab/??/get_basecount.mk)
+	$(call RUN_MAKE,innovation-lab/beta_test/get_basecount.mk)
 	
 TARGETS += msi_sensor
 msi_sensor :
-	$(call RUN_MAKE,innovation-lab/??/msi_sensor.mk)
+	$(call RUN_MAKE,innovation-lab/beta_test/msi_sensor.mk)
 	
 TARGETS += sufam_genotype
 sufam_genotype :
-	$(call RUN_MAKE,innovation-lab/??/sufam_genotype.mk)
+	$(call RUN_MAKE,innovation-lab/beta_test/sufam_genotype.mk)
 	
-
 .PHONY : $(TARGETS)
