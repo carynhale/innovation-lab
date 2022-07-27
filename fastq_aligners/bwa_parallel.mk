@@ -38,7 +38,7 @@ bwa_par : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample).oxog_metrics.txt) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metrics_summary.txt) \
 	  $(foreach sample,$(SAMPLES),metrics/$(sample).wgs_metrics.txt) \
-	  $(foreach sample,$(SAMPLES),metrics/$(sample).library_complexity_metrics.txt) \
+	  $(foreach sample,$(SAMPLES),metrics/$(sample).duplicate_metrics.txt) \
 	  summary/idx_metrics.txt \
 	  summary/aln_metrics.txt \
 	  summary/insert_metrics.txt \
@@ -263,11 +263,11 @@ metrics/$1.wgs_metrics.txt : bam/$1.bam
 							OUTPUT=$$(@) \
 							REFERENCE_SEQUENCE=$$(REF_FASTA)")
 							
-metrics/$1.library_complexity_metrics.txt : bam/$1.bam
+metrics/$1.duplicate_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
-							$$(CALC_LIBRARY_COMPLEXITY) \
+							$$(COLLECT_DUP_METRICS) \
 							INPUT=$$(<) \
-							OUTPUT=$$(@)")
+							METRICS_FILE=$$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
