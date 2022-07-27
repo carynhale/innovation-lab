@@ -42,8 +42,8 @@ bwa_par : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 	  summary/aln_metrics.txt \
 	  summary/insert_metrics.txt \
 	  summary/oxog_metrics.txt \
-	  summary/gc_metrics.txt
-#	  summary/wgs_metrics.txt
+	  summary/gc_metrics.txt \
+	  summary/wgs_metrics.txt
 	    
 
 SPLIT_THREADS = 8
