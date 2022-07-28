@@ -44,7 +44,8 @@ bwa_par : $(foreach sample,$(SAMPLES),bwamem/$(sample)/$(sample)_R1.fastq.gz) \
 	  summary/insert_metrics.txt \
 	  summary/oxog_metrics.txt \
 	  summary/gc_metrics.txt \
-	  summary/wgs_metrics.txt
+	  summary/wgs_metrics.txt \
+	  summary/duplicate_metrics.txt
 	    
 
 SPLIT_THREADS = 8
@@ -296,6 +297,10 @@ summary/gc_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).gc_metric
 summary/wgs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).wgs_metrics.txt)
 	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
 					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/bwa_parallel.R --option 6 --sample_names '$(SAMPLES)'")
+					  
+summary/duplicate_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample).duplicate_metrics.txt)
+	$(call RUN, -c -n 1 -s 8G -m 12G,"set -o pipefail && \
+					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/bwa_parallel.R --option 7 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 	     $(BWA) &> version/tmp.txt; \
