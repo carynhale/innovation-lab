@@ -78,7 +78,7 @@ endif
 ALL_SAMPLES = $(SAMPLE_PAIRS) $(SAMPLES)
 
 SHELL = /bin/bash
-export TMPDIR := $(HOME)/share/tmp
+export TMPDIR := $(HOME)/share/data/$(USER)/tmp
 
 COUNT_SAMPLES = $(shell expr `sed 's/\..*//; s:.*/::' <<< $1 | grep -o "_" | wc -l` + 1)
 
