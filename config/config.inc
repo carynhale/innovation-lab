@@ -116,7 +116,7 @@ MUTECT ?= $(JAVA7) -Xmx11G -jar $(MUTECT_EXE) --analysis_type MuTect
 
 # paths
 SCRIPTS_DIR ?= innovation-lab/dodo-cloning-kit
-TMPDIR ?= $(HOME)/share/tmp
+TMPDIR ?= $(HOME)/share/data/$(USER)/tmp
 
 endif
 CONFIG_INC = true
