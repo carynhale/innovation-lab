@@ -97,7 +97,7 @@ $(foreach sample,$(SAMPLES),\
 
 define fastq-2-bam
 bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1--$(FASTQ_SPLIT)_R2.fastq.gz
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
 					 $$(FASTQ_TO_SAM) \
 					 FASTQ=bwamem/$1/$1--$2_R1.fastq.gz \
 					 FASTQ2=bwamem/$1/$1--$2_R2.fastq.gz \
@@ -108,7 +108,7 @@ bwamem/$1/$1--$2_aln.bam : bwamem/$1/$1--$(FASTQ_SPLIT)_R1.fastq.gz bwamem/$1/$1
 					 PL=illumina")
 									       
 bwamem/$1/$1--$2_cl.fastq.gz : bwamem/$1/$1--$2_aln.bam
-	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
+	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
 					 $$(MARK_ADAPTERS) \
 					 INPUT=$$(<) \
 					 OUTPUT=/dev/stdout \
