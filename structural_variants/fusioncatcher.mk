@@ -11,11 +11,11 @@ CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/cu
 
 define merged-fastq
 fusioncatcher/$1/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G -v $(PIGZ_ENV),"set -o pipefail && \
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
 							$$(PIGZ) -cd -p 12 $$(^) | $$(PIGZ) -c -p 12 > $$(@)")
 					 
 fusioncatcher/$1/$1.2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G -v $(PIGZ_ENV),"set -o pipefail && \
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
 							$$(PIGZ) -cd -p 12 $$(^) | $$(PIGZ) -c -p 12 > $$(@)")
 
 endef
