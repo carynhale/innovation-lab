@@ -10,15 +10,17 @@ fusion_catcher : $(foreach sample,$(SAMPLES),fusioncatcher/$(sample)/$(sample).1
 CACHE = $(HOME)/share/usr/env/fusioncatcher-1.2.0/share/fusioncatcher-1.20/db/current
 
 define merged-fastq
-fusioncatcher/$1/$1.1.fastq.gz : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+fusioncatcher/$1/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+					 mkdir -p fusioncatcher && \
 					 mkdir -p fusioncatcher/$1 && \
-					 cp $$(^) $$(@)")
+					 zcat $$(^) > $$(@)")
 					 
-fusioncatcher/$1/$1.2.fastq.gz : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+fusioncatcher/$1/$1.2.fastq : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
 	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
+					 mkdir -p fusioncatcher && \
 					 mkdir -p fusioncatcher/$1 && \
-					 cp $$(^) $$(@)")
+					 zcat $$(^) > $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
