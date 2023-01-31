@@ -24,7 +24,7 @@ $(foreach sample,$(SAMPLES),\
 
 define fusion-catcher
 fusioncatcher/$1/out/taskcomplete : fusioncatcher/$1/$1.1.fastq.gz fusioncatcher/$1/$1.2.fastq.gz
-	$$(call RUN,-c -n 8 -s 2G -m 3G -v $(FUSIONCATCHER_ENV) -w 72:00:00,"set -o pipefail && \
+	$$(call RUN,-c -n 8 -s 4G -m 6G -v $(FUSIONCATCHER_ENV) -w 72:00:00,"set -o pipefail && \
 									     mkdir -p fusioncatcher/$1/out && \
 									     fusioncatcher.py \
 									     -i fusioncatcher/$1 \
