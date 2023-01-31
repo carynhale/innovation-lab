@@ -27,8 +27,8 @@ define star-fusion
 starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq starfusion/$1/$1.2.fastq
 	$$(call RUN,-c -n 20 -s 1G -m 2G -v $(STARFUSION_ENV) -w 36:00:00,"set -o pipefail && \
 									   $$(STAR_FUSION) \
-									   --left_fq starfusion/$1/$1.1.fastq \
-									   --right_fq starfusion/$1/$1.2.fastq \
+									   --left_fq $$(<) \
+									   --right_fq $$(<<) \
 									   --CPU 20 \
 									   --output_dir starfusion/$1 \
 									   --genome_lib_dir $$(CTAT_LIB) && \
