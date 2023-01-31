@@ -25,7 +25,7 @@ $(foreach sample,$(SAMPLES),\
 		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 define run-defuse
-defuse/%/results.candidate.tsv : defuse/%/%.1.fastq defuse/%/%.2.fastq
+defuse/$1/results.candidate.tsv : defuse/$1/$1.1.fastq defuse/$1/$1.2.fastq
 	$$(call RUN,-c -n 10 -s 2G -m 3G -w 72:00:00 -v $(DEFUSE_ENV),"set -o pipefail && \
 								       mkdir -p defuse && \
 								       $$(DEFUSE) \
@@ -35,14 +35,14 @@ defuse/%/results.candidate.tsv : defuse/%/%.1.fastq defuse/%/%.2.fastq
 								       --res defuse/$$(*)/results.candidate.tsv \
 								       --rescla defuse/$$(*)/results.classify.tsv \
 								       --resfil defuse/$$(*)/results.filtered.tsv \
-								       -1 defuse/$$(*)/$$(*).1.fastq \
-								       -2 defuse/$$(*)/$$(*).2.fastq \
+								       -1 $$(<) \
+								       -2 $$(<<) \
 								       -s direct \
 								       -p 10")
 												  
-defuse/%/taskcomplete : defuse/%/results.candidate.tsv
+defuse/$1/taskcomplete : defuse/$1/results.candidate.tsv
 	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
-					 echo $$(*) > defuse/$$(*)/taskcomplete")
+					 echo $$(*) > $$(<)")
 	
 endef
 $(foreach sample,$(SAMPLES),\
