@@ -10,12 +10,10 @@ TARGETS_LIST ?= $(HOME)/share/lib/resource_files/IDT_exome_research_targets.list
 rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_rnaseq_metrics.txt) \
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_alignment_metrics.txt) \
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_insert_metrics.txt) \
-		 $(foreach sample,$(SAMPLES),metrics/$(sample)_hs_metrics.txt) \
 		 summary/rnaseq_metrics.txt \
 		 summary/alignment_metrics.txt \
 		 summary/insert_metrics.txt \
-		 summary/insert_summary.txt \
-		 summary/hs_metrics.txt
+		 summary/insert_summary.txt
 
 define rnaseq-metrics
 metrics/$1_rnaseq_metrics.txt : bam/$1.bam
@@ -56,22 +54,6 @@ endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call insert-metrics,$(sample))))
 		
-define hs-metrics
-metrics/$1_hs_metrics.txt : bam/$1.bam
-	$$(call RUN,-c -n 1 -s 6G -m 12G,"set -o pipefail && \
-					  $$(CALC_HS_METRICS) \
-					  R=$(REF_FASTA) \
-					  I=$$(<) \
-					  O=$$(@) \
-					  BAIT_INTERVALS=$(TARGETS_LIST) \
-					  TARGET_INTERVALS=$(TARGETS_LIST) \
-					  TMP_DIR=$(TMPDIR)")
-
-endef
-$(foreach sample,$(SAMPLES),\
-		$(eval $(call hs-metrics,$(sample))))
-
-
 summary/rnaseq_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_rnaseq_metrics.txt)
 	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 1 --sample_names '$(SAMPLES)'")
@@ -87,10 +69,6 @@ summary/insert_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_inser
 summary/insert_summary.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_insert_metrics.txt)
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					   $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 4 --sample_names '$(SAMPLES)'")
-
-summary/hs_metrics.txt : $(foreach sample,$(SAMPLES),metrics/$(sample)_hs_metrics.txt)
-	$(call RUN, -c -n 1 -s 4G -m 6G,"set -o pipefail && \
-					 $(RSCRIPT) $(SCRIPTS_DIR)/qc/rnaseq_metrics.R --option 5 --sample_names '$(SAMPLES)'")
 
 ..DUMMY := $(shell mkdir -p version; \
 	     echo "picard" >> version/rnaseq_metrics.txt; \
