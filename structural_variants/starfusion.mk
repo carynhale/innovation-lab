@@ -11,20 +11,17 @@ star_fusion : $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).1.fastq
 
 define merged-fastq
 starfusion/$1/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p starfusion && \
-					 mkdir -p starfusion/$1 && \
-					 zcat $$(^) > $$(@)")
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
+							$$(PIGZ) -cd -p 12 $$(^) > $$(@)")
 					 
 starfusion/$1/$1.2.fastq : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p starfusion && \
-					 mkdir -p starfusion/$1 && \
-					 zcat $$(^) > $$(@)")
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
+							$$(PIGZ) -cd -p 12 $$(^) > $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
+
 
 define star-fusion
 starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq starfusion/$1/$1.2.fastq
