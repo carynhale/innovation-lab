@@ -42,7 +42,7 @@ defuse/$1/results.candidate.tsv : defuse/$1/$1.1.fastq defuse/$1/$1.2.fastq
 												  
 defuse/$1/taskcomplete : defuse/$1/results.candidate.tsv
 	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
-					 echo $$(*) > $$(<)")
+					 echo $$(*) > $$(@)")
 	
 endef
 $(foreach sample,$(SAMPLES),\
