@@ -5,7 +5,6 @@ LOGDIR ?= log/rnaseq_metrics.$(NOW)
 REF_FLAT ?= $(HOME)/share/lib/resource_files/refFlat_ensembl.v75.txt
 RIBOSOMAL_INTERVALS ?= $(HOME)/share/lib/resource_files/Homo_sapiens.GRCh37.75.rRNA.interval_list
 STRAND_SPECIFICITY ?= NONE
-TARGETS_LIST ?= $(HOME)/share/lib/resource_files/IDT_exome_research_targets.list
 
 rnaseq_metrics : $(foreach sample,$(SAMPLES),metrics/$(sample)_rnaseq_metrics.txt) \
 		 $(foreach sample,$(SAMPLES),metrics/$(sample)_alignment_metrics.txt) \
