@@ -31,6 +31,7 @@ FACETS_ENV ?= $(HOME)/share/usr/env/r-facets-0.6.2
 SAMBAMBA_ENV ?= $(HOME)/share/usr/env/sambamba-0.8.2
 CRAVAT_ENV ?= $(HOME)/share/usr/env/open-cravat-2.2.7
 PIGZ_ENV ?= $(HOME)/share/usr/env/pigz-2.6
+ONCOFUSE_ENV ?= $(HOME)/share/usr/env/oncofuse-1.1.1
 
 # aliases
 PYTHON ?= python
@@ -57,6 +58,7 @@ CUTADAPT ?= cutadapt
 SEQTK ?= seqtk
 SUFAM ?= sufam
 PIGZ ?= pigz
+ONCOFUSE ?= oncofuse
 
 
 # java command lines
