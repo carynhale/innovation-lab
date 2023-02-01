@@ -4,19 +4,13 @@ LOGDIR ?= log/onco_fuse.$(NOW)
 
 FUSION_CALLERS = arriba starfusion defuse
 
-oncofuse :  $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller).txt) \
-	    $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller).txt)
+oncofuse :  $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller).txt)
 	   
 define oncofuse-annotate
 oncofuse/$1.txt : $1/summary.txt
 	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
 					 $(RSCRIPT) $(SCRIPTS_DIR)/rna_seq/summarize_oncofuse.R --fusion_caller $1")
 					 
-oncofuse/ : oncofuse/$1.txt
-	$$(call RUN,-c -n 1 -s 4G -m 8G -v $(),"set -o pipefail && \
-						")
-
-
 endef
 $(foreach caller,$(FUSION_CALLERS),\
 		$(eval $(call oncofuse-annotate,$(caller))))
