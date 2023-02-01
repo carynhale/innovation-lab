@@ -147,6 +147,10 @@ fusion_catcher :
 TARGETS += star_fusion
 star_fusion :
 	$(call RUN_MAKE,innovation-lab/structural_variants/starfusion.mk)
+	
+TARGETS += onco_fuse
+onco_fuse :
+	$(call RUN_MAKE,innovation-lab/structural_variants/oncofuse.mk)
 
 #==================================================
 # Quality control
