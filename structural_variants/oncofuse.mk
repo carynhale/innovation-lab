@@ -2,7 +2,7 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/onco_fuse.$(NOW)
 
-FUSION_CALLERS = arriba
+FUSION_CALLERS = arriba starfusion defuse
 
 oncofuse :  $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller).txt)
 	   
