@@ -5,8 +5,7 @@ LOGDIR ?= log/onco_fuse.$(NOW)
 FUSION_CALLERS = arriba starfusion defuse fusioncatcher
 
 oncofuse :  $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller)/summary.txt) \
-	    $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller)/oncofuse.txt) \
-	    $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller).txt)
+	    $(foreach caller,$(FUSION_CALLERS),oncofuse/$(caller)/oncofuse.txt)
 	   
 define oncofuse-annotate
 oncofuse/$1/summary.txt : $1/summary.txt
