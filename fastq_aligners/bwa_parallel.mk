@@ -239,7 +239,7 @@ metrics/$1.insert_metrics.txt : bam/$1.bam
 							INPUT=$$(<) \
 							OUTPUT=$$(@) \
 							HISTOGRAM_FILE=metrics/$1.insert_metrics.pdf \
-							MINIMUM_PCT=0.5")
+							MINIMUM_PCT=0.05")
 									   
 metrics/$1.oxog_metrics.txt : bam/$1.bam
 	$$(call RUN, -c -n 1 -s 12G -m 24G -w 24:00:00,"set -o pipefail && \
