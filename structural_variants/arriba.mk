@@ -73,7 +73,7 @@ arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 							    -t $$(KNOWN_FUSIONS_TSV) \
 							    -p $$(PROTEIN_DOMAINS_GFF3)")
 
-arriba/$1/fusions.pdf : arriba/$1/fusions.tsv arriba/$1/$1.Aligned.out.bam
+arriba/$1/fusions.pdf : arriba/$1/fusions.tsv arriba/$1/$1.Aligned.out.bam arriba/$1/$1.Aligned.out.bai
 	$$(call RUN,-c -n 1 -s 12G -m 24G -v $(GENOMIC_ALIGNMENTS_ENV),"set -o pipefail && \
 									$$(RSCRIPT) $$(DRAW_FUSIONS) \
 									--fusions=$$(<) \
