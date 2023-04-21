@@ -5,9 +5,6 @@ LOGDIR ?= log/arriba.$(NOW)
 
 arriba : $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).1.fastq.gz) \
 	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).2.fastq.gz) \
-	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).Aligned.out.bam) \
-	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).Aligned.out.bam.bai) \
-	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).Aligned.out.bai) \
 	 $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.tsv) \
 	 $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.pdf) \
 	 arriba/summary.txt
@@ -53,14 +50,6 @@ arriba/$1/$1.Aligned.out.bam : arriba/$1/$1.1.fastq.gz arriba/$1/$1.2.fastq.gz
 										    --chimMultimapNmax 50 \
 										    --outFileNamePrefix arriba/$1/$1. > arriba/$1/$1.Aligned.out.bam")
 										    
-arriba/$1/$1.Aligned.out.bam.bai : arriba/$1/$1.Aligned.out.bam
-	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
-					 $$(SAMTOOLS) index $$(<)")
-
-arriba/$1/$1.Aligned.out.bai : arriba/$1/$1.Aligned.out.bam.bai
-	$$(call RUN,-c -n 1 -s 4G -m 8G,"set -o pipefail && \
-					 cp $$(<) $$(@)")
-										    
 arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(ARRIBA_ENV),"set -o pipefail && \
 							    $$(ARRIBA_EXE) -x arriba/$1/$1.Aligned.out.bam \
@@ -73,7 +62,7 @@ arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 							    -t $$(KNOWN_FUSIONS_TSV) \
 							    -p $$(PROTEIN_DOMAINS_GFF3)")
 
-arriba/$1/fusions.pdf : arriba/$1/fusions.tsv arriba/$1/$1.Aligned.out.bam arriba/$1/$1.Aligned.out.bai
+arriba/$1/fusions.pdf : arriba/$1/fusions.tsv bam/$1.bam
 	$$(call RUN,-c -n 1 -s 12G -m 24G -v $(GENOMIC_ALIGNMENTS_ENV),"set -o pipefail && \
 									$$(RSCRIPT) $$(DRAW_FUSIONS) \
 									--fusions=$$(<) \
