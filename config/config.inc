@@ -7,6 +7,7 @@ SEQ_PLATFORM ?= illumina
 INNOVATION_LAB_ENV ?= $(HOME)/share/usr/env/innovation-lab-0.0.1
 SUPERHEAT_ENV = $(HOME)/share/usr/env/r-complexheatmap-2.2.0
 VARIANT_ANNOTATION_ENV = $(HOME)/share/usr/env/r-variantannotation-1.32.0
+GENOMIC_ALIGNMENTS_ENV = $(HOME)/share/usr/env/r-genomicalignments-1.34.0
 ANNOTATION_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 SUMREADS_ENV = $(HOME)/share/usr/env/r-bsgenome.hsapiens.ucsc.hg19-1.4.0
 GENOTYPE_VARIANTS_ENV ?= $(HOME)/share/usr/env/genotype-variants

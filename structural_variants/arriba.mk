@@ -64,14 +64,14 @@ arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 							    -p $$(PROTEIN_DOMAINS_GFF3)")
 							    
 arriba/$1/fusions.pdf : arriba/$1/fusions.tsv arriba/$1/$1.Aligned.out.bam
-	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(ARRIBA_ENV),"set -o pipefail && \
-							    $(RSCRIPT) $$(DRAW_FUSIONS) \
-							    --fusions=$$(<) \
-							    --annotation=$$(ANNOTATION_GTF) \
-							    --alignments=$$(<<) \
-							    --cytobands=$$(CYTOBAND) \
-							    --proteinDomains=$$(PROTEIN_DOMAINS_GFF3) \
-							    --output=$$(@)")
+	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(GENOMIC_ALIGNMENTS_ENV),"set -o pipefail && \
+									$$(RSCRIPT) $$(DRAW_FUSIONS) \
+									--fusions=$$(<) \
+									--annotation=$$(ANNOTATION_GTF) \
+									--alignments=$$(<<) \
+									--cytobands=$$(CYTOBAND) \
+									--proteinDomains=$$(PROTEIN_DOMAINS_GFF3) \
+									--output=$$(@)")
 
 
 endef
