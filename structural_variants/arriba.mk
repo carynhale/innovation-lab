@@ -65,7 +65,7 @@ arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 							    
 arriba/$1/fusions.pdf : arriba/$1/fusions.tsv arriba/$1/$1.Aligned.out.bam
 	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(ARRIBA_ENV),"set -o pipefail && \
-							    $$(RSCRIPT) $$(DRAW_FUSIONS) \
+							    $(RSCRIPT) $$(DRAW_FUSIONS) \
 							    --fusions=$$(<) \
 							    --annotation=$$(ANNOTATION_GTF) \
 							    --alignments=$$(<<) \
