@@ -6,6 +6,7 @@ LOGDIR ?= log/arriba.$(NOW)
 arriba : $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).1.fastq.gz) \
 	 $(foreach sample,$(SAMPLES),arriba/$(sample)/$(sample).2.fastq.gz) \
 	 $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.tsv) \
+	 $(foreach sample,$(SAMPLES),arriba/$(sample)/fusions.pdf) \
 	 arriba/summary.txt
 	 
 	 
@@ -61,6 +62,17 @@ arriba/$1/fusions.tsv : arriba/$1/$1.Aligned.out.bam
 							    -k $$(KNOWN_FUSIONS_TSV) \
 							    -t $$(KNOWN_FUSIONS_TSV) \
 							    -p $$(PROTEIN_DOMAINS_GFF3)")
+							    
+arriba/$1/fusions.pdf : arriba/$1/fusions.tsv arriba/$1/$1.Aligned.out.bam
+	$$(call RUN,-c -n 1 -s 24G -m 36G -v $(ARRIBA_ENV),"set -o pipefail && \
+							    $$(RSCRIPT) $$(DRAW_FUSIONS) \
+							    --fusions=$$(<) \
+							    --annotation=$$(ANNOTATION_GTF) \
+							    --alignments=$$(<<) \
+							    --cytobands=$$(CYTOBAND) \
+							    --proteinDomains=$$(PROTEIN_DOMAINS_GFF3) \
+							    --output=$$(@)")
+
 
 endef
 $(foreach sample,$(SAMPLES),\
