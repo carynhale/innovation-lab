@@ -41,7 +41,6 @@ summary/summary_genotype.txt : $(foreach sample,$(SAMPLES),genotype_variants/$(s
 	$(call RUN, -c -n 1 -s 12G -m 24G,"set -o pipefail && \
 					  $(RSCRIPT) $(SCRIPTS_DIR)/summary/genotype_access.R --sample_names '$(SAMPLES)'")
 
-		
 ..DUMMY := $(shell mkdir -p version; \
 	     $(GBCMS_PATH) --help &> version/genotype_access.txt; \
 	     echo 'genotype_variants' >> version/genotype_access.txt; \

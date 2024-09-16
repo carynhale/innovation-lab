@@ -2,8 +2,8 @@ include innovation-lab/Makefile.inc
 
 LOGDIR ?= log/defuse.$(NOW)
 
-defuse : $(foreach sample,$(SAMPLES),defuse/$(sample).1.fastq) \
-	 $(foreach sample,$(SAMPLES),defuse/$(sample).2.fastq) \
+defuse : $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).1.fastq) \
+	 $(foreach sample,$(SAMPLES),defuse/$(sample)/$(sample).2.fastq) \
 	 $(foreach sample,$(SAMPLES),defuse/$(sample)/results.candidate.tsv) \
 	 $(foreach sample,$(SAMPLES),defuse/$(sample)/taskcomplete) \
 	 defuse/summary.txt
@@ -12,34 +12,37 @@ DEFUSE_CONFIG = innovation-lab/config/defuse.inc
 DEFUSE_E75 = /home/brownd7/share/lib/resource_files/defuse/homo_sapiens/Ensembl/Grch37.p13/Sequence/defuse_e75
 
 define merged-fastq
-defuse/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) > $$(@)")
-defuse/$1.2.fastq : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"zcat $$(^) > $$(@)")
-	
+defuse/$1/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
+							$$(PIGZ) -cd -p 12 $$(^) > $$(@)")
+					 
+defuse/$1/$1.2.fastq : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
+							$$(PIGZ) -cd -p 12 $$(^) > $$(@)")
+
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
 define run-defuse
-defuse/%/results.candidate.tsv : defuse/%.1.fastq defuse/%.2.fastq
-	$$(call RUN,-c -n 10 -s 2G -m 3G -w 72:00:00 -v $(DEFUSE_ENV),"set -o pipefail && \
+defuse/$1/results.candidate.tsv : defuse/$1/$1.1.fastq defuse/$1/$1.2.fastq
+	$$(call RUN,-c -n 20 -s 1G -m 2G -w 72:00:00 -v $(DEFUSE_ENV),"set -o pipefail && \
 								       mkdir -p defuse && \
 								       $$(DEFUSE) \
 								       --config $$(DEFUSE_CONFIG) \
 								       --dataset $$(DEFUSE_E75) \
-								       --output defuse/$$(*) \
-								       --res defuse/$$(*)/results.candidate.tsv \
-								       --rescla defuse/$$(*)/results.classify.tsv \
-								       --resfil defuse/$$(*)/results.filtered.tsv \
-								       -1 defuse/$$(*).1.fastq \
-								       -2 defuse/$$(*).2.fastq \
+								       --output defuse/$1 \
+								       --res defuse/$1/results.candidate.tsv \
+								       --rescla defuse/$1/results.classify.tsv \
+								       --resfil defuse/$1/results.filtered.tsv \
+								       -1 $$(<) \
+								       -2 $$(<<) \
 								       -s direct \
 								       -p 10")
 												  
-defuse/%/taskcomplete : defuse/%/results.candidate.tsv
+defuse/$1/taskcomplete : defuse/$1/results.candidate.tsv
 	$$(call RUN,-c -n 1 -s 1G -m 2G,"set -o pipefail && \
-					 echo $$(*) > defuse/$$(*)/taskcomplete")
+					 echo $$(*) > $$(@)")
 	
 endef
 $(foreach sample,$(SAMPLES),\

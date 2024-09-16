@@ -11,27 +11,24 @@ star_fusion : $(foreach sample,$(SAMPLES),starfusion/$(sample)/$(sample).1.fastq
 
 define merged-fastq
 starfusion/$1/$1.1.fastq : $$(foreach split,$2,$$(word 1, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p starfusion && \
-					 mkdir -p starfusion/$1 && \
-					 zcat $$(^) > $$(@)")
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
+							$$(PIGZ) -cd -p 12 $$(^) > $$(@)")
 					 
 starfusion/$1/$1.2.fastq : $$(foreach split,$2,$$(word 2, $$(fq.$$(split))))
-	$$(call RUN,-c -n 1 -s 2G -m 4G,"set -o pipefail && \
-					 mkdir -p starfusion && \
-					 mkdir -p starfusion/$1 && \
-					 zcat $$(^) > $$(@)")
+	$$(call RUN,-c -n 12 -s 0.5G -m 1G -v $(PIGZ_ENV),"set -o pipefail && \
+							$$(PIGZ) -cd -p 12 $$(^) > $$(@)")
 
 endef
 $(foreach sample,$(SAMPLES),\
 		$(eval $(call merged-fastq,$(sample),$(split.$(sample)))))
 
+
 define star-fusion
 starfusion/$1/taskcomplete : starfusion/$1/$1.1.fastq starfusion/$1/$1.2.fastq
 	$$(call RUN,-c -n 20 -s 1G -m 2G -v $(STARFUSION_ENV) -w 36:00:00,"set -o pipefail && \
 									   $$(STAR_FUSION) \
-									   --left_fq starfusion/$1/$1.1.fastq \
-									   --right_fq starfusion/$1/$1.2.fastq \
+									   --left_fq $$(<) \
+									   --right_fq $$(<<) \
 									   --CPU 20 \
 									   --output_dir starfusion/$1 \
 									   --genome_lib_dir $$(CTAT_LIB) && \

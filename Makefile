@@ -14,7 +14,7 @@ MAKELOG = log/$(@).$(NOW).log
 
 USE_CLUSTER ?= true
 QMAKE = innovation-lab/dodo-cloning-kit/runtime/qmake.pl -n $@.$(NOW) $(if $(SLACK_CHANNEL),-c $(SLACK_CHANNEL)) -r $(NUM_ATTEMPTS) -m -s -- make
-NUM_JOBS ?= 150
+NUM_JOBS ?= 250
 
 define RUN_QMAKE
 $(QMAKE) -e -f $1 -j $2 $(TARGET) && \
@@ -25,44 +25,20 @@ endef
 RUN_MAKE = $(if $(findstring false,$(USE_CLUSTER))$(findstring n,$(MAKEFLAGS)),+$(MAKE) -f $1,$(call RUN_QMAKE,$1,$(NUM_JOBS)))
 
 #==================================================
-# BETA testing
+# MSK-ACCESS
 #==================================================
 
-TARGETS += em_seq
-em_seq :
-	$(call RUN_MAKE,innovation-lab/workflows/em_seq.mk)
-	
-TARGETS += pileup_metrics
-pileup_metrics :
-	$(call RUN_MAKE,innovation-lab/workflows/pileup_metrics.mk)
-	
-TARGETS += get_basecount
-get_basecount :
-	$(call RUN_MAKE,innovation-lab/workflows/get_basecount.mk)
-	
-TARGETS += msi_sensor
-msi_sensor :
-	$(call RUN_MAKE,innovation-lab/workflows/msi_sensor.mk)
-
-#==================================================
-# MSK-ACCESS workflows
-#==================================================
-
-TARGETS += fgbio_prism
-fgbio_prism :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_prism.mk)
-	
 TARGETS += fgbio_access
 fgbio_access :
-	$(call RUN_MAKE,innovation-lab/workflows/fgbio_access.mk)
+	$(call RUN_MAKE,innovation-lab/msk_access/fgbio_access.mk)
 
 TARGETS += genotype_access
 genotype_access :
-	$(call RUN_MAKE,innovation-lab/workflows/genotype_access.mk)
+	$(call RUN_MAKE,innovation-lab/msk_access/genotype_access.mk)
 	
 TARGETS += cluster_access
 cluster_access :
-	$(call RUN_MAKE,innovation-lab/workflows/cluster_access.mk)
+	$(call RUN_MAKE,innovation-lab/msk_access/cluster_access.mk)
 
 #==================================================
 # FASTQ / BAM file aligners
@@ -70,15 +46,19 @@ cluster_access :
 
 TARGETS += bwa_mem
 bwa_mem :
-	$(call RUN_MAKE,innovation-lab/aligners/bwa_mem.mk)
-
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/bwa_mem.mk)
+	
+TARGETS += bwa_par
+bwa_par :
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/bwa_parallel.mk)
+	
 TARGETS += bismark_bt2
 bismark_bt2 :
-	$(call RUN_MAKE,innovation-lab/aligners/bismark_bt2.mk)
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/bismark_bt2.mk)
 
 TARGETS += star_align
 star_align :
-	$(call RUN_MAKE,innovation-lab/aligners/star_align.mk)
+	$(call RUN_MAKE,innovation-lab/fastq_aligners/star_align.mk)
 
 #==================================================
 # BAM file utilities
@@ -127,6 +107,10 @@ annotate_vcf_context :
 TARGETS += annotate_vcf_maf
 annotate_vcf_maf :
 	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_vcf_maf.mk)
+	
+TARGETS += annotate_maf_vcf
+annotate_maf_vcf :
+	$(call RUN_MAKE,innovation-lab/vcf_tools/annotate_maf_vcf.mk)
 
 #==================================================
 # Copy number aberration callers
@@ -163,6 +147,10 @@ fusion_catcher :
 TARGETS += star_fusion
 star_fusion :
 	$(call RUN_MAKE,innovation-lab/structural_variants/starfusion.mk)
+	
+TARGETS += onco_fuse
+onco_fuse :
+	$(call RUN_MAKE,innovation-lab/structural_variants/oncofuse.mk)
 
 #==================================================
 # Quality control
@@ -184,10 +172,6 @@ TARGETS += cluster_samples
 cluster_samples :
 	$(call RUN_MAKE,innovation-lab/qc/cluster_samples.mk)
 	
-TARGETS += library_complexity
-library_complexity :
-	$(call RUN_MAKE,innovation-lab/qc/library_complexity.mk)
-
 #==================================================
 # RNA sequencing
 #==================================================
@@ -204,5 +188,24 @@ TARGETS += sum_reads
 sum_reads :
 	$(call RUN_MAKE,innovation-lab/rna_seq/sum_reads.mk)
 	
+#==================================================
+# BETA testing
+#==================================================
 
+TARGETS += pileup_metrics
+pileup_metrics :
+	$(call RUN_MAKE,innovation-lab/beta_test/pileup_metrics.mk)
+	
+TARGETS += get_basecount
+get_basecount :
+	$(call RUN_MAKE,innovation-lab/beta_test/get_basecount.mk)
+	
+TARGETS += msi_sensor
+msi_sensor :
+	$(call RUN_MAKE,innovation-lab/beta_test/msi_sensor.mk)
+	
+TARGETS += sufam_genotype
+sufam_genotype :
+	$(call RUN_MAKE,innovation-lab/beta_test/sufam_genotype.mk)
+	
 .PHONY : $(TARGETS)
